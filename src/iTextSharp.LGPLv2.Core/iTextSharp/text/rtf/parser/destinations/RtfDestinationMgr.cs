@@ -1,0 +1,210 @@
+using System;
+using System.Collections;
+
+namespace iTextSharp.text.rtf.parser.destinations
+{
+
+    /// <summary>
+    ///  RtfDestinationMgr  manages destination objects for the parser
+    /// @author Howard Shank (hgshank@yahoo.com)
+    /// @since 2.0.8
+    /// </summary>
+    public sealed class RtfDestinationMgr
+    {
+        /// <summary>
+        /// String representation of document destination.
+        /// </summary>
+        public const string DESTINATION_DOCUMENT = "document";
+
+        /// <summary>
+        /// String representation of null destination.
+        /// </summary>
+        public const string DESTINATION_NULL = "null";
+
+        /// <summary>
+        /// Destination objects.
+        /// There is only one of each destination.
+        /// </summary>
+        private static readonly Hashtable _destinationObjects = new Hashtable(10, 0.95f);
+
+        /// <summary>
+        /// CtrlWord :: Destination map object.
+        /// Maps control words to their destinations objects.
+        /// Null destination is a special destination used for
+        /// discarding unwanted data. This is primarily used when
+        /// skipping groups, binary data or unwanted/unknown data.
+        /// </summary>
+        private static readonly Hashtable _destinations = new Hashtable(300, 0.95f);
+
+        private static readonly bool _ignoreUnknownDestinations = false;
+
+        /// <summary>
+        /// Destinations
+        /// </summary>
+        private static RtfDestinationMgr _instance;
+        private static RtfParser _rtfParser;
+        /// <summary>
+        /// Hidden default constructor becuase
+        /// </summary>
+        private RtfDestinationMgr()
+        {
+        }
+
+        public static bool AddDestination(string destination, object[] args)
+        {
+            if (_destinations.ContainsKey(destination))
+            {
+                return true;
+            }
+
+            string thisClass = "iTextSharp.text.rtf.parser.destinations." + (string)args[0];
+
+            if (thisClass.IndexOf("RtfDestinationNull") >= 0)
+            {
+                _destinations[destination] = RtfDestinationNull.GetInstance();
+                return true;
+            }
+
+            Type value = null;
+
+            try
+            {
+                value = Type.GetType(thisClass);
+            }
+            catch
+            {
+                return false;
+            }
+            if (value == null)
+                return false;
+
+            RtfDestination c = null;
+
+            if (_destinationObjects.ContainsKey(value.Name))
+            {
+                c = (RtfDestination)_destinationObjects[value.Name];
+            }
+            else
+            {
+                try
+                {
+                    c = (RtfDestination)Activator.CreateInstance(value);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            c.SetParser(_rtfParser);
+
+            if (value.Equals(typeof(RtfDestinationInfo)))
+            {
+                ((RtfDestinationInfo)c).SetElementName(destination);
+            }
+
+            if (value.Equals(typeof(RtfDestinationStylesheetTable)))
+            {
+                ((RtfDestinationStylesheetTable)c).SetElementName(destination);
+                ((RtfDestinationStylesheetTable)c).SetType((string)args[1]);
+            }
+
+            _destinations[destination] = c;
+            _destinationObjects[value.Name] = c;
+            return true;
+        }
+
+        /// <summary>
+        /// Adds a  RtfDestinationListener  to the appropriate  RtfDestination .
+        /// the new RtfDestinationListener.
+        /// </summary>
+        /// <param name="destination">the destination string for the listener</param>
+        /// <param name="listener"></param>
+        public static bool AddListener(string destination, IRtfDestinationListener listener)
+        {
+            RtfDestination dest = GetDestination(destination);
+            if (dest != null)
+            {
+                return dest.AddListener(listener);
+            }
+            return false;
+        }
+
+        public static RtfDestination GetDestination(string destination)
+        {
+            RtfDestination dest;
+            if (_destinations.ContainsKey(destination))
+            {
+                dest = (RtfDestination)_destinations[destination];
+            }
+            else
+            {
+                if (_ignoreUnknownDestinations)
+                {
+                    dest = (RtfDestination)_destinations[DESTINATION_NULL];
+                }
+                else
+                {
+                    dest = (RtfDestination)_destinations[DESTINATION_DOCUMENT];
+                }
+            }
+            dest.SetParser(_rtfParser);
+            return dest;
+        }
+
+        public static RtfDestinationMgr GetInstance()
+        {
+            lock (_destinations)
+            {
+                if (_instance == null)
+                {
+                    _instance = new RtfDestinationMgr();
+                    // 2 required destinations for all documents
+                    AddDestination(DESTINATION_DOCUMENT, new object[] { "RtfDestinationDocument", "" });
+                    AddDestination(DESTINATION_NULL, new object[] { "RtfDestinationNull", "" });
+                }
+                return _instance;
+            }
+        }
+
+        public static RtfDestinationMgr GetInstance(RtfParser parser)
+        {
+            lock (_destinations)
+            {
+                SetParser(parser);
+                if (_instance == null)
+                {
+                    _instance = new RtfDestinationMgr();
+                    // 2 required destinations for all documents
+                    AddDestination(DESTINATION_DOCUMENT, new object[] { "RtfDestinationDocument", "" });
+                    AddDestination(DESTINATION_NULL, new object[] { "RtfDestinationNull", "" });
+                }
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// listener methods
+        /// </summary>
+        /// <summary>
+        /// Removes a  RtfDestinationListener  from the appropriate  RtfDestination .
+        /// the RtfCtrlWordListener that has to be removed.
+        /// </summary>
+        /// <param name="destination">the destination string for the listener</param>
+        /// <param name="listener"></param>
+        public static bool RemoveListener(string destination, IRtfDestinationListener listener)
+        {
+            RtfDestination dest = GetDestination(destination);
+            if (dest != null)
+            {
+                return dest.RemoveListener(listener);
+            }
+            return false;
+        }
+
+        public static void SetParser(RtfParser parser)
+        {
+            _rtfParser = parser;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0.0",
+    "testRunner": "mstest",
+    "dependencies": {
+        "Microsoft.NETCore.App": {
+            "type": "platform",
+            "version": "1.0.0"
+        },
+        "dotnet-test-mstest": "1.1.1-preview",
+        "iTextSharp.LGPLv2.Core": "1.0.0.0",
+        "MSTest.TestFramework": "1.0.1-preview",
+        "NETStandard.Library": "1.6.0"
+    },
+
+    "frameworks": {
+        "netcoreapp1.0": {
+            "imports": [
+                "dnxcore50",
+                "portable-net45+win8"
+            ]
+        }
+    }
+}

@@ -1,0 +1,151 @@
+using System.IO;
+using iTextSharp.text.rtf.document;
+using iTextSharp.text.rtf.style;
+using ST = iTextSharp.text.rtf.style;
+
+namespace iTextSharp.text.rtf.text
+{
+
+    /// <summary>
+    /// The RtfChunk contains one piece of text. The smallest text element available
+    /// in iText.
+    /// @version $Version:$
+    /// @author Mark Hall (Mark.Hall@mail.room3b.eu)
+    /// </summary>
+    public class RtfChunk : RtfElement
+    {
+
+        /// <summary>
+        /// Constant for the subscript flag
+        /// </summary>
+        private static readonly byte[] _fontSubscript = DocWriter.GetIsoBytes("\\sub");
+        /// <summary>
+        /// Constant for the superscript flag
+        /// </summary>
+        private static readonly byte[] _fontSuperscript = DocWriter.GetIsoBytes("\\super");
+        /// <summary>
+        /// Constant for the end of sub / superscript flag
+        /// </summary>
+        private static readonly byte[] _fontEndSuperSubscript = DocWriter.GetIsoBytes("\\nosupersub");
+        /// <summary>
+        /// Constant for background colour.
+        /// </summary>
+        private static readonly byte[] _backgroundColor = DocWriter.GetIsoBytes("\\chcbpat");
+
+        /// <summary>
+        /// The font of this RtfChunk
+        /// </summary>
+        private readonly RtfFont _font;
+        /// <summary>
+        /// The actual content of this RtfChunk
+        /// </summary>
+        private readonly string _content = "";
+        /// <summary>
+        /// Whether to use soft line breaks instead of hard ones.
+        /// </summary>
+        private bool _softLineBreaks;
+        /// <summary>
+        /// The super / subscript of this RtfChunk
+        /// </summary>
+        private readonly float _superSubScript;
+        /// <summary>
+        /// An optional background colour.
+        /// </summary>
+        private readonly RtfColor _background;
+
+        /// <summary>
+        /// Constructs a RtfChunk based on the content of a Chunk
+        /// </summary>
+        /// <param name="doc">The RtfDocument that this Chunk belongs to</param>
+        /// <param name="chunk">The Chunk that this RtfChunk is based on</param>
+        public RtfChunk(RtfDocument doc, Chunk chunk) : base(doc)
+        {
+
+            if (chunk == null)
+            {
+                return;
+            }
+
+            if (chunk.Attributes != null && chunk.Attributes[Chunk.SUBSUPSCRIPT] != null)
+            {
+                _superSubScript = (float)chunk.Attributes[Chunk.SUBSUPSCRIPT];
+            }
+            if (chunk.Attributes != null && chunk.Attributes[Chunk.BACKGROUND] != null)
+            {
+                _background = new RtfColor(Document, (BaseColor)((object[])chunk.Attributes[Chunk.BACKGROUND])[0]);
+            }
+            _font = new RtfFont(doc, chunk.Font);
+            _content = chunk.Content;
+        }
+
+        /// <summary>
+        /// Writes the content of this RtfChunk. First the font information
+        /// is written, then the content, and then more font information
+        /// </summary>
+        public override void WriteContent(Stream result)
+        {
+            byte[] t;
+            if (_background != null)
+            {
+                result.Write(OpenGroup, 0, OpenGroup.Length);
+            }
+
+            _font.WriteBegin(result);
+            if (_superSubScript < 0)
+            {
+                result.Write(_fontSubscript, 0, _fontSubscript.Length);
+            }
+            else if (_superSubScript > 0)
+            {
+                result.Write(_fontSuperscript, 0, _fontSuperscript.Length);
+            }
+            if (_background != null)
+            {
+                result.Write(_backgroundColor, 0, _backgroundColor.Length);
+                result.Write(t = IntToByteArray(_background.GetColorNumber()), 0, t.Length);
+            }
+            result.Write(Delimiter, 0, Delimiter.Length);
+
+            Document.FilterSpecialChar(result, _content, false, _softLineBreaks || Document.GetDocumentSettings().IsAlwaysGenerateSoftLinebreaks());
+
+            if (_superSubScript != 0)
+            {
+                result.Write(_fontEndSuperSubscript, 0, _fontEndSuperSubscript.Length);
+            }
+            _font.WriteEnd(result);
+
+            if (_background != null)
+            {
+                result.Write(CloseGroup, 0, CloseGroup.Length);
+            }
+        }
+
+        /// <summary>
+        /// Sets the RtfDocument this RtfChunk belongs to.
+        /// </summary>
+        /// <param name="doc">The RtfDocument to use</param>
+        public override void SetRtfDocument(RtfDocument doc)
+        {
+            base.SetRtfDocument(doc);
+            _font.SetRtfDocument(Document);
+        }
+
+        /// <summary>
+        /// Sets whether to use soft line breaks instead of default hard ones.
+        /// </summary>
+        /// <param name="softLineBreaks">whether to use soft line breaks instead of default hard ones.</param>
+        public void SetSoftLineBreaks(bool softLineBreaks)
+        {
+            _softLineBreaks = softLineBreaks;
+        }
+
+        /// <summary>
+        /// Gets whether to use soft line breaks instead of default hard ones.
+        /// </summary>
+        /// <returns>whether to use soft line breaks instead of default hard ones.</returns>
+        public bool GetSoftLineBreaks()
+        {
+            return _softLineBreaks;
+        }
+    }
+}
