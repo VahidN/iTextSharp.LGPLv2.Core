@@ -31,6 +31,13 @@ namespace iTextSharp.text.pdf
 
         public RandomAccessFileOrArray(string filename, bool forceRead)
         {
+            var cachedBytes = PdfResourceFileCache.Get(filename);
+            if (cachedBytes != null)
+            {
+                ArrayIn = cachedBytes;
+                return;
+            }
+
             if (!File.Exists(filename))
             {
                 if (filename.StartsWith("file:/", StringComparison.OrdinalIgnoreCase) ||

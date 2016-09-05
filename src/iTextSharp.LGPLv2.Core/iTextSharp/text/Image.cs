@@ -919,6 +919,19 @@ namespace iTextSharp.text
         /// <returns>an object of type Gif, Jpeg or Png</returns>
         public static Image GetInstance(Uri url)
         {
+            // Add support for base64 encoded images.
+            if (url.Scheme == "data")
+            {
+                var src = url.AbsoluteUri;
+                if (src.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+                {
+                    // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
+                    var base64Data = src.Substring(src.IndexOf(",", StringComparison.OrdinalIgnoreCase) + 1);
+                    var imagedata = Convert.FromBase64String(base64Data);
+                    return GetInstance(imagedata);
+                }
+            }
+
             Stream istr = null;
             try
             {

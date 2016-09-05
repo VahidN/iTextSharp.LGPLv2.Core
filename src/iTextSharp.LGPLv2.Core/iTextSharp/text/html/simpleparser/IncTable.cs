@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using iTextSharp.text.pdf;
 
 namespace iTextSharp.text.html.simpleparser
@@ -42,13 +43,28 @@ namespace iTextSharp.text.html.simpleparser
         {
             if (Rows.Count == 0)
                 return new PdfPTable(1);
+
             int ncol = 0;
+
             ArrayList c0 = (ArrayList)Rows[0];
             for (int k = 0; k < c0.Count; ++k)
             {
                 ncol += ((PdfPCell)c0[k]).Colspan;
             }
+
             PdfPTable table = new PdfPTable(ncol);
+
+            var widths = (string)_props["widths"];
+            if (widths != null)
+            {
+                var intWidths = new List<int>();
+                foreach (var widthElement in widths.Split(','))
+                {
+                    intWidths.Add(int.Parse(widthElement));
+                }
+                table.SetWidths(intWidths.ToArray());
+            }
+
             string width = (string)_props["width"];
             if (width == null)
                 table.WidthPercentage = 100;
@@ -62,6 +78,7 @@ namespace iTextSharp.text.html.simpleparser
                     table.LockedWidth = true;
                 }
             }
+
             for (int row = 0; row < Rows.Count; ++row)
             {
                 ArrayList col = (ArrayList)Rows[row];

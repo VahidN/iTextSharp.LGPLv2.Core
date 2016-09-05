@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Globalization;
 using System.util;
 using iTextSharp.text.pdf;
 
@@ -15,12 +16,19 @@ namespace iTextSharp.text.html.simpleparser
         public IncCell(string tag, ChainedProperties props)
         {
             Cell = new PdfPCell();
+
             string value = props["colspan"];
             if (value != null)
                 Cell.Colspan = int.Parse(value);
+
+            value = props["rowspan"];
+            if (value != null)
+                Cell.Rowspan = int.Parse(value);
+
             value = props["align"];
             if (tag.Equals("th"))
                 Cell.HorizontalAlignment = Element.ALIGN_CENTER;
+
             if (value != null)
             {
                 if (Util.EqualsIgnoreCase(value, "center"))
@@ -32,6 +40,7 @@ namespace iTextSharp.text.html.simpleparser
                 else if (Util.EqualsIgnoreCase(value, "justify"))
                     Cell.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
             }
+
             value = props["valign"];
             Cell.VerticalAlignment = Element.ALIGN_MIDDLE;
             if (value != null)
@@ -41,14 +50,54 @@ namespace iTextSharp.text.html.simpleparser
                 else if (Util.EqualsIgnoreCase(value, "bottom"))
                     Cell.VerticalAlignment = Element.ALIGN_BOTTOM;
             }
+
             value = props["border"];
             float border = 0;
             if (value != null)
-                border = float.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                border = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
             Cell.BorderWidth = border;
             value = props["cellpadding"];
             if (value != null)
-                Cell.Padding = float.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                Cell.Padding = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            // Advanced formatting - does not conform to HTML standards
+            value = props["bordertop"];
+            if (value != null)
+                Cell.BorderWidthTop = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["borderbottom"];
+            if (value != null)
+                Cell.BorderWidthBottom = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["borderleft"];
+            if (value != null)
+                Cell.BorderWidthLeft = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["borderright"];
+            if (value != null)
+                Cell.BorderWidthRight = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["cellpaddingtop"];
+            if (value != null)
+                Cell.PaddingTop = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["cellpaddingbottom"];
+            if (value != null)
+                Cell.PaddingBottom = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["cellpaddingleft"];
+            if (value != null)
+                Cell.PaddingLeft = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["cellpaddingright"];
+            if (value != null)
+                Cell.PaddingRight = float.Parse(value, NumberFormatInfo.InvariantInfo);
+
+            value = props["bordercolor"];
+            if (value != null)
+                Cell.BorderColor = Markup.DecodeColor(value);
+
             Cell.UseDescender = true;
             value = props["bgcolor"];
             Cell.BackgroundColor = Markup.DecodeColor(value);
@@ -94,10 +143,6 @@ namespace iTextSharp.text.html.simpleparser
         public bool Process(IElementListener listener)
         {
             return true;
-        }
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }
