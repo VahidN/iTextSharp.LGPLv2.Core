@@ -862,7 +862,7 @@ namespace iTextSharp.text.pdf
             {
                 producer = Document.Version;
             }
-            else if (producer.IndexOf(Document.Product) == -1)
+            else if (producer.IndexOf(Document.Product, StringComparison.Ordinal) == -1)
             {
                 StringBuilder buf = new StringBuilder(producer);
                 buf.Append("; modified using ");

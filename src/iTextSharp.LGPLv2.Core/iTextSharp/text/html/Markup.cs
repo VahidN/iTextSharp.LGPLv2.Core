@@ -562,12 +562,12 @@ namespace iTextSharp.text.html
             StringBuilder result = new StringBuilder();
             int pos = 0;
             int end = endComment.Length;
-            int start = str.IndexOf(startComment, pos);
+            int start = str.IndexOf(startComment, pos, StringComparison.Ordinal);
             while (start > -1)
             {
                 result.Append(str.Substring(pos, start - pos));
-                pos = str.IndexOf(endComment, start) + end;
-                start = str.IndexOf(startComment, pos);
+                pos = str.IndexOf(endComment, start, StringComparison.Ordinal) + end;
+                start = str.IndexOf(startComment, pos, StringComparison.Ordinal);
             }
             result.Append(str.Substring(pos));
             return result.ToString();

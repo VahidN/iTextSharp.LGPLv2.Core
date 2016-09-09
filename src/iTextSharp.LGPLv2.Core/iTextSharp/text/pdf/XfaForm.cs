@@ -592,7 +592,7 @@ namespace iTextSharp.text.pdf
             /// <returns>the short name</returns>
             public static string GetShortName(string s)
             {
-                int idx = s.IndexOf(".#subform[");
+                int idx = s.IndexOf(".#subform[", StringComparison.OrdinalIgnoreCase);
                 if (idx < 0)
                     return s;
                 int last = 0;
@@ -600,11 +600,11 @@ namespace iTextSharp.text.pdf
                 while (idx >= 0)
                 {
                     sb.Append(s.Substring(last, idx - last));
-                    idx = s.IndexOf("]", idx + 10);
+                    idx = s.IndexOf("]", idx + 10, StringComparison.Ordinal);
                     if (idx < 0)
                         return sb.ToString();
                     last = idx + 1;
-                    idx = s.IndexOf(".#subform[", last);
+                    idx = s.IndexOf(".#subform[", last, StringComparison.OrdinalIgnoreCase);
                 }
                 sb.Append(s.Substring(last));
                 return sb.ToString();

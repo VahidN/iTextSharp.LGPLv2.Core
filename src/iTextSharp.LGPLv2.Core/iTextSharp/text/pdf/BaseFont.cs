@@ -938,12 +938,12 @@ namespace iTextSharp.text.pdf
                 if (fontFound != null)
                     return fontFound;
             }
-            if (isBuiltinFonts14 || name.ToLower(CultureInfo.InvariantCulture).EndsWith(".afm") || name.ToLower(CultureInfo.InvariantCulture).EndsWith(".pfm"))
+            if (isBuiltinFonts14 || name.EndsWith(".afm", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".pfm", StringComparison.OrdinalIgnoreCase))
             {
                 fontBuilt = new Type1Font(name, encoding, embedded, ttfAfm, pfb, forceRead);
                 fontBuilt.FastWinansi = encoding.Equals(CP1252);
             }
-            else if (nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") || nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") || nameBase.ToLower(CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0)
+            else if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || nameBase.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || nameBase.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
             {
                 if (encoding.Equals(IDENTITY_H) || encoding.Equals(IDENTITY_V))
                     fontBuilt = new TrueTypeFontUnicode(name, encoding, embedded, ttfAfm, forceRead);
@@ -1022,7 +1022,7 @@ namespace iTextSharp.text.pdf
         {
             string nameBase = GetBaseName(name);
             BaseFont fontBuilt = null;
-            if (nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") || nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") || nameBase.ToLower(CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0)
+            if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || nameBase.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || nameBase.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
                 fontBuilt = new TrueTypeFont(name, CP1252, false, ttfAfm, true, false);
             else
                 fontBuilt = CreateFont(name, encoding, false, false, ttfAfm, null);
@@ -1042,7 +1042,7 @@ namespace iTextSharp.text.pdf
         {
             string nameBase = GetBaseName(name);
             BaseFont fontBuilt = null;
-            if (nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") || nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") || nameBase.ToLower(CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0)
+            if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || nameBase.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || nameBase.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
                 fontBuilt = new TrueTypeFont(name, CP1252, false, ttfAfm, true, false);
             else
                 fontBuilt = CreateFont(name, encoding, false, false, ttfAfm, null);
@@ -1100,7 +1100,7 @@ namespace iTextSharp.text.pdf
         {
             string nameBase = GetBaseName(name);
             BaseFont fontBuilt = null;
-            if (nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") || nameBase.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") || nameBase.ToLower(CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0)
+            if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || nameBase.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || nameBase.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
                 fontBuilt = new TrueTypeFont(name, CP1252, false, ttfAfm, true, false);
             else
                 fontBuilt = CreateFont(name, encoding, false, false, ttfAfm, null);
@@ -1606,11 +1606,11 @@ namespace iTextSharp.text.pdf
         /// <returns>the name without the modifiers Bold, Italic or BoldItalic</returns>
         protected static string GetBaseName(string name)
         {
-            if (name.EndsWith(",Bold"))
+            if (name.EndsWith(",Bold", StringComparison.OrdinalIgnoreCase))
                 return name.Substring(0, name.Length - 5);
-            else if (name.EndsWith(",Italic"))
+            else if (name.EndsWith(",Italic", StringComparison.OrdinalIgnoreCase))
                 return name.Substring(0, name.Length - 7);
-            else if (name.EndsWith(",BoldItalic"))
+            else if (name.EndsWith(",BoldItalic", StringComparison.OrdinalIgnoreCase))
                 return name.Substring(0, name.Length - 11);
             else
                 return name;

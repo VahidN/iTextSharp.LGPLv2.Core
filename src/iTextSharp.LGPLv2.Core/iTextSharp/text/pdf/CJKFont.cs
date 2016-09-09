@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Collections;
@@ -206,7 +207,7 @@ namespace iTextSharp.text.pdf
         {
             loadProperties();
             string encodings = CjkFonts[fontName];
-            return (encodings != null && (enc.Equals("Identity-H") || enc.Equals("Identity-V") || encodings.IndexOf("_" + enc + "_") >= 0));
+            return (encodings != null && (enc.Equals("Identity-H") || enc.Equals("Identity-V") || encodings.IndexOf($"_{enc}_", StringComparison.OrdinalIgnoreCase) >= 0));
         }
 
         public override bool CharExists(int c)

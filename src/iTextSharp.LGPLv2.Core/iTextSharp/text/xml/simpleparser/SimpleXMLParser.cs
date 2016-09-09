@@ -281,7 +281,7 @@ namespace iTextSharp.text.xml.simpleparser
         {
             if (decl == null)
                 return null;
-            int idx = decl.IndexOf("encoding");
+            int idx = decl.IndexOf("encoding", StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
                 return null;
             int idx1 = decl.IndexOf('"', idx);

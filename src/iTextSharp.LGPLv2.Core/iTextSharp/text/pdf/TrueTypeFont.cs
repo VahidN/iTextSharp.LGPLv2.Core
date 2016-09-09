@@ -1270,7 +1270,7 @@ namespace iTextSharp.text.pdf
         /// <returns>the simple file name</returns>
         protected static string GetTtcName(string name)
         {
-            int idx = name.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,");
+            int idx = name.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
                 return name;
             else

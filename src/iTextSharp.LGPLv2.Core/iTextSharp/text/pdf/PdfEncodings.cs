@@ -454,11 +454,11 @@ namespace iTextSharp.text.pdf
                 {
                     case CIDNONE:
                         {
-                            if (line.IndexOf("begincidrange") >= 0)
+                            if (line.IndexOf("begincidrange", StringComparison.OrdinalIgnoreCase) >= 0)
                                 state = CIDRANGE;
-                            else if (line.IndexOf("begincidchar") >= 0)
+                            else if (line.IndexOf("begincidchar", StringComparison.OrdinalIgnoreCase) >= 0)
                                 state = CIDCHAR;
-                            else if (line.IndexOf("usecmap") >= 0)
+                            else if (line.IndexOf("usecmap", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 StringTokenizer tk = new StringTokenizer(line);
                                 string t = tk.NextToken();
@@ -468,7 +468,7 @@ namespace iTextSharp.text.pdf
                         }
                     case CIDRANGE:
                         {
-                            if (line.IndexOf("endcidrange") >= 0)
+                            if (line.IndexOf("endcidrange", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 state = CIDNONE;
                                 break;
@@ -491,7 +491,7 @@ namespace iTextSharp.text.pdf
                         }
                     case CIDCHAR:
                         {
-                            if (line.IndexOf("endcidchar") >= 0)
+                            if (line.IndexOf("endcidchar", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 state = CIDNONE;
                                 break;

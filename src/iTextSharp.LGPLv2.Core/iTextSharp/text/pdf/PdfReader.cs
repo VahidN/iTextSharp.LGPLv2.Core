@@ -3267,7 +3267,7 @@ namespace iTextSharp.text.pdf
                     {
                         Tokens.Seek(pos - 16);
                         string s = Tokens.ReadString(16);
-                        int index = s.IndexOf("endstream");
+                        int index = s.IndexOf("endstream", StringComparison.OrdinalIgnoreCase);
                         if (index >= 0)
                             pos = pos - 16 + index;
                         streamLength = pos - start;

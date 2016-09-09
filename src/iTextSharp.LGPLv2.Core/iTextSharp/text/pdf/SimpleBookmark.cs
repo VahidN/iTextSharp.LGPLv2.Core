@@ -370,11 +370,10 @@ namespace iTextSharp.text.pdf
                 string style = (string)map["Style"];
                 if (style != null)
                 {
-                    style = style.ToLower(System.Globalization.CultureInfo.InvariantCulture);
                     int bits = 0;
-                    if (style.IndexOf("italic") >= 0)
+                    if (style.IndexOf("italic", StringComparison.OrdinalIgnoreCase) >= 0)
                         bits |= 1;
-                    if (style.IndexOf("bold") >= 0)
+                    if (style.IndexOf("bold", StringComparison.OrdinalIgnoreCase) >= 0)
                         bits |= 2;
                     if (bits != 0)
                         outline.Put(PdfName.F, new PdfNumber(bits));

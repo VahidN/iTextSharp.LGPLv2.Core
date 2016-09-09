@@ -609,17 +609,17 @@ namespace iTextSharp.text.pdf
             }
 
             _outp.Write("\nWeight ");
-            if (_weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf("bold") >= 0)
+            if (_weight > 475 || fname.IndexOf("bold", StringComparison.OrdinalIgnoreCase) >= 0)
                 _outp.Write("Bold");
-            else if ((_weight < 325 && _weight != 0) || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf("light") >= 0)
+            else if ((_weight < 325 && _weight != 0) || fname.IndexOf("light", StringComparison.OrdinalIgnoreCase) >= 0)
                 _outp.Write("Light");
-            else if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf("black") >= 0)
+            else if (fname.IndexOf("black", StringComparison.OrdinalIgnoreCase) >= 0)
                 _outp.Write("Black");
             else
                 _outp.Write("Medium");
 
             _outp.Write("\nItalicAngle ");
-            if (_italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf("italic") >= 0)
+            if (_italic != 0 || fname.IndexOf("italic", StringComparison.OrdinalIgnoreCase) >= 0)
                 _outp.Write("-12.00");
             /* this is a typical value; something else may work better for a
             specific font */

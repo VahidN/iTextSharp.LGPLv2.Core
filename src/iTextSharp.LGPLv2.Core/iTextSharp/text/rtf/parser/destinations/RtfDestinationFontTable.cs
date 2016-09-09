@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using iTextSharp.text.rtf.parser.ctrlwords;
 
@@ -551,23 +552,23 @@ namespace iTextSharp.text.rtf.parser.destinations
                 if (f1.BaseFont == null)
                 {
                     // Did not find a font, let's try a substring of the first name.
-                    if (FontFactory.COURIER.IndexOf(fName) > -1)
+                    if (FontFactory.COURIER.IndexOf(fName, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         f1 = FontFactory.GetFont(FontFactory.COURIER);
                     }
-                    else if (FontFactory.HELVETICA.IndexOf(fName) > -1)
+                    else if (FontFactory.HELVETICA.IndexOf(fName, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         f1 = FontFactory.GetFont(FontFactory.HELVETICA);
                     }
-                    else if (FontFactory.TIMES.IndexOf(fName) > -1)
+                    else if (FontFactory.TIMES.IndexOf(fName, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         f1 = FontFactory.GetFont(FontFactory.TIMES);
                     }
-                    else if (FontFactory.SYMBOL.IndexOf(fName) > -1)
+                    else if (FontFactory.SYMBOL.IndexOf(fName, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         f1 = FontFactory.GetFont(FontFactory.SYMBOL);
                     }
-                    else if (FontFactory.ZAPFDINGBATS.IndexOf(fName) > -1)
+                    else if (FontFactory.ZAPFDINGBATS.IndexOf(fName, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         f1 = FontFactory.GetFont(FontFactory.ZAPFDINGBATS);
                     }

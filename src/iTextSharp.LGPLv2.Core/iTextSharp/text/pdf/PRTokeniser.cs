@@ -109,7 +109,7 @@ namespace iTextSharp.text.pdf
                 int pos = file.Length - size;
                 file.Seek(pos);
                 string str = ReadString(1024);
-                int idx = str.LastIndexOf("startxref");
+                int idx = str.LastIndexOf("startxref", StringComparison.OrdinalIgnoreCase);
                 if (idx < 0)
                     throw new IOException("PDF startxref not found.");
                 return pos + idx;
@@ -188,7 +188,7 @@ namespace iTextSharp.text.pdf
         {
             file.StartOffset = 0;
             string str = ReadString(1024);
-            int idx = str.IndexOf("%FDF-1.2");
+            int idx = str.IndexOf("%FDF-1.2", StringComparison.Ordinal);
             if (idx < 0)
                 throw new IOException("FDF header signature not found.");
             file.StartOffset = idx;
@@ -198,7 +198,7 @@ namespace iTextSharp.text.pdf
         {
             file.StartOffset = 0;
             string str = ReadString(1024);
-            int idx = str.IndexOf("%PDF-");
+            int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx < 0)
                 throw new IOException("PDF header signature not found.");
             file.StartOffset = idx;

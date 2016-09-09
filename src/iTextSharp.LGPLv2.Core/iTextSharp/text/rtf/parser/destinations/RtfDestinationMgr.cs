@@ -57,9 +57,9 @@ namespace iTextSharp.text.rtf.parser.destinations
                 return true;
             }
 
-            string thisClass = "iTextSharp.text.rtf.parser.destinations." + (string)args[0];
+            string thisClass = $"iTextSharp.text.rtf.parser.destinations.{(string) args[0]}";
 
-            if (thisClass.IndexOf("RtfDestinationNull") >= 0)
+            if (thisClass.IndexOf("RtfDestinationNull", StringComparison.Ordinal) >= 0)
             {
                 _destinations[destination] = RtfDestinationNull.GetInstance();
                 return true;

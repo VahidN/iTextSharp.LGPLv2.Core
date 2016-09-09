@@ -375,27 +375,27 @@ namespace iTextSharp.text
         public static int GetStyleValue(string style)
         {
             int s = 0;
-            if (style.IndexOf(Markup.CSS_VALUE_NORMAL) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_NORMAL, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= NORMAL;
             }
-            if (style.IndexOf(Markup.CSS_VALUE_BOLD) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_BOLD, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= BOLD;
             }
-            if (style.IndexOf(Markup.CSS_VALUE_ITALIC) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_ITALIC, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= ITALIC;
             }
-            if (style.IndexOf(Markup.CSS_VALUE_OBLIQUE) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_OBLIQUE, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= ITALIC;
             }
-            if (style.IndexOf(Markup.CSS_VALUE_UNDERLINE) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_UNDERLINE, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= UNDERLINE;
             }
-            if (style.IndexOf(Markup.CSS_VALUE_LINETHROUGH) != -1)
+            if (style.IndexOf(Markup.CSS_VALUE_LINETHROUGH, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 s |= STRIKETHRU;
             }

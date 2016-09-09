@@ -885,13 +885,13 @@ namespace iTextSharp.text.html
                 if (bf != null)
                 {
                     string ps = bf.PostscriptFontName.ToLower(CultureInfo.InvariantCulture);
-                    if (ps.IndexOf("bold") >= 0)
+                    if (ps.IndexOf("bold", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         if (fontstyle == Font.UNDEFINED)
                             fontstyle = 0;
                         fontstyle |= Font.BOLD;
                     }
-                    if (ps.IndexOf("italic") >= 0 || ps.IndexOf("oblique") >= 0)
+                    if (ps.IndexOf("italic", StringComparison.OrdinalIgnoreCase) >= 0 || ps.IndexOf("oblique", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         if (fontstyle == Font.UNDEFINED)
                             fontstyle = 0;

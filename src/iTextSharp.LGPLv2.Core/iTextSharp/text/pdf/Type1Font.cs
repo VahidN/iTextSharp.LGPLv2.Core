@@ -388,7 +388,7 @@ namespace iTextSharp.text.pdf
             flags |= FontSpecific ? 4 : 32;
             if (_italicAngle < 0)
                 flags |= 64;
-            if (_fontName.IndexOf("Caps") >= 0 || _fontName.EndsWith("SC"))
+            if (_fontName.IndexOf("Caps", StringComparison.Ordinal) >= 0 || _fontName.EndsWith("SC", StringComparison.Ordinal))
                 flags |= 131072;
             if (_weight.Equals("Bold"))
                 flags |= 262144;

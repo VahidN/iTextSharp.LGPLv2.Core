@@ -172,8 +172,8 @@ namespace iTextSharp.text
                 {
                     string lcf = f.ToLower(CultureInfo.InvariantCulture);
                     fs = Font.NORMAL;
-                    if (lcf.ToLower(CultureInfo.InvariantCulture).IndexOf("bold") != -1) fs |= Font.BOLD;
-                    if (lcf.ToLower(CultureInfo.InvariantCulture).IndexOf("italic") != -1 || lcf.ToLower(CultureInfo.InvariantCulture).IndexOf("oblique") != -1) fs |= Font.ITALIC;
+                    if (lcf.IndexOf("bold", StringComparison.OrdinalIgnoreCase) != -1) fs |= Font.BOLD;
+                    if (lcf.IndexOf("italic", StringComparison.OrdinalIgnoreCase) != -1 || lcf.IndexOf("oblique", StringComparison.OrdinalIgnoreCase) != -1) fs |= Font.ITALIC;
                     if ((s & Font.BOLDITALIC) == fs)
                     {
                         fontname = f;
@@ -516,7 +516,7 @@ namespace iTextSharp.text
         /// <param name="alias">the alias you want to use for the font</param>
         public virtual void Register(string path, string alias)
         {
-            if (path.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") || path.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") || path.ToLower(CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0)
+            if (path.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) || path.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
             {
                 object[] allNames = BaseFont.GetAllFontNames(path, BaseFont.WINANSI, null);
                 _trueTypeFonts.Add(((string)allNames[0]).ToLower(CultureInfo.InvariantCulture), path);

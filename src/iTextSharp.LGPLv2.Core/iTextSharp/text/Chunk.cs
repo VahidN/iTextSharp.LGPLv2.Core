@@ -454,7 +454,7 @@ namespace iTextSharp.text
         /// <returns>false if the Chunk contains other characters than space.</returns>
         public virtual bool IsEmpty()
         {
-            return (content.ToString().Trim().Length == 0) && (content.ToString().IndexOf("\n") == -1) && (attributes == null);
+            return (content.ToString().Trim().Length == 0) && (content.ToString().IndexOf("\n", StringComparison.Ordinal) == -1) && (attributes == null);
         }
 
         /// <summary>

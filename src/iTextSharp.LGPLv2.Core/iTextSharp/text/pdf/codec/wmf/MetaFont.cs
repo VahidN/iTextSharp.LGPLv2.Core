@@ -76,26 +76,26 @@ namespace iTextSharp.text.pdf.codec.wmf
                 if (_font != null)
                     return _font;
                 string fontName;
-                if (_faceName.IndexOf("courier") != -1 || _faceName.IndexOf("terminal") != -1
-                    || _faceName.IndexOf("fixedsys") != -1)
+                if (_faceName.IndexOf("courier", StringComparison.OrdinalIgnoreCase) != -1 || _faceName.IndexOf("terminal", StringComparison.OrdinalIgnoreCase) != -1
+                    || _faceName.IndexOf("fixedsys", StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     fontName = _fontNames[MARKER_COURIER + _italic + _bold];
                 }
-                else if (_faceName.IndexOf("ms sans serif") != -1 || _faceName.IndexOf("arial") != -1
-                    || _faceName.IndexOf("system") != -1)
+                else if (_faceName.IndexOf("ms sans serif", StringComparison.OrdinalIgnoreCase) != -1 || _faceName.IndexOf("arial", StringComparison.OrdinalIgnoreCase) != -1
+                    || _faceName.IndexOf("system", StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     fontName = _fontNames[MARKER_HELVETICA + _italic + _bold];
                 }
-                else if (_faceName.IndexOf("arial black") != -1)
+                else if (_faceName.IndexOf("arial black", StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     fontName = _fontNames[MARKER_HELVETICA + _italic + MARKER_BOLD];
                 }
-                else if (_faceName.IndexOf("times") != -1 || _faceName.IndexOf("ms serif") != -1
-                    || _faceName.IndexOf("roman") != -1)
+                else if (_faceName.IndexOf("times", StringComparison.OrdinalIgnoreCase) != -1 || _faceName.IndexOf("ms serif", StringComparison.OrdinalIgnoreCase) != -1
+                    || _faceName.IndexOf("roman", StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     fontName = _fontNames[MARKER_TIMES + _italic + _bold];
                 }
-                else if (_faceName.IndexOf("symbol") != -1)
+                else if (_faceName.IndexOf("symbol", StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     fontName = _fontNames[MARKER_SYMBOL];
                 }
