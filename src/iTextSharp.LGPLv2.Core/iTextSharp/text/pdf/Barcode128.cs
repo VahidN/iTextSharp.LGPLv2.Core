@@ -339,17 +339,17 @@ namespace iTextSharp.text.pdf
         {
             set
             {
-                string code = value;
-                if (CodeType == CODE128_UCC && code.StartsWith("("))
+                string localCode = value;
+                if (CodeType == CODE128_UCC && localCode.StartsWith("("))
                 {
                     int idx = 0;
                     string ret = "";
                     while (idx >= 0)
                     {
-                        int end = code.IndexOf(')', idx);
+                        int end = localCode.IndexOf(')', idx);
                         if (end < 0)
-                            throw new ArgumentException("Badly formed UCC string: " + code);
-                        string sai = code.Substring(idx + 1, end - (idx + 1));
+                            throw new ArgumentException("Badly formed UCC string: " + localCode);
+                        string sai = localCode.Substring(idx + 1, end - (idx + 1));
                         if (sai.Length < 2)
                             throw new ArgumentException("AI too short: (" + sai + ")");
                         int ai = int.Parse(sai);
@@ -359,9 +359,9 @@ namespace iTextSharp.text.pdf
                         sai = ai.ToString();
                         if (sai.Length == 1)
                             sai = "0" + sai;
-                        idx = code.IndexOf('(', end);
-                        int next = (idx < 0 ? code.Length : idx);
-                        ret += sai + code.Substring(end + 1, next - (end + 1));
+                        idx = localCode.IndexOf('(', end);
+                        int next = (idx < 0 ? localCode.Length : idx);
+                        ret += sai + localCode.Substring(end + 1, next - (end + 1));
                         if (len < 0)
                         {
                             if (idx >= 0)
@@ -373,7 +373,7 @@ namespace iTextSharp.text.pdf
                     base.Code = ret;
                 }
                 else
-                    base.Code = code;
+                    base.Code = localCode;
             }
         }
 

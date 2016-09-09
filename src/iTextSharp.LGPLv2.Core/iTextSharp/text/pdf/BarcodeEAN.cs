@@ -648,7 +648,7 @@ namespace iTextSharp.text.pdf
                     guard = _guardEan8;
                     break;
                 case UPCA:
-                    bars = GetBarsEan13("0" + code);
+                    bars = GetBarsEan13($"0{code}");
                     guard = _guardUpca;
                     break;
                 case UPCE:

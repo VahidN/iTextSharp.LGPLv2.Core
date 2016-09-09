@@ -458,14 +458,14 @@ namespace iTextSharp.text.pdf
         {
             if (FieldArray == null)
                 return;
-            PdfDictionary acroForm = new PdfDictionary();
-            catalog.Put(PdfName.Acroform, acroForm);
-            acroForm.Put(PdfName.Fields, FieldArray);
-            acroForm.Put(PdfName.Da, new PdfString("/Helv 0 Tf 0 g "));
+            PdfDictionary localAcroForm = new PdfDictionary();
+            catalog.Put(PdfName.Acroform, localAcroForm);
+            localAcroForm.Put(PdfName.Fields, FieldArray);
+            localAcroForm.Put(PdfName.Da, new PdfString("/Helv 0 Tf 0 g "));
             if (FieldTemplates.Count == 0)
                 return;
             PdfDictionary dr = new PdfDictionary();
-            acroForm.Put(PdfName.Dr, dr);
+            localAcroForm.Put(PdfName.Dr, dr);
             foreach (PdfTemplate template in FieldTemplates.Keys)
             {
                 PdfFormField.MergeResources(dr, (PdfDictionary)template.Resources);

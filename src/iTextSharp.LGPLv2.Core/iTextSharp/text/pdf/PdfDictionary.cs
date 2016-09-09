@@ -323,8 +323,8 @@ namespace iTextSharp.text.pdf
             {
                 value = (PdfObject)HashMap[key];
                 key.ToPdf(writer, os);
-                int type = value.Type;
-                if (type != ARRAY && type != DICTIONARY && type != NAME && type != STRING)
+                int localType = value.Type;
+                if (localType != ARRAY && localType != DICTIONARY && localType != NAME && localType != STRING)
                     os.WriteByte((byte)' ');
                 value.ToPdf(writer, os);
             }

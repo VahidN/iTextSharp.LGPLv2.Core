@@ -48,7 +48,7 @@ namespace iTextSharp.text.pdf.codec
         static readonly short[] _additionalMakeup = {
             28679,  28679,  31752,  unchecked((short)32777),
             unchecked((short)33801),  unchecked((short)34825),  unchecked((short)35849),  unchecked((short)36873),
-            unchecked(29703),  unchecked(29703),  unchecked(30727),  unchecked(30727),
+            29703,  29703,  30727,  30727,
             unchecked((short)37897),  unchecked((short)38921),  unchecked((short)39945),  unchecked((short)40969)
         };
 

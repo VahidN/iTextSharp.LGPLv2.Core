@@ -381,8 +381,8 @@ namespace iTextSharp.text.pdf
         public PdfAppearance GetAppearance()
         {
             PdfAppearance app = GetBorderAppearance();
-            Rectangle box = new Rectangle(app.BoundingBox);
-            if ((text == null || text.Length == 0) && (_layout == LAYOUT_LABEL_ONLY || (_image == null && _template == null && _iconReference == null)))
+            Rectangle localBox = new Rectangle(app.BoundingBox);
+            if (string.IsNullOrEmpty(text) && (_layout == LAYOUT_LABEL_ONLY || (_image == null && _template == null && _iconReference == null)))
             {
                 return app;
             }
@@ -390,7 +390,7 @@ namespace iTextSharp.text.pdf
                 return app;
             BaseFont ufont = RealFont;
             bool borderExtra = borderStyle == PdfBorderDictionary.STYLE_BEVELED || borderStyle == PdfBorderDictionary.STYLE_INSET;
-            float h = box.Height - borderWidth * 2;
+            float h = localBox.Height - borderWidth * 2;
             float bw2 = borderWidth;
             if (borderExtra)
             {
@@ -404,8 +404,8 @@ namespace iTextSharp.text.pdf
             float textX = float.NaN;
             float textY = 0;
             float fsize = fontSize;
-            float wt = box.Width - 2 * offX - 2;
-            float ht = box.Height - 2 * offX;
+            float wt = localBox.Width - 2 * offX - 2;
+            float ht = localBox.Height - 2 * offX;
             float adj = (_iconFitToBounds ? 0 : offX + 1);
             int nlayout = _layout;
             if (_image == null && _template == null && _iconReference == null)
@@ -417,56 +417,56 @@ namespace iTextSharp.text.pdf
                 {
                     case LAYOUT_LABEL_ONLY:
                     case LAYOUT_LABEL_OVER_ICON:
-                        if (text != null && text.Length > 0 && wt > 0 && ht > 0)
+                        if (!string.IsNullOrEmpty(text) && wt > 0 && ht > 0)
                         {
                             fsize = calculateFontSize(wt, ht);
-                            textX = (box.Width - ufont.GetWidthPoint(text, fsize)) / 2;
-                            textY = (box.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
+                            textX = (localBox.Width - ufont.GetWidthPoint(text, fsize)) / 2;
+                            textY = (localBox.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
                         }
                         goto case LAYOUT_ICON_ONLY;
                     case LAYOUT_ICON_ONLY:
                         if (nlayout == LAYOUT_LABEL_OVER_ICON || nlayout == LAYOUT_ICON_ONLY)
-                            iconBox = new Rectangle(box.Left + adj, box.Bottom + adj, box.Right - adj, box.Top - adj);
+                            iconBox = new Rectangle(localBox.Left + adj, localBox.Bottom + adj, localBox.Right - adj, localBox.Top - adj);
                         break;
                     case LAYOUT_ICON_TOP_LABEL_BOTTOM:
-                        if (text == null || text.Length == 0 || wt <= 0 || ht <= 0)
+                        if (string.IsNullOrEmpty(text) || wt <= 0 || ht <= 0)
                         {
                             nlayout = LAYOUT_ICON_ONLY;
                             continue;
                         }
-                        float nht = box.Height * 0.35f - offX;
+                        float nht = localBox.Height * 0.35f - offX;
                         if (nht > 0)
                             fsize = calculateFontSize(wt, nht);
                         else
                             fsize = 4;
-                        textX = (box.Width - ufont.GetWidthPoint(text, fsize)) / 2;
+                        textX = (localBox.Width - ufont.GetWidthPoint(text, fsize)) / 2;
                         textY = offX - ufont.GetFontDescriptor(BaseFont.DESCENT, fsize);
-                        iconBox = new Rectangle(box.Left + adj, textY + fsize, box.Right - adj, box.Top - adj);
+                        iconBox = new Rectangle(localBox.Left + adj, textY + fsize, localBox.Right - adj, localBox.Top - adj);
                         break;
                     case LAYOUT_LABEL_TOP_ICON_BOTTOM:
-                        if (text == null || text.Length == 0 || wt <= 0 || ht <= 0)
+                        if (string.IsNullOrEmpty(text) || wt <= 0 || ht <= 0)
                         {
                             nlayout = LAYOUT_ICON_ONLY;
                             continue;
                         }
-                        nht = box.Height * 0.35f - offX;
+                        nht = localBox.Height * 0.35f - offX;
                         if (nht > 0)
                             fsize = calculateFontSize(wt, nht);
                         else
                             fsize = 4;
-                        textX = (box.Width - ufont.GetWidthPoint(text, fsize)) / 2;
-                        textY = box.Height - offX - fsize;
+                        textX = (localBox.Width - ufont.GetWidthPoint(text, fsize)) / 2;
+                        textY = localBox.Height - offX - fsize;
                         if (textY < offX)
                             textY = offX;
-                        iconBox = new Rectangle(box.Left + adj, box.Bottom + adj, box.Right - adj, textY + ufont.GetFontDescriptor(BaseFont.DESCENT, fsize));
+                        iconBox = new Rectangle(localBox.Left + adj, localBox.Bottom + adj, localBox.Right - adj, textY + ufont.GetFontDescriptor(BaseFont.DESCENT, fsize));
                         break;
                     case LAYOUT_LABEL_LEFT_ICON_RIGHT:
-                        if (text == null || text.Length == 0 || wt <= 0 || ht <= 0)
+                        if (string.IsNullOrEmpty(text) || wt <= 0 || ht <= 0)
                         {
                             nlayout = LAYOUT_ICON_ONLY;
                             continue;
                         }
-                        float nw = box.Width * 0.35f - offX;
+                        float nw = localBox.Width * 0.35f - offX;
                         if (nw > 0)
                             fsize = calculateFontSize(wt, nw);
                         else
@@ -478,16 +478,16 @@ namespace iTextSharp.text.pdf
                             continue;
                         }
                         textX = offX + 1;
-                        textY = (box.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
-                        iconBox = new Rectangle(textX + ufont.GetWidthPoint(text, fsize), box.Bottom + adj, box.Right - adj, box.Top - adj);
+                        textY = (localBox.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
+                        iconBox = new Rectangle(textX + ufont.GetWidthPoint(text, fsize), localBox.Bottom + adj, localBox.Right - adj, localBox.Top - adj);
                         break;
                     case LAYOUT_ICON_LEFT_LABEL_RIGHT:
-                        if (text == null || text.Length == 0 || wt <= 0 || ht <= 0)
+                        if (string.IsNullOrEmpty(text) || wt <= 0 || ht <= 0)
                         {
                             nlayout = LAYOUT_ICON_ONLY;
                             continue;
                         }
-                        nw = box.Width * 0.35f - offX;
+                        nw = localBox.Width * 0.35f - offX;
                         if (nw > 0)
                             fsize = calculateFontSize(wt, nw);
                         else
@@ -498,15 +498,15 @@ namespace iTextSharp.text.pdf
                             fsize = fontSize;
                             continue;
                         }
-                        textX = box.Width - ufont.GetWidthPoint(text, fsize) - offX - 1;
-                        textY = (box.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
-                        iconBox = new Rectangle(box.Left + adj, box.Bottom + adj, textX - 1, box.Top - adj);
+                        textX = localBox.Width - ufont.GetWidthPoint(text, fsize) - offX - 1;
+                        textY = (localBox.Height - ufont.GetFontDescriptor(BaseFont.ASCENT, fsize)) / 2;
+                        iconBox = new Rectangle(localBox.Left + adj, localBox.Bottom + adj, textX - 1, localBox.Top - adj);
                         break;
                 }
                 break;
             }
-            if (textY < box.Bottom + offX)
-                textY = box.Bottom + offX;
+            if (textY < localBox.Bottom + offX)
+                textY = localBox.Bottom + offX;
             if (iconBox != null && (iconBox.Width <= 0 || iconBox.Height <= 0))
                 iconBox = null;
             bool haveIcon = false;
@@ -620,7 +620,7 @@ namespace iTextSharp.text.pdf
             if (!float.IsNaN(textX))
             {
                 app.SaveState();
-                app.Rectangle(offX, offX, box.Width - 2 * offX, box.Height - 2 * offX);
+                app.Rectangle(offX, offX, localBox.Width - 2 * offX, localBox.Height - 2 * offX);
                 app.Clip();
                 app.NewPath();
                 if (textColor == null)

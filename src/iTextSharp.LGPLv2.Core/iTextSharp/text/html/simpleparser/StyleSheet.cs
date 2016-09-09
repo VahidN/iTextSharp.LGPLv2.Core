@@ -67,10 +67,5 @@ namespace iTextSharp.text.html.simpleparser
             }
             props[key] = value;
         }
-
-        private void applyMap(Hashtable map, Hashtable props)
-        {
-
-        }
     }
 }

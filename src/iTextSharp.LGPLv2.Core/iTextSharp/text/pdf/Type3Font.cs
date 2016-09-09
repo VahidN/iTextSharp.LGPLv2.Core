@@ -254,7 +254,7 @@ namespace iTextSharp.text.pdf
             int lastChar = _usedSlot.Length - 1;
             while (lastChar >= firstChar && !_usedSlot[lastChar]) lastChar--;
 
-            int[] widths = new int[lastChar - firstChar + 1];
+            int[] localWidths = new int[lastChar - firstChar + 1];
             int[] invOrd = new int[lastChar - firstChar + 1];
 
             int invOrdIndx = 0, w = 0;
@@ -263,7 +263,7 @@ namespace iTextSharp.text.pdf
                 if (_usedSlot[u])
                 {
                     invOrd[invOrdIndx++] = u;
-                    widths[w] = _widths3[u];
+                    localWidths[w] = _widths3[u];
                 }
             }
             PdfArray diffs = new PdfArray();
@@ -298,12 +298,12 @@ namespace iTextSharp.text.pdf
                 font.Put(PdfName.Fontbbox, new PdfRectangle(_llx, _lly, _urx, _ury));
             font.Put(PdfName.Fontmatrix, new PdfArray(new[] { 0.001f, 0, 0, 0.001f, 0, 0 }));
             font.Put(PdfName.Charprocs, writer.AddToBody(charprocs).IndirectReference);
-            PdfDictionary encoding = new PdfDictionary();
-            encoding.Put(PdfName.Differences, diffs);
-            font.Put(PdfName.Encoding, writer.AddToBody(encoding).IndirectReference);
+            PdfDictionary localEncoding = new PdfDictionary();
+            localEncoding.Put(PdfName.Differences, diffs);
+            font.Put(PdfName.Encoding, writer.AddToBody(localEncoding).IndirectReference);
             font.Put(PdfName.Firstchar, new PdfNumber(firstChar));
             font.Put(PdfName.Lastchar, new PdfNumber(lastChar));
-            font.Put(PdfName.Widths, writer.AddToBody(new PdfArray(widths)).IndirectReference);
+            font.Put(PdfName.Widths, writer.AddToBody(new PdfArray(localWidths)).IndirectReference);
             if (_pageResources.HasResources())
                 font.Put(PdfName.Resources, writer.AddToBody(_pageResources.Resources).IndirectReference);
             writer.AddToBody(font, piRef);

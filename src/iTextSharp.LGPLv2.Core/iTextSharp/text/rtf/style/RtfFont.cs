@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.util;
 using iTextSharp.text.rtf.document;
@@ -348,7 +349,7 @@ namespace iTextSharp.text.rtf.style
             }
             if (obj is RtfFont)
             {
-                if (GetFontName().CompareTo(((RtfFont)obj).GetFontName()) != 0)
+                if (String.Compare(GetFontName(), ((RtfFont)obj).GetFontName(), StringComparison.Ordinal) != 0)
                 {
                     return 1;
                 }

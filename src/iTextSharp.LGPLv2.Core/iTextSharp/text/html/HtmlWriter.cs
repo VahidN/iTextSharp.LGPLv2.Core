@@ -311,19 +311,19 @@ namespace iTextSharp.text.html
             WriteStart(HtmlTags.BODY);
             if (Document.LeftMargin > 0)
             {
-                Write(HtmlTags.LEFTMARGIN, Document.LeftMargin.ToString());
+                Write(HtmlTags.LEFTMARGIN, Document.LeftMargin.ToString(CultureInfo.InvariantCulture));
             }
             if (Document.RightMargin > 0)
             {
-                Write(HtmlTags.RIGHTMARGIN, Document.RightMargin.ToString());
+                Write(HtmlTags.RIGHTMARGIN, Document.RightMargin.ToString(CultureInfo.InvariantCulture));
             }
             if (Document.TopMargin > 0)
             {
-                Write(HtmlTags.TOPMARGIN, Document.TopMargin.ToString());
+                Write(HtmlTags.TOPMARGIN, Document.TopMargin.ToString(CultureInfo.InvariantCulture));
             }
             if (Document.BottomMargin > 0)
             {
-                Write(HtmlTags.BOTTOMMARGIN, Document.BottomMargin.ToString());
+                Write(HtmlTags.BOTTOMMARGIN, Document.BottomMargin.ToString(CultureInfo.InvariantCulture));
             }
             if (PageSize.BackgroundColor != null)
             {
@@ -653,7 +653,7 @@ namespace iTextSharp.text.html
                         WriteMarkupAttributes(Markup);
                         if (cell.BorderWidth != Rectangle.UNDEFINED)
                         {
-                            Write(HtmlTags.BORDERWIDTH, cell.BorderWidth.ToString());
+                            Write(HtmlTags.BORDERWIDTH, cell.BorderWidth.ToString(CultureInfo.InvariantCulture));
                         }
                         if (cell.BorderColor != null)
                         {
@@ -842,8 +842,8 @@ namespace iTextSharp.text.html
                         {
                             Write(HtmlTags.ALT, image.Alt);
                         }
-                        Write(HtmlTags.PLAINWIDTH, image.ScaledWidth.ToString());
-                        Write(HtmlTags.PLAINHEIGHT, image.ScaledHeight.ToString());
+                        Write(HtmlTags.PLAINWIDTH, image.ScaledWidth.ToString(CultureInfo.InvariantCulture));
+                        Write(HtmlTags.PLAINHEIGHT, image.ScaledHeight.ToString(CultureInfo.InvariantCulture));
                         WriteMarkupAttributes(Markup);
                         WriteEnd();
                         return;

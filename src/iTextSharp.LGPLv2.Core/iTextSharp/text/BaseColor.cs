@@ -92,37 +92,20 @@ namespace iTextSharp.text
         /// Gets the blue component value of this <see cref="T:System.Drawing.Color"/> structure.
         /// </summary>
         /// <value>The blue component value of this <see cref="T:System.Drawing.Color"/> structure.</value>
-        public int B
-        {
-            get
-            {
-                return _color.B;
-            }
-        }
+        public int B => _color.B;
 
         /// <summary>
         /// Gets the green component value of this <see cref="T:System.Drawing.Color"/> structure.
         /// </summary>
         /// <value>The green component value of this <see cref="T:System.Drawing.Color"/> structure.</value>
-        public int G
-        {
-            get
-            {
-                return _color.G;
-            }
-        }
+        public int G => _color.G;
 
         /// <summary>
         /// Gets the red component value of this <see cref="T:System.Drawing.Color"/> structure.
         /// </summary>
         /// <value>The red component value of this <see cref="T:System.Drawing.Color"/> structure.</value>
-        public int R
-        {
-            get
-            {
-                return _color.R;
-            }
-        }
+        public int R => _color.R;
+
         public BaseColor Brighter()
         {
             int r = _color.R;

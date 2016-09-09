@@ -87,8 +87,6 @@ namespace iTextSharp.text
         /// <summary>This is the title of the Annotation.</summary>
         protected Hashtable AnnotationAttributes = new Hashtable();
 
-        /// <summary>This is the type of annotation.</summary>
-        protected int Annotationtype;
         /// <summary>This is the lower left x-value</summary>
         private float _llx = float.NaN;
         /// <summary>This is the lower left y-value</summary>
@@ -104,7 +102,7 @@ namespace iTextSharp.text
 
         public Annotation(Annotation an)
         {
-            Annotationtype = an.Annotationtype;
+            AnnotationType = an.AnnotationType;
             AnnotationAttributes = an.AnnotationAttributes;
             _llx = an._llx;
             _lly = an._lly;
@@ -119,7 +117,7 @@ namespace iTextSharp.text
         /// <param name="text">the content of the annotation</param>
         public Annotation(string title, string text)
         {
-            Annotationtype = TEXT;
+            AnnotationType = TEXT;
             AnnotationAttributes[TITLE] = title;
             AnnotationAttributes[CONTENT] = text;
         }
@@ -135,7 +133,7 @@ namespace iTextSharp.text
         /// <param name="ury">the upper right y-value</param>
         public Annotation(string title, string text, float llx, float lly, float urx, float ury) : this(llx, lly, urx, ury)
         {
-            Annotationtype = TEXT;
+            AnnotationType = TEXT;
             AnnotationAttributes[TITLE] = title;
             AnnotationAttributes[CONTENT] = text;
         }
@@ -150,7 +148,7 @@ namespace iTextSharp.text
         /// <param name="url">the external reference</param>
         public Annotation(float llx, float lly, float urx, float ury, Uri url) : this(llx, lly, urx, ury)
         {
-            Annotationtype = URL_NET;
+            AnnotationType = URL_NET;
             AnnotationAttributes[URL] = url;
         }
 
@@ -164,7 +162,7 @@ namespace iTextSharp.text
         /// <param name="url">the external reference</param>
         public Annotation(float llx, float lly, float urx, float ury, string url) : this(llx, lly, urx, ury)
         {
-            Annotationtype = URL_AS_STRING;
+            AnnotationType = URL_AS_STRING;
             AnnotationAttributes[FILE] = url;
         }
 
@@ -179,7 +177,7 @@ namespace iTextSharp.text
         /// <param name="dest">the destination in this file</param>
         public Annotation(float llx, float lly, float urx, float ury, string file, string dest) : this(llx, lly, urx, ury)
         {
-            Annotationtype = FILE_DEST;
+            AnnotationType = FILE_DEST;
             AnnotationAttributes[FILE] = file;
             AnnotationAttributes[DESTINATION] = dest;
         }
@@ -197,7 +195,7 @@ namespace iTextSharp.text
         public Annotation(float llx, float lly, float urx, float ury,
             string moviePath, string mimeType, bool showOnDisplay) : this(llx, lly, urx, ury)
         {
-            Annotationtype = SCREEN;
+            AnnotationType = SCREEN;
             AnnotationAttributes[FILE] = moviePath;
             AnnotationAttributes[MIMETYPE] = mimeType;
             AnnotationAttributes[PARAMETERS] = new[] { false /* embedded */, showOnDisplay };
@@ -214,7 +212,7 @@ namespace iTextSharp.text
         /// <param name="page">a page number in this file</param>
         public Annotation(float llx, float lly, float urx, float ury, string file, int page) : this(llx, lly, urx, ury)
         {
-            Annotationtype = FILE_PAGE;
+            AnnotationType = FILE_PAGE;
             AnnotationAttributes[FILE] = file;
             AnnotationAttributes[PAGE] = page;
         }
@@ -232,7 +230,7 @@ namespace iTextSharp.text
         /// </overloads>
         public Annotation(float llx, float lly, float urx, float ury, int named) : this(llx, lly, urx, ury)
         {
-            Annotationtype = NAMED_DEST;
+            AnnotationType = NAMED_DEST;
             AnnotationAttributes[NAMED] = named;
         }
 
@@ -249,7 +247,7 @@ namespace iTextSharp.text
         /// <param name="defaultdir">the default directory to run this application in</param>
         public Annotation(float llx, float lly, float urx, float ury, string application, string parameters, string operation, string defaultdir) : this(llx, lly, urx, ury)
         {
-            Annotationtype = LAUNCH;
+            AnnotationType = LAUNCH;
             AnnotationAttributes[APPLICATION] = application;
             AnnotationAttributes[PARAMETERS] = parameters;
             AnnotationAttributes[OPERATION] = operation;
@@ -278,13 +276,7 @@ namespace iTextSharp.text
         /// Returns the type of this Annotation.
         /// </summary>
         /// <value>a type</value>
-        public int AnnotationType
-        {
-            get
-            {
-                return Annotationtype;
-            }
-        }
+        public int AnnotationType { get; }
 
         /// <summary>
         /// Gets the content of this Annotation.
@@ -493,10 +485,6 @@ namespace iTextSharp.text
             _lly = lly;
             _urx = urx;
             _ury = ury;
-        }
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

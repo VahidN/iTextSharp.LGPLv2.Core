@@ -148,7 +148,7 @@ namespace iTextSharp.text.pdf
         /// <param name="writer">the document  PdfWriter </param>
         /// <param name="box">the field location and dimensions</param>
         /// <param name="fieldName">the field name. If  null  only the widget keys</param>
-        public BaseField(PdfWriter writer, Rectangle box, string fieldName)
+        protected BaseField(PdfWriter writer, Rectangle box, string fieldName)
         {
             this.writer = writer;
             Box = box;

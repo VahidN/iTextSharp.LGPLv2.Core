@@ -31,7 +31,7 @@ namespace iTextSharp.text.pdf
         /// </summary>
         /// <param name="filter">the filter name</param>
         /// <param name="subFilter">the sub-filter name</param>
-        public PdfSigGenericPkcs(PdfName filter, PdfName subFilter) : base(filter, subFilter)
+        protected PdfSigGenericPkcs(PdfName filter, PdfName subFilter) : base(filter, subFilter)
         {
         }
 

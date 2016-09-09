@@ -124,7 +124,7 @@ namespace iTextSharp.text.rtf.parser
 
             if (charset >= 0)
                 rtfFont.SetCharset(charset);
-            if (fontFamily != null && fontFamily.Length > 0)
+            if (!string.IsNullOrEmpty(fontFamily))
                 rtfFont.SetFamily(fontFamily);
             rtfFont.SetRtfDocument(_rtfDoc);
             _importFontMapping[fontNr] = _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString();

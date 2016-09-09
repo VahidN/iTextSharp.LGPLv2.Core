@@ -98,12 +98,12 @@ namespace iTextSharp.text.rtf.parser.destinations
 
             c.SetParser(_rtfParser);
 
-            if (value.Equals(typeof(RtfDestinationInfo)))
+            if (value == typeof(RtfDestinationInfo))
             {
                 ((RtfDestinationInfo)c).SetElementName(destination);
             }
 
-            if (value.Equals(typeof(RtfDestinationStylesheetTable)))
+            if (value == typeof(RtfDestinationStylesheetTable))
             {
                 ((RtfDestinationStylesheetTable)c).SetElementName(destination);
                 ((RtfDestinationStylesheetTable)c).SetType((string)args[1]);

@@ -258,7 +258,7 @@ namespace iTextSharp.text
         /// Constructs an Image-object, using an url.
         /// </summary>
         /// <param name="url">the URL where the image can be found.</param>
-        public Image(Uri url) : base(0, 0)
+        protected Image(Uri url) : base(0, 0)
         {
             this.url = url;
             alignment = DEFAULT;
@@ -269,7 +269,7 @@ namespace iTextSharp.text
         /// Constructs an Image object duplicate.
         /// </summary>
         /// <param name="image">another Image object.</param>
-        public Image(Image image) : base(image)
+        protected Image(Image image) : base(image)
         {
             type = image.type;
             url = image.url;
@@ -1736,7 +1736,7 @@ namespace iTextSharp.text
         private PdfObject simplifyColorspace(PdfArray obj)
         {
             if (obj == null)
-                return obj;
+                return null;
             PdfObject first = obj.GetAsName(0);
             if (PdfName.Calgray.Equals(first))
                 return PdfName.Devicegray;

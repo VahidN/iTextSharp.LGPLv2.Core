@@ -276,7 +276,7 @@ namespace iTextSharp.LGPLv2.Core.System.Encodings
         /// (e.g. if a byte value of 5 is used to encode the character 'x', this
         /// character will be stored at the array index 5.
         /// </summary>
-        private static char[] byteToChar = new char[]
+        private static readonly char[] byteToChar = new char[]
         {
       (char)0 /* byte 0 */  ,
       (char)1 /* byte 1 */  ,
@@ -544,7 +544,7 @@ namespace iTextSharp.LGPLv2.Core.System.Encodings
         /// <summary>
         /// This dictionary is used to resolve byte values for a given character.
         /// </summary>
-        private static Dictionary<char, byte> charToByte = new Dictionary<char, byte>
+        private static readonly Dictionary<char, byte> charToByte = new Dictionary<char, byte>
     {
       { (char)0, 0 },
       { (char)1, 1 },

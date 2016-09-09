@@ -88,7 +88,7 @@ namespace iTextSharp.text
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("FontFactoryImp cannot be null.");
+                    throw new ArgumentNullException(nameof(FontImp), "FontFactoryImp cannot be null.");
                 _fontImp = value;
             }
         }

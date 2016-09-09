@@ -1364,7 +1364,7 @@ namespace iTextSharp.text.pdf
             /// <summary>
             /// email address in Verisign certificates
             /// </summary>
-            public static DerObjectIdentifier E = EmailAddress;
+            public static DerObjectIdentifier E = new DerObjectIdentifier("1.2.840.113549.1.9.1");
 
             /// <summary>
             /// Email address (RSA PKCS#9 extension) - IA5String.

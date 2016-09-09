@@ -241,7 +241,7 @@ namespace iTextSharp.text.pdf
         /// <returns>an array of  byte  representing the conversion according to the font's encoding</returns>
         public static byte[] ConvertToBytes(char char1, string encoding)
         {
-            if (encoding == null || encoding.Length == 0)
+            if (string.IsNullOrEmpty(encoding))
                 return new[] { (byte)char1 };
             IExtraEncoding extra = (IExtraEncoding)ExtraEncodings[encoding.ToLower(CultureInfo.InvariantCulture)];
             if (extra != null)
@@ -283,7 +283,7 @@ namespace iTextSharp.text.pdf
         {
             if (bytes == null)
                 return PdfObject.NOTHING;
-            if (encoding == null || encoding.Length == 0)
+            if (string.IsNullOrEmpty(encoding))
             {
                 char[] c = new char[bytes.Length];
                 for (int k = 0; k < bytes.Length; ++k)

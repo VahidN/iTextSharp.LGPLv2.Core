@@ -314,8 +314,8 @@ namespace iTextSharp.text.pdf
             {
                 if (UseBorderPadding)
                 {
-                    float border = BorderWidthBottom / (UseVariableBorders ? 1f : 2f);
-                    return _paddingBottom + border;
+                    float localBorder = BorderWidthBottom / (UseVariableBorders ? 1f : 2f);
+                    return _paddingBottom + localBorder;
                 }
                 return _paddingBottom;
             }
@@ -332,8 +332,8 @@ namespace iTextSharp.text.pdf
             {
                 if (UseBorderPadding)
                 {
-                    float border = BorderWidthLeft / (UseVariableBorders ? 1f : 2f);
-                    return _paddingLeft + border;
+                    float localBorder = BorderWidthLeft / (UseVariableBorders ? 1f : 2f);
+                    return _paddingLeft + localBorder;
                 }
                 return _paddingLeft;
             }
@@ -350,8 +350,8 @@ namespace iTextSharp.text.pdf
             {
                 if (UseBorderPadding)
                 {
-                    float border = BorderWidthRight / (UseVariableBorders ? 1f : 2f);
-                    return _paddingRight + border;
+                    float localBorder = BorderWidthRight / (UseVariableBorders ? 1f : 2f);
+                    return _paddingRight + localBorder;
                 }
                 return _paddingRight;
             }
@@ -368,8 +368,8 @@ namespace iTextSharp.text.pdf
             {
                 if (UseBorderPadding)
                 {
-                    float border = BorderWidthTop / (UseVariableBorders ? 1f : 2f);
-                    return _paddingTop + border;
+                    float localBorder = BorderWidthTop / (UseVariableBorders ? 1f : 2f);
+                    return _paddingTop + localBorder;
                 }
                 return _paddingTop;
             }

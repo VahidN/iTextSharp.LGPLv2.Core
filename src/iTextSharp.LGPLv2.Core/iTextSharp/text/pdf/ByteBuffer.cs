@@ -31,8 +31,14 @@ namespace iTextSharp.text.pdf
         protected int Count;
         private static readonly byte[] _bytes = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102 };
         private static readonly char[] _chars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        private static byte[][] _byteCache = new byte[_byteCacheSize][];
+        private static byte[][] _byteCache;
         private static int _byteCacheSize;
+
+        static ByteBuffer()
+        {
+            _byteCache = new byte[_byteCacheSize][];
+        }
+
         /// <summary>
         /// Creates new ByteBuffer with capacity 128
         /// </summary>

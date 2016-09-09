@@ -32,7 +32,7 @@ namespace iTextSharp.text.rtf
         /// Constructs a new RtfAddableElement. The Chunk content is
         /// set to an empty string and the font to the default Font().
         /// </summary>
-        public RtfAddableElement() : base("", new Font())
+        protected RtfAddableElement() : base("", new Font())
         {
         }
 

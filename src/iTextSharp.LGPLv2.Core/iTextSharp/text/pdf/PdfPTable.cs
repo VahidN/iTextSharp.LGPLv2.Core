@@ -1073,10 +1073,10 @@ namespace iTextSharp.text.pdf
         {
             if (columnWidth.Length != NumberOfColumns)
                 throw new ArgumentException("Wrong number of columns.");
-            float totalWidth = 0;
+            float localTotalWidth = 0;
             for (int k = 0; k < columnWidth.Length; ++k)
-                totalWidth += columnWidth[k];
-            widthPercentage = totalWidth / (pageSize.Right - pageSize.Left) * 100f;
+                localTotalWidth += columnWidth[k];
+            widthPercentage = localTotalWidth / (pageSize.Right - pageSize.Left) * 100f;
             SetWidths(columnWidth);
         }
 

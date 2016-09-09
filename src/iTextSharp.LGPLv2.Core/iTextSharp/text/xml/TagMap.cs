@@ -17,14 +17,7 @@ namespace iTextSharp.text.xml
         /// <param name="tagfile">the file of tags to parse</param>
         public TagMap(string tagfile)
         {
-            try
-            {
-                Init(tagfile);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            Init(tagfile);
         }
 
         /// <summary>
@@ -32,14 +25,7 @@ namespace iTextSharp.text.xml
         /// </summary>
         public TagMap(XmlDocument xTagfile)
         {
-            try
-            {
-                Init(xTagfile);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            Init(xTagfile);
         }
 
         /// <summary>
@@ -47,15 +33,8 @@ namespace iTextSharp.text.xml
         /// </summary>
         protected void Init(XmlDocument xTagfile)
         {
-            try
-            {
-                AttributeHandler a = new AttributeHandler(this);
-                a.Parse(xTagfile);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            AttributeHandler a = new AttributeHandler(this);
+            a.Parse(xTagfile);
         }
 
         /// <summary>
@@ -64,15 +43,8 @@ namespace iTextSharp.text.xml
         /// <param name="tagfile"></param>
         protected void Init(string tagfile)
         {
-            try
-            {
-                AttributeHandler a = new AttributeHandler(this);
-                a.Parse(tagfile);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            AttributeHandler a = new AttributeHandler(this);
+            a.Parse(tagfile);
         }
 
         class AttributeHandler : ParserBase

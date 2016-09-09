@@ -2702,7 +2702,7 @@ namespace iTextSharp.text.pdf
                 for (int fldIdx = 0; fldIdx < fields.Length; ++fldIdx)
                 {
                     FieldInfo curFld = fields[fldIdx];
-                    if (curFld.FieldType.Equals(typeof(PdfName)))
+                    if (curFld.FieldType == typeof(PdfName))
                     {
                         PdfName name = (PdfName)curFld.GetValue(null);
                         StaticNames[DecodeName(name.ToString())] = name;

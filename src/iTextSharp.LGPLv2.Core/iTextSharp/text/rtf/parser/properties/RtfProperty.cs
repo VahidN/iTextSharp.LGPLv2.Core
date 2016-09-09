@@ -538,7 +538,7 @@ namespace iTextSharp.text.rtf.parser.properties
 
             string propertyName = ctrlWordData.SpecialHandler;
 
-            if (propertyName == null || propertyName.Length == 0) return false;
+            if (string.IsNullOrEmpty(propertyName)) return false;
 
             object propertyValue = GetProperty(propertyName);
             if (propertyValue == null)

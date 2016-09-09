@@ -152,7 +152,7 @@ namespace iTextSharp.text.rtf.document
 
             // if there is no password or the length is 0, then skip this and return "00000000" as default
             // otherwise process the password
-            if (password != null && password.Length > 0)
+            if (!string.IsNullOrEmpty(password))
             {
                 int hi = 0;
                 int lo = 0;

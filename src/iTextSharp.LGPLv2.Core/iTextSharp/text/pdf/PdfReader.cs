@@ -2623,10 +2623,10 @@ namespace iTextSharp.text.pdf
                 ReadDocObjPartial();
                 ReadPages();
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 try { Tokens.Close(); } catch { }
-                throw e;
+                throw;
             }
         }
 
@@ -2883,10 +2883,10 @@ namespace iTextSharp.text.pdf
                         Tokens.ThrowError("Invalid cross-reference entry in this xref subsection");
                 }
             }
-            PdfDictionary trailer = (PdfDictionary)ReadPrObject();
-            PdfNumber xrefSize = (PdfNumber)trailer.Get(PdfName.Size);
+            PdfDictionary localTrailer = (PdfDictionary)ReadPrObject();
+            PdfNumber xrefSize = (PdfNumber)localTrailer.Get(PdfName.Size);
             ensureXrefSize(xrefSize.IntValue * 2);
-            PdfObject xrs = trailer.Get(PdfName.Xrefstm);
+            PdfObject xrs = localTrailer.Get(PdfName.Xrefstm);
             if (xrs != null && xrs.IsNumber())
             {
                 int loc = ((PdfNumber)xrs).IntValue;
@@ -2896,13 +2896,13 @@ namespace iTextSharp.text.pdf
                     NewXrefType = true;
                     _hybridXref = true;
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     Xref = null;
-                    throw e;
+                    throw;
                 }
             }
-            return trailer;
+            return localTrailer;
         }
 
         protected internal bool ReadXRefStream(int ptr)

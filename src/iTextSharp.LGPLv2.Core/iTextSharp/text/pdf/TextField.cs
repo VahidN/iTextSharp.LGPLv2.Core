@@ -199,7 +199,7 @@ namespace iTextSharp.text.pdf
         {
             PdfAppearance app = GetBorderAppearance();
             app.BeginVariableText();
-            if (text == null || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 app.EndVariableText();
                 return app;
@@ -655,7 +655,7 @@ namespace iTextSharp.text.pdf
 
         private static bool checkRtl(string text)
         {
-            if (text == null || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
                 return false;
             char[] cc = text.ToCharArray();
             for (int k = 0; k < cc.Length; ++k)

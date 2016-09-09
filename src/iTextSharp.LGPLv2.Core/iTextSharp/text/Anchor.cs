@@ -98,9 +98,10 @@ namespace iTextSharp.text
         /// <param name="phrase">a  Phrase </param>
         public Anchor(Phrase phrase) : base(phrase)
         {
-            if (phrase is Anchor)
+            var anchor = phrase as Anchor;
+            if (anchor != null)
             {
-                Anchor a = (Anchor)phrase;
+                Anchor a = anchor;
                 Name = a.name;
                 Reference = a.reference;
             }
@@ -178,13 +179,7 @@ namespace iTextSharp.text
         /// Gets the type of the text element.
         /// </summary>
         /// <value>a type</value>
-        public override int Type
-        {
-            get
-            {
-                return Element.ANCHOR;
-            }
-        }
+        public override int Type { get; } = Element.ANCHOR;
 
         /// <summary>
         /// methods

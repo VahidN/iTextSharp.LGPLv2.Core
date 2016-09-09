@@ -230,7 +230,7 @@ namespace iTextSharp.text.pdf
                 if (cell.MaxLines > 0)
                 {
                     string more = cell.ShowTruncation;
-                    if (more != null && more.Length > 0)
+                    if (!string.IsNullOrEmpty(more))
                     {
                         // Denote that the content has been truncated
                         _lastLine = (PdfLine)_lines[_lines.Count - 1];

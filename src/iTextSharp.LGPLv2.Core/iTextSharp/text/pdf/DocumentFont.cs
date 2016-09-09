@@ -665,12 +665,12 @@ namespace iTextSharp.text.pdf
             int dw = 1000;
             if (dwo != null)
                 dw = dwo.IntValue;
-            IntHashtable widths = readWidths((PdfArray)PdfReader.GetPdfObjectRelease(cidft.Get(PdfName.W)));
+            IntHashtable localWidths = readWidths((PdfArray)PdfReader.GetPdfObjectRelease(cidft.Get(PdfName.W)));
             PdfDictionary fontDesc = (PdfDictionary)PdfReader.GetPdfObjectRelease(cidft.Get(PdfName.Fontdescriptor));
             fillFontDesc(fontDesc);
             if (toUniObject != null)
             {
-                fillMetrics(PdfReader.GetStreamBytes((PrStream)toUniObject), widths, dw);
+                fillMetrics(PdfReader.GetStreamBytes((PrStream)toUniObject), localWidths, dw);
             }
         }
 

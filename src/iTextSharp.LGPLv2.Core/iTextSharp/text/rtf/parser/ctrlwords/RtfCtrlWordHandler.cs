@@ -228,7 +228,7 @@ namespace iTextSharp.text.rtf.parser.ctrlwords
                         // If no substitute character, then provide special handling in the destination for the ctrl word.
                         if (data != null)
                         {
-                            foreach (char cc in data.ToCharArray())
+                            foreach (char cc in data)
                             {
                                 handled = dest.HandleCharacter(cc);
                             }

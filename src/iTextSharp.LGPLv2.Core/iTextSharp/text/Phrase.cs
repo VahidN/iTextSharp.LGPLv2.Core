@@ -129,7 +129,7 @@ namespace iTextSharp.text
             this.leading = leading;
             this.font = font;
             /* bugfix by August Detlefsen */
-            if (str != null && str.Length != 0)
+            if (!string.IsNullOrEmpty(str))
             {
                 base.Add(new Chunk(str, font));
             }
@@ -300,7 +300,7 @@ namespace iTextSharp.text
                     ((ArrayList)p).Add(new Chunk(buf.ToString(), symbol));
                 }
             }
-            if (str != null && str.Length != 0)
+            if (!string.IsNullOrEmpty(str))
             {
                 ((ArrayList)p).Add(new Chunk(str, font));
             }

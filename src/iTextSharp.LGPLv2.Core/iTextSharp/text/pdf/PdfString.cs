@@ -179,7 +179,7 @@ namespace iTextSharp.text.pdf
         /// <returns>a  string </returns>
         public string ToUnicodeString()
         {
-            if (encoding != null && encoding.Length != 0)
+            if (!string.IsNullOrEmpty(encoding))
                 return Value;
             GetBytes();
             if (Bytes.Length >= 2 && Bytes[0] == 254 && Bytes[1] == 255)

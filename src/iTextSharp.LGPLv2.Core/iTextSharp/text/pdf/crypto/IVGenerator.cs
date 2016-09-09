@@ -6,7 +6,7 @@ namespace iTextSharp.text.pdf.crypto
     /// An initialization vector generator for a CBC block encryption. It's a random generator based on RC4.
     /// @author Paulo Soares (psoares@consiste.pt)
     /// </summary>
-    public sealed class IvGenerator
+    public static class IvGenerator
     {
 
         private static readonly ArcfourEncryption _rc4;
@@ -22,13 +22,6 @@ namespace iTextSharp.text.pdf.crypto
                 val = (long)((ulong)val >> 8);
             }
             _rc4.PrepareArcfourKey(longBytes);
-        }
-
-        /// <summary>
-        /// Creates a new instance of IVGenerator
-        /// </summary>
-        private IvGenerator()
-        {
         }
 
         /// <summary>

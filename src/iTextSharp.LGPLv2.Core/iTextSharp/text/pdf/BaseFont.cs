@@ -958,7 +958,7 @@ namespace iTextSharp.text.pdf
             else if (noThrow)
                 return null;
             else
-                throw new DocumentException("Font '" + name + "' with '" + encoding + "' is not recognized.");
+                throw new DocumentException($"Font \'{name}\' with \'{encoding}\' is not recognized.");
             if (cached)
             {
                 lock (FontCache)
