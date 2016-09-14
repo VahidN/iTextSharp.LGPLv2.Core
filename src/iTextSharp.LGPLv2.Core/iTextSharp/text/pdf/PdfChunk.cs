@@ -1,4 +1,5 @@
 using System.Collections;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -156,7 +157,7 @@ namespace iTextSharp.text.pdf
 
             Font f = chunk.Font;
             float size = f.Size;
-            if (size == text.Font.UNDEFINED)
+            if (size.ApproxEquals(text.Font.UNDEFINED))
                 size = 12;
             BaseFont = f.BaseFont;
             BaseFont bf = f.BaseFont;

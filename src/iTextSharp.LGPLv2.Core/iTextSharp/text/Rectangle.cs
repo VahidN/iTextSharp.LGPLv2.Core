@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using System.util;
 using iTextSharp.text.pdf;
 
 namespace iTextSharp.text
@@ -714,7 +715,7 @@ namespace iTextSharp.text
                 rotation = rect.rotation;
             if (rect.border != UNDEFINED)
                 border = rect.border;
-            if (rect.borderWidth != UNDEFINED)
+            if (rect.borderWidth.ApproxNotEqual(UNDEFINED))
                 borderWidth = rect.borderWidth;
             if (rect.borderColor != null)
                 borderColor = rect.borderColor;
@@ -728,13 +729,13 @@ namespace iTextSharp.text
                 borderColorTop = rect.borderColorTop;
             if (rect.borderColorBottom != null)
                 borderColorBottom = rect.borderColorBottom;
-            if (rect.borderWidthLeft != UNDEFINED)
+            if (rect.borderWidthLeft.ApproxNotEqual(UNDEFINED))
                 borderWidthLeft = rect.borderWidthLeft;
-            if (rect.borderWidthRight != UNDEFINED)
+            if (rect.borderWidthRight.ApproxNotEqual(UNDEFINED))
                 borderWidthRight = rect.borderWidthRight;
-            if (rect.borderWidthTop != UNDEFINED)
+            if (rect.borderWidthTop.ApproxNotEqual(UNDEFINED))
                 borderWidthTop = rect.borderWidthTop;
-            if (rect.borderWidthBottom != UNDEFINED)
+            if (rect.borderWidthBottom.ApproxNotEqual(UNDEFINED))
                 borderWidthBottom = rect.borderWidthBottom;
             if (useVariableBorders)
                 useVariableBorders = rect.useVariableBorders;
@@ -760,7 +761,7 @@ namespace iTextSharp.text
         private float getVariableBorderWidth(float variableWidthValue, int side)
         {
             if ((border & side) != 0)
-                return variableWidthValue != UNDEFINED ? variableWidthValue : borderWidth;
+                return variableWidthValue.ApproxNotEqual(UNDEFINED) ? variableWidthValue : borderWidth;
             return 0;
         }
 

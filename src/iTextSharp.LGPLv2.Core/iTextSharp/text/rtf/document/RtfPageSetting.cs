@@ -1,4 +1,5 @@
 using System.IO;
+using System.util;
 
 namespace iTextSharp.text.rtf.document
 {
@@ -310,7 +311,7 @@ namespace iTextSharp.text.rtf.document
         /// <returns> True  if the Rectangles equal,  false  otherwise</returns>
         private static bool rectEquals(Rectangle rect1, Rectangle rect2)
         {
-            return (rect1.Width == rect2.Width) && (rect1.Height == rect2.Height);
+            return (rect1.Width.ApproxEquals(rect2.Width)) && (rect1.Height.ApproxEquals(rect2.Height));
         }
 
         /// <summary>

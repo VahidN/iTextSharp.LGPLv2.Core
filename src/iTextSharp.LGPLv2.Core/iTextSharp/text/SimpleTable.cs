@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.util;
 using iTextSharp.text.pdf;
 
 namespace iTextSharp.text
@@ -217,7 +218,7 @@ namespace iTextSharp.text
             float sumWidths = 0f;
             for (int i = 0; i < columns; i++)
             {
-                if (widths[i] == 0)
+                if (widths[i].ApproxEquals(0))
                 {
                     sumWidths = 0;
                     break;
@@ -233,7 +234,7 @@ namespace iTextSharp.text
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    if (widthpercentages[i] == 0)
+                    if (widthpercentages[i].ApproxEquals(0))
                     {
                         sumWidths = 0;
                         break;
@@ -295,7 +296,7 @@ namespace iTextSharp.text
             float sumWidths = 0f;
             for (int i = 0; i < columns; i++)
             {
-                if (widths[i] == 0)
+                if (widths[i].ApproxEquals(0))
                 {
                     sumWidths = 0;
                     break;
@@ -312,7 +313,7 @@ namespace iTextSharp.text
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    if (widthpercentages[i] == 0)
+                    if (widthpercentages[i].ApproxEquals(0))
                     {
                         sumWidths = 0;
                         break;

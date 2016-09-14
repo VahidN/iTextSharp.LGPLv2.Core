@@ -199,7 +199,7 @@ namespace iTextSharp.text
             get
             {
                 float s = _size;
-                if (s == UNDEFINED)
+                if (s.ApproxEquals(UNDEFINED))
                 {
                     s = DEFAULTSIZE;
                 }
@@ -425,7 +425,7 @@ namespace iTextSharp.text
                 {
                     return 1;
                 }
-                if (_size != font.Size)
+                if (_size.ApproxNotEqual(font.Size))
                 {
                     return 2;
                 }
@@ -467,7 +467,7 @@ namespace iTextSharp.text
             if (font == null) return this;
             // size
             float dSize = font._size;
-            if (dSize == UNDEFINED)
+            if (dSize.ApproxEquals(UNDEFINED))
             {
                 dSize = _size;
             }
@@ -656,7 +656,7 @@ namespace iTextSharp.text
         public virtual bool IsStandardFont()
         {
             return (_family == UNDEFINED
-                && _size == UNDEFINED
+                && _size.ApproxEquals(UNDEFINED)
                 && _style == UNDEFINED
                 && _color == null
                 && _baseFont == null);

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.util;
 using System.util.zlib;
 
 namespace iTextSharp.text.pdf.codec
@@ -260,7 +261,7 @@ namespace iTextSharp.text.pdf.codec
                 }
             }
             img.OriginalType = Image.ORIGINAL_TIFF;
-            if (rotation != 0)
+            if (rotation.ApproxNotEqual(0))
                 img.InitialRotation = rotation;
             return img;
         }
@@ -526,7 +527,7 @@ namespace iTextSharp.text.pdf.codec
             }
             if (photometric == TiffConstants.PHOTOMETRIC_MINISWHITE)
                 img.Inverted = true;
-            if (rotation != 0)
+            if (rotation.ApproxNotEqual(0))
                 img.InitialRotation = rotation;
             return img;
         }

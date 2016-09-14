@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
+using System.util;
 using Org.BouncyCastle.X509;
 using Org.BouncyCastle.Crypto;
 
@@ -650,7 +651,7 @@ namespace iTextSharp.text.pdf
                 _writer.AddDirectTemplateSimple(t, new PdfName("n2"));
                 if (_image != null)
                 {
-                    if (_imageScale == 0)
+                    if (_imageScale.ApproxEquals(0))
                     {
                         t.AddImage(_image, Rect.Width, 0, 0, Rect.Height, 0, 0);
                     }
@@ -914,7 +915,7 @@ namespace iTextSharp.text.pdf
         /// <returns>the visibility status of the signature</returns>
         public bool IsInvisible()
         {
-            return (Rect == null || Rect.Width == 0 || Rect.Height == 0);
+            return (Rect == null || Rect.Width.ApproxEquals(0) || Rect.Height.ApproxEquals(0));
         }
 
         /// <summary>

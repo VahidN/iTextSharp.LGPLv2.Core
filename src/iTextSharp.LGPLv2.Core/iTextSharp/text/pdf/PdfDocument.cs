@@ -1387,7 +1387,7 @@ namespace iTextSharp.text.pdf
                     CurrentHeight = IndentTop - ct.YLine;
                     break;
                 }
-                if (IndentTop - CurrentHeight == ct.YLine)
+                if ((IndentTop - CurrentHeight).ApproxEquals(ct.YLine))
                     ++loop;
                 else
                     loop = 0;
@@ -2052,7 +2052,7 @@ namespace iTextSharp.text.pdf
                     if (tr == PdfContentByte.TEXT_RENDER_MODE_STROKE || tr == PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE)
                     {
                         strokeWidth = (float)textRender[1];
-                        if (strokeWidth != 1)
+                        if (strokeWidth.ApproxNotEqual(1))
                             text.SetLineWidth(strokeWidth);
                         strokeColor = (BaseColor)textRender[2];
                         if (strokeColor == null)
@@ -2065,7 +2065,7 @@ namespace iTextSharp.text.pdf
                     rise = (float)fr;
                 if (color != null)
                     text.SetColorFill(color);
-                if (rise != 0)
+                if (rise.ApproxNotEqual(0))
                     text.SetTextRise(rise);
                 if (chunk.IsImage())
                 {
@@ -2087,7 +2087,7 @@ namespace iTextSharp.text.pdf
                 // space adjustment.
                 else if (isJustified && numberOfSpaces > 0 && chunk.IsSpecialEncoding())
                 {
-                    if (hScale != lastHScale)
+                    if (hScale.ApproxNotEqual(lastHScale))
                     {
                         lastHScale = hScale;
                         text.SetWordSpacing(baseWordSpacing / hScale);
@@ -2115,7 +2115,7 @@ namespace iTextSharp.text.pdf
                 }
                 else
                 {
-                    if (isJustified && hScale != lastHScale)
+                    if (isJustified && hScale.ApproxNotEqual(lastHScale))
                     {
                         lastHScale = hScale;
                         text.SetWordSpacing(baseWordSpacing / hScale);
@@ -2124,7 +2124,7 @@ namespace iTextSharp.text.pdf
                     text.ShowText(chunk.ToString());
                 }
 
-                if (rise != 0)
+                if (rise.ApproxNotEqual(0))
                     text.SetTextRise(0);
                 if (color != null)
                     text.ResetRgbColorFill();
@@ -2132,7 +2132,7 @@ namespace iTextSharp.text.pdf
                     text.SetTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL);
                 if (strokeColor != null)
                     text.ResetRgbColorStroke();
-                if (strokeWidth != 1)
+                if (strokeWidth.ApproxNotEqual(1))
                     text.SetLineWidth(1);
                 if (chunk.IsAttribute(Chunk.SKEW) || chunk.IsAttribute(Chunk.HSCALE))
                 {
@@ -2178,7 +2178,7 @@ namespace iTextSharp.text.pdf
             }
 
             // if there isn't enough room for the image on this page, save it for the next page
-            if (CurrentHeight != 0 && IndentTop - CurrentHeight - image.ScaledHeight < IndentBottom)
+            if (CurrentHeight.ApproxNotEqual(0) && IndentTop - CurrentHeight - image.ScaledHeight < IndentBottom)
             {
                 if (!strictImageSequence && ImageWait == null)
                 {
@@ -2186,7 +2186,7 @@ namespace iTextSharp.text.pdf
                     return;
                 }
                 NewPage();
-                if (CurrentHeight != 0 && IndentTop - CurrentHeight - image.ScaledHeight < IndentBottom)
+                if (CurrentHeight.ApproxNotEqual(0) && IndentTop - CurrentHeight - image.ScaledHeight < IndentBottom)
                 {
                     ImageWait = image;
                     return;
@@ -2265,7 +2265,7 @@ namespace iTextSharp.text.pdf
         /// </summary>
         protected internal void AddSpacing(float extraspace, float oldleading, Font f)
         {
-            if (extraspace == 0) return;
+            if (extraspace.ApproxEquals(0)) return;
             if (pageEmpty) return;
             if (CurrentHeight + Line.Height + leading > IndentTop - IndentBottom) return;
             leading = extraspace;

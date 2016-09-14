@@ -486,7 +486,7 @@ namespace iTextSharp.text.pdf.codec
                 else
                     return PdfName.Devicergb;
             }
-            if (_gamma == 1f && !_hasChrm)
+            if (_gamma.ApproxEquals(1f) && !_hasChrm)
             {
                 if ((_colorType & 2) == 0)
                     return PdfName.Devicegray;
@@ -499,7 +499,7 @@ namespace iTextSharp.text.pdf.codec
                 PdfDictionary dic = new PdfDictionary();
                 if ((_colorType & 2) == 0)
                 {
-                    if (_gamma == 1f)
+                    if (_gamma.ApproxEquals(1f))
                         return PdfName.Devicegray;
                     array.Add(PdfName.Calgray);
                     dic.Put(PdfName.Gamma, new PdfNumber(_gamma));
@@ -510,7 +510,7 @@ namespace iTextSharp.text.pdf.codec
                 {
                     PdfObject wp = new PdfLiteral("[1 1 1]");
                     array.Add(PdfName.Calrgb);
-                    if (_gamma != 1f)
+                    if (_gamma.ApproxNotEqual(1f))
                     {
                         PdfArray gm = new PdfArray();
                         PdfNumber n = new PdfNumber(_gamma);

@@ -1,3 +1,4 @@
+using System.util;
 using iTextSharp.text.pdf.interfaces;
 
 namespace iTextSharp.text.pdf.intern
@@ -131,11 +132,11 @@ namespace iTextSharp.text.pdf.intern
                         throw new PdfXConformanceException("Blend mode " + obj + " not allowed.");
                     obj = gs.Get(PdfName.CA);
                     double v = 0.0;
-                    if (obj != null && (v = ((PdfNumber)obj).DoubleValue) != 1.0)
+                    if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(1.0))
                         throw new PdfXConformanceException("Transparency is not allowed: /CA = " + v);
                     obj = gs.Get(PdfName.CA_);
                     v = 0.0;
-                    if (obj != null && (v = ((PdfNumber)obj).DoubleValue) != 1.0)
+                    if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(1.0))
                         throw new PdfXConformanceException("Transparency is not allowed: /ca = " + v);
                     break;
                 case PDFXKEY_LAYER:

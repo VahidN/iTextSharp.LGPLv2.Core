@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -271,7 +272,7 @@ namespace iTextSharp.text.pdf
 
         public bool HasToBeJustified()
         {
-            return ((Alignment == Element.ALIGN_JUSTIFIED || Alignment == Element.ALIGN_JUSTIFIED_ALL) && Width != 0);
+            return ((Alignment == Element.ALIGN_JUSTIFIED || Alignment == Element.ALIGN_JUSTIFIED_ALL) && Width.ApproxNotEqual(0));
         }
 
         /// <summary>

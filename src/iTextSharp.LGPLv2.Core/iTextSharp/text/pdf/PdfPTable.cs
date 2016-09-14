@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.util;
 using iTextSharp.text.pdf.events;
 
 namespace iTextSharp.text.pdf
@@ -559,7 +560,7 @@ namespace iTextSharp.text.pdf
             }
             set
             {
-                if (totalWidth == value)
+                if (totalWidth.ApproxEquals(value))
                     return;
                 totalWidth = value;
                 totalHeight = 0;

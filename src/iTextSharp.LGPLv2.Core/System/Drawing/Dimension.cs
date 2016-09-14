@@ -20,16 +20,16 @@ namespace System.Drawing
     /// </remarks>
     public class Dimension : Dimension2D
     {
-
         /// <summary>
         /// The height dimension. Negative values can be used.
         /// </summary>
-        public int height;
+        public int height { set; get; }
 
         /// <summary>
         /// The width dimension. Negative values can be used.
         /// </summary>
-        public int width;
+        public int width { set; get; }
+
         /// <summary>
         /// Creates an instance of  Dimension  with a width
         /// of zero and a height of zero.
@@ -63,13 +63,7 @@ namespace System.Drawing
         /// Returns the height of this dimension in double precision.
         /// </summary>
         /// <value>the height</value>
-        public override double Height
-        {
-            get
-            {
-                return height;
-            }
-        }
+        public override double Height => height;
 
         /// <summary>
         /// Get/set the size of this  Dimension  object.
@@ -92,13 +86,8 @@ namespace System.Drawing
         /// Returns the width of this dimension in double precision.
         /// </summary>
         /// <value>the width</value>
-        public override double Width
-        {
-            get
-            {
-                return width;
-            }
-        }
+        public override double Width => width;
+
         /// <summary>
         /// Checks whether two dimension objects have equal values.
         /// </summary>

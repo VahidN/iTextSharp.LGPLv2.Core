@@ -1,3 +1,5 @@
+using System.util;
+
 namespace iTextSharp.text.pdf
 {
 
@@ -20,7 +22,7 @@ namespace iTextSharp.text.pdf
 
         public override bool Equals(object obj)
         {
-            return (obj is GrayColor) && ((GrayColor)obj).Gray == Gray;
+            return (obj is GrayColor) && ((GrayColor)obj).Gray.ApproxEquals(Gray);
         }
 
         public override int GetHashCode()

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -58,12 +59,12 @@ namespace iTextSharp.text.pdf
 
         public void Add(float number)
         {
-            if (number != 0)
+            if (number.ApproxNotEqual(0))
             {
                 if (!float.IsNaN(_lastNum))
                 {
                     _lastNum += number;
-                    if (_lastNum != 0)
+                    if (_lastNum.ApproxNotEqual(0))
                     {
                         replaceLast(_lastNum);
                     }

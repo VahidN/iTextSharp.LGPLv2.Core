@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -624,7 +625,7 @@ namespace iTextSharp.text.pdf
             // border
             if (borderStyle == PdfBorderDictionary.STYLE_UNDERLINE)
             {
-                if (borderWidth != 0 && borderColor != null)
+                if (borderWidth.ApproxNotEqual(0) && borderColor != null)
                 {
                     app.SetColorStroke(borderColor);
                     app.SetLineWidth(borderWidth);
@@ -635,7 +636,7 @@ namespace iTextSharp.text.pdf
             }
             else if (borderStyle == PdfBorderDictionary.STYLE_BEVELED)
             {
-                if (borderWidth != 0 && borderColor != null)
+                if (borderWidth.ApproxNotEqual(0) && borderColor != null)
                 {
                     app.SetColorStroke(borderColor);
                     app.SetLineWidth(borderWidth);
@@ -653,7 +654,7 @@ namespace iTextSharp.text.pdf
             }
             else if (borderStyle == PdfBorderDictionary.STYLE_INSET)
             {
-                if (borderWidth != 0 && borderColor != null)
+                if (borderWidth.ApproxNotEqual(0) && borderColor != null)
                 {
                     app.SetColorStroke(borderColor);
                     app.SetLineWidth(borderWidth);
@@ -668,7 +669,7 @@ namespace iTextSharp.text.pdf
             }
             else
             {
-                if (borderWidth != 0 && borderColor != null)
+                if (borderWidth.ApproxNotEqual(0) && borderColor != null)
                 {
                     if (borderStyle == PdfBorderDictionary.STYLE_DASHED)
                         app.SetLineDash(3, 0);

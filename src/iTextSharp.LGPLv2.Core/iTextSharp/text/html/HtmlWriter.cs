@@ -651,7 +651,7 @@ namespace iTextSharp.text.html
                             WriteStart(HtmlTags.CELL);
                         }
                         WriteMarkupAttributes(Markup);
-                        if (cell.BorderWidth != Rectangle.UNDEFINED)
+                        if (cell.BorderWidth.ApproxNotEqual(Rectangle.UNDEFINED))
                         {
                             Write(HtmlTags.BORDERWIDTH, cell.BorderWidth.ToString(CultureInfo.InvariantCulture));
                         }
@@ -770,7 +770,7 @@ namespace iTextSharp.text.html
                         }
                         Write(HtmlTags.CELLPADDING, table.Cellpadding.ToString(CultureInfo.InvariantCulture));
                         Write(HtmlTags.CELLSPACING, table.Cellspacing.ToString(CultureInfo.InvariantCulture));
-                        if (table.BorderWidth != Rectangle.UNDEFINED)
+                        if (table.BorderWidth.ApproxNotEqual(Rectangle.UNDEFINED))
                         {
                             Write(HtmlTags.BORDERWIDTH, table.BorderWidth.ToString(CultureInfo.InvariantCulture));
                         }
@@ -871,9 +871,9 @@ namespace iTextSharp.text.html
             {
                 WriteCssProperty(html.Markup.CSS_KEY_FONTFAMILY, font.Familyname);
 
-                if (font.Size != Font.UNDEFINED)
+                if (font.Size.ApproxNotEqual(Font.UNDEFINED))
                 {
-                    WriteCssProperty(html.Markup.CSS_KEY_FONTSIZE, font.Size + "pt");
+                    WriteCssProperty(html.Markup.CSS_KEY_FONTSIZE, $"{font.Size}pt");
                 }
                 if (font.Color != null)
                 {

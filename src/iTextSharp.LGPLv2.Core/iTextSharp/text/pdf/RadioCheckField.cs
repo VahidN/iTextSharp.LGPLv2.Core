@@ -1,4 +1,5 @@
 using System;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -219,10 +220,10 @@ namespace iTextSharp.text.pdf
             float wt = box.Width - 2 * offX;
             float ht = box.Height - 2 * offX;
             float fsize = fontSize;
-            if (fsize == 0)
+            if (fsize.ApproxEquals(0))
             {
                 float bw = ufont.GetWidthPoint(text, 1);
-                if (bw == 0)
+                if (bw.ApproxEquals(0))
                     fsize = 12;
                 else
                     fsize = wt / bw;

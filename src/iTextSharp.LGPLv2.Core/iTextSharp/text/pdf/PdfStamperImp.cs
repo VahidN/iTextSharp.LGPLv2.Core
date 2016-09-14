@@ -558,7 +558,7 @@ namespace iTextSharp.text.pdf
                     if (!annot.IsUsed())
                     {
                         PdfRectangle rect = (PdfRectangle)annot.Get(PdfName.Rect);
-                        if (rect != null && (rect.Left != 0 || rect.Right != 0 || rect.Top != 0 || rect.Bottom != 0))
+                        if (rect != null && (rect.Left.ApproxNotEqual(0) || rect.Right.ApproxNotEqual(0) || rect.Top.ApproxNotEqual(0) || rect.Bottom.ApproxNotEqual(0)))
                         {
                             int rotation = Reader.GetPageRotation(pageN);
                             Rectangle pageSize = Reader.GetPageSizeWithRotation(pageN);

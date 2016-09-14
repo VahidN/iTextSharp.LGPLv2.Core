@@ -1,4 +1,5 @@
 using System;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -106,7 +107,7 @@ namespace iTextSharp.text.pdf
                 {
                     return 1;
                 }
-                if (Size != pdfFont.Size)
+                if (Size.ApproxNotEqual(pdfFont.Size))
                 {
                     return 2;
                 }

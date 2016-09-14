@@ -383,7 +383,7 @@ namespace iTextSharp.text.rtf.style
             }
 
             float dSize = font.Size;
-            if (dSize == UNDEFINED)
+            if (dSize.ApproxEquals(UNDEFINED))
             {
                 dSize = Size;
             }

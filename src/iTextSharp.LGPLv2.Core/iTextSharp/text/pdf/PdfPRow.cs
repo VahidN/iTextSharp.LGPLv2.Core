@@ -1,4 +1,5 @@
 using System;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -270,7 +271,7 @@ namespace iTextSharp.text.pdf
                     }
                     int status;
                     status = ct.Go(true);
-                    bool thisEmpty = (ct.YLine == y);
+                    bool thisEmpty = (ct.YLine.ApproxEquals(y));
                     if (thisEmpty)
                     {
                         newCell.Column = ColumnText.Duplicate(cell.Column);

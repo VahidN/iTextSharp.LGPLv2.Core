@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -713,7 +714,7 @@ namespace iTextSharp.text.pdf
                 dic.Put(PdfName.Sw, scale);
             if (!scalingType.Equals(PdfName.P))
                 dic.Put(PdfName.S, scalingType);
-            if (leftoverLeft != 0.5f || leftoverBottom != 0.5f)
+            if (leftoverLeft.ApproxNotEqual(0.5f) || leftoverBottom.ApproxNotEqual(0.5f))
             {
                 PdfArray array = new PdfArray(new PdfNumber(leftoverLeft));
                 array.Add(new PdfNumber(leftoverBottom));

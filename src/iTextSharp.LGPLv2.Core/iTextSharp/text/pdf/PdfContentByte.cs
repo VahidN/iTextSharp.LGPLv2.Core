@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using System.util;
 using iTextSharp.text.exceptions;
 using iTextSharp.text.pdf.intern;
 
@@ -942,7 +943,7 @@ namespace iTextSharp.text.pdf
         public PdfPatternPainter CreatePattern(float width, float height, float xstep, float ystep)
         {
             CheckWriter();
-            if (xstep == 0.0f || ystep == 0.0f)
+            if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
                 throw new Exception("XStep or YStep can not be ZERO.");
             PdfPatternPainter painter = new PdfPatternPainter(Writer);
             painter.Width = width;
@@ -979,7 +980,7 @@ namespace iTextSharp.text.pdf
         public PdfPatternPainter CreatePattern(float width, float height, float xstep, float ystep, BaseColor color)
         {
             CheckWriter();
-            if (xstep == 0.0f || ystep == 0.0f)
+            if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
                 throw new Exception("XStep or YStep can not be ZERO.");
             PdfPatternPainter painter = new PdfPatternPainter(Writer, color);
             painter.Width = width;
@@ -1242,13 +1243,13 @@ namespace iTextSharp.text.pdf
             else
                 w = bf.GetWidthPoint(text, State.size);
 
-            if (State.CharSpace != 0.0f && text.Length > 1)
+            if (State.CharSpace.ApproxNotEqual(0.0f) && text.Length > 1)
             {
                 w += State.CharSpace * (text.Length - 1);
             }
 
             int ft = bf.FontType;
-            if (State.WordSpace != 0.0f && (ft == BaseFont.FONT_TYPE_T1 || ft == BaseFont.FONT_TYPE_TT || ft == BaseFont.FONT_TYPE_T3))
+            if (State.WordSpace.ApproxNotEqual(0.0f) && (ft == BaseFont.FONT_TYPE_T1 || ft == BaseFont.FONT_TYPE_TT || ft == BaseFont.FONT_TYPE_T3))
             {
                 for (int i = 0; i < (text.Length - 1); i++)
                 {
@@ -1256,7 +1257,7 @@ namespace iTextSharp.text.pdf
                         w += State.WordSpace;
                 }
             }
-            if (State.Scale != 100.0)
+            if (State.Scale.ApproxNotEqual(100.0f))
                 w = (w * State.Scale) / 100.0f;
 
             //System.out.Println("String width = " + Float.ToString(w));
@@ -1435,7 +1436,7 @@ namespace iTextSharp.text.pdf
             else
             {
                 // the width is set to the width of the element
-                if (rectangle.BorderWidth != text.Rectangle.UNDEFINED)
+                if (rectangle.BorderWidth.ApproxNotEqual(text.Rectangle.UNDEFINED))
                 {
                     SetLineWidth(rectangle.BorderWidth);
                 }
@@ -2403,7 +2404,7 @@ namespace iTextSharp.text.pdf
             // Draw bottom
             if (wb > 0)
             {
-                if (wb != clw)
+                if (wb.ApproxNotEqual(clw))
                     SetLineWidth(clw = wb);
                 if (!cdef || !compareColors(ccol, cb))
                 {
@@ -2422,7 +2423,7 @@ namespace iTextSharp.text.pdf
             // Draw right
             if (wr > 0)
             {
-                if (wr != clw)
+                if (wr.ApproxNotEqual(clw))
                     SetLineWidth(clw = wr);
                 if (!cdef || !compareColors(ccol, cr))
                 {
@@ -2466,7 +2467,7 @@ namespace iTextSharp.text.pdf
             // Draw Left
             if (wl > 0)
             {
-                if (wl != clw)
+                if (wl.ApproxNotEqual(clw))
                     SetLineWidth(wl);
                 if (!cdef || !compareColors(ccol, cl))
                 {
@@ -2747,7 +2748,7 @@ namespace iTextSharp.text.pdf
         {
             if (State.FontDetails == null)
                 throw new Exception("Font and size must be set before writing any text");
-            if (rotation == 0)
+            if (rotation.ApproxNotEqual(0))
             {
                 switch (alignment)
                 {

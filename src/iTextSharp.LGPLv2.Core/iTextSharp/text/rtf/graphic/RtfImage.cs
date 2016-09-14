@@ -1,4 +1,5 @@
 using System.IO;
+using System.util;
 using iTextSharp.LGPLv2.Core.System.NetUtils;
 using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.document.output;
@@ -240,12 +241,12 @@ namespace iTextSharp.text.rtf.graphic
             }
             else
             {
-                if (_width != _plainWidth || _imageType == Image.ORIGINAL_BMP)
+                if (_width.ApproxNotEqual(_plainWidth) || _imageType == Image.ORIGINAL_BMP)
                 {
                     result.Write(_pictureScaledWidth, 0, _pictureScaledWidth.Length);
                     result.Write(t = IntToByteArray((int)(_plainWidth * PixelTwipsFactor)), 0, t.Length);
                 }
-                if (_height != _plainHeight || _imageType == Image.ORIGINAL_BMP)
+                if (_height.ApproxNotEqual(_plainHeight) || _imageType == Image.ORIGINAL_BMP)
                 {
                     result.Write(_pictureScaledHeight, 0, _pictureScaledHeight.Length);
                     result.Write(t = IntToByteArray((int)(_plainHeight * PixelTwipsFactor)), 0, t.Length);

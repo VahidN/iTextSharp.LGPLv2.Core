@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.util;
 using iTextSharp.text.pdf.draw;
 
 namespace iTextSharp.text.pdf
@@ -629,7 +630,7 @@ namespace iTextSharp.text.pdf
                     urx = 20000;
                     break;
             }
-            if (rotation == 0)
+            if (rotation.ApproxEquals(0))
             {
                 llx += x;
                 lly += y;
@@ -689,7 +690,7 @@ namespace iTextSharp.text.pdf
                 Image img = (Image)element;
                 PdfPTable t = new PdfPTable(1);
                 float w = img.WidthPercentage;
-                if (w == 0)
+                if (w.ApproxEquals(0))
                 {
                     t.TotalWidth = img.ScaledWidth;
                     t.LockedWidth = true;
@@ -842,7 +843,7 @@ namespace iTextSharp.text.pdf
                 throw new Exception("ColumnText.go with simulate==false and text==null.");
             if (!simulate)
             {
-                if (ratio == GlobalSpaceCharRatio)
+                if (ratio.ApproxEquals(GlobalSpaceCharRatio))
                     ratio = text.PdfWriter.SpaceCharRatio;
                 else if (ratio < 0.001f)
                     ratio = 0.001f;
@@ -1157,7 +1158,7 @@ namespace iTextSharp.text.pdf
                 float y1 = cLine[k + 1];
                 float x2 = cLine[k + 2];
                 float y2 = cLine[k + 3];
-                if (y1 == y2)
+                if (y1.ApproxEquals(y2))
                     continue;
                 // x = ay + b
                 float a = (x1 - x2) / (y1 - y2);
@@ -1228,7 +1229,7 @@ namespace iTextSharp.text.pdf
             bool repeat = false;
             for (;;)
             {
-                if (repeat && CurrentLeading == 0)
+                if (repeat && CurrentLeading.ApproxEquals(0))
                     return null;
                 repeat = true;
                 float[] x1 = FindLimitsOneLine();

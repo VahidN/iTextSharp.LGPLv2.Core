@@ -1371,7 +1371,7 @@ namespace iTextSharp.text
             {
                 aCell.Border = _defaultCell.Border;
             }
-            if (aCell.BorderWidth == UNDEFINED)
+            if (aCell.BorderWidth.ApproxEquals(UNDEFINED))
             {
                 aCell.BorderWidth = _defaultCell.BorderWidth;
             }

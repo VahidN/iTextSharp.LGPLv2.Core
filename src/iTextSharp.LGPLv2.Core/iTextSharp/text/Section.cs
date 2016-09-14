@@ -784,17 +784,6 @@ namespace iTextSharp.text
         }
 
         /// <summary>
-        /// implementation of the Element-methods
-        /// </summary>
-        /// <summary>
-        /// public methods
-        /// </summary>
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        /// <summary>
         /// Sets the number of this section.
         /// </summary>
         /// <param name="number">the number of this section</param>

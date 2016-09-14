@@ -1,4 +1,5 @@
 using System.IO;
+using System.util;
 using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.style;
 using ST = iTextSharp.text.rtf.style;
@@ -108,7 +109,7 @@ namespace iTextSharp.text.rtf.text
 
             Document.FilterSpecialChar(result, _content, false, _softLineBreaks || Document.GetDocumentSettings().IsAlwaysGenerateSoftLinebreaks());
 
-            if (_superSubScript != 0)
+            if (_superSubScript.ApproxNotEqual(0))
             {
                 result.Write(_fontEndSuperSubscript, 0, _fontEndSuperSubscript.Length);
             }

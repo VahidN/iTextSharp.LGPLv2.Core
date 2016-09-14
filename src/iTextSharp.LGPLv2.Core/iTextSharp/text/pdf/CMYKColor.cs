@@ -1,3 +1,5 @@
+using System.util;
+
 namespace iTextSharp.text.pdf
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace iTextSharp.text.pdf
             if (!(obj is CmykColor))
                 return false;
             CmykColor c2 = (CmykColor)obj;
-            return (Cyan == c2.Cyan && Magenta == c2.Magenta && Yellow == c2.Yellow && Black == c2.Black);
+            return (Cyan.ApproxEquals(c2.Cyan) && Magenta.ApproxEquals(c2.Magenta) && Yellow.ApproxEquals(c2.Yellow) && Black.ApproxEquals(c2.Black));
         }
 
         public override int GetHashCode()

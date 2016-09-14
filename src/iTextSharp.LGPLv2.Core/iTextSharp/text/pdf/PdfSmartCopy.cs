@@ -96,7 +96,6 @@ namespace iTextSharp.text.pdf
         internal class ByteStore
         {
             private readonly byte[] _b;
-            private int _hash;
 
             internal ByteStore(PrStream str)
             {
@@ -126,15 +125,13 @@ namespace iTextSharp.text.pdf
 
             public override int GetHashCode()
             {
-                if (_hash == 0)
+                var hash = 0;
+                int len = _b.Length;
+                for (int k = 0; k < len; ++k)
                 {
-                    int len = _b.Length;
-                    for (int k = 0; k < len; ++k)
-                    {
-                        _hash = _hash * 31 + _b[k];
-                    }
+                    hash = hash * 31 + _b[k];
                 }
-                return _hash;
+                return hash;
             }
 
             private void serArray(PdfArray array, int level, ByteBuffer bb)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -235,7 +236,7 @@ namespace iTextSharp.text.pdf
                 float width = box.Width - 4 * offsetX - _extraMarginLeft;
                 float factor = ufont.GetFontDescriptor(BaseFont.BBOXURY, 1) - ufont.GetFontDescriptor(BaseFont.BBOXLLY, 1);
                 ColumnText ct = new ColumnText(null);
-                if (usize == 0)
+                if (usize.ApproxEquals(0))
                 {
                     usize = h / factor;
                     if (usize > 4)
@@ -275,12 +276,12 @@ namespace iTextSharp.text.pdf
             }
             else
             {
-                if (usize == 0)
+                if (usize.ApproxEquals(0))
                 {
                     float maxCalculatedSize = h / (ufont.GetFontDescriptor(BaseFont.BBOXURX, 1) - ufont.GetFontDescriptor(BaseFont.BBOXLLY, 1));
                     changeFontSize(phrase, 1);
                     float wd = ColumnText.GetWidth(phrase, rtl, 0);
-                    if (wd == 0)
+                    if (wd.ApproxEquals(0))
                         usize = maxCalculatedSize;
                     else
                         usize = Math.Min(maxCalculatedSize, (box.Width - _extraMarginLeft - 4 * offsetX) / wd);
@@ -492,7 +493,7 @@ namespace iTextSharp.text.pdf
                 topChoice = 0;
             BaseFont ufont = RealFont;
             float usize = fontSize;
-            if (usize == 0)
+            if (usize.ApproxEquals(0))
                 usize = 12;
             bool borderExtra = borderStyle == PdfBorderDictionary.STYLE_BEVELED || borderStyle == PdfBorderDictionary.STYLE_INSET;
             float h = box.Height - borderWidth * 2;

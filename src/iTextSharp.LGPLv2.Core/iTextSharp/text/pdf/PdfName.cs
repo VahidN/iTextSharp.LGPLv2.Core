@@ -2713,11 +2713,6 @@ namespace iTextSharp.text.pdf
         }
 
         /// <summary>
-        /// CLASS VARIABLES
-        /// </summary>
-        private int _hash;
-
-        /// <summary>
         /// constructors
         /// </summary>
 
@@ -2809,16 +2804,11 @@ namespace iTextSharp.text.pdf
         /// <returns>a hash code value for this object.</returns>
         public override int GetHashCode()
         {
-            int h = _hash;
-            if (h == 0)
-            {
-                int ptr = 0;
-                int len = Bytes.Length;
-
-                for (int i = 0; i < len; i++)
-                    h = 31 * h + (Bytes[ptr++] & 0xff);
-                _hash = h;
-            }
+            int ptr = 0;
+            int len = Bytes.Length;
+            var h = 0;
+            for (int i = 0; i < len; i++)
+                h = 31 * h + (Bytes[ptr++] & 0xff);
             return h;
         }
 

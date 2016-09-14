@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -247,11 +248,11 @@ namespace iTextSharp.text.pdf
             bool done = false;
             while (!done)
             {
-                if (_top == AUTOMATIC)
+                if (_top.ApproxEquals(AUTOMATIC))
                 {
                     _top = document.GetVerticalPosition(true);
                 }
-                else if (_nextY == AUTOMATIC)
+                else if (_nextY.ApproxEquals(AUTOMATIC))
                 {
                     _nextY = document.GetVerticalPosition(true); // RS - 07/07/2005 - - Get current doc writing position for top of columns on new page.
                 }
@@ -300,7 +301,7 @@ namespace iTextSharp.text.pdf
                 {  // check if we are done because of height
                     _totalHeight += currentHeight;
 
-                    if ((_desiredHeight != AUTOMATIC) && (_totalHeight >= _desiredHeight))
+                    if ((_desiredHeight.ApproxNotEqual(AUTOMATIC)) && (_totalHeight >= _desiredHeight))
                     {
                         _overflow = true;
                         break;
@@ -313,7 +314,7 @@ namespace iTextSharp.text.pdf
                     }
                 }
             }
-            if (_desiredHeight == AUTOMATIC && _columnDefs.Count == 1)
+            if (_desiredHeight.ApproxEquals(AUTOMATIC) && _columnDefs.Count == 1)
             {
                 currentHeight = documentY - _columnText.YLine;
             }
@@ -323,7 +324,7 @@ namespace iTextSharp.text.pdf
         private void newPage()
         {
             ResetCurrentColumn();
-            if (_desiredHeight == AUTOMATIC)
+            if (_desiredHeight.ApproxEquals(AUTOMATIC))
             {
                 _top = _nextY = AUTOMATIC;
             }
@@ -431,7 +432,7 @@ namespace iTextSharp.text.pdf
         /// <returns>the y position of the bottom of the columns</returns>
         private float getColumnBottom()
         {
-            if (_desiredHeight == AUTOMATIC)
+            if (_desiredHeight.ApproxEquals(AUTOMATIC))
             {
                 return _document.Bottom;
             }
@@ -552,11 +553,6 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
         /// <summary>
         /// Inner class used to define a column
         /// </summary>
@@ -580,7 +576,7 @@ namespace iTextSharp.text.pdf
                 _left[0] = leftPosition; // x1
                 _left[1] = mc._top;          // y1
                 _left[2] = leftPosition; // x2
-                if (mc._desiredHeight == AUTOMATIC || mc._top == AUTOMATIC)
+                if (mc._desiredHeight.ApproxEquals(AUTOMATIC) || mc._top.ApproxEquals(AUTOMATIC))
                 {
                     _left[3] = AUTOMATIC;
                 }
@@ -593,7 +589,7 @@ namespace iTextSharp.text.pdf
                 _right[0] = rightPosition; // x1
                 _right[1] = mc._top;           // y1
                 _right[2] = rightPosition; // x2
-                if (mc._desiredHeight == AUTOMATIC || mc._top == AUTOMATIC)
+                if (mc._desiredHeight.ApproxEquals(AUTOMATIC) || mc._top.ApproxEquals(AUTOMATIC))
                 {
                     _right[3] = AUTOMATIC;
                 }
@@ -629,7 +625,7 @@ namespace iTextSharp.text.pdf
                     positions[1] = _mc._top;
                     return positions;
                 }
-                if (_mc._top == AUTOMATIC)
+                if (_mc._top.ApproxEquals(AUTOMATIC))
                 {
                     // this is bad - must be programmer error
                     throw new Exception("resolvePositions called with top=AUTOMATIC (-1).  " +
@@ -646,7 +642,7 @@ namespace iTextSharp.text.pdf
             /// <returns>true if it is a simple column</returns>
             internal bool IsSimple()
             {
-                return (_left.Length == 4 && _right.Length == 4) && (_left[0] == _left[2] && _right[0] == _right[2]);
+                return (_left.Length == 4 && _right.Length == 4) && (_left[0].ApproxEquals(_left[2]) && _right[0].ApproxEquals(_right[2]));
             }
 
         }

@@ -329,9 +329,9 @@ namespace iTextSharp.text.xml
                 {
                     cell = c;
                     width = cell.GetWidthAsString();
-                    if (cell.Width == 0)
+                    if (cell.Width.ApproxEquals(0))
                     {
-                        if (cell.Colspan == 1 && cellWidths[j] == 0)
+                        if (cell.Colspan == 1 && cellWidths[j].ApproxEquals(0))
                         {
                             try
                             {
@@ -369,7 +369,7 @@ namespace iTextSharp.text.xml
                     float left = 0.0f;
                     for (int i = 0; i < columns; i++)
                     {
-                        if (cellNulls[i] && widths[i] != 0)
+                        if (cellNulls[i] && widths[i].ApproxNotEqual(0))
                         {
                             left += widths[i];
                             cellWidths[i] = widths[i];
@@ -379,7 +379,7 @@ namespace iTextSharp.text.xml
                     {
                         for (int i = 0; i < widths.Length; i++)
                         {
-                            if (cellWidths[i] == 0 && widths[i] != 0)
+                            if (cellWidths[i].ApproxEquals(0) && widths[i].ApproxNotEqual(0))
                             {
                                 cellWidths[i] = (widths[i] / left) * (100.0f - total);
                             }
@@ -622,7 +622,7 @@ namespace iTextSharp.text.xml
                 float[] widths = table.ProportionalWidths;
                 for (int i = 0; i < widths.Length; i++)
                 {
-                    if (widths[i] == 0)
+                    if (widths[i].ApproxEquals(0))
                     {
                         widths[i] = 100.0f / widths.Length;
                     }

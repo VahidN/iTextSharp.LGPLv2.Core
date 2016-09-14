@@ -1,5 +1,6 @@
 using System.Collections;
 using System.IO;
+using System.util;
 
 namespace iTextSharp.text.pdf
 {
@@ -559,7 +560,7 @@ namespace iTextSharp.text.pdf
                         if (!annot.IsUsed())
                         {
                             PdfRectangle rect = (PdfRectangle)annot.Get(PdfName.Rect);
-                            if (rect != null && (rect.Left != 0 || rect.Right != 0 || rect.Top != 0 || rect.Bottom != 0))
+                            if (rect != null && (rect.Left.ApproxNotEqual(0) || rect.Right.ApproxNotEqual(0) || rect.Top.ApproxNotEqual(0) || rect.Bottom.ApproxNotEqual(0)))
                             {
                                 int rotation = _reader.GetPageRotation(_pageN);
                                 Rectangle pageSize = _reader.GetPageSizeWithRotation(_pageN);
@@ -786,8 +787,8 @@ namespace iTextSharp.text.pdf
         /// </summary>
         protected class RefKey
         {
-            internal int Gen;
-            internal int Num;
+            internal readonly int Gen;
+            internal readonly int Num;
             internal RefKey(int num, int gen)
             {
                 Num = num;
@@ -816,7 +817,7 @@ namespace iTextSharp.text.pdf
             }
             public override string ToString()
             {
-                return "" + Num + " " + Gen;
+                return $"{Num} {Gen}";
             }
         }
     }

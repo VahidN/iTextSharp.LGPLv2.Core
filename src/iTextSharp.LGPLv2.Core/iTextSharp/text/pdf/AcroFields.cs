@@ -240,7 +240,7 @@ namespace iTextSharp.text.pdf
                         if (stack.Count >= 1)
                         {
                             float gray = float.Parse((string)stack[stack.Count - 1], System.Globalization.NumberFormatInfo.InvariantInfo);
-                            if (gray != 0)
+                            if (gray.ApproxNotEqual(0))
                                 ret[DA_COLOR] = new GrayColor(gray);
                         }
                     }
