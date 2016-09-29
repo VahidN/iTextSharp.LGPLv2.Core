@@ -10,6 +10,9 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 {
     public static class TestUtils
     {
+        const string ITextExamplesFolder = "iTextExamples";
+        const string ResourcesFolder = "resources";
+
         public static string Author => "VahidN";
 
         public static string GetBaseDir()
@@ -18,6 +21,18 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             var root = Path.GetDirectoryName(currentAssembly.Location);
             var idx = root.IndexOf($"{Path.DirectorySeparatorChar}bin", StringComparison.OrdinalIgnoreCase);
             return root.Substring(0, idx);
+        }
+
+        public static string GetImagePath(string fileName)
+        {
+
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "img", fileName);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static string GetOutputFileName([CallerMemberName] string methodName = null)
+        {
+            return Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
         }
 
         public static string GetOutputFolder()
@@ -30,17 +45,19 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             return dir;
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static string GetOutputFileName([CallerMemberName] string methodName = null)
+        public static string GetPosterPath(string fileName)
         {
-            return Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "posters", fileName);
         }
 
         public static string GetTahomaFontPath()
         {
-            //TODO: change this for other platforms
-            const string fontsfolder = @"c:\windows\fonts";
-            return Path.Combine(fontsfolder, "tahoma.ttf");
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", "tahoma.ttf");
+        }
+
+        public static string GetTxtPath(string fileName)
+        {
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
         }
 
         public static Font GetUnicodeFont(

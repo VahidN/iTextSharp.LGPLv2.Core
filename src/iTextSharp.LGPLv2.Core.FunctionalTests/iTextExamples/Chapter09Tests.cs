@@ -102,10 +102,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
     {
         public Image GetImage(string src, Hashtable h, ChainedProperties cprops, IDocListener doc)
         {
-            return Image.GetInstance(
-                Path.Combine(TestUtils.GetBaseDir(),
-                $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}posters",
-                Path.GetFileName(src)));
+            var fileName = Path.GetFileName(src);
+            return Image.GetInstance(TestUtils.GetPosterPath(fileName));
         }
     }
 }

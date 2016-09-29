@@ -9,8 +9,6 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
     [TestClass]
     public class Chapter03Tests
     {
-        readonly string _imagePath = Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}img", "loa.jpg");
-
         [TestMethod]
         public void Verify_FestivalOpening_CanBeCreated()
         {
@@ -33,7 +31,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             ) {Alignment = Element.ALIGN_CENTER};
             document.Add(p);
             // Create and add an Image
-            Image img = Image.GetInstance(_imagePath);
+            Image img = Image.GetInstance(TestUtils.GetImagePath("loa.jpg"));
             img.SetAbsolutePosition(
               (PageSize.Postcard.Width - img.ScaledWidth) / 2,
               (PageSize.Postcard.Height - img.ScaledHeight) / 2
@@ -143,7 +141,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.AddAuthor(TestUtils.Author);
             document.Open();
             // step 4
-            Image img = Image.GetInstance(_imagePath);
+            Image img = Image.GetInstance(TestUtils.GetImagePath("loa.jpg"));
             img.SetAbsolutePosition(
               (PageSize.Postcard.Width - img.ScaledWidth) / 2,
               (PageSize.Postcard.Height - img.ScaledHeight) / 2
@@ -178,7 +176,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.AddAuthor(TestUtils.Author);
             document.Open();
             // step 4
-            Image img = Image.GetInstance(_imagePath);
+            Image img = Image.GetInstance(TestUtils.GetImagePath("loa.jpg"));
             img.SetAbsolutePosition(
               (PageSize.Postcard.Width - img.ScaledWidth) / 2,
               (PageSize.Postcard.Height - img.ScaledHeight) / 2
@@ -206,7 +204,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.AddAuthor(TestUtils.Author);
             document.Open();
             // step 4
-            Image img = Image.GetInstance(_imagePath);
+            Image img = Image.GetInstance(TestUtils.GetImagePath("loa.jpg"));
             // Add the image to the upper layer
             writer.DirectContent.AddImage(
               img,

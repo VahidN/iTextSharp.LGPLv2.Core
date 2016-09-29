@@ -414,7 +414,7 @@ namespace iTextSharp.text.pdf
                 data[dataOffset + 2] = (byte)(textLength % 250);
                 k = 3;
             }
-            System.Array.Copy(text, textOffset, data, k + dataOffset, textLength);
+            Array.Copy(text, textOffset, data, k + dataOffset, textLength);
             k += textLength + dataOffset;
             for (j = dataOffset + 1; j < k; ++j)
             {
@@ -666,7 +666,7 @@ namespace iTextSharp.text.pdf
                 case DM_RAW:
                     if (textSize > dataSize)
                         return -1;
-                    System.Array.Copy(text, textOffset, data, dataOffset, textSize);
+                    Array.Copy(text, textOffset, data, dataOffset, textSize);
                     return textSize;
             }
             return -1;

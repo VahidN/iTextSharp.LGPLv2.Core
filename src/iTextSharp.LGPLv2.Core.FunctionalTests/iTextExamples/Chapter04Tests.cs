@@ -485,10 +485,10 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             // we'll use 4 images in this example
             Image[] img =
                 {
-                  Image.GetInstance(getFilePath("0120903.jpg")),
-                  Image.GetInstance(getFilePath("0290334.jpg")),
-                  Image.GetInstance(getFilePath("0376994.jpg")),
-                  Image.GetInstance(getFilePath("0348150.jpg"))
+                  Image.GetInstance(TestUtils.GetPosterPath("0120903.jpg")),
+                  Image.GetInstance(TestUtils.GetPosterPath("0290334.jpg")),
+                  Image.GetInstance(TestUtils.GetPosterPath("0376994.jpg")),
+                  Image.GetInstance(TestUtils.GetPosterPath("0348150.jpg"))
                 };
             // Creates a table with 6 columns
             PdfPTable table = new PdfPTable(6) {WidthPercentage = 100};
@@ -624,11 +624,6 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             table.AddCell("row 2; cell 1");
             table.AddCell("row 2; cell 2");
             return table;
-        }
-
-        private static string getFilePath(string name)
-        {
-            return Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}posters", $"{name}");
         }
     }
 }

@@ -784,7 +784,7 @@ namespace iTextSharp.text
                     }
                 }
                 while (
-                    (i < _rows.Count) && (j < _columns) && (((Row)_rows[i]).IsReserved(j) == true)
+                    (i < _rows.Count) && (j < _columns) && (((Row)_rows[i]).IsReserved(j))
                     );
                 _curPosition = new System.Drawing.Point(i, j);
             }
@@ -949,12 +949,12 @@ namespace iTextSharp.text
         /// </summary>
         public void Complete()
         {
-            if (_mTableInserted == true)
+            if (_mTableInserted)
             {
                 mergeInsertedTables();  // integrate tables in the table
                 _mTableInserted = false;
             }
-            if (autoFillEmptyCells == true)
+            if (autoFillEmptyCells)
             {
                 fillEmptyMatrixCells();
             }
@@ -1441,7 +1441,7 @@ namespace iTextSharp.text
                 {
                     for (int j = aLocation.Y; j < (aLocation.Y + dify); j++)
                     {
-                        if (((Row)_rows[i]).IsReserved(j) == true)
+                        if (((Row)_rows[i]).IsReserved(j))
                         {
                             return false;
                         }

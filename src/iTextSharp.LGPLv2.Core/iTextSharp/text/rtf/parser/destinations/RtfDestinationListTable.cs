@@ -265,7 +265,7 @@ namespace iTextSharp.text.rtf.parser.destinations
                 }
                 else if (ctrlWordData.CtrlWord.Equals("levellegal"))
                 {
-                    _currentListLevel.SetLegal(ctrlWordData.Param == "1" ? true : false);
+                    _currentListLevel.SetLegal(ctrlWordData.Param == "1");
                     skipCtrlWord = true;
                     result = true;
                 }

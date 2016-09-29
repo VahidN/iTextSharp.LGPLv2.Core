@@ -221,7 +221,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.AddAuthor(TestUtils.Author);
             document.Open();
             // step 4
-            var img = Image.GetInstance(Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}img", "hitchcock.png"));
+            var img = Image.GetInstance(TestUtils.GetImagePath("hitchcock.png"));
             float w = img.ScaledWidth;
             float h = img.ScaledHeight;
             PdfTemplate t = writer.DirectContent.CreateTemplate(850, 600);

@@ -759,7 +759,7 @@ namespace System.util.collections
             {
                 if (_pre)
                     throw new InvalidOperationException("Current");
-                return _keys == true ? Key : Value;
+                return _keys ? Key : Value;
             }
         }
 
@@ -887,7 +887,7 @@ namespace System.util.collections
             Value = node.Data;
             // ******** testing only ********
 
-            return _keys == true ? node.Key : node.Data;
+            return _keys ? node.Key : node.Data;
         }
 
         public void Reset()
