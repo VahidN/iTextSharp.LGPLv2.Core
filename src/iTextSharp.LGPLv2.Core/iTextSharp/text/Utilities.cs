@@ -204,7 +204,7 @@ namespace iTextSharp.text
             }
             catch
             {
-                return new Uri("file:///" + filename);
+                return new Uri($"file://{filename}");
             }
         }
 
