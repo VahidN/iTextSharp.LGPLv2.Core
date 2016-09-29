@@ -451,7 +451,7 @@ namespace iTextSharp.text.pdf
                 if (parent != null)
                     dic.Put(PdfName.Parent, parent);
                 dic.Put(PdfName.T, new PdfString(name, PdfObject.TEXT_UNICODE));
-                string fname2 = fname + "." + name;
+                string fname2 = $"{fname}.{name}";
                 int coidx = _calculationOrder.IndexOf(fname2);
                 if (coidx >= 0)
                     _calculationOrderRefs[coidx] = ind;

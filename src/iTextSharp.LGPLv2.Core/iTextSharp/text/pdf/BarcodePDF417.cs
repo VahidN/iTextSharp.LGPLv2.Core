@@ -1451,8 +1451,8 @@ namespace iTextSharp.text.pdf
                 return (LOWER + c - 'a');
             if (c == ' ')
                 return (ALPHA + LOWER + MIXED + SPACE);
-            int ms = MixedSet.IndexOf(c);
-            int ps = PunctuationSet.IndexOf(c);
+            int ms = MixedSet.IndexOf(c.ToString(), StringComparison.Ordinal);
+            int ps = PunctuationSet.IndexOf(c.ToString(), StringComparison.Ordinal);
             if (ms < 0 && ps < 0)
                 return (ISBYTE + c);
             if (ms == ps)

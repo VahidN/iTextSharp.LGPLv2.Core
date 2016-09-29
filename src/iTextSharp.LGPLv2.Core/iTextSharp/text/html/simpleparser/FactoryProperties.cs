@@ -127,21 +127,21 @@ namespace iTextSharp.text.html.simpleparser
             int leftMin = 2;
             int rightMin = 2;
 
-            int pos = s.IndexOf('_');
+            int pos = s.IndexOf("_", StringComparison.Ordinal);
             if (pos == -1)
             {
                 return new HyphenationAuto(lang, country, leftMin, rightMin);
             }
             lang = s.Substring(0, pos);
             country = s.Substring(pos + 1);
-            pos = country.IndexOf(',');
+            pos = country.IndexOf(",", StringComparison.Ordinal);
             if (pos == -1)
             {
                 return new HyphenationAuto(lang, country, leftMin, rightMin);
             }
             s = country.Substring(pos + 1);
             country = country.Substring(0, pos);
-            pos = s.IndexOf(',');
+            pos = s.IndexOf(",", StringComparison.Ordinal);
             if (pos == -1)
             {
                 leftMin = int.Parse(s);

@@ -104,7 +104,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
         {
             return Image.GetInstance(
                 Path.Combine(TestUtils.GetBaseDir(),
-                @"iTextExamples\resources\posters",
+                $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}posters",
                 Path.GetFileName(src)));
         }
     }

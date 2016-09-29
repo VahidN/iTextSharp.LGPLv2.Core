@@ -75,11 +75,11 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             PdfTemplate template = content.CreateTemplate(rect.Width, rect.Height);
             template.ConcatCtm(factor, 0, 0, factor, 0, 0);
 
-            var hero = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\txt", "hero.txt");
+            var hero = Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}txt", "hero.txt");
 
             if (!File.Exists(hero))
             {
-                throw new FileNotFoundException(hero + " NOT FOUND!");
+                throw new FileNotFoundException($"{hero} NOT FOUND!");
             }
             var fi = new FileInfo(hero);
             using (var sr = fi.OpenText())

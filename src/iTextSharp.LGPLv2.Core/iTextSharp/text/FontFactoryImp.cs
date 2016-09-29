@@ -252,16 +252,16 @@ namespace iTextSharp.text
                     if (fontname != null)
                     {
                         string tmp;
-                        while (fontname.IndexOf(',') != -1)
+                        while (fontname.IndexOf(",", StringComparison.Ordinal) != -1)
                         {
-                            tmp = fontname.Substring(0, fontname.IndexOf(','));
+                            tmp = fontname.Substring(0, fontname.IndexOf(",", StringComparison.Ordinal));
                             if (IsRegistered(tmp))
                             {
                                 fontname = tmp;
                             }
                             else
                             {
-                                fontname = fontname.Substring(fontname.IndexOf(',') + 1);
+                                fontname = fontname.Substring(fontname.IndexOf(",", StringComparison.Ordinal) + 1);
                             }
                         }
                     }

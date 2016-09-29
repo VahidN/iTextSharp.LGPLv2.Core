@@ -628,7 +628,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
 
         private static string getFilePath(string name)
         {
-            return Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\posters", $"{name}");
+            return Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}posters", $"{name}");
         }
     }
 }

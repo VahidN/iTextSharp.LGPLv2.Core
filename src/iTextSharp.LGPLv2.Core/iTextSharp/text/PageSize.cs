@@ -280,7 +280,7 @@ namespace iTextSharp.text
         public static Rectangle GetRectangle(string name)
         {
             name = name.Trim().ToUpper(System.Globalization.CultureInfo.InvariantCulture);
-            int pos = name.IndexOf(' ');
+            int pos = name.IndexOf(" ", StringComparison.Ordinal);
             if (pos == -1)
             {
                 try

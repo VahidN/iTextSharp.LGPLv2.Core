@@ -284,20 +284,20 @@ namespace iTextSharp.text.xml.simpleparser
             int idx = decl.IndexOf("encoding", StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
                 return null;
-            int idx1 = decl.IndexOf('"', idx);
-            int idx2 = decl.IndexOf('\'', idx);
+            int idx1 = decl.IndexOf("\"", idx, StringComparison.Ordinal);
+            int idx2 = decl.IndexOf("'", idx, StringComparison.Ordinal);
             if (idx1 == idx2)
                 return null;
             if ((idx1 < 0 && idx2 > 0) || (idx2 > 0 && idx2 < idx1))
             {
-                int idx3 = decl.IndexOf('\'', idx2 + 1);
+                int idx3 = decl.IndexOf("'", idx2 + 1, StringComparison.Ordinal);
                 if (idx3 < 0)
                     return null;
                 return decl.Substring(idx2 + 1, idx3 - (idx2 + 1));
             }
             if ((idx2 < 0 && idx1 > 0) || (idx1 > 0 && idx1 < idx2))
             {
-                int idx3 = decl.IndexOf('"', idx1 + 1);
+                int idx3 = decl.IndexOf("\"", idx1 + 1, StringComparison.Ordinal);
                 if (idx3 < 0)
                     return null;
                 return decl.Substring(idx1 + 1, idx3 - (idx1 + 1));
@@ -735,7 +735,7 @@ namespace iTextSharp.text.xml.simpleparser
                             flush();
                             State = TagExamined;
                         }
-                        else if (" \r\n\u0009".IndexOf((char)Character) >= 0)
+                        else if (" \r\n\u0009".IndexOf(((char)Character).ToString(), StringComparison.Ordinal) >= 0)
                         {
                             text.Append(' ');
                         }

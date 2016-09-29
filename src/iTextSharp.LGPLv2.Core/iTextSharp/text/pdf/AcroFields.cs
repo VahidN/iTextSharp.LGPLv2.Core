@@ -1130,8 +1130,8 @@ namespace iTextSharp.text.pdf
         /// <returns> true  if the renaming was successful,  false </returns>
         public bool RenameField(string oldName, string newName)
         {
-            int idx1 = oldName.LastIndexOf('.') + 1;
-            int idx2 = newName.LastIndexOf('.') + 1;
+            int idx1 = oldName.LastIndexOf(".", StringComparison.Ordinal) + 1;
+            int idx2 = newName.LastIndexOf(".", StringComparison.Ordinal) + 1;
             if (idx1 != idx2)
                 return false;
             if (!oldName.Substring(0, idx1).Equals(newName.Substring(0, idx2)))

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Text;
 using System.Globalization;
@@ -359,7 +360,7 @@ namespace iTextSharp.text.xml.simpleparser
         /// </summary>
         public static string DecodeString(string s)
         {
-            int posAmp = s.IndexOf('&');
+            int posAmp = s.IndexOf("&", StringComparison.Ordinal);
             if (posAmp == -1) return s;
 
             int posSc;
@@ -368,18 +369,18 @@ namespace iTextSharp.text.xml.simpleparser
             char replace;
             while (true)
             {
-                posSc = s.IndexOf(';', posAmp);
+                posSc = s.IndexOf(";", posAmp, StringComparison.Ordinal);
                 if (posSc == -1)
                 {
                     buf.Append(s.Substring(posAmp));
                     return buf.ToString();
                 }
-                posA = s.IndexOf('&', posAmp + 1);
+                posA = s.IndexOf("&", posAmp + 1, StringComparison.Ordinal);
                 while (posA != -1 && posA < posSc)
                 {
                     buf.Append(s.Substring(posAmp, posA - posAmp));
                     posAmp = posA;
-                    posA = s.IndexOf('&', posAmp + 1);
+                    posA = s.IndexOf("&", posAmp + 1, StringComparison.Ordinal);
                 }
                 replace = DecodeEntity(s.Substring(posAmp + 1, posSc - (posAmp + 1)));
                 if (s.Length < posSc + 1)
@@ -394,7 +395,7 @@ namespace iTextSharp.text.xml.simpleparser
                 {
                     buf.Append(replace);
                 }
-                posAmp = s.IndexOf('&', posSc);
+                posAmp = s.IndexOf("&", posSc, StringComparison.Ordinal);
                 if (posAmp == -1)
                 {
                     buf.Append(s.Substring(posSc + 1));

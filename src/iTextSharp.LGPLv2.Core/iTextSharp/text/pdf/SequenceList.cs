@@ -98,7 +98,7 @@ namespace iTextSharp.text.pdf
                             }
                             break;
                         case Other:
-                            if (NotOther.IndexOf(c) < 0)
+                            if (NotOther.IndexOf(c.ToString(), StringComparison.Ordinal) < 0)
                                 buf.Append(c);
                             else
                             {

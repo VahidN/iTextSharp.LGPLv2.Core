@@ -167,7 +167,7 @@ namespace iTextSharp.text.pdf
 
         public static string RemoveCrlf(string text)
         {
-            if (text.IndexOf('\n') >= 0 || text.IndexOf('\r') >= 0)
+            if (text.IndexOf("\n", StringComparison.Ordinal) >= 0 || text.IndexOf("\r", StringComparison.Ordinal) >= 0)
             {
                 char[] p = text.ToCharArray();
                 StringBuilder sb = new StringBuilder(p.Length);

@@ -1808,7 +1808,7 @@ namespace iTextSharp.text.pdf
                     {
                         string s = last.ToString();
                         char c;
-                        if (s.Length > 0 && hangingPunctuation.IndexOf((c = s[s.Length - 1])) >= 0)
+                        if (s.Length > 0 && hangingPunctuation.IndexOf((c = s[s.Length - 1]).ToString(), StringComparison.Ordinal) >= 0)
                         {
                             float oldWidth = width;
                             width += last.Font.Width(c) * 0.4f;
@@ -2094,7 +2094,7 @@ namespace iTextSharp.text.pdf
                         text.SetCharacterSpacing(baseCharacterSpacing / hScale);
                     }
                     string s = chunk.ToString();
-                    int idx = s.IndexOf(' ');
+                    int idx = s.IndexOf(" ", StringComparison.Ordinal);
                     if (idx < 0)
                         text.ShowText(s);
                     else
@@ -2102,7 +2102,7 @@ namespace iTextSharp.text.pdf
                         float spaceCorrection = -baseWordSpacing * 1000f / chunk.Font.Size / hScale;
                         PdfTextArray textArray = new PdfTextArray(s.Substring(0, idx));
                         int lastIdx = idx;
-                        while ((idx = s.IndexOf(' ', lastIdx + 1)) >= 0)
+                        while ((idx = s.IndexOf(" ", lastIdx + 1, StringComparison.Ordinal)) >= 0)
                         {
                             textArray.Add(spaceCorrection);
                             textArray.Add(s.Substring(lastIdx, idx - lastIdx));

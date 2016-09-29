@@ -112,7 +112,7 @@ namespace iTextSharp.text.xml
 
             if (Ignore) return;
 
-            if (content.Trim().Length == 0 && content.IndexOf(' ') < 0)
+            if (content.Trim().Length == 0 && content.IndexOf(" ", StringComparison.Ordinal) < 0)
             {
                 return;
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.util;
 
@@ -398,7 +399,7 @@ namespace iTextSharp.text.pdf
             }
             int numberOfSpaces = 0;
             int idx = -1;
-            while ((idx = value.IndexOf(' ', idx + 1)) >= 0)
+            while ((idx = value.IndexOf(" ", idx + 1, StringComparison.Ordinal)) >= 0)
                 ++numberOfSpaces;
             return Width + (value.Length * charSpacing + numberOfSpaces * wordSpacing);
         }

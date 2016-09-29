@@ -816,9 +816,9 @@ namespace iTextSharp.text.html
                         string path = image.Url.ToString();
                         if (Imagepath != null)
                         {
-                            if (path.IndexOf('/') > 0)
+                            if (path.IndexOf("/", StringComparison.Ordinal) > 0)
                             {
-                                path = Imagepath + path.Substring(path.LastIndexOf('/') + 1);
+                                path = Imagepath + path.Substring(path.LastIndexOf("/", StringComparison.Ordinal) + 1);
                             }
                             else
                             {

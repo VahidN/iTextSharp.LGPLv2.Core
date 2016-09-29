@@ -82,7 +82,7 @@ namespace iTextSharp.text.pdf
                     if (page != null)
                     {
                         page = page.Trim();
-                        int idx = page.IndexOf(' ');
+                        int idx = page.IndexOf(" ", StringComparison.Ordinal);
                         int pageNum;
                         if (idx < 0)
                             pageNum = int.Parse(page);
@@ -407,7 +407,7 @@ namespace iTextSharp.text.pdf
                     if (page != null)
                     {
                         page = page.Trim();
-                        int idx = page.IndexOf(' ');
+                        int idx = page.IndexOf(" ", StringComparison.Ordinal);
                         int pageNum;
                         if (idx < 0)
                             pageNum = int.Parse(page);

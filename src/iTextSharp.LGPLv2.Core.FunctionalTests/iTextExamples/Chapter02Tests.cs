@@ -49,7 +49,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
         private Paragraph createParagraph(string msg, string imdb)
         {
             var p = new Paragraph(msg);
-            var imagePath = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\posters", $"{imdb}.jpg");
+            var imagePath = Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}posters", $"{imdb}.jpg");
             var img = Image.GetInstance(imagePath);
             img.ScaleToFit(1000, 72);
             img.RotationDegrees = -30;

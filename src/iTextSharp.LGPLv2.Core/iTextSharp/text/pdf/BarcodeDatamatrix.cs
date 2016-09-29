@@ -1,3 +1,4 @@
+using System;
 using iTextSharp.text.pdf.codec;
 using System.Collections;
 using iTextSharp.LGPLv2.Core.System.Encodings;
@@ -469,7 +470,7 @@ namespace iTextSharp.text.pdf
                     enc[encPtr++] = 1;
                     enc[encPtr++] = 30;
                 }
-                int idx = basic.IndexOf((char)c);
+                int idx = basic.IndexOf(((char)c).ToString(), StringComparison.Ordinal);
                 if (idx >= 0)
                 {
                     enc[encPtr++] = idx + 3;
@@ -479,12 +480,12 @@ namespace iTextSharp.text.pdf
                     enc[encPtr++] = 0;
                     enc[encPtr++] = c;
                 }
-                else if ((idx = shift2.IndexOf((char)c)) >= 0)
+                else if ((idx = shift2.IndexOf(((char)c).ToString(), StringComparison.Ordinal)) >= 0)
                 {
                     enc[encPtr++] = 1;
                     enc[encPtr++] = idx;
                 }
-                else if ((idx = shift3.IndexOf((char)c)) >= 0)
+                else if ((idx = shift3.IndexOf(((char)c).ToString(), StringComparison.Ordinal)) >= 0)
                 {
                     enc[encPtr++] = 2;
                     enc[encPtr++] = idx;
@@ -717,7 +718,7 @@ namespace iTextSharp.text.pdf
             count = 0;
             for (; ptrIn < textLength; ++ptrIn)
             {
-                int i = X12.IndexOf((char)text[ptrIn + textOffset]);
+                int i = X12.IndexOf(((char)text[ptrIn + textOffset]).ToString(), StringComparison.Ordinal);
                 if (i >= 0)
                 {
                     x[ptrIn] = (byte)i;

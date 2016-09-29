@@ -1158,7 +1158,7 @@ namespace iTextSharp.text.pdf
                         {
                             return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
                         }
-                        int idx = modkey.LastIndexOf('/');
+                        int idx = modkey.LastIndexOf("/", StringComparison.Ordinal);
                         if (idx >= 0)
                         {
                             modkey = modkey.Substring(0, idx) + "." + modkey.Substring(idx + 1);

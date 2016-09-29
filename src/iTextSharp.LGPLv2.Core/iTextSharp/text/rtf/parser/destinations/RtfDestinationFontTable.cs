@@ -467,7 +467,7 @@ namespace iTextSharp.text.rtf.parser.destinations
 
                 if (f1.BaseFont != null) break; // found a font, exit the do/while
 
-                pos = fontName.LastIndexOf(' ');    // find the last space
+                pos = fontName.LastIndexOf(" ", StringComparison.Ordinal);    // find the last space
                 if (pos > 0)
                 {
                     fontName = fontName.Substring(0, pos); // truncate it to the last space
@@ -513,9 +513,9 @@ namespace iTextSharp.text.rtf.parser.destinations
             if (_fontName.Length == 0) return;
             if (_fontNr.Length == 0) return;
 
-            if (_fontName.Length > 0 && _fontName.IndexOf(';') >= 0)
+            if (_fontName.Length > 0 && _fontName.IndexOf(";", StringComparison.Ordinal) >= 0)
             {
-                _fontName = _fontName.Substring(0, _fontName.IndexOf(';'));
+                _fontName = _fontName.Substring(0, _fontName.IndexOf(";", StringComparison.Ordinal));
             }
 
             if (RtfParser.IsImport())

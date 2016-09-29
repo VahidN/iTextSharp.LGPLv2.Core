@@ -9,7 +9,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
     [TestClass]
     public class Chapter03Tests
     {
-        readonly string _imagePath = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\img", "loa.jpg");
+        readonly string _imagePath = Path.Combine(TestUtils.GetBaseDir(), $"iTextExamples{Path.DirectorySeparatorChar}resources{Path.DirectorySeparatorChar}img", "loa.jpg");
 
         [TestMethod]
         public void Verify_FestivalOpening_CanBeCreated()

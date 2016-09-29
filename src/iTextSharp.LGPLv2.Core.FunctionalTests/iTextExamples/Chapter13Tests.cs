@@ -24,7 +24,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.AddAuthor(TestUtils.Author);
             document.Open();
             // step 4
-            const string arialTtf = @"c:\windows\fonts\arial.ttf";
+            string arialTtf = TestUtils.GetTahomaFontPath();
             Font font = FontFactory.GetFont(
               arialTtf, BaseFont.CP1252, BaseFont.EMBEDDED, Font.UNDEFINED,
               Font.UNDEFINED, new CmykColor(255, 255, 0, 0)

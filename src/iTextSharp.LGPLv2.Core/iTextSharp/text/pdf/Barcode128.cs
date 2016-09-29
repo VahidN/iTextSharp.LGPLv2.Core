@@ -297,7 +297,7 @@ namespace iTextSharp.text.pdf
                         fontY = -baseline + size;
                     if (codeType == CODE128_RAW)
                     {
-                        int idx = code.IndexOf('\uffff');
+                        int idx = code.IndexOf("\uffff", StringComparison.Ordinal);
                         if (idx < 0)
                             fullCode = "";
                         else
@@ -311,7 +311,7 @@ namespace iTextSharp.text.pdf
                 }
                 if (codeType == CODE128_RAW)
                 {
-                    int idx = code.IndexOf('\uffff');
+                    int idx = code.IndexOf("\uffff", StringComparison.Ordinal);
                     if (idx >= 0)
                         fullCode = code.Substring(0, idx);
                     else
@@ -346,7 +346,7 @@ namespace iTextSharp.text.pdf
                     string ret = "";
                     while (idx >= 0)
                     {
-                        int end = localCode.IndexOf(')', idx);
+                        int end = localCode.IndexOf(")", idx, StringComparison.Ordinal);
                         if (end < 0)
                             throw new ArgumentException("Badly formed UCC string: " + localCode);
                         string sai = localCode.Substring(idx + 1, end - (idx + 1));
@@ -359,7 +359,7 @@ namespace iTextSharp.text.pdf
                         sai = ai.ToString();
                         if (sai.Length == 1)
                             sai = "0" + sai;
-                        idx = localCode.IndexOf('(', end);
+                        idx = localCode.IndexOf("(", end, StringComparison.Ordinal);
                         int next = (idx < 0 ? localCode.Length : idx);
                         ret += sai + localCode.Substring(end + 1, next - (end + 1));
                         if (len < 0)
@@ -386,7 +386,7 @@ namespace iTextSharp.text.pdf
         public static byte[] GetBarsCode128Raw(string text)
         {
             int k;
-            int idx = text.IndexOf('\uffff');
+            int idx = text.IndexOf("\uffff", StringComparison.Ordinal);
             if (idx >= 0)
                 text = text.Substring(0, idx);
             int chk = text[0];
@@ -445,7 +445,7 @@ namespace iTextSharp.text.pdf
                     }
                     else
                     {
-                        int idx = code.IndexOf(FNC1);
+                        int idx = code.IndexOf(FNC1.ToString(), StringComparison.Ordinal);
                         if (idx < 0)
                             break;
                         buf.Append(code.Substring(0, idx));
@@ -635,7 +635,7 @@ namespace iTextSharp.text.pdf
             string bCode;
             if (codeType == CODE128_RAW)
             {
-                int idx = code.IndexOf('\uffff');
+                int idx = code.IndexOf("\uffff", StringComparison.Ordinal);
                 if (idx >= 0)
                     bCode = code.Substring(0, idx);
                 else
@@ -710,7 +710,7 @@ namespace iTextSharp.text.pdf
             string fullCode;
             if (codeType == CODE128_RAW)
             {
-                int idx = code.IndexOf('\uffff');
+                int idx = code.IndexOf("\uffff", StringComparison.Ordinal);
                 if (idx < 0)
                     fullCode = "";
                 else
@@ -728,7 +728,7 @@ namespace iTextSharp.text.pdf
             string bCode;
             if (codeType == CODE128_RAW)
             {
-                int idx = code.IndexOf('\uffff');
+                int idx = code.IndexOf("\uffff", StringComparison.Ordinal);
                 if (idx >= 0)
                     bCode = code.Substring(0, idx);
                 else

@@ -52,7 +52,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             document.Open();
 
             // step 4
-            const string font = @"c:\windows\fonts\arialbd.ttf";
+            string font = TestUtils.GetTahomaFontPath();
             for (var i = 0; i < 4; i++)
             {
                 var bf = BaseFont.CreateFont(font, movies[i][0], BaseFont.EMBEDDED);

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Collections;
@@ -684,7 +685,7 @@ namespace iTextSharp.text.html.simpleparser
                 _currentParagraph.Add(_factoryProperties.CreateChunk(content, _cprops));
                 return;
             }
-            if (content.Trim().Length == 0 && content.IndexOf(' ') < 0)
+            if (content.Trim().Length == 0 && content.IndexOf(" ", StringComparison.Ordinal) < 0)
             {
                 return;
             }

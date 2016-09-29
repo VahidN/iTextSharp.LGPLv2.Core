@@ -1163,7 +1163,7 @@ namespace iTextSharp.text.pdf
         {
             if (fieldName != null)
             {
-                if (fieldName.IndexOf('.') >= 0)
+                if (fieldName.IndexOf(".", StringComparison.Ordinal) >= 0)
                     throw new ArgumentException("Field names cannot contain a dot.");
                 AcroFields af = _writer.AcroFields;
                 AcroFields.Item item = af.GetFieldItem(fieldName);

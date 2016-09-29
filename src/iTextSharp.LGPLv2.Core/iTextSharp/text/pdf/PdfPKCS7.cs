@@ -1492,7 +1492,7 @@ namespace iTextSharp.text.pdf
                 while (nTok.HasMoreTokens())
                 {
                     string token = nTok.NextToken();
-                    int index = token.IndexOf('=');
+                    int index = token.IndexOf("=", StringComparison.Ordinal);
 
                     if (index == -1)
                     {

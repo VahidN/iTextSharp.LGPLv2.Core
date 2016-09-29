@@ -156,7 +156,7 @@ namespace iTextSharp.text.pdf
             byte[] bars = new byte[text.Length * 10 - 1];
             for (int k = 0; k < text.Length; ++k)
             {
-                int idx = Chars.IndexOf(text[k]);
+                int idx = Chars.IndexOf(text[k].ToString(), StringComparison.Ordinal);
                 if (idx < 0)
                     throw new ArgumentException($"The character \'{text[k]}\' is illegal in code 39.");
                 Array.Copy(_bars[idx], 0, bars, k * 10, 9);
@@ -341,7 +341,7 @@ namespace iTextSharp.text.pdf
             int chk = 0;
             for (int k = 0; k < text.Length; ++k)
             {
-                int idx = Chars.IndexOf(text[k]);
+                int idx = Chars.IndexOf(text[k].ToString(), StringComparison.Ordinal);
                 if (idx < 0)
                     throw new ArgumentException($"The character \'{text[k]}\' is illegal in code 39.");
                 chk += idx;

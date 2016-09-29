@@ -81,7 +81,7 @@ namespace iTextSharp.text.pdf
             {
                 _cidDirect = true;
                 string s = CjkFonts[fontName];
-                s = s.Substring(0, s.IndexOf('_'));
+                s = s.Substring(0, s.IndexOf("_", StringComparison.Ordinal));
                 char[] c = (char[])AllCMaps[s];
                 if (c == null)
                 {

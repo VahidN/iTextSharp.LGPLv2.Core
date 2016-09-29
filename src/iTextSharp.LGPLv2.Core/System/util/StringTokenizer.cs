@@ -41,7 +41,7 @@ namespace System.util
 
             while (tmpPos < _len)
             {
-                if (_delim.IndexOf(_str[tmpPos++]) >= 0)
+                if (_delim.IndexOf(_str[tmpPos++].ToString(), StringComparison.Ordinal) >= 0)
                 {
                     if (tokenFound)
                     {
@@ -54,7 +54,7 @@ namespace System.util
                 {
                     tokenFound = true;
                     while (tmpPos < _len
-                        && _delim.IndexOf(_str[tmpPos]) < 0)
+                        && _delim.IndexOf(_str[tmpPos].ToString(), StringComparison.Ordinal) < 0)
                         ++tmpPos;
                 }
             }
@@ -67,7 +67,7 @@ namespace System.util
         {
             if (!_retDelims)
             {
-                while (_pos < _len && _delim.IndexOf(_str[_pos]) >= 0)
+                while (_pos < _len && _delim.IndexOf(_str[_pos].ToString(), StringComparison.Ordinal) >= 0)
                     _pos++;
             }
             return _pos < _len;
@@ -81,16 +81,16 @@ namespace System.util
 
         public string NextToken()
         {
-            if (_pos < _len && _delim.IndexOf(_str[_pos]) >= 0)
+            if (_pos < _len && _delim.IndexOf(_str[_pos].ToString(), StringComparison.Ordinal) >= 0)
             {
                 if (_retDelims)
                     return _str.Substring(_pos++, 1);
-                while (++_pos < _len && _delim.IndexOf(_str[_pos]) >= 0) ;
+                while (++_pos < _len && _delim.IndexOf(_str[_pos].ToString(), StringComparison.Ordinal) >= 0) ;
             }
             if (_pos < _len)
             {
                 int start = _pos;
-                while (++_pos < _len && _delim.IndexOf(_str[_pos]) < 0) ;
+                while (++_pos < _len && _delim.IndexOf(_str[_pos].ToString(), StringComparison.Ordinal) < 0) ;
 
                 return _str.Substring(start, _pos - start);
             }

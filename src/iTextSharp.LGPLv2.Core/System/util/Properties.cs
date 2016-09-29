@@ -94,7 +94,7 @@ namespace System.util
                     int len = line.Length;
                     int keyStart;
                     for (keyStart = 0; keyStart < len; keyStart++)
-                        if (WhiteSpaceChars.IndexOf(line[keyStart]) == -1)
+                        if (WhiteSpaceChars.IndexOf(line[keyStart].ToString(), StringComparison.Ordinal) == -1)
                             break;
 
                     // Blank lines are ignored
@@ -114,7 +114,7 @@ namespace System.util
                             // Advance beyond whitespace on new line
                             int startIndex;
                             for (startIndex = 0; startIndex < nextLine.Length; startIndex++)
-                                if (WhiteSpaceChars.IndexOf(nextLine[startIndex]) == -1)
+                                if (WhiteSpaceChars.IndexOf(nextLine[startIndex].ToString(), StringComparison.Ordinal) == -1)
                                     break;
                             nextLine = nextLine.Substring(startIndex, nextLine.Length - startIndex);
                             line = loppedLine + nextLine;
@@ -128,25 +128,25 @@ namespace System.util
                             char currentChar = line[separatorIndex];
                             if (currentChar == '\\')
                                 separatorIndex++;
-                            else if (KeyValueSeparators.IndexOf(currentChar) != -1)
+                            else if (KeyValueSeparators.IndexOf(currentChar.ToString(), StringComparison.Ordinal) != -1)
                                 break;
                         }
 
                         // Skip over whitespace after key if any
                         int valueIndex;
                         for (valueIndex = separatorIndex; valueIndex < len; valueIndex++)
-                            if (WhiteSpaceChars.IndexOf(line[valueIndex]) == -1)
+                            if (WhiteSpaceChars.IndexOf(line[valueIndex].ToString(), StringComparison.Ordinal) == -1)
                                 break;
 
                         // Skip over one non whitespace key value separators if any
                         if (valueIndex < len)
-                            if (StrictKeyValueSeparators.IndexOf(line[valueIndex]) != -1)
+                            if (StrictKeyValueSeparators.IndexOf(line[valueIndex].ToString(), StringComparison.Ordinal) != -1)
                                 valueIndex++;
 
                         // Skip over white space after other separators if any
                         while (valueIndex < len)
                         {
-                            if (WhiteSpaceChars.IndexOf(line[valueIndex]) == -1)
+                            if (WhiteSpaceChars.IndexOf(line[valueIndex].ToString(), StringComparison.Ordinal) == -1)
                                 break;
                             valueIndex++;
                         }

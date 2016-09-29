@@ -16,7 +16,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
         {
             var currentAssembly = typeof(TestUtils).GetTypeInfo().Assembly;
             var root = Path.GetDirectoryName(currentAssembly.Location);
-            var idx = root.IndexOf(@"\bin", StringComparison.OrdinalIgnoreCase);
+            var idx = root.IndexOf($"{Path.DirectorySeparatorChar}bin", StringComparison.OrdinalIgnoreCase);
             return root.Substring(0, idx);
         }
 
@@ -38,6 +38,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 
         public static string GetTahomaFontPath()
         {
+            //TODO: change this for other platforms
             const string fontsfolder = @"c:\windows\fonts";
             return Path.Combine(fontsfolder, "tahoma.ttf");
         }

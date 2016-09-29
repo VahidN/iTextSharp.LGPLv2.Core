@@ -424,7 +424,7 @@ namespace iTextSharp.text.pdf
             /// <returns> true  if a similitude was found</returns>
             public bool IsSimilar(string name)
             {
-                int idx = name.IndexOf('[');
+                int idx = name.IndexOf("[", StringComparison.Ordinal);
                 name = name.Substring(0, idx + 1);
                 foreach (string n in Part)
                 {
@@ -569,7 +569,7 @@ namespace iTextSharp.text.pdf
             /// <returns>the escaped string</returns>
             public static string EscapeSom(string s)
             {
-                int idx = s.IndexOf('.');
+                int idx = s.IndexOf(".", StringComparison.Ordinal);
                 if (idx < 0)
                     return s;
                 StringBuilder sb = new StringBuilder();
@@ -579,7 +579,7 @@ namespace iTextSharp.text.pdf
                     sb.Append(s.Substring(last, idx - last));
                     sb.Append('\\');
                     last = idx;
-                    idx = s.IndexOf('.', idx + 1);
+                    idx = s.IndexOf(".", idx + 1, StringComparison.Ordinal);
                 }
                 sb.Append(s.Substring(last));
                 return sb.ToString();
@@ -662,7 +662,7 @@ namespace iTextSharp.text.pdf
                     pos = last;
                     while (true)
                     {
-                        pos = name.IndexOf('.', pos);
+                        pos = name.IndexOf(".", pos, StringComparison.Ordinal);
                         if (pos < 0)
                             break;
                         if (name[pos - 1] == '\\')
@@ -692,7 +692,7 @@ namespace iTextSharp.text.pdf
             /// <returns>the unescaped string</returns>
             public static string UnescapeSom(string s)
             {
-                int idx = s.IndexOf('\\');
+                int idx = s.IndexOf("\\", StringComparison.Ordinal);
                 if (idx < 0)
                     return s;
                 StringBuilder sb = new StringBuilder();
@@ -701,7 +701,7 @@ namespace iTextSharp.text.pdf
                 {
                     sb.Append(s.Substring(last, idx - last));
                     last = idx + 1;
-                    idx = s.IndexOf('\\', idx + 1);
+                    idx = s.IndexOf("\\", idx + 1, StringComparison.Ordinal);
                 }
                 sb.Append(s.Substring(last));
                 return sb.ToString();
@@ -794,7 +794,7 @@ namespace iTextSharp.text.pdf
                 for (int k = 0; k < stack.Count; ++k)
                 {
                     string part = (string)stack[k];
-                    int idx = part.LastIndexOf('[');
+                    int idx = part.LastIndexOf("[", StringComparison.Ordinal);
                     string name = part.Substring(0, idx);
                     idx = int.Parse(part.Substring(idx + 1, part.Length - idx - 2));
                     int found = -1;

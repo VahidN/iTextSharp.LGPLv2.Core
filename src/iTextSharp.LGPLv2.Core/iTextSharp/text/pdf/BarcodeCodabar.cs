@@ -120,7 +120,7 @@ namespace iTextSharp.text.pdf
             int sum = 0;
             int len = text.Length;
             for (int k = 0; k < len; ++k)
-                sum += Chars.IndexOf(text[k]);
+                sum += Chars.IndexOf(text[k].ToString(), StringComparison.Ordinal);
             sum = (sum + 15) / 16 * 16 - sum;
             return code.Substring(0, len - 1) + Chars[sum] + code.Substring(len - 1);
         }
@@ -136,12 +136,12 @@ namespace iTextSharp.text.pdf
             int len = text.Length;
             if (len < 2)
                 throw new ArgumentException("Codabar must have at least a start and stop character.");
-            if (Chars.IndexOf(text[0]) < StartStopIdx || Chars.IndexOf(text[len - 1]) < StartStopIdx)
+            if (Chars.IndexOf(text[0].ToString(), StringComparison.Ordinal) < StartStopIdx || Chars.IndexOf(text[len - 1].ToString(), StringComparison.Ordinal) < StartStopIdx)
                 throw new ArgumentException("Codabar must have one of 'ABCD' as start/stop character.");
             byte[] bars = new byte[text.Length * 8 - 1];
             for (int k = 0; k < len; ++k)
             {
-                int idx = Chars.IndexOf(text[k]);
+                int idx = Chars.IndexOf(text[k].ToString(), StringComparison.Ordinal);
                 if (idx >= StartStopIdx && k > 0 && k < len - 1)
                     throw new ArgumentException("In codabar, start/stop characters are only allowed at the extremes.");
                 if (idx < 0)
