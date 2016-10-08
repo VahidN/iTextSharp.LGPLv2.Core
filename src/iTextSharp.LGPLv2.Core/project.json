@@ -3,7 +3,7 @@
     "authors": [ "Vahid Nasiri" ],
     "packOptions": {
         "owners": [ "Vahid Nasiri" ],
-        "tags": [ "PdfReport", "Excel", "Export", "iTextSharp", "PDF", "Report", "Reporting", "Persian", ".NET Core" ],
+        "tags": [ "PdfReport", "Excel", "Export", "iTextSharp", "PDF", "Report", "Reporting", "Persian", ".NET Core", "aspnetcore" ],
         "licenseUrl": "http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html",
         "projectUrl": "https://github.com/VahidN/iTextSharp.LGPLv2.Core"
     },
