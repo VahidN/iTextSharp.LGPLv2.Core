@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Text;
 
 namespace iTextSharp.text.pdf
@@ -65,7 +66,8 @@ namespace iTextSharp.text.pdf
                     for (int f = 0; f < fsize; ++f)
                     {
                         font = (Font)Fonts[f];
-                        if (font.BaseFont.CharExists(u))
+                        if (font.BaseFont.CharExists(u) ||
+                            CharUnicodeInfo.GetUnicodeCategory(char.ConvertFromUtf32(u), 0) == UnicodeCategory.Format)
                         {
                             if (lastidx != f)
                             {
@@ -88,7 +90,8 @@ namespace iTextSharp.text.pdf
                     for (int f = 0; f < fsize; ++f)
                     {
                         font = (Font)Fonts[f];
-                        if (font.BaseFont.CharExists(c))
+                        if (font.BaseFont.CharExists(c) ||
+                            CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.Format)
                         {
                             if (lastidx != f)
                             {

@@ -124,6 +124,13 @@ namespace iTextSharp.text.pdf
 
         PdfDictionary _rootPages;
         private ArrayList _xrefObj;
+
+        /// <summary>
+        /// Allows reading the pdf file without the owner password.
+        /// </summary>
+        public static bool AllowOpenWithFullPermissions = false;
+
+
         /// <summary>
         /// Reads and parses a PDF document.
         /// @throws IOException on error
@@ -424,7 +431,7 @@ namespace iTextSharp.text.pdf
         {
             get
             {
-                return !Encrypted || _ownerPasswordUsed;
+                return !Encrypted || _ownerPasswordUsed || AllowOpenWithFullPermissions;
             }
         }
 

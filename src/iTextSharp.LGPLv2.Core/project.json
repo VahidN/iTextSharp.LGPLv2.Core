@@ -1,5 +1,5 @@
 {
-    "version": "1.1.2.0",
+    "version": "1.2.0-*",
     "authors": [ "Vahid Nasiri" ],
     "packOptions": {
         "owners": [ "Vahid Nasiri" ],

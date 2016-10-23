@@ -15,7 +15,6 @@ namespace iTextSharp.text.pdf
     /// when the table is rendered.
     /// @author Paulo Soares (psoares@consiste.pt)
     /// </summary>
-
     public class PdfPTable : ILargeElement
     {
 
@@ -53,7 +52,7 @@ namespace iTextSharp.text.pdf
         protected int headerRows;
 
         protected bool IsColspan;
-        protected float[] RelativeWidths;
+
         /// <summary>
         /// Keeps track of the completeness of the current row.
         /// @since    2.1.6
@@ -61,7 +60,9 @@ namespace iTextSharp.text.pdf
         protected bool RowCompleted = true;
 
         protected ArrayList rows = new ArrayList();
+
         protected int runDirection = PdfWriter.RUN_DIRECTION_DEFAULT;
+
         /// <summary>
         /// The spacing after the table.
         /// </summary>
@@ -73,8 +74,11 @@ namespace iTextSharp.text.pdf
         protected float spacingBefore;
 
         protected IPdfPTableEvent tableEvent;
+
         protected float totalHeight;
+
         protected float totalWidth;
+
         /// <summary>
         /// Holds value of property widthPercentage.
         /// </summary>
@@ -118,6 +122,7 @@ namespace iTextSharp.text.pdf
         /// @since    2.1.6
         /// </summary>
         private bool _skipLastFooter;
+
         /// <summary>
         /// Holds value of property splitLate.
         /// </summary>
@@ -127,6 +132,7 @@ namespace iTextSharp.text.pdf
         /// Holds value of property splitRows.
         /// </summary>
         private bool _splitRows = true;
+
         /// <summary>
         /// Constructs a  PdfPTable  with the relative column widths.
         /// </summary>
@@ -187,6 +193,7 @@ namespace iTextSharp.text.pdf
         protected PdfPTable()
         {
         }
+
         /// <summary>
         /// Gets the absolute sizes of each column width.
         /// </summary>
@@ -390,6 +397,11 @@ namespace iTextSharp.text.pdf
                 return RelativeWidths.Length;
             }
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public float[] RelativeWidths { get; private set; }
 
         /// <summary>
         /// Gets an arraylist with all the rows in the table.
