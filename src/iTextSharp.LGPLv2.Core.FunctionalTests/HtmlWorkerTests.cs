@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
+using iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples;
 using iTextSharp.text;
+using iTextSharp.text.html;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -53,6 +56,76 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             fileStream.Dispose();
 
             TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
+
+        [TestMethod]
+        public void Verify_Unicode_Html_To_Pdf_CanBeCreated()
+        {
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var stream = new FileStream(pdfFilePath, FileMode.Create);
+
+            // create a StyleSheet
+            var styles = new StyleSheet();
+            // set the default font's properties
+            styles.LoadTagStyle(HtmlTags.BODY, "encoding", "Identity-H");
+            styles.LoadTagStyle(HtmlTags.BODY, HtmlTags.FONT, "Tahoma");
+            styles.LoadTagStyle(HtmlTags.BODY, "size", "16pt");
+
+
+            FontFactory.Register(TestUtils.GetTahomaFontPath());
+
+            var props = new Hashtable
+            {
+                { "img_provider", new MyImageFactory() },
+                { "font_factory", new UnicodeFontProvider() } // Always use Unicode fonts
+            };
+
+            // step 1
+            var document = new Document();
+            // step 2
+            PdfWriter.GetInstance(document, stream);
+            // step 3
+            document.AddAuthor(TestUtils.Author);
+            document.Open();
+            // step 4
+            var objects = HtmlWorker.ParseToList(
+                new StringReader(createHtmlSnippet()),
+                styles,
+                props
+            );
+            foreach (IElement element in objects)
+            {
+                document.Add(element);
+            }
+
+            document.Close();
+            stream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
+
+        private string createHtmlSnippet()
+        {
+            return @"<b>This is a test</b>
+                     <br/>
+                     <span style='color:blue;font-size:20pt;font-family:tahoma;font-style:italic;font-weight:bold'>
+                        <b>اين يك آزمايش است.<b/>
+                    </span>";
+        }
+    }
+
+    public class UnicodeFontProvider : FontFactoryImp
+    {
+        /// <summary>
+        /// Provides a font with BaseFont.IDENTITY_H encoding.
+        /// </summary>
+        public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color, bool cached)
+        {
+            if(string.IsNullOrWhiteSpace(fontname))
+            {
+                //TODO: set a default font
+            }
+            return FontFactory.GetFont(fontname, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, size, style, color);
         }
     }
 }
