@@ -1507,7 +1507,7 @@ namespace iTextSharp.text.pdf
                     float footerHeight = table.FooterHeight;
 
                     // make sure the header and footer fit on the page
-                    bool skipHeader = (!firstPass && table.SkipFirstHeader && ListIdx <= headerRows);
+                    bool skipHeader =  table.SkipFirstHeader && ListIdx <= realHeaderRows && (table.ElementComplete || ListIdx != realHeaderRows);
                     if (!skipHeader)
                     {
                         yTemp -= headerHeight;
