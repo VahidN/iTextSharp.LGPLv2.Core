@@ -926,9 +926,9 @@ namespace iTextSharp.text.pdf
                 embedded = false;
             else if (encoding.Equals(IDENTITY_H) || encoding.Equals(IDENTITY_V))
                 embedded = true;
-            BaseFont fontFound = null;
-            BaseFont fontBuilt = null;
-            string key = name + "\n" + encoding + "\n" + embedded;
+            BaseFont fontFound;
+            BaseFont fontBuilt;
+            string key = $"{name}\n{encoding}\n{embedded}";
             if (cached)
             {
                 lock (FontCache)
@@ -938,6 +938,7 @@ namespace iTextSharp.text.pdf
                 if (fontFound != null)
                     return fontFound;
             }
+
             if (isBuiltinFonts14 || name.EndsWith(".afm", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".pfm", StringComparison.OrdinalIgnoreCase))
             {
                 fontBuilt = new Type1Font(name, encoding, embedded, ttfAfm, pfb, forceRead);
@@ -959,6 +960,7 @@ namespace iTextSharp.text.pdf
                 return null;
             else
                 throw new DocumentException($"Font \'{name}\' with \'{encoding}\' is not recognized.");
+
             if (cached)
             {
                 lock (FontCache)
@@ -967,6 +969,18 @@ namespace iTextSharp.text.pdf
                     if (fontFound != null)
                         return fontFound;
                     FontCache.Add(key, fontBuilt);
+
+                    string keyNormalized = $"{fontBuilt.PostscriptFontName}\n{encoding}\n{embedded}";
+                    if (!FontCache.ContainsKey(keyNormalized))
+                    {
+                        FontCache.Add(keyNormalized, fontBuilt);
+
+                        var keyNormalizedToLower = $"{fontBuilt.PostscriptFontName.ToLower()}\n{encoding}\n{embedded}";
+                        if (!FontCache.ContainsKey(keyNormalizedToLower))
+                        {
+                            FontCache.Add(keyNormalizedToLower, fontBuilt);
+                        }
+                    }
                 }
             }
             return fontBuilt;

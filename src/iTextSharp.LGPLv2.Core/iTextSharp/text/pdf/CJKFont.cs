@@ -556,6 +556,11 @@ namespace iTextSharp.text.pdf
             {
                 name += ".properties";
                 Stream isp = GetResourceStream(RESOURCE_PATH + name);
+                if(isp == null)
+                {
+                    return null;
+                }
+
                 Properties p = new Properties();
                 p.Load(isp);
                 isp.Dispose();
@@ -622,11 +627,18 @@ namespace iTextSharp.text.pdf
                 try
                 {
                     Stream isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
-                    CjkFonts.Load(isp);
-                    isp.Dispose();
-                    isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
-                    CjkEncodings.Load(isp);
-                    isp.Dispose();
+                    if (isp != null)
+                    {
+                        CjkFonts.Load(isp);
+                        isp.Dispose();
+
+                        isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
+                        if (isp != null)
+                        {
+                            CjkEncodings.Load(isp);
+                            isp.Dispose();
+                        }
+                    }
                 }
                 catch
                 {
