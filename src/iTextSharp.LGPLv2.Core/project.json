@@ -1,5 +1,5 @@
 {
-    "version": "1.2.2-*",
+    "version": "1.2.3-*",
     "authors": [ "Vahid Nasiri" ],
     "packOptions": {
         "owners": [ "Vahid Nasiri" ],
@@ -11,16 +11,16 @@
 
     "dependencies": {
         "CoreCompat.System.Drawing": "1.0.0-beta006",
-        "Microsoft.Extensions.DependencyModel": "1.0.0",
-        "NETStandard.Library": "1.6.0",
+        "Microsoft.Extensions.DependencyModel": "1.1.0",
+        "NETStandard.Library": "1.6.1",
         "Portable.BouncyCastle": "1.8.1.1",
-        "System.Collections.NonGeneric": "4.0.1",
-        "System.Net.Requests": "4.0.11",
-        "System.Reflection.TypeExtensions": "4.1.0",
-        "System.Runtime.Loader": "4.0.0",
-        "System.Security.Cryptography.Algorithms": "4.2.0",
-        "System.Xml.ReaderWriter": "4.0.11",
-        "System.Xml.XmlDocument": "4.0.1"
+        "System.Collections.NonGeneric": "4.3.0",
+        "System.Net.Requests": "4.3.0",
+        "System.Reflection.TypeExtensions": "4.3.0",
+        "System.Runtime.Loader": "4.3.0",
+        "System.Security.Cryptography.Algorithms": "4.3.0",
+        "System.Xml.ReaderWriter": "4.3.0",
+        "System.Xml.XmlDocument": "4.3.0"
     },
 
     "frameworks": {
