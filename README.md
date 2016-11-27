@@ -24,3 +24,11 @@ If you need a more recent version, you either have to make your project open-sou
 Usage
 ------
 [Functional Tests](/src/iTextSharp.LGPLv2.Core.FunctionalTests)
+
+
+Note:
+-----------------
+To run this project on Linux, you will need to install `libgdiplus` too:
+```
+sudo apt-get updatesudo apt-get install libgdiplus
+```
