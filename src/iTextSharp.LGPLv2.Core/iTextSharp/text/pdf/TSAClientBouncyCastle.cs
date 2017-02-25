@@ -167,6 +167,7 @@ namespace iTextSharp.text.pdf
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException("Invalid HTTP response: " + (int)response.StatusCode);
             Stream inp = response.GetResponseStream();
+            string encoding = response.Headers["Content-Encoding"];
 
             MemoryStream baos = new MemoryStream();
             byte[] buffer = new byte[1024];
@@ -179,7 +180,6 @@ namespace iTextSharp.text.pdf
             response.Dispose();
             byte[] respBytes = baos.ToArray();
 
-            string encoding = response.Headers["Content-Encoding"];
             if (encoding != null && Util.EqualsIgnoreCase(encoding, "base64"))
             {
                 respBytes = Convert.FromBase64String(Encoding.ASCII.GetString(respBytes));
