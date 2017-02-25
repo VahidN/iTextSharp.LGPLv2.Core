@@ -3,7 +3,7 @@
     "testRunner": "mstest",
     "dependencies": {
         "dotnet-test-mstest": "1.1.2-preview",
-        "iTextSharp.LGPLv2.Core": "1.2.3-*",
+        "iTextSharp.LGPLv2.Core": "1.2.4-*",
         "MSTest.TestFramework": "1.0.6-preview",
         "NETStandard.Library": "1.6.1"
     },
