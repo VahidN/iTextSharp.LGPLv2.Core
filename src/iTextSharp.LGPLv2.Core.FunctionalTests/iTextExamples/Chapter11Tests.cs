@@ -135,5 +135,33 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
 
             TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
         }
+
+        [TestMethod]
+        public void Verify_Chinese_PDF_File_CanBeCreated()
+        {
+            var pdfDoc = new Document(PageSize.A4);
+
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+            PdfWriter.GetInstance(pdfDoc, fileStream);
+
+            pdfDoc.AddAuthor(TestUtils.Author);
+            pdfDoc.Open();
+
+            var text = "These are the protagonists in 'Hero', a movie by Zhang Yimou:\n"
+                   + "\u7121\u540d (Nameless), \u6b98\u528d (Broken Sword), "
+                   + "\u98db\u96ea (Flying Snow), \u5982\u6708 (Moon), "
+                   + "\u79e6\u738b (the King), and \u9577\u7a7a (Sky).";
+            var chinese = "Chinese: \u5341\u950a\u57cb\u4f0f";
+
+            var tahomaFont = TestUtils.GetUnicodeFont("SimSun", TestUtils.GetSimSunFontPath(), 10, Font.NORMAL, BaseColor.Black);
+            pdfDoc.Add(new Paragraph(text, tahomaFont));
+            pdfDoc.Add(new Paragraph(chinese, tahomaFont));
+
+            pdfDoc.Close();
+            fileStream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
     }
 }
