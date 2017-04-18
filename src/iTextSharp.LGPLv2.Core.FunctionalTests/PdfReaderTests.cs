@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -52,6 +54,30 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             reader.Close();
 
             Assert.AreEqual(expected: 1, actual: blankPages, message: $"{reader.NumberOfPages} page(s) with {blankPages} blank page(s).");
+        }
+
+
+        [TestMethod]
+        public void Test_Extract_Text()
+        {
+            var pdfFile = createSamplePdfFile();
+            var reader = new PdfReader(pdfFile);
+
+            var streamBytes = reader.GetPageContent(1);
+            var tokenizer = new PrTokeniser(new RandomAccessFileOrArray(streamBytes));
+
+            var stringsList = new List<string>();
+            while (tokenizer.NextToken())
+            {
+                if (tokenizer.TokenType == PrTokeniser.TK_STRING)
+                {
+                    stringsList.Add(tokenizer.StringValue);
+                }
+            }
+
+            reader.Close();
+
+            Assert.IsTrue(stringsList.Contains("Hello DNT!"));
         }
 
         private static byte[] createSamplePdfFile()
