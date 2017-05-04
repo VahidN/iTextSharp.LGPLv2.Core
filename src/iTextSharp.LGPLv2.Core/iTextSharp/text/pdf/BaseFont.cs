@@ -6,28 +6,9 @@ using System.Collections;
 using System.util;
 using iTextSharp.text.xml.simpleparser;
 using System.Runtime.Loader;
-using Microsoft.Extensions.DependencyModel;
-using System.Linq;
 
 namespace iTextSharp.text.pdf
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class AssemblyLoader : AssemblyLoadContext
-    {
-        /// <summary>
-        ///
-        /// </summary>
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            var deps = DependencyContext.Default;
-            var res = deps.CompileLibraries.Where(d => d.Name.Contains(assemblyName.Name)).ToList();
-            var assembly = Assembly.Load(new AssemblyName(res.First().Name));
-            return assembly;
-        }
-    }
-
     /// <summary>
     /// Summary description for BaseFont.
     /// </summary>
@@ -313,16 +294,16 @@ namespace iTextSharp.text.pdf
         /// </summary>
         internal int fontType;
 
-        protected internal static ArrayList ResourceSearch = ArrayList.Synchronized(new ArrayList());
+        protected internal static readonly ArrayList ResourceSearch = ArrayList.Synchronized(new ArrayList());
         /// <summary>
         /// list of the 14 built in fonts.
         /// </summary>
-        protected static Hashtable BuiltinFonts14 = new Hashtable();
+        protected static readonly Hashtable BuiltinFonts14 = new Hashtable();
 
         /// <summary>
         /// cache for the fonts already used.
         /// </summary>
-        protected static Hashtable FontCache = new Hashtable();
+        protected static readonly Hashtable FontCache = new Hashtable();
 
         protected int[][] CharBBoxes = new int[256][];
         /// <summary>
@@ -1157,8 +1138,7 @@ namespace iTextSharp.text.pdf
                         string dir = (string)obj;
                         try
                         {
-                            var asl = new AssemblyLoader();
-                            var asm = asl.LoadFromAssemblyPath(dir);
+                            var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(dir);
                             istr = asm.GetManifestResourceStream(key);
                         }
                         catch
