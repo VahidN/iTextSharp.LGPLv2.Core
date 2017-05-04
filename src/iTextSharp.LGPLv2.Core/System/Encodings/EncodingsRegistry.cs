@@ -17,16 +17,7 @@ namespace iTextSharp.LGPLv2.Core.System.Encodings
 
         private EncodingsRegistry()
         {
-            // missing from corefx
-            Encoding.RegisterProvider(new Windows1250EncodingProvider());
-            Encoding.RegisterProvider(new Windows1251EncodingProvider());
-            Encoding.RegisterProvider(new Windows1252EncodingProvider());
-            Encoding.RegisterProvider(new Windows1253EncodingProvider());
-            Encoding.RegisterProvider(new Windows1254EncodingProvider());
-            Encoding.RegisterProvider(new Windows1255EncodingProvider());
-            Encoding.RegisterProvider(new Windows1256EncodingProvider());
-            Encoding.RegisterProvider(new Windows1257EncodingProvider());
-            Encoding.RegisterProvider(new Windows1258EncodingProvider());
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         /// <summary>

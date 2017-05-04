@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description> iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-    <VersionPrefix>1.2.5</VersionPrefix>
+    <VersionPrefix>1.2.6</VersionPrefix>
     <Authors>Vahid Nasiri</Authors>
     <TargetFramework>netstandard1.3</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
@@ -44,6 +44,7 @@
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
