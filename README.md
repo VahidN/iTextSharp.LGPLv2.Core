@@ -14,21 +14,36 @@ PM> Install-Package iTextSharp.LGPLv2.Core
 You can also view the [package page](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/) on NuGet.
 
 
-Licensing
----------
-You have three license choices when it comes to iTextSharp: LGPL/MPL, AGPL, or a commercial license. The LGPL/MPL license is only an option with the older 4.1.6 version (used here). After that version, they switched to a dual AGPL/Commercial.
-
-If you need a more recent version, you either have to make your project open-source or pay the license fee. 
-
-
 Usage
 ------
 [Functional Tests](/src/iTextSharp.LGPLv2.Core.FunctionalTests)
 
 
-Note:
+FAQ
+-----------------
+ > The pdf is created, but when I try to view it is says that the document is in use by another process.
+
+ You should dispose the FileStream/MemoryStream explicitly. It won't be closed and disposed automatically at the end.
+
+ > I can't find what would be the equivalent of PdfTextExtractor class
+
+ PdfTextExtractor exists in v5.0.2+ with AGPL license (Current project is based on the iTextSharp 4.x, not 5.x).
+
+ > It can't display Unicode characters. 
+
+ You can find more samples about how define and use Unicode fonts [here](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/iTextExamples/Chapter11Tests.cs).
+
+
+Note
 -----------------
 To run this project on Linux, you will need to install `libgdiplus` too:
 ```
-sudo apt-get updatesudo apt-get install libgdiplus
+sudo apt-get update
+sudo apt-get install libgdiplus
 ```
+
+Licensing
+---------
+You have three license choices when it comes to iTextSharp: LGPL/MPL, AGPL, or a commercial license. The LGPL/MPL license is only an option with the older 4.1.6 version (used here). After that version, they switched to a dual AGPL/Commercial.
+
+If you need a more recent version, you either have to make your project open-source or pay the license fee. 
