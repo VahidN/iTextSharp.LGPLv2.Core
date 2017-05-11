@@ -21,11 +21,11 @@ Usage
 
 FAQ
 -----------------
- > The pdf is created, but when I try to view it is says that the document is in use by another process.
+ > The pdf is created, but when I try to view it, it says that the document is in use by another process.
 
  You should dispose the FileStream/MemoryStream explicitly. It won't be closed and disposed automatically at the end.
 
- > I can't find what would be the equivalent of PdfTextExtractor class
+ > I can't find what would be the equivalent of the PdfTextExtractor class.
 
  PdfTextExtractor exists in v5.0.2+ with AGPL license (Current project is based on the iTextSharp 4.x, not 5.x).
 
