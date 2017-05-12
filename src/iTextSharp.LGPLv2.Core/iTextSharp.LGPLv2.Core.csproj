@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description> iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-    <VersionPrefix>1.2.6</VersionPrefix>
+    <VersionPrefix>1.2.7</VersionPrefix>
     <Authors>Vahid Nasiri</Authors>
     <TargetFramework>netstandard1.3</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
@@ -35,8 +35,8 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.0" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.2" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Net.Requests" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
