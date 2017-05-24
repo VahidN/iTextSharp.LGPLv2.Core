@@ -23,7 +23,7 @@ FAQ
 -----------------
  > The pdf is created, but when I try to view it, it says that the document is in use by another process.
 
- You should dispose the FileStream/MemoryStream explicitly. It won't be closed and disposed automatically at the end.
+ You should dispose the FileStream/MemoryStream [explicitly](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/iTextExamples/Chapter11Tests.cs#L69). It won't be closed and disposed automatically at the end.
 
  > I can't find what would be the equivalent of the PdfTextExtractor class.
 
@@ -31,7 +31,7 @@ FAQ
 
  > It can't display Unicode characters. 
 
- You can find more samples about how define and use Unicode fonts [here](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/iTextExamples/Chapter11Tests.cs).
+ You can find more samples about how to define and use Unicode fonts [here](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/iTextExamples/Chapter11Tests.cs).
 
 
 Note
