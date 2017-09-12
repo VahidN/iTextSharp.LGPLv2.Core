@@ -37,6 +37,10 @@ FAQ
 
  This version which is based on iTextSharp V4.1.6 doesn't support rowspans correctly (iTextSharp supports row spans correctly since v5.4.3, not before that). A solution based on the current version: use `nested tables` to simulate it.
 
+ > iTextSharp.text.html.simpleparser.HTMLWorker does not exist.
+
+ It has been renamed to [HtmlWorker](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/HtmlWorkerTests.cs#L42).
+ 
 Note
 -----------------
 To run this project on Linux, you will need to install `libgdiplus` too:

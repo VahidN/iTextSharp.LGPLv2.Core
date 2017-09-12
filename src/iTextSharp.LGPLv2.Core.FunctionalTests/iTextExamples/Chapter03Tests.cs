@@ -28,7 +28,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             Paragraph p = new Paragraph(
                 "Foobar Film Festival",
                 new Font(BaseFont.CreateFont(), 22)
-            ) {Alignment = Element.ALIGN_CENTER};
+            )
+            { Alignment = Element.ALIGN_CENTER };
             document.Add(p);
             // Create and add an Image
             Image img = Image.GetInstance(TestUtils.GetImagePath("loa.jpg"));
@@ -150,7 +151,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
             Paragraph p = new Paragraph(
                 "Foobar Film Festival",
                 new Font(BaseFont.CreateFont(), 22)
-            ) {Alignment = Element.ALIGN_CENTER};
+            )
+            { Alignment = Element.ALIGN_CENTER };
             document.Add(p);
 
             document.Close();
