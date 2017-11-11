@@ -105,5 +105,46 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
                 return stream.ToArray();
             }
         }
+
+        [TestMethod]
+        public void Test_Draw_Text()
+        {
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+            var pdfDoc = new Document(PageSize.A4);
+            var pdfWriter = PdfWriter.GetInstance(pdfDoc, fileStream);
+
+            pdfDoc.AddAuthor(TestUtils.Author);
+            pdfDoc.Open();
+
+            pdfDoc.Add(new Paragraph("Test"));
+
+            PdfContentByte cb = pdfWriter.DirectContent;
+            BaseFont bf = BaseFont.CreateFont();
+            cb.BeginText();
+            cb.SetFontAndSize(bf, 12);
+            cb.MoveText(88.66f, 367);
+            cb.ShowText("ld");
+            cb.MoveText(-22f, 0);
+            cb.ShowText("Wor");
+            cb.MoveText(-15.33f, 0);
+            cb.ShowText("llo");
+            cb.MoveText(-15.33f, 0);
+            cb.ShowText("He");
+            cb.EndText();
+
+            PdfTemplate tmp = cb.CreateTemplate(250, 25);
+            tmp.BeginText();
+            tmp.SetFontAndSize(bf, 12);
+            tmp.MoveText(0, 7);
+            tmp.ShowText("Hello People");
+            tmp.EndText();
+            cb.AddTemplate(tmp, 36, 343);
+
+            pdfDoc.Close();
+            fileStream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
     }
 }
