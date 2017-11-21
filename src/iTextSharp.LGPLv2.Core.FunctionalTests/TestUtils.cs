@@ -70,6 +70,11 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
         }
 
+        public static string GetPdfsPath(string fileName)
+        {
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
+        }
+
         public static Font GetUnicodeFont(
                     string fontName, string fontFilePath, float size, int style, BaseColor color)
         {
