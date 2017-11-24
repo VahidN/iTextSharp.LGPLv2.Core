@@ -2634,7 +2634,11 @@ namespace iTextSharp.text.pdf
                 }
             }
 
+#if NETSTANDARD1_3
             public void Close()
+#else
+            public override void Close()
+#endif
             {
                 if (!_closed)
                 {
