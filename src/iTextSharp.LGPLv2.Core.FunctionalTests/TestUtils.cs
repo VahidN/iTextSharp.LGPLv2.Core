@@ -65,6 +65,11 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", "simsun.ttf");
         }
 
+        public static string GetThaiFontPath()
+        {
+            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", "thsarabunnew.ttf");
+        }
+
         public static string GetTxtPath(string fileName)
         {
             return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
