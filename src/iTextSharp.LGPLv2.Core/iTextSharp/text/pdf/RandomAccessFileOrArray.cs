@@ -57,7 +57,17 @@ namespace iTextSharp.text.pdf
                 }
                 else
                 {
-                    Stream isp = BaseFont.GetResourceStream(filename);
+                    //Stream isp = BaseFont.GetResourceStream(filename);
+                    Stream isp = null;
+                    if ("-".Equals(filename))
+                    {
+                        isp = ((StreamReader)Console.In).BaseStream;
+                    }
+                    else
+                    {
+                        isp = BaseFont.GetResourceStream(filename);
+                    }
+
                     if (isp == null)
                         throw new IOException(filename + " not found as file or resource.");
                     try
