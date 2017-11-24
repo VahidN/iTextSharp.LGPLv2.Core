@@ -1,5 +1,7 @@
 iTextSharp.LGPLv2.Core
 ======================
+[![Build Status](https://travis-ci.org/ooKriangsaKoo/iTextSharp.LGPLv2.Core.svg?branch=master)](https://travis-ci.org/ooKriangsaKoo/iTextSharp.LGPLv2.Core)
+
 `iTextSharp.LGPLv2.Core` is an **unofficial** port of the last [LGPL version](http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html) of the [iTextSharp (V4.1.6)](https://github.com/itextsharper/iTextSharp-4.1.6) to .NET Core.
 
 

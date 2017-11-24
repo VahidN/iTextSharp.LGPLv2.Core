@@ -163,5 +163,28 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
 
             TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
         }
+
+        [TestMethod]
+        public void Verify_Thai_PDF_File_CanBeCreated()
+        {
+            var pdfDoc = new Document(PageSize.A4);
+
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+            PdfWriter.GetInstance(pdfDoc, fileStream);
+
+            pdfDoc.AddAuthor(TestUtils.Author);
+            pdfDoc.Open();
+
+            var chinese = "ทดสอบ ภาษาไทย ฝีมือ พึ่ง พ่อ กู รู้ ดู กันต์ ก๋ยวเตี๋ยว";
+
+            var tahomaFont = TestUtils.GetUnicodeFont("THSarabunNew", TestUtils.GetThaiFontPath(), 20, Font.NORMAL, BaseColor.Black);
+            pdfDoc.Add(new Paragraph(chinese, tahomaFont));
+
+            pdfDoc.Close();
+            fileStream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
     }
 }
