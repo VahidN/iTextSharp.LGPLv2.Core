@@ -6,7 +6,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace iTextSharp.text.pdf.crypto
 {
-        /// <summary>
+    /// <summary>
     /// Creates an AES Cipher with CBC and padding PKCS5/7.
     /// @author Paulo Soares (psoares@consiste.pt)
     /// </summary>
@@ -19,7 +19,7 @@ namespace iTextSharp.text.pdf.crypto
         /// </summary>
         public AesCipher(bool forEncryption, byte[] key, byte[] iv)
         {
-            IBlockCipher aes = new AesFastEngine();
+            IBlockCipher aes = new AesEngine();
             IBlockCipher cbc = new CbcBlockCipher(aes);
             _bp = new PaddedBufferedBlockCipher(cbc);
             KeyParameter kp = new KeyParameter(key);

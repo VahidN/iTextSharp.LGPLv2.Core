@@ -7,6 +7,7 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Collections.Generic;
 
 namespace iTextSharp.text.pdf
 {
@@ -62,7 +63,7 @@ namespace iTextSharp.text.pdf
             outp.Dispose();
             HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().Result;
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new IOException($"Invalid HTTP response: {(int) response.StatusCode}");
+                throw new IOException($"Invalid HTTP response: {(int)response.StatusCode}");
             Stream inp = response.GetResponseStream();
             OcspResp ocspResponse = new OcspResp(inp);
             inp.Dispose();
@@ -114,8 +115,8 @@ namespace iTextSharp.text.pdf
             gen.AddRequest(id);
 
             // create details for nonce extension
-            ArrayList oids = new ArrayList();
-            ArrayList values = new ArrayList();
+            var oids = new List<object>();
+            var values = new List<object>();
 
             oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
             values.Add(new X509Extension(false, new DerOctetString(new DerOctetString(PdfEncryption.CreateDocumentId()).GetEncoded())));
