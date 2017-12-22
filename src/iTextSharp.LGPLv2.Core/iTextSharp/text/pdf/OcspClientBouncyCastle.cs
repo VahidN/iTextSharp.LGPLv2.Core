@@ -58,16 +58,30 @@ namespace iTextSharp.text.pdf
             con.ContentType = "application/ocsp-request";
             con.Accept = "application/ocsp-response";
             con.Method = "POST";
+#if NET40
+            Stream outp = con.GetRequestStream();
+#else
             Stream outp = con.GetRequestStreamAsync().Result;
+#endif
             outp.Write(array, 0, array.Length);
             outp.Dispose();
-            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().Result;
+
+#if NET40
+            HttpWebResponse response = (HttpWebResponse)con.GetResponse();
+#else
+            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().GetAwaiter().GetResult();
+#endif
+
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException($"Invalid HTTP response: {(int)response.StatusCode}");
             Stream inp = response.GetResponseStream();
             OcspResp ocspResponse = new OcspResp(inp);
             inp.Dispose();
+#if NET40
+            response.Close();
+#else
             response.Dispose();
+#endif
 
             if (ocspResponse.Status != 0)
                 throw new IOException("Invalid status: " + ocspResponse.Status);

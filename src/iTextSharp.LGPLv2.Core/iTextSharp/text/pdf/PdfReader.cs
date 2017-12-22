@@ -3044,7 +3044,7 @@ namespace iTextSharp.text.pdf
             int top = 0;
             trailer = null;
             byte[] line = new byte[64];
-            for (;;)
+            for (; ; )
             {
                 int pos = Tokens.FilePointer;
                 if (!Tokens.ReadLineSegment(line))
@@ -3502,7 +3502,22 @@ namespace iTextSharp.text.pdf
                     throw new UnsupportedPdfException("Bad certificate and key.");
                 }
 
+#if NET40
+                using (var sh = new SHA1CryptoServiceProvider())
+                {
+                    sh.TransformBlock(envelopedData, 0, 20, envelopedData, 0);
+                    for (int i = 0; i < recipients.Size; i++)
+                    {
+                        byte[] encodedRecipient = recipients[i].GetBytes();
+                        sh.TransformBlock(encodedRecipient, 0, encodedRecipient.Length, encodedRecipient, 0);
+                    }
+                    if ((cryptoMode & PdfWriter.DO_NOT_ENCRYPT_METADATA) != 0)
+                        sh.TransformBlock(PdfEncryption.MetadataPad, 0, PdfEncryption.MetadataPad.Length, PdfEncryption.MetadataPad, 0);
 
+                    sh.TransformFinalBlock(envelopedData, 0, 0);
+                    encryptionKey = sh.Hash;
+                }
+#else
                 using (var sh = IncrementalHash.CreateHash(HashAlgorithmName.SHA1))
                 {
                     sh.AppendData(envelopedData, 0, 20);
@@ -3516,6 +3531,7 @@ namespace iTextSharp.text.pdf
 
                     encryptionKey = sh.GetHashAndReset();
                 }
+#endif
             }
             decrypt = new PdfEncryption();
             decrypt.SetCryptoMode(cryptoMode, lengthValue);

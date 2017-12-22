@@ -5,7 +5,9 @@ using System.IO;
 using System.Collections;
 using System.util;
 using iTextSharp.text.xml.simpleparser;
+#if !NET40
 using System.Runtime.Loader;
+#endif
 
 namespace iTextSharp.text.pdf
 {
@@ -1114,7 +1116,11 @@ namespace iTextSharp.text.pdf
             // Try to use resource loader to load the properties file.
             try
             {
+#if NET40
+                var assm = Assembly.GetExecutingAssembly();
+#else
                 var assm = typeof(BaseFont).GetTypeInfo().Assembly;
+#endif
                 istr = assm.GetManifestResourceStream(key);
             }
             catch
@@ -1138,7 +1144,11 @@ namespace iTextSharp.text.pdf
                         string dir = (string)obj;
                         try
                         {
+#if NET40
+                            var asm = Assembly.LoadFrom(dir);
+#else
                             var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(dir);
+#endif
                             istr = asm.GetManifestResourceStream(key);
                         }
                         catch

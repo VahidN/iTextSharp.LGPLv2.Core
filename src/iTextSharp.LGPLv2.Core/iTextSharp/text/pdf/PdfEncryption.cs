@@ -258,6 +258,21 @@ namespace iTextSharp.text.pdf
                     }
                 }
 
+#if NET40
+                SHA1 sh = new SHA1CryptoServiceProvider();
+                byte[] encodedRecipient = null;
+                byte[] seed = PublicKeyHandler.GetSeed();
+                sh.TransformBlock(seed, 0, seed.Length, seed, 0);
+                for (int i = 0; i < PublicKeyHandler.GetRecipientsSize(); i++)
+                {
+                    encodedRecipient = PublicKeyHandler.GetEncodedRecipient(i);
+                    sh.TransformBlock(encodedRecipient, 0, encodedRecipient.Length, encodedRecipient, 0);
+                }
+                if (!_encryptMetadata)
+                    sh.TransformBlock(MetadataPad, 0, MetadataPad.Length, MetadataPad, 0);
+                sh.TransformFinalBlock(seed, 0, 0);
+                byte[] mdResult = sh.Hash;
+#else
                 byte[] mdResult;
                 using (var sh = IncrementalHash.CreateHash(HashAlgorithmName.SHA1))
                 {
@@ -273,6 +288,7 @@ namespace iTextSharp.text.pdf
 
                     mdResult = sh.GetHashAndReset();
                 }
+#endif
 
                 SetupByEncryptionKey(mdResult, _keyLength);
             }
@@ -377,8 +393,27 @@ namespace iTextSharp.text.pdf
                     throw new ArgumentException("No valid encryption mode");
             }
         }
+
         public void SetHashKey(int number, int generation)
         {
+#if NET40
+            using (var md5 = new MD5CryptoServiceProvider())
+            {
+                md5.Initialize();
+                Extra[0] = (byte)number;
+                Extra[1] = (byte)(number >> 8);
+                Extra[2] = (byte)(number >> 16);
+                Extra[3] = (byte)generation;
+                Extra[4] = (byte)(generation >> 8);
+                md5.TransformBlock(Mkey, 0, Mkey.Length, Mkey, 0);
+                md5.TransformBlock(Extra, 0, Extra.Length, Extra, 0);
+                if (_revision == AES_128)
+                    md5.TransformBlock(_salt, 0, _salt.Length, _salt, 0);
+
+                md5.TransformFinalBlock(Extra, 0, 0);
+                Key = md5.Hash;
+            }
+#else
             using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
             {
                 Extra[0] = (byte)number;
@@ -393,6 +428,7 @@ namespace iTextSharp.text.pdf
 
                 Key = md5.GetHashAndReset();
             }
+#endif
 
             KeySize = Mkey.Length + 5;
             if (KeySize > 16)
@@ -509,7 +545,31 @@ namespace iTextSharp.text.pdf
             Permissions = permissions;
             // use variable keylength
             Mkey = new byte[_keyLength / 8];
+            byte[] digest = new byte[Mkey.Length];
 
+#if NET40
+            //fixed by ujihara in order to follow PDF refrence
+            using (var md5 = new MD5CryptoServiceProvider())
+            {
+                md5.Initialize();
+                md5.TransformBlock(userPad, 0, userPad.Length, userPad, 0);
+                md5.TransformBlock(ownerKey, 0, ownerKey.Length, ownerKey, 0);
+
+                byte[] ext = new byte[4];
+                ext[0] = (byte)permissions;
+                ext[1] = (byte)(permissions >> 8);
+                ext[2] = (byte)(permissions >> 16);
+                ext[3] = (byte)(permissions >> 24);
+                md5.TransformBlock(ext, 0, 4, ext, 0);
+                if (documentId != null)
+                    md5.TransformBlock(documentId, 0, documentId.Length, documentId, 0);
+                if (!_encryptMetadata)
+                    md5.TransformBlock(MetadataPad, 0, MetadataPad.Length, MetadataPad, 0);
+                md5.TransformFinalBlock(ext, 0, 0);
+
+                Array.Copy(md5.Hash, 0, digest, 0, Mkey.Length);
+            }
+#else
             //fixed by ujihara in order to follow PDF refrence
             var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
             md5.AppendData(userPad, 0, userPad.Length);
@@ -526,9 +586,8 @@ namespace iTextSharp.text.pdf
             if (!_encryptMetadata)
                 md5.AppendData(MetadataPad, 0, MetadataPad.Length);
 
-            byte[] digest = new byte[Mkey.Length];
             Array.Copy(md5.GetHashAndReset(), 0, digest, 0, Mkey.Length);
-
+#endif
 
 
             // only use the really needed bits as input for the hash
@@ -556,13 +615,22 @@ namespace iTextSharp.text.pdf
             if (_revision == STANDARD_ENCRYPTION_128 || _revision == AES_128)
             {
                 byte[] digest;
+#if NET40
+                using (var md5 = new MD5CryptoServiceProvider())
+                {
+                    md5.Initialize();
+                    md5.TransformBlock(_pad, 0, _pad.Length, _pad, 0);
+                    md5.TransformFinalBlock(DocumentId, 0, DocumentId.Length);
+                    digest = md5.Hash;
+                }
+#else
                 using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
                 {
                     md5.AppendData(_pad, 0, _pad.Length);
                     md5.AppendData(DocumentId, 0, DocumentId.Length);
                     digest = md5.GetHashAndReset();
                 }
-
+#endif
                 Array.Copy(digest, 0, UserKey, 0, 16);
                 for (int k = 16; k < 32; ++k)
                     UserKey[k] = 0;

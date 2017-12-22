@@ -170,7 +170,11 @@ namespace iTextSharp.text.pdf
             };
             var xw = XmlWriter.Create(fout, xwSettings);
             n.WriteContentTo(xw);
+#if NET40
+            xw.Close();
+#else
             xw.Dispose();
+#endif
             return fout.ToArray();
         }
 

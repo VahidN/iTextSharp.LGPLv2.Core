@@ -17,7 +17,9 @@ namespace iTextSharp.LGPLv2.Core.System.Encodings
 
         private EncodingsRegistry()
         {
+#if !NET40
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
         }
 
         /// <summary>

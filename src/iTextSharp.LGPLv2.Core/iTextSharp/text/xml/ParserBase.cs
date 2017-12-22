@@ -86,7 +86,11 @@ namespace iTextSharp.text.xml
             {
                 if (reader != null)
                 {
+#if NET40
+                    reader.Close();
+#else
                     reader.Dispose();
+#endif
                 }
             }
         }

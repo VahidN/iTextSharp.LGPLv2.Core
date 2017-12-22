@@ -1,2 +1,2 @@
 dotnet pack -c release
-paue
+pause

@@ -160,10 +160,20 @@ namespace iTextSharp.text.pdf
                 authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
                 con.Headers["Authorization"] = "Basic " + authInfo;
             }
+
+#if NET40
+            Stream outp = con.GetRequestStream();
+#else
             Stream outp = con.GetRequestStreamAsync().Result;
+#endif
             outp.Write(requestBytes, 0, requestBytes.Length);
             outp.Dispose();
-            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().Result;
+
+#if NET40
+            HttpWebResponse response = (HttpWebResponse)con.GetResponse();
+#else
+            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().GetAwaiter().GetResult();
+#endif
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException("Invalid HTTP response: " + (int)response.StatusCode);
             Stream inp = response.GetResponseStream();
@@ -177,7 +187,12 @@ namespace iTextSharp.text.pdf
                 baos.Write(buffer, 0, bytesRead);
             }
             inp.Dispose();
+#if NET40
+            response.Close();
+#else
             response.Dispose();
+#endif
+
             byte[] respBytes = baos.ToArray();
 
             if (encoding != null && Util.EqualsIgnoreCase(encoding, "base64"))
