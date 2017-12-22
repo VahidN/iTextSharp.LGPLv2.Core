@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <Authors>Vahid Nasiri</Authors>
     <TargetFrameworks>net40;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
