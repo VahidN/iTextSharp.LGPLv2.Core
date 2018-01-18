@@ -2748,7 +2748,7 @@ namespace iTextSharp.text.pdf
         {
             if (State.FontDetails == null)
                 throw new Exception("Font and size must be set before writing any text");
-            if (rotation.ApproxNotEqual(0))
+            if (rotation.ApproxEquals(0))
             {
                 switch (alignment)
                 {
