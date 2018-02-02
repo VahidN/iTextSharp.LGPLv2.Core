@@ -1362,7 +1362,7 @@ namespace iTextSharp.text.pdf
             {
                 int col = currCol - 1;
                 aboveCell = aboveRow.GetCells()[col];
-                while ((aboveCell == null) && (row > 0))
+                while ((aboveCell == null) && (col > 0))
                     aboveCell = aboveRow.GetCells()[--col];
                 return aboveCell != null && aboveCell.Rowspan > distance;
             }
