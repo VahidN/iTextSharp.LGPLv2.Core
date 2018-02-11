@@ -31,7 +31,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
 
             var props = new Hashtable
             {
-                { "font_factory", new UnicodeFontProvider() } // Always use Unicode fonts
+                { "font_factory", new UnicodeFontProvider() } // Always use Unicode fonts --> It's defined here: https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/HtmlWorkerTests.cs#L117
             };
 
             var document = new Document();
