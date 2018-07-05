@@ -1353,6 +1353,7 @@ namespace iTextSharp.text.pdf
             while ((aboveCell == null) && (row > 0))
             {
                 aboveRow = (PdfPRow)rows[--row];
+                if (aboveRow == null) return false;
                 aboveCell = aboveRow.GetCells()[currCol];
             }
 
