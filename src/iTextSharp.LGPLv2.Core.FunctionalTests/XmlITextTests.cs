@@ -7,19 +7,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace iTextSharp.LGPLv2.Core.FunctionalTests
 {
-	[TestClass]
-	public class XmlITextTests
-	{
-		/// <summary>
-		/// iTextXML can be used as a report generator
-		/// </summary>
-		[TestMethod]
-		public void Verify_iTextXML_To_PDF_File_CanBeCreated()
-		{
-			var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\img", "hitchcock.png");
-			var iTextXML = $@"
+    [TestClass]
+    public class XmlITextTests
+    {
+        /// <summary>
+        /// iTextXML can be used as a report generator
+        /// </summary>
+        [TestMethod]
+        public void Verify_iTextXML_To_PDF_File_CanBeCreated()
+        {
+            var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
+            var iTextXML = $@"
 <itext creationdate='1395/06/14' producer='iTextSharp.LGPLv2.Core'>
-	
+
 	<paragraph style='font-family:Helvetica;font-size:18;font-weight:bold;font-style:italic;'>
 		<chunk red='255' green='0' blue='0'>iText XML Sample</chunk>
 	</paragraph>
@@ -48,20 +48,20 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 </itext>
 ";
 
-			var pdfFilePath = TestUtils.GetOutputFileName();
-			converITextXmlToPdfFile(iTextXML, pdfFilePath);
-			TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-		}
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            converITextXmlToPdfFile(iTextXML, pdfFilePath);
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
 
 
-		[TestMethod]
-		public void Verify_iTextXML_CanBeParsed()
-		{
-			var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples\resources\img", "hitchcock.png");
-			var iTextXML = $@"
+        [TestMethod]
+        public void Verify_iTextXML_CanBeParsed()
+        {
+            var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
+            var iTextXML = $@"
 <itext creationdate='Thu Jun 26 14:25:52 CEST 2003' producer='iTextXML by lowagie.com'>
 	<paragraph leading='18.0' font='unknown' align='Default'>
-		Please visit my 
+		Please visit my
 		<anchor leading='18.0' font='Helvetica' size='12.0' fontstyle='normal, underline' red='0' green='0' blue='255' name='top' reference='http://www.lowagie.com/iText/'>
 			<chunk font='Helvetica' size='12.0' fontstyle='normal, underline' red='0' green='0' blue='255'>website (external reference)</chunk>
 		</anchor>
@@ -1978,31 +1978,31 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 	</chapter>
 </itext>
 ";
-			var pdfFilePath = TestUtils.GetOutputFileName();
-			converITextXmlToPdfFile(iTextXML, pdfFilePath);
-			TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-		}
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            converITextXmlToPdfFile(iTextXML, pdfFilePath);
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
 
 
-		private static void converITextXmlToPdfFile(string iTextXML, string pdfFilePath)
-		{
-			var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+        private static void converITextXmlToPdfFile(string iTextXML, string pdfFilePath)
+        {
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
 
-			var document = new Document();
-			var pdfWriter = PdfWriter.GetInstance(document, fileStream);
+            var document = new Document();
+            var pdfWriter = PdfWriter.GetInstance(document, fileStream);
 
-			document.AddAuthor(TestUtils.Author);
-			document.Open();
+            document.AddAuthor(TestUtils.Author);
+            document.Open();
 
-			var xmlReader = XmlReader.Create(new StringReader(iTextXML));
+            var xmlReader = XmlReader.Create(new StringReader(iTextXML));
 
-			var parser = new XmlParser();
-			parser.Go(document, xmlReader);
+            var parser = new XmlParser();
+            parser.Go(document, xmlReader);
 
-			pdfWriter.Close();
-			document.Close();
-			fileStream.Dispose();
-			xmlReader.Dispose();
-		}
-	}
+            pdfWriter.Close();
+            document.Close();
+            fileStream.Dispose();
+            xmlReader.Dispose();
+        }
+    }
 }
