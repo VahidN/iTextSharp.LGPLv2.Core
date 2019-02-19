@@ -755,6 +755,11 @@ namespace iTextSharp.text.pdf
             directContentUnder = new PdfContentByte(this);
         }
 
+        /// <summary>
+        /// This is the current height of the document.
+        /// </summary>
+        public float CurrentPageHeight => Pdf.CurrentHeight;
+
         public PdfAcroForm AcroForm
         {
             get

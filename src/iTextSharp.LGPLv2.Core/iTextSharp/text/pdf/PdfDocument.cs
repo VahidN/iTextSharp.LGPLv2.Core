@@ -55,7 +55,7 @@ namespace iTextSharp.text.pdf
         /// <summary>
         /// This is the current height of the document.
         /// </summary>
-        protected internal float CurrentHeight;
+        public float CurrentHeight { get; private set; }
 
         /// <summary>
         /// This is the current  PdfOutline  in the hierarchy of outlines.
@@ -2781,7 +2781,7 @@ namespace iTextSharp.text.pdf
             PageSize = NextPageSize;
             if (MarginMirroring && (PageNumber & 1) == 0)
             {
-              RightMargin   = NextMarginLeft;
+                RightMargin = NextMarginLeft;
                 LeftMargin = NextMarginRight;
             }
             else
