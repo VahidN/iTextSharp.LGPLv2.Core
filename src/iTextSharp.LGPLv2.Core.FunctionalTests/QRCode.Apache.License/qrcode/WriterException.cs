@@ -15,7 +15,8 @@ using System;
  * limitations under the License.
  */
 
-namespace iTextSharp.text.pdf.qrcode {
+namespace iTextSharp.text.pdf.qrcode
+{
 
     /**
      * A base class which covers the range of exceptions which may occur when encoding a barcode using
@@ -23,17 +24,20 @@ namespace iTextSharp.text.pdf.qrcode {
      *
      * @author dswitkin@google.com (Daniel Switkin)
      */
-	[Serializable]
-    public sealed class WriterException : Exception {
+    [Serializable]
+    public class WriterException : Exception
+    {
 
         public WriterException()
-            : base() {
+            : base()
+        {
         }
 
         public WriterException(String message)
-            : base(message) {
+            : base(message)
+        {
         }
 
-		protected WriterException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        protected WriterException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

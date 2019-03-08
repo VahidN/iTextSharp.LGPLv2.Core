@@ -552,36 +552,28 @@ namespace iTextSharp.text.pdf
 
         internal static Hashtable ReadFontProperties(string name)
         {
-            try
+            name += ".properties";
+            Stream isp = GetResourceStream(RESOURCE_PATH + name);
+            if (isp == null)
             {
-                name += ".properties";
-                Stream isp = GetResourceStream(RESOURCE_PATH + name);
-                if(isp == null)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                Properties p = new Properties();
-                p.Load(isp);
-                isp.Dispose();
-                IntHashtable w = CreateMetric(p["W"]);
-                p.Remove("W");
-                IntHashtable w2 = CreateMetric(p["W2"]);
-                p.Remove("W2");
-                Hashtable map = new Hashtable();
-                foreach (string key in p.Keys)
-                {
-                    map[key] = p[key];
-                }
-                map["W"] = w;
-                map["W2"] = w2;
-                return map;
-            }
-            catch
+            Properties p = new Properties();
+            p.Load(isp);
+            isp.Dispose();
+            IntHashtable w = CreateMetric(p["W"]);
+            p.Remove("W");
+            IntHashtable w2 = CreateMetric(p["W2"]);
+            p.Remove("W2");
+            Hashtable map = new Hashtable();
+            foreach (string key in p.Keys)
             {
-                // empty on purpose
+                map[key] = p[key];
             }
-            return null;
+            map["W"] = w;
+            map["W2"] = w2;
+            return map;
         }
 
         internal override int GetRawWidth(int c, string name)
@@ -624,30 +616,23 @@ namespace iTextSharp.text.pdf
             {
                 if (_propertiesLoaded)
                     return;
-                try
+                Stream isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
+                if (isp != null)
                 {
-                    Stream isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
+                    CjkFonts.Load(isp);
+                    isp.Dispose();
+
+                    isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
                     if (isp != null)
                     {
-                        CjkFonts.Load(isp);
+                        CjkEncodings.Load(isp);
                         isp.Dispose();
-
-                        isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
-                        if (isp != null)
-                        {
-                            CjkEncodings.Load(isp);
-                            isp.Dispose();
-                        }
                     }
-                }
-                catch
-                {
-                    CjkFonts = new Properties();
-                    CjkEncodings = new Properties();
                 }
                 _propertiesLoaded = true;
             }
         }
+
         private float getBBox(int idx)
         {
             string s = (string)_fontDesc["FontBBox"];

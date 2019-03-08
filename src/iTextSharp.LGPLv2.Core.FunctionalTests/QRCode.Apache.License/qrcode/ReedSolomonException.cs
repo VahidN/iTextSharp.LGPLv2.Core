@@ -15,7 +15,8 @@ using System;
  * limitations under the License.
  */
 
-namespace iTextSharp.text.pdf.qrcode {
+namespace iTextSharp.text.pdf.qrcode
+{
 
     /**
      * <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when
@@ -23,13 +24,15 @@ namespace iTextSharp.text.pdf.qrcode {
      *
      * @author Sean Owen
      */
-	[Serializable]
-    public sealed class ReedSolomonException : Exception {
+    [Serializable]
+    public class ReedSolomonException : Exception
+    {
 
         public ReedSolomonException(String message)
-            : base(message) {
+            : base(message)
+        {
         }
 
-		protected ReedSolomonException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        protected ReedSolomonException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }
