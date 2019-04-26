@@ -65,7 +65,7 @@ To run this project on non-Windows-based operating systems, you will need to ins
 	- make
 	- make install
 	- cd /usr/lib64/
-	- ln -s /usr/local/lib/libgdiplus.so gdiplus.dll
+	- ln -s /usr/local/lib/libgdiplus.so libgdiplus.so
 - Docker
 	- RUN apt-get update \\
 
