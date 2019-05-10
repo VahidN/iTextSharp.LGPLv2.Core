@@ -31,7 +31,11 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
             text.Add(new Chunk("\u00A0Test Test\u00A0"));
             text.Add(new Chunk("\nNew line"));
 
-            ct.SetSimpleColumn(text, 34, 750, 580, 317, 15, Element.ALIGN_LEFT);
+            ct.SetSimpleColumn(
+               phrase: text,
+               llx: 34, lly: 750, urx: 580, ury: 317,
+               leading: 15,
+               alignment: Element.ALIGN_LEFT);
             ct.Go();
 
             pdfDoc.Close();
