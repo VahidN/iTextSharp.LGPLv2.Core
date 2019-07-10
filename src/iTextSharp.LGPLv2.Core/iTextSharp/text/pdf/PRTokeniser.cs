@@ -101,18 +101,25 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        public int Startxref
+        public long Startxref
         {
             get
             {
-                int size = Math.Min(1024, file.Length);
-                int pos = file.Length - size;
-                file.Seek(pos);
-                string str = ReadString(1024);
-                int idx = str.LastIndexOf("startxref", StringComparison.OrdinalIgnoreCase);
-                if (idx < 0)
-                    throw new IOException("PDF startxref not found.");
-                return pos + idx;
+                const int arrLength = 1024;
+                const string startxref = "startxref";
+                var startxrefLength = startxref.Length;
+                long fileLength = file.Length;
+                long pos = fileLength - arrLength;
+                if (pos < 1) pos = 1;
+                while (pos > 0)
+                {
+                    file.Seek(pos);
+                    var str = ReadString(arrLength);
+                    int idx = str.LastIndexOf(startxref, StringComparison.Ordinal);
+                    if (idx >= 0) return pos + idx;
+                    pos = pos - arrLength + startxrefLength;
+                }
+                throw new IOException("PDF startxref not found.");
             }
         }
 

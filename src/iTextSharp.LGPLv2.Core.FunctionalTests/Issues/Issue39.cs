@@ -14,12 +14,23 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
         [TestMethod]
         public void Verify_Issue39_CanBe_Processed()
         {
-            var pdfFile = TestUtils.GetPdfsPath("issue39.pdf");
-            var pdfReader = new PdfReader(pdfFile);
+            var inPdfFile = TestUtils.GetPdfsPath("issue39.pdf");
+            var outPdfFile = TestUtils.GetOutputFileName();
+            addWatermark(inPdfFile, outPdfFile);
+        }
 
-            var pdfFilePath = TestUtils.GetOutputFileName();
-            var outStream = new FileStream(pdfFilePath, FileMode.Create);
+        [TestMethod]
+        public void Verify_Issue39_2_CanBe_Processed()
+        {
+            var inPdfFile = TestUtils.GetPdfsPath("issue39_2.pdf");
+            var outPdfFile = TestUtils.GetOutputFileName();
+            addWatermark(inPdfFile, outPdfFile);
+        }
 
+        private static void addWatermark(string inPdfFile, string outPdfFile)
+        {
+            var pdfReader = new PdfReader(inPdfFile);
+            var outStream = new FileStream(outPdfFile, FileMode.Create);
             var pdfStamper = new PdfStamper(pdfReader, outStream);
             int total = pdfReader.NumberOfPages + 1;
             var pageSize = pdfReader.GetPageSize(1);
@@ -29,7 +40,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
             //var font = TestUtils.GetUnicodeFont("Tahoma", TestUtils.GetTahomaFontPath(), 10, Font.BOLD, BaseColor.Black);
             //var font = TestUtils.GetUnicodeFont("FangSong", TestUtils.GetFontPath("simfang.ttf"), 10, Font.BOLD, BaseColor.Black);
             var font = BaseFont.CreateFont(TestUtils.GetFontPath("simfang.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            PdfGState gs = new PdfGState();
+            var gs = new PdfGState();
             for (int i = 1; i < total; i++)
             {
                 var content = pdfStamper.GetOverContent(i);

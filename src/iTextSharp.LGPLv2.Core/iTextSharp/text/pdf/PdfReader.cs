@@ -2795,7 +2795,7 @@ namespace iTextSharp.text.pdf
         {
             _hybridXref = false;
             NewXrefType = false;
-            Tokens.Seek(Tokens.Startxref);
+            Tokens.Seek((int)Tokens.Startxref);
             Tokens.NextToken();
             if (!Tokens.StringValue.Equals("startxref"))
                 throw new InvalidPdfException("startxref not found.");
