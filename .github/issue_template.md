@@ -5,9 +5,9 @@
 ## Environment
 
 ```
-The in-use version:
-Operating system: 
-IDE: (e.g. Visual Studio 2015)
+iTextSharp.LGPLv2.Core version: 
+.NET Core SDK version: 
+IDE: 
 ```
 
 ## Example code/Steps to reproduce:

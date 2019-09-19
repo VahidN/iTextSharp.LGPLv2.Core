@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.util;
 using iTextSharp.text.pdf;
 
@@ -60,9 +60,6 @@ namespace iTextSharp.text
         /// <summary> This is the default encoding to use. </summary>
         private static readonly string _defaultEncoding = BaseFont.WINANSI;
 
-        private static FontFactoryImp _fontImp = new FontFactoryImp();
-
-
         public static bool DefaultEmbedding
         {
             get
@@ -79,29 +76,17 @@ namespace iTextSharp.text
             }
         }
 
-        public static FontFactoryImp FontImp
-        {
-            get
-            {
-                return _fontImp;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(FontImp), "FontFactoryImp cannot be null.");
-                _fontImp = value;
-            }
-        }
+        public static FontFactoryImp FontImp { set; get; } = FontFactoryImp.Instance;
 
         /// <summary>
         /// Gets a set of registered font families.
         /// </summary>
         /// <value>a set of registered font families</value>
-        public static ICollection RegisteredFamilies
+        public static ICollection<string> RegisteredFamilies
         {
             get
             {
-                return _fontImp.RegisteredFamilies;
+                return FontImp.RegisteredFamilies;
             }
         }
 
@@ -113,7 +98,7 @@ namespace iTextSharp.text
         {
             get
             {
-                return _fontImp.RegisteredFonts;
+                return FontImp.RegisteredFonts;
             }
         }
 
@@ -124,7 +109,7 @@ namespace iTextSharp.text
         /// <returns>true if font is contained within the object</returns>
         public static bool Contains(string fontname)
         {
-            return _fontImp.IsRegistered(fontname);
+            return FontImp.IsRegistered(fontname);
         }
 
         /// <summary>
@@ -139,7 +124,7 @@ namespace iTextSharp.text
         /// <returns>a Font object</returns>
         public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color)
         {
-            return _fontImp.GetFont(fontname, encoding, embedded, size, style, color);
+            return FontImp.GetFont(fontname, encoding, embedded, size, style, color);
         }
 
         /// <summary>
@@ -155,7 +140,7 @@ namespace iTextSharp.text
         /// <returns>a Font object</returns>
         public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color, bool cached)
         {
-            return _fontImp.GetFont(fontname, encoding, embedded, size, style, color, cached);
+            return FontImp.GetFont(fontname, encoding, embedded, size, style, color, cached);
         }
 
         /// <summary>
@@ -165,9 +150,9 @@ namespace iTextSharp.text
         /// <returns>a Font object</returns>
         public static Font GetFont(Properties attributes)
         {
-            _fontImp.DefaultEmbedding = _defaultEmbedding;
-            _fontImp.DefaultEncoding = _defaultEncoding;
-            return _fontImp.GetFont(attributes);
+            FontImp.DefaultEmbedding = _defaultEmbedding;
+            FontImp.DefaultEncoding = _defaultEncoding;
+            return FontImp.GetFont(attributes);
         }
 
         /// <summary>
@@ -324,7 +309,7 @@ namespace iTextSharp.text
         /// <returns>true if the font is found</returns>
         public static bool IsRegistered(string fontname)
         {
-            return _fontImp.IsRegistered(fontname);
+            return FontImp.IsRegistered(fontname);
         }
 
         public static void Register(Properties attributes)
@@ -335,7 +320,7 @@ namespace iTextSharp.text
             path = attributes.Remove("path");
             alias = attributes.Remove("alias");
 
-            _fontImp.Register(path, alias);
+            FontImp.Register(path, alias);
         }
 
         /// <summary>
@@ -354,7 +339,7 @@ namespace iTextSharp.text
         /// <param name="alias">the alias you want to use for the font</param>
         public static void Register(string path, string alias)
         {
-            _fontImp.Register(path, alias);
+            FontImp.Register(path, alias);
         }
 
         /// <summary>
@@ -364,7 +349,7 @@ namespace iTextSharp.text
         /// <returns>the number of fonts registered</returns>
         public static int RegisterDirectories()
         {
-            return _fontImp.RegisterDirectories();
+            return FontImp.RegisterDirectories();
         }
 
         /// <summary>
@@ -374,7 +359,7 @@ namespace iTextSharp.text
         /// <returns>the number of fonts registered</returns>
         public static int RegisterDirectory(string dir)
         {
-            return _fontImp.RegisterDirectory(dir);
+            return FontImp.RegisterDirectory(dir);
         }
 
         /// <summary>
@@ -386,7 +371,7 @@ namespace iTextSharp.text
         /// <returns>the number of fonts registered</returns>
         public static int RegisterDirectory(string dir, bool scanSubdirectories)
         {
-            return _fontImp.RegisterDirectory(dir, scanSubdirectories);
+            return FontImp.RegisterDirectory(dir, scanSubdirectories);
         }
 
         /// <summary>
@@ -397,7 +382,7 @@ namespace iTextSharp.text
         /// <param name="path">the font path</param>
         public static void RegisterFamily(string familyName, string fullName, string path)
         {
-            _fontImp.RegisterFamily(familyName, fullName, path);
+            FontImp.RegisterFamily(familyName, fullName, path);
         }
     }
 }

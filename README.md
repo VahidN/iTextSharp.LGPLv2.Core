@@ -1,6 +1,11 @@
 iTextSharp.LGPLv2.Core
 ======================
-[![Build status](https://ci.appveyor.com/api/projects/status/47yloyod8axcqnyx?svg=true)](https://ci.appveyor.com/project/VahidN/itextsharp-lgplv2-core)
+
+<p align="left">
+  <a href="https://github.com/VahidN/iTextSharp.LGPLv2.Core">
+     <img alt="GitHub Actions status" src="https://github.com/VahidN/iTextSharp.LGPLv2.Core/workflows/.NET%20Core%20Build/badge.svg">
+  </a>
+</p>
 
 `iTextSharp.LGPLv2.Core` is an **unofficial** port of the last [LGPL version](http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html) of the [iTextSharp (V4.1.6)](https://github.com/itextsharper/iTextSharp-4.1.6) to .NET Core.
 
@@ -81,7 +86,7 @@ To run this project on non-Windows-based operating systems, you will need to ins
 
       And paste them to: /usr/local/lib
 
-	  
+
 Licensing
 ---------
 You have three license choices when it comes to iTextSharp: LGPL/MPL, AGPL, or a commercial license. The LGPL/MPL license is only an option with the older 4.1.6 version (used here). After that version, they switched to a dual AGPL/Commercial.

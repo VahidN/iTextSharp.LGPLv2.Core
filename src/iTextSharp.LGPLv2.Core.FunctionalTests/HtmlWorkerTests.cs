@@ -74,10 +74,14 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 
             FontFactory.Register(TestUtils.GetTahomaFontPath());
 
+            var unicodeFontProvider = FontFactoryImp.Instance;
+            unicodeFontProvider.DefaultEmbedding = BaseFont.EMBEDDED;
+            unicodeFontProvider.DefaultEncoding = BaseFont.IDENTITY_H;
+
             var props = new Hashtable
             {
                 { "img_provider", new MyImageFactory() },
-                { "font_factory", new UnicodeFontProvider() } // Always use Unicode fonts
+                { "font_factory", unicodeFontProvider } // Always use Unicode fonts
             };
 
             // step 1
@@ -111,21 +115,6 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
                      <span style='color:blue;font-size:20pt;font-family:tahoma;font-style:italic;font-weight:bold'>
                         <b>اين يك آزمايش است.<b/>
                     </span>";
-        }
-    }
-
-    public class UnicodeFontProvider : FontFactoryImp
-    {
-        /// <summary>
-        /// Provides a font with BaseFont.IDENTITY_H encoding.
-        /// </summary>
-        public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color, bool cached)
-        {
-            if(string.IsNullOrWhiteSpace(fontname))
-            {
-                //TODO: set a default font
-            }
-            return FontFactory.GetFont(fontname, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, size, style, color);
         }
     }
 }

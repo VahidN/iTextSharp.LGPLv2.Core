@@ -1,0 +1,17 @@
+name: .NET Core Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100-rc1-014190
+    - name: Build PdfRpt.Core lib
+      run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
