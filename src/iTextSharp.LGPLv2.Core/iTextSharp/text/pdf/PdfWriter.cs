@@ -3008,9 +3008,9 @@ namespace iTextSharp.text.pdf
             }
             if (grx.Size > 0)
                 d.Put(PdfName.OFF, grx);
-            if (OcgRadioGroup.Size > 0)
+            if (OcgRadioGroup != null && OcgRadioGroup.Size > 0)
                 d.Put(PdfName.Rbgroups, OcgRadioGroup);
-            if (OcgLocked.Size > 0)
+            if (OcgLocked != null && OcgLocked.Size > 0)
                 d.Put(PdfName.Locked, OcgLocked);
             addAsEvent(PdfName.View, PdfName.Zoom);
             addAsEvent(PdfName.View, PdfName.View);
