@@ -108,6 +108,62 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
             TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
         }
 
+        [TestMethod]
+        public void Verify_Html_To_Pdf_With_colspan_CanBeCreated()
+        {
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var stream = new FileStream(pdfFilePath, FileMode.Create);
+
+            // create a StyleSheet
+            var styles = new StyleSheet();
+            // set the default font's properties
+            styles.LoadTagStyle(HtmlTags.BODY, "encoding", "Identity-H");
+            styles.LoadTagStyle(HtmlTags.BODY, HtmlTags.FONT, "Tahoma");
+            styles.LoadTagStyle(HtmlTags.BODY, "size", "16pt");
+
+            FontFactory.Register(TestUtils.GetTahomaFontPath());
+
+            var unicodeFontProvider = FontFactoryImp.Instance;
+            unicodeFontProvider.DefaultEmbedding = BaseFont.EMBEDDED;
+            unicodeFontProvider.DefaultEncoding = BaseFont.IDENTITY_H;
+
+            var props = new Hashtable
+            {
+                { "font_factory", unicodeFontProvider }
+            };
+
+            var document = new Document();
+            PdfWriter.GetInstance(document, stream);
+            document.AddAuthor(TestUtils.Author);
+            document.Open();
+            var objects = HtmlWorker.ParseToList(
+                new StringReader(@"<table style='width: 100%;font-size:9pt;font-family:Tahoma;'>
+ <tr>
+    <td align='center' bgcolor='#00FF00' colspan='2'>Hello</td>
+ </tr>
+ <tr>
+    <td align = 'right'> Month </td>
+    <td align = 'right'> Savings </td>
+ </tr>
+ <tr>
+   <td align = 'right'> January </td>
+   <td align = 'right'>$100 </td>
+ </tr>
+</table>"),
+                styles,
+                props
+            );
+            foreach (IElement element in objects)
+            {
+                document.Add(element);
+            }
+
+            document.Close();
+            stream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
+
         private string createHtmlSnippet()
         {
             return @"<b>This is a test</b>
