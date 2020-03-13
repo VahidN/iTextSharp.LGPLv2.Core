@@ -894,7 +894,7 @@ namespace iTextSharp.text.pdf.codec
         private byte[] getPalette(int group)
         {
             if (_palette == null)
-                return null;
+                return new byte[0];
             byte[] np = new byte[_palette.Length / group * 3];
             int e = _palette.Length / group;
             for (int k = 0; k < e; ++k)
