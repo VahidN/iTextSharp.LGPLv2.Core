@@ -40,6 +40,8 @@ namespace iTextSharp.text.pdf
 
         protected internal int lastXref;
 
+        protected internal ArrayList xrefByteOffset = new ArrayList();
+
         protected internal bool NewXrefType;
 
         protected internal Hashtable ObjStmMark;
@@ -466,6 +468,18 @@ namespace iTextSharp.text.pdf
             get
             {
                 return lastXref;
+            }
+        }
+
+        /// <summary>
+        /// Gets the byte address of the all xref tables.
+        /// </summary>
+        /// <returns>the byte address of all the xref tables</returns>
+        public ArrayList XrefByteOffset
+        {
+            get
+            {
+                return xrefByteOffset;
             }
         }
 
@@ -2804,6 +2818,7 @@ namespace iTextSharp.text.pdf
                 throw new InvalidPdfException("startxref is not followed by a number.");
             int startxref = Tokens.IntValue;
             lastXref = startxref;
+            xrefByteOffset.Add(startxref);
             eofPos = Tokens.FilePointer;
             try
             {
@@ -2824,6 +2839,7 @@ namespace iTextSharp.text.pdf
                 if (prev == null)
                     break;
                 Tokens.Seek(prev.IntValue);
+                xrefByteOffset.Add(prev.IntValue);
                 trailer2 = ReadXrefSection();
             }
         }
