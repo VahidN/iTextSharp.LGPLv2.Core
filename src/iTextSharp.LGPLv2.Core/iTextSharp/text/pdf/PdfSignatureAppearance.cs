@@ -593,8 +593,8 @@ namespace iTextSharp.text.pdf
                     if (Originalout != null)
                         try { File.Delete(TempFile); } catch { }
                 }
-                if (Originalout != null)
-                    try { Originalout.Dispose(); } catch { }
+
+                Originalout?.Seek(0, SeekOrigin.Begin);
             }
         }
 
