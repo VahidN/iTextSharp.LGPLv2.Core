@@ -1146,8 +1146,10 @@ namespace iTextSharp.text.pdf
                         {
 #if NET40
                             var asm = Assembly.LoadFrom(dir);
-#else
+#elif NETSTANDARD1_3
                             var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(dir);
+#else
+                            var asm = Assembly.LoadFrom(dir);
 #endif
                             istr = asm.GetManifestResourceStream(key);
                         }
