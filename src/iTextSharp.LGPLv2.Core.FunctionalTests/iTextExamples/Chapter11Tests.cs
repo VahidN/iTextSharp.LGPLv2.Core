@@ -103,6 +103,40 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
         }
 
         [TestMethod]
+        public void Verify_Unicode_PDF_File_CanBeCreated_Using_Phrases()
+        {
+            var pdfDoc = new Document(PageSize.A4);
+
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+            PdfWriter.GetInstance(pdfDoc, fileStream);
+
+            pdfDoc.AddAuthor(TestUtils.Author);
+            pdfDoc.Open();
+
+            var fontFilePath = TestUtils.GetFontPath("IRANSans(FaNum)_Medium.ttf");
+            var sansFont = TestUtils.GetUnicodeFont(fontFilePath, fontFilePath, 10, Font.NORMAL, BaseColor.Black);
+            var table = new PdfPTable(numColumns: 1)
+            {
+                RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                ExtendLastRow = true
+            };
+
+            var pdfCell = new PdfPCell(new Phrase("آزمایش", sansFont))
+            {
+                RunDirection = PdfWriter.RUN_DIRECTION_RTL
+            };
+
+            table.AddCell(pdfCell);
+            pdfDoc.Add(table);
+
+            pdfDoc.Close();
+            fileStream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
+
+        [TestMethod]
         public void Verify_Unicode_PDF_File_CanBeCreated_Using_PdfTable()
         {
             var pdfDoc = new Document(PageSize.A4);
