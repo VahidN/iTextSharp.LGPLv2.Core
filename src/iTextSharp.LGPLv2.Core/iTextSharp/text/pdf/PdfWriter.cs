@@ -2836,7 +2836,7 @@ namespace iTextSharp.text.pdf
         {
             if (CurrentPdfReaderInstance == null)
             {
-                CurrentPdfReaderInstance = GetPdfReaderInstance(reader);
+                CurrentPdfReaderInstance = reader.GetPdfReaderInstance(this);
             }
             return CurrentPdfReaderInstance.GetNewObjectNumber(number, generation);
         }
