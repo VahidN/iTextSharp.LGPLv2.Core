@@ -2834,6 +2834,10 @@ namespace iTextSharp.text.pdf
 
         protected internal virtual int GetNewObjectNumber(PdfReader reader, int number, int generation)
         {
+            if (CurrentPdfReaderInstance == null)
+            {
+                CurrentPdfReaderInstance = GetPdfReaderInstance(reader);
+            }
             return CurrentPdfReaderInstance.GetNewObjectNumber(number, generation);
         }
 
