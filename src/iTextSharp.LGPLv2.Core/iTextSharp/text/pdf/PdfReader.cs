@@ -2818,7 +2818,6 @@ namespace iTextSharp.text.pdf
                 throw new InvalidPdfException("startxref is not followed by a number.");
             int startxref = Tokens.IntValue;
             lastXref = startxref;
-            xrefByteOffset.Add(startxref);
             eofPos = Tokens.FilePointer;
             try
             {
@@ -2829,6 +2828,7 @@ namespace iTextSharp.text.pdf
                 }
             }
             catch { }
+            xrefByteOffset.Add(startxref);
             Xref = null;
             Tokens.Seek(startxref);
             trailer = ReadXrefSection();
@@ -2838,8 +2838,8 @@ namespace iTextSharp.text.pdf
                 PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
                 if (prev == null)
                     break;
-                Tokens.Seek(prev.IntValue);
                 xrefByteOffset.Add(prev.IntValue);
+                Tokens.Seek(prev.IntValue);
                 trailer2 = ReadXrefSection();
             }
         }
@@ -2968,6 +2968,7 @@ namespace iTextSharp.text.pdf
             else
                 index = (PdfArray)obj;
             PdfArray w = (PdfArray)stm.Get(PdfName.W);
+            xrefByteOffset.Add(ptr);
             int prev = -1;
             obj = stm.Get(PdfName.Prev);
             if (obj != null)
