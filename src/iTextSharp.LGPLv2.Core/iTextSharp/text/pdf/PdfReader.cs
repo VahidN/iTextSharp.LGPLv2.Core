@@ -2818,7 +2818,6 @@ namespace iTextSharp.text.pdf
                 throw new InvalidPdfException("startxref is not followed by a number.");
             int startxref = Tokens.IntValue;
             lastXref = startxref;
-            xrefByteOffset.Add(startxref);
             eofPos = Tokens.FilePointer;
             try
             {
@@ -2829,6 +2828,7 @@ namespace iTextSharp.text.pdf
                 }
             }
             catch { }
+            xrefByteOffset.Add(startxref);
             Xref = null;
             Tokens.Seek(startxref);
             trailer = ReadXrefSection();
@@ -2838,8 +2838,8 @@ namespace iTextSharp.text.pdf
                 PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
                 if (prev == null)
                     break;
-                Tokens.Seek(prev.IntValue);
                 xrefByteOffset.Add(prev.IntValue);
+                Tokens.Seek(prev.IntValue);
                 trailer2 = ReadXrefSection();
             }
         }
@@ -2968,6 +2968,7 @@ namespace iTextSharp.text.pdf
             else
                 index = (PdfArray)obj;
             PdfArray w = (PdfArray)stm.Get(PdfName.W);
+            xrefByteOffset.Add(ptr);
             int prev = -1;
             obj = stm.Get(PdfName.Prev);
             if (obj != null)
@@ -3650,6 +3651,122 @@ namespace iTextSharp.text.pdf
                 return;
             _xrefObj[idx] = obj;
         }
+
+        /// <summary>
+        /// Return all Signature Names from signatures that cover the whole document.
+        /// Empty in case no signature covers the whole document.
+        /// </summary>
+        /// <returns> An ArrayList filled with the Signature Names from signatures that covers the whole document.</returns>
+        public ArrayList SignaturesCoverWholeDocument()
+        {
+            ArrayList signaturesCoverWholeDocument = new ArrayList();
+            ArrayList signatureNames = AcroFields.GetSignatureNames();
+            if (signatureNames.Count <= 0)
+                throw new InvalidPdfException("No signatures found");
+            ArrayList signatureLastByte = new ArrayList();
+            for (int i = 0; i < signatureNames.Count; i++)
+            {
+                signatureNames[i] = AcroFields.GetTranslatedFieldName((string)signatureNames[i]);
+                var nameDict = AcroFields.GetSignatureDictionary((string)signatureNames[i]);
+                PdfArray byteRange = nameDict.GetAsArray(PdfName.Byterange);
+                var offset = ((PdfNumber)byteRange[2]).IntValue;
+                var lastByte = offset + ((PdfNumber)byteRange[3]).IntValue;
+                signatureLastByte.Add(new object[] { signatureNames[i], lastByte });
+            }
+            signatureLastByte.Sort(new SignaturesSorterComparator());
+            if (xrefByteOffset.Count <= 0)
+                throw new InvalidPdfException("No references to xref found");
+            xrefByteOffset.Sort(new XrefsSorterComparator());
+            for (int i = 0; i < xrefByteOffset.Count && i < signatureLastByte.Count; i++)
+            {
+                Tokens.Seek((int)xrefByteOffset[i]);
+                Tokens.NextToken();
+                if (Tokens.StringValue.Equals("xref"))
+                {
+                    while (true)
+                    {
+                        if (!Tokens.NextToken() || !Tokens.TokenType.Equals(PrTokeniser.TK_NUMBER))
+                            break;
+                        if (!Tokens.NextToken() || !Tokens.TokenType.Equals(PrTokeniser.TK_NUMBER))
+                            break;
+                        int bytesSkip = Tokens.IntValue;
+                        Tokens.Seek(Tokens.FilePointer + (bytesSkip * 20));
+                    }
+                    if (!Tokens.StringValue.Equals("trailer"))
+                        throw new InvalidPdfException("trailer not found");
+                    while (true)
+                        if (Tokens.NextToken() && Tokens.StringValue.Equals("startxref"))
+                            break;
+                    if (!Tokens.NextToken() || !Tokens.TokenType.Equals(PrTokeniser.TK_NUMBER))
+                        throw new InvalidPdfException("startxref byte position not found");
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals(PrTokeniser.EMPTY))
+                        throw new InvalidPdfException("invalid data between startxref byte position and eof");
+                    int eofPos = Tokens.FilePointer;
+                    if (eofPos > (int)((object[])signatureLastByte[i])[1])
+                        return signaturesCoverWholeDocument;
+                    else
+                        signaturesCoverWholeDocument.Add(signatureNames[i]);
+                }
+                else if (Tokens.TokenType == PrTokeniser.TK_NUMBER)
+                {
+                    if (!Tokens.NextToken() || Tokens.TokenType != PrTokeniser.TK_NUMBER)
+                        throw new InvalidPdfException("object's generation number not found");
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals("obj"))
+                        throw new InvalidPdfException("object's brilling not found");
+                    PdfObject obj = ReadPrObject();
+                    PrStream stm;
+                    if (obj.IsStream())
+                    {
+                        stm = (PrStream)obj;
+                        if (!PdfName.Xref.Equals(stm.Get(PdfName.TYPE)))
+                            throw new InvalidPdfException("object is not typed as XRef");
+                    }
+                    else
+                        throw new InvalidPdfException("invalid xref object");
+                    int Length = ((PdfNumber)stm.Get(PdfName.LENGTH)).IntValue;
+                    Tokens.Seek(Tokens.FilePointer + Length);
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals("endstream"))
+                        throw new InvalidPdfException("endstream not found");
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals("endobj"))
+                        throw new InvalidPdfException("endobj not found");
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals("startxref"))
+                        throw new InvalidPdfException("startxref not found");
+                    if (!Tokens.NextToken() || !Tokens.TokenType.Equals(PrTokeniser.TK_NUMBER))
+                        throw new InvalidPdfException("startxref byte position not found");
+                    if (!Tokens.NextToken() || !Tokens.StringValue.Equals(PrTokeniser.EMPTY))
+                        throw new InvalidPdfException("invalid data between startxref byte position and eof");
+                    int eofPos = Tokens.FilePointer;
+                    if (eofPos > (int)((object[])signatureLastByte[i])[1])
+                        return signaturesCoverWholeDocument;
+                    else
+                        signaturesCoverWholeDocument.Add(signatureNames[i]);
+                }
+                else
+                    throw new InvalidPdfException("xref object not found");
+            }
+            return signaturesCoverWholeDocument;
+        }
+
+        public class SignaturesSorterComparator : IComparer
+        {
+            public int Compare(object o1, object o2)
+            {
+                int n1 = (int)(((object[])o1)[1]);
+                int n2 = (int)(((object[])o2)[1]);
+                return n2 - n1;
+            }
+        }
+
+        public class XrefsSorterComparator : IComparer
+        {
+            public int Compare(object o1, object o2)
+            {
+                int n1 = (int)o1;
+                int n2 = (int)o2;
+                return n2 - n1;
+            }
+        }
+
         public class PageRefs
         {
             private readonly PdfReader _reader;
