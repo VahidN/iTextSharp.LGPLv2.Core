@@ -3419,10 +3419,10 @@ namespace iTextSharp.text.pdf
                         cryptoMode = PdfWriter.STANDARD_ENCRYPTION_128;
                         break;
                     case 4:
-                        PdfDictionary dic = (PdfDictionary)enc.GetDirectObject(PdfName.Cf);
+                        var dic = (PdfDictionary)enc.Get(PdfName.Cf);
                         if (dic == null)
                             throw new InvalidPdfException("/CF not found (encryption)");
-                        dic = (PdfDictionary)dic.GetDirectObject(PdfName.Stdcf);
+                        dic = (PdfDictionary)dic.Get(PdfName.Stdcf);
                         if (dic == null)
                             throw new InvalidPdfException("/StdCF not found (encryption)");
                         if (PdfName.V2.Equals(dic.Get(PdfName.Cfm)))

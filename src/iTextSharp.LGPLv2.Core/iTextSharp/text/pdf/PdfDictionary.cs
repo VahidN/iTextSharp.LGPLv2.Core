@@ -116,7 +116,8 @@ namespace iTextSharp.text.pdf
 
         public PdfObject Get(PdfName key)
         {
-            return (PdfObject)HashMap[key];
+            var pdfObject = (PdfObject)HashMap[key];
+            return pdfObject is PrIndirectReference ? GetDirectObject(key) : pdfObject;
         }
 
         public PdfArray GetAsArray(PdfName key)
