@@ -17,7 +17,6 @@ namespace iTextSharp.text.pdf
     /// </summary>
     public class PdfChunk
     {
-
         /// <summary>
         /// Metric attributes.
         ///
@@ -121,7 +120,7 @@ namespace iTextSharp.text.pdf
         /// <summary>
         /// Constructs a  PdfChunk -object.
         /// </summary>
-        internal PdfChunk(string str, PdfChunk other)
+        public PdfChunk(string str, PdfChunk other)
         {
             _thisChunk[0] = this;
             value = str;
@@ -151,7 +150,7 @@ namespace iTextSharp.text.pdf
         /// <param name="chunk">the original  Chunk -object</param>
         /// <param name="action">the  PdfAction  if the  Chunk  comes from an  Anchor </param>
 
-        internal PdfChunk(Chunk chunk, PdfAction action)
+        public PdfChunk(Chunk chunk, PdfAction action)
         {
             _thisChunk[0] = this;
             value = chunk.Content;
@@ -270,7 +269,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal BaseColor Color
+        public BaseColor Color
         {
             get
             {
@@ -278,7 +277,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal string Encoding
+        public string Encoding
         {
             get
             {
@@ -286,7 +285,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal PdfFont Font
+        public PdfFont Font
         {
             get
             {
@@ -294,7 +293,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal Image Image
+        public Image Image
         {
             get
             {
@@ -302,7 +301,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal float ImageOffsetX
+        public float ImageOffsetX
         {
             get
             {
@@ -315,7 +314,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal float ImageOffsetY
+        public float ImageOffsetY
         {
             get
             {
@@ -332,7 +331,7 @@ namespace iTextSharp.text.pdf
         /// Gets the encoding of this string.
         /// </summary>
         /// <returns>a  string </returns>
-        internal int Length
+        public int Length
         {
             get
             {
@@ -340,7 +339,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal int LengthUtf32
+        public int LengthUtf32
         {
             get
             {
@@ -358,7 +357,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal string Value
+        public string Value
         {
             set
             {
@@ -366,7 +365,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal float Width
+        public float Width
         {
             get
             {
@@ -478,7 +477,7 @@ namespace iTextSharp.text.pdf
         /// @since   2.1.2
         /// </summary>
         /// <param name="newValue">the new value for the left X.</param>
-        internal void AdjustLeft(float newValue)
+        public void AdjustLeft(float newValue)
         {
             object[] o = (object[])Attributes[Chunk.TAB];
             if (o != null)
@@ -487,28 +486,28 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        internal object GetAttribute(string name)
+        public object GetAttribute(string name)
         {
             if (Attributes.ContainsKey(name))
                 return Attributes[name];
             return NoStroke[name];
         }
 
-        internal float GetCharWidth(int c)
+        public float GetCharWidth(int c)
         {
             if (NoPrint(c))
                 return 0;
             return font.Width(c);
         }
 
-        internal bool IsAttribute(string name)
+        public bool IsAttribute(string name)
         {
             if (Attributes.ContainsKey(name))
                 return true;
             return NoStroke.ContainsKey(name);
         }
 
-        internal bool IsExtSplitCharacter(int start, int current, int end, char[] cc, PdfChunk[] ck)
+        public bool IsExtSplitCharacter(int start, int current, int end, char[] cc, PdfChunk[] ck)
         {
             return SplitCharacter.IsSplitCharacter(start, current, end, cc, ck);
         }
@@ -518,7 +517,7 @@ namespace iTextSharp.text.pdf
         /// @since   2.1.2
         /// </summary>
         /// <returns>true if this chunk is a horizontal separator.</returns>
-        internal bool IsHorizontalSeparator()
+        public bool IsHorizontalSeparator()
         {
             if (IsAttribute(Chunk.SEPARATOR))
             {
@@ -528,7 +527,7 @@ namespace iTextSharp.text.pdf
             return false;
         }
 
-        internal bool IsImage()
+        public bool IsImage()
         {
             return image != null;
         }
@@ -538,17 +537,17 @@ namespace iTextSharp.text.pdf
         /// @since   2.1.2
         /// </summary>
         /// <returns>true if this chunk is a separator.</returns>
-        internal bool IsSeparator()
+        public bool IsSeparator()
         {
             return IsAttribute(Chunk.SEPARATOR);
         }
 
-        internal bool IsSpecialEncoding()
+        public bool IsSpecialEncoding()
         {
             return encoding.Equals(CjkFont.CJK_ENCODING) || encoding.Equals(BaseFont.IDENTITY_H);
         }
 
-        internal bool IsStroked()
+        public bool IsStroked()
         {
             return (Attributes.Count > 0);
         }
@@ -558,12 +557,12 @@ namespace iTextSharp.text.pdf
         /// @since   2.1.2
         /// </summary>
         /// <returns>true if this chunk is a separator.</returns>
-        internal bool IsTab()
+        public bool IsTab()
         {
             return IsAttribute(Chunk.TAB);
         }
 
-        internal PdfChunk Split(float width)
+        public PdfChunk Split(float width)
         {
             NewlineSplit = false;
             if (image != null)
@@ -708,7 +707,7 @@ namespace iTextSharp.text.pdf
             return tmp;
         }
 
-        internal string Trim(string str)
+        public string Trim(string str)
         {
             BaseFont ft = font.Font;
             if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
@@ -728,7 +727,7 @@ namespace iTextSharp.text.pdf
             return str;
         }
 
-        internal PdfChunk Truncate(float width)
+        public PdfChunk Truncate(float width)
         {
             if (image != null)
             {

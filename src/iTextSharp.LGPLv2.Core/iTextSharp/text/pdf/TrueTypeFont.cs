@@ -129,7 +129,7 @@ namespace iTextSharp.text.pdf
         /// <summary>
         /// The file name.
         /// </summary>
-        protected string FileName;
+        public string FileName;
 
         /// <summary>
         /// The font name.
