@@ -94,7 +94,11 @@ namespace iTextSharp.text.xml.xmp
 
                 var xwSettings = new XmlWriterSettings
                 {
-                    Encoding = new UTF8Encoding(false)
+                    Encoding = new UTF8Encoding(false),
+                    IndentChars = "  ",
+                    Indent = true,
+                    NewLineChars = "\n",
+                    OmitXmlDeclaration = true
                 };
                 var xw = XmlWriter.Create(fout, xwSettings);
                 var xmlNode = xmpmeta[0];
