@@ -15,7 +15,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
     public class Issue61
     {
         [TestMethod]
-        public void Verify_Issue61_CanBe_Processed()
+        public void Verify_Issue61_Khemer_CanBe_Processed()
         {
             var pdfDoc = new Document(PageSize.A4);
 
@@ -44,13 +44,38 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues
                     20, Font.NORMAL, BaseColor.Blue);
 
             var text = "Hello World សួស្តី​ពិភពលោក";
-            var processedData = new KhmerLigaturizer().ProcessKhmer(text, khemerFont6);
+            //var processedData = new KhmerLigaturizer().ProcessKhmer(text, khemerFont6);
 
             pdfDoc.Add(new Paragraph("Original Text:  " + text, khemerFont6));
-            pdfDoc.Add(new Paragraph("Processed Text: " + processedData, khemerFont6));
+            //pdfDoc.Add(new Paragraph("Processed Text: " + processedData, khemerFont6));
 
             // NOTE: It requires `GlyphSubstitutionTable (GSUB)` support to work correctly.
             // https://docs.microsoft.com/en-us/typography/opentype/spec/gsub
+
+            pdfDoc.Close();
+            fileStream.Dispose();
+
+            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+        }
+
+        [TestMethod]
+        public void Verify_Issue61_Indic_CanBe_Processed()
+        {
+            var pdfDoc = new Document(PageSize.A4);
+
+            var pdfFilePath = TestUtils.GetOutputFileName();
+            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+            PdfWriter.GetInstance(pdfDoc, fileStream);
+
+            pdfDoc.AddAuthor(TestUtils.Author);
+            pdfDoc.Open();
+
+            var font = TestUtils.GetUnicodeFont(
+                    "Lohit Bengali", TestUtils.GetFontPath("Lohit-Bengali.ttf"),
+                    20, Font.NORMAL, BaseColor.Blue);
+
+            var text = "আমি কোন পথে ক্ষীরের ষন্ড পুতুল রুপো গঙ্গা ঋষি";
+            pdfDoc.Add(new Paragraph(text, font));
 
             pdfDoc.Close();
             fileStream.Dispose();
