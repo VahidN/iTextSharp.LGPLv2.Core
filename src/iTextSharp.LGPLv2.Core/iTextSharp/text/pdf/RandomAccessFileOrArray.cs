@@ -112,9 +112,17 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        public RandomAccessFileOrArray(Stream isp)
+        public RandomAccessFileOrArray(Stream isp, bool forceRead = true)
         {
-            ArrayIn = InputStreamToArray(isp);
+            if (isp is FileStream fs && !forceRead)
+            {
+                Rf = fs;
+                Filename = fs.Name;
+            }
+            else
+            {
+                ArrayIn = InputStreamToArray(isp);                
+            }
         }
 
         public RandomAccessFileOrArray(byte[] arrayIn)

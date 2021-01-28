@@ -221,10 +221,11 @@ namespace iTextSharp.text.pdf
         /// </summary>
         /// <param name="isp">the  InputStream  containing the document. The stream is read to the</param>
         /// <param name="ownerPassword">the password to read the document</param>
-        public PdfReader(Stream isp, byte[] ownerPassword)
+        /// <param name="forceRead">force the read of the entire stream, even it's a FileStream</param>
+        public PdfReader(Stream isp, byte[] ownerPassword, bool forceRead = true)
         {
             Password = ownerPassword;
-            Tokens = new PrTokeniser(new RandomAccessFileOrArray(isp));
+            Tokens = new PrTokeniser(new RandomAccessFileOrArray(isp, forceRead));
             ReadPdf();
         }
 
@@ -234,7 +235,8 @@ namespace iTextSharp.text.pdf
         /// @throws IOException on error
         /// </summary>
         /// <param name="isp">the  InputStream  containing the document. The stream is read to the</param>
-        public PdfReader(Stream isp) : this(isp, null)
+        /// <param name="forceRead">force the read of the entire stream, even it's a FileStream</param>
+        public PdfReader(Stream isp, bool forceRead = true) : this(isp, null, forceRead)
         {
         }
 
