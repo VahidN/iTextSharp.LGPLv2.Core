@@ -22,7 +22,7 @@ steps:
   displayName: Test
   inputs:
     command: 'test'
-    arguments: '--filter "TestCategory!=Not working&TestCategory!=Manual Only" --collect "Code Coverage" --verbosity d'
+    arguments: '--filter "TestCategory!=Not working&TestCategory!=Manual Only" --collect "Code Coverage"'
 - task: DotNetCoreCLI@2
   displayName: Pack
   inputs: 
