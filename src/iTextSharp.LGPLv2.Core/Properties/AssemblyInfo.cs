@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("iTextSharp.LGPLv2.Core")]
+[assembly: AssemblyCompany("Fiftytwo A/S")]
+[assembly: AssemblyProduct("OneTooX.iTextSharp")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyTitle("iTextSharp.LGPLv2.Core")]
-[assembly: AssemblyDescription("iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.")]
+[assembly: AssemblyDescription("iTextSharp classes for OneTooX based on https://github.com/VahidN/iTextSharp.LGPLv2.Core.")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
