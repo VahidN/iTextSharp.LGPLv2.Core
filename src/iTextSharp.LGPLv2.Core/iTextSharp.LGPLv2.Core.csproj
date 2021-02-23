@@ -8,7 +8,7 @@
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
+    <AssemblyName>OneTooX.iTextSharp</AssemblyName>
     <PackageId>OneTooX.iTextSharp</PackageId>
     <PackageTags>OneTooX;iTextSharp;PDF;.NET Core;aspnetcore</PackageTags>
     <PackageProjectUrl>https://github.com/OneTooX/iTextSharp.LGPLv2.Core</PackageProjectUrl>
@@ -25,6 +25,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <Version>1.0.0</Version>
+    <RootNamespace>OneTooX.iTextSharp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
