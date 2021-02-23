@@ -7,7 +7,8 @@ namespace System.util.collections
         /// <summary>
         /// sentinelNode is convenient way of indicating a leaf node.
         /// </summary>
-        public static readonly OrderedTreeNode SentinelNode;
+        [ThreadStatic]
+        private static OrderedTreeNode sentinelNode;
 
         /// <summary>
         /// the number of nodes contained in the tree
@@ -23,14 +24,21 @@ namespace System.util.collections
         /// </summary>
         private OrderedTreeNode _rbTree;
 
-        static OrderedTree()
+        public static OrderedTreeNode SentinelNode
         {
-            // set up the sentinel node. the sentinel node is the key to a successfull
-            // implementation and for understanding the red-black tree properties.
-            SentinelNode = new OrderedTreeNode();
-            SentinelNode.Left = SentinelNode.Right = SentinelNode;
-            SentinelNode.Parent = null;
-            SentinelNode.Color = OrderedTreeNode.BLACK;
+            get
+            {
+                if (sentinelNode == null)
+                {
+                    // set up the sentinel node. the sentinel node is the key to a successfull
+                    // implementation and for understanding the red-black tree properties.
+                    sentinelNode = new OrderedTreeNode();
+                    sentinelNode.Left = sentinelNode.Right = sentinelNode;
+                    sentinelNode.Parent = null;
+                    sentinelNode.Color = OrderedTreeNode.BLACK;
+                }
+                return sentinelNode;
+            }
         }
 
         public OrderedTree()
