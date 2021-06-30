@@ -16,7 +16,6 @@ namespace iTextSharp.text.pdf
     /// </summary>
     public class PdfPages
     {
-
         private readonly ArrayList _pages = new ArrayList();
         private readonly ArrayList _parents = new ArrayList();
         private readonly PdfWriter _writer;
@@ -25,11 +24,9 @@ namespace iTextSharp.text.pdf
         /// <summary>
         /// constructors
         /// </summary>
-
         /// <summary>
         /// Constructs a  PdfPages -object.
         /// </summary>
-
         internal PdfPages(PdfWriter writer)
         {
             _writer = writer;
@@ -41,7 +38,7 @@ namespace iTextSharp.text.pdf
         {
             if ((_pages.Count % _leafSize) == 0)
                 _parents.Add(_writer.PdfIndirectReference);
-            PdfIndirectReference parent = (PdfIndirectReference)_parents[_parents.Count - 1];
+            PdfIndirectReference parent = (PdfIndirectReference) _parents[_parents.Count - 1];
             page.Put(PdfName.Parent, parent);
             PdfIndirectReference current = _writer.CurrentPage;
             _writer.AddToBody(page, current);
@@ -58,7 +55,7 @@ namespace iTextSharp.text.pdf
             if ((_pages.Count % _leafSize) == 0)
                 _parents.Add(_writer.PdfIndirectReference);
             _pages.Add(pageRef);
-            return (PdfIndirectReference)_parents[_parents.Count - 1];
+            return (PdfIndirectReference) _parents[_parents.Count - 1];
         }
 
         internal int ReorderPages(int[] order)
@@ -142,17 +139,17 @@ namespace iTextSharp.text.pdf
                     {
                         if ((p % _leafSize) == 0)
                             nextParents.Add(_writer.PdfIndirectReference);
-                        top.Put(PdfName.Parent, (PdfIndirectReference)nextParents[p / _leafSize]);
+                        top.Put(PdfName.Parent, (PdfIndirectReference) nextParents[p / _leafSize]);
                     }
                     else
                     {
                         top.Put(PdfName.Itxt, new PdfString(Document.Release));
                     }
-                    _writer.AddToBody(top, (PdfIndirectReference)tParents[p]);
+                    _writer.AddToBody(top, (PdfIndirectReference) tParents[p]);
                 }
                 if (tParents.Count == 1)
                 {
-                    TopParent = (PdfIndirectReference)tParents[0];
+                    TopParent = (PdfIndirectReference) tParents[0];
                     return TopParent;
                 }
                 tPages = tParents;
