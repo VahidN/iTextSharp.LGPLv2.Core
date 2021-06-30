@@ -141,10 +141,6 @@ namespace iTextSharp.text.pdf
                             nextParents.Add(_writer.PdfIndirectReference);
                         top.Put(PdfName.Parent, (PdfIndirectReference) nextParents[p / _leafSize]);
                     }
-                    else
-                    {
-                        top.Put(PdfName.Itxt, new PdfString(Document.Release));
-                    }
                     _writer.AddToBody(top, (PdfIndirectReference) tParents[p]);
                 }
                 if (tParents.Count == 1)

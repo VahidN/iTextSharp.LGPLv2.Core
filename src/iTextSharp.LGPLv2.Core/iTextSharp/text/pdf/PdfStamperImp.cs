@@ -771,7 +771,6 @@ namespace iTextSharp.text.pdf
             AddFieldResources();
             PdfDictionary catalog = Reader.Catalog;
             PdfDictionary pages = (PdfDictionary) PdfReader.GetPdfObject(catalog.Get(PdfName.Pages));
-            pages.Put(PdfName.Itxt, new PdfString(Document.Release));
             MarkUsed(pages);
             PdfDictionary acroForm = (PdfDictionary) PdfReader.GetPdfObject(catalog.Get(PdfName.Acroform), Reader.Catalog);
             if (acroFields != null && acroFields.Xfa.Changed)
