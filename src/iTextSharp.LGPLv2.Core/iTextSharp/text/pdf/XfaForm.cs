@@ -166,7 +166,16 @@ namespace iTextSharp.text.pdf
             MemoryStream fout = new MemoryStream();
             var xwSettings = new XmlWriterSettings
             {
-                Encoding = new UTF8Encoding(false)
+                Encoding = new UTF8Encoding(false),
+                IndentChars = "  ",
+                Indent = true,
+                NewLineChars = "\n",
+                // We have to omit the XML delcaration, otherwise we'll confuse
+                // the PDF readers when they try to process the XFA data
+                OmitXmlDeclaration = true,
+                // We don't really care if we're starting from a top-level
+                // document or an individual element
+                ConformanceLevel = ConformanceLevel.Auto
             };
             var xw = XmlWriter.Create(fout, xwSettings);
             n.WriteContentTo(xw);
