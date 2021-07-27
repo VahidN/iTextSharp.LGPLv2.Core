@@ -167,7 +167,7 @@ namespace iTextSharp.text.pdf
             MemoryStream fout = new MemoryStream();
             using (XmlWriter sw = XmlWriter.Create(fout, new XmlWriterSettings
             {
-                // Specify the encoding manyally, so we can ask for the UTF
+                // Specify the encoding manually, so we can ask for the UTF
                 // identifier to not be included in the output
                 Encoding = new UTF8Encoding(false),
                 // We have to omit the XML delcaration, otherwise we'll confuse
