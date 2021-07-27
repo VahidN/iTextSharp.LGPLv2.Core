@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace iTextSharp.text.pdf
 {
@@ -164,26 +165,27 @@ namespace iTextSharp.text.pdf
         public static byte[] SerializeDoc(XmlNode n)
         {
             MemoryStream fout = new MemoryStream();
-            var xwSettings = new XmlWriterSettings
+            using (XmlWriter sw = XmlWriter.Create(fout, new XmlWriterSettings
             {
+                // Specify the encoding manually, so we can ask for the UTF
+                // identifier to not be included in the output
                 Encoding = new UTF8Encoding(false),
-                IndentChars = "  ",
-                Indent = true,
-                NewLineChars = "\n",
                 // We have to omit the XML delcaration, otherwise we'll confuse
                 // the PDF readers when they try to process the XFA data
                 OmitXmlDeclaration = true,
-                // We don't really care if we're starting from a top-level
-                // document or an individual element
-                ConformanceLevel = ConformanceLevel.Auto
-            };
-            var xw = XmlWriter.Create(fout, xwSettings);
-            n.WriteContentTo(xw);
-#if NET40
-            xw.Close();
-#else
-            xw.Dispose();
-#endif
+            }))
+            {
+                // We use an XmlSerializer here so that we include the node itself
+                // in the output text ; if we would've used n.WriteContentTo, as
+                // the name implies, only the content of the node would have been
+                // added, instead of the full node.
+                //
+                // This does require adding the System.Xml.XmlSerializer NuGet package
+                // to the netstandard1.3 target, as it is not available out of the box
+                XmlSerializer ser = new XmlSerializer(typeof(XmlNode));
+                ser.Serialize(sw, n);
+            }
+
             return fout.ToArray();
         }
 
