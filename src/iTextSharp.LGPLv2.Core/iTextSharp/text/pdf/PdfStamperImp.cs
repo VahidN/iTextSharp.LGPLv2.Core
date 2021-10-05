@@ -851,8 +851,20 @@ namespace iTextSharp.text.pdf
             }
             // metadata
             int skipInfo = -1;
-            PrIndirectReference iInfo = (PrIndirectReference)Reader.Trailer.Get(PdfName.Info);
-            PdfDictionary oldInfo = (PdfDictionary)PdfReader.GetPdfObject(iInfo);
+            var infoObj = Reader.Trailer.Get(PdfName.Info);
+            PrIndirectReference iInfo;
+            PdfDictionary oldInfo;
+
+            if (infoObj is PdfIndirectReference)
+            {
+                iInfo = (PrIndirectReference)infoObj;
+                oldInfo = (PdfDictionary)PdfReader.GetPdfObject(iInfo);
+            }
+            else
+            {
+                iInfo = null;
+                oldInfo = (PdfDictionary)infoObj;
+            }
             string producer = null;
             if (iInfo != null)
                 skipInfo = iInfo.Number;
