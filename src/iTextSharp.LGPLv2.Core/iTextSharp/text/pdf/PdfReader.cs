@@ -11,6 +11,7 @@ using System.util.zlib;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.X509;
+using System.Diagnostics;
 
 namespace iTextSharp.text.pdf
 {
@@ -106,6 +107,8 @@ namespace iTextSharp.text.pdf
         private PrIndirectReference _cryptoRef;
         private bool _encryptionError;
         private bool _hybridXref;
+        private bool _bBailout = false;
+        private int _iPRObjectDepth = 0;
         private int _lastXrefPartial = -1;
         private int _objGen;
         private int _objNum;
@@ -2356,9 +2359,15 @@ namespace iTextSharp.text.pdf
         protected internal PdfArray ReadArray()
         {
             PdfArray array = new PdfArray();
-            while (true)
+            for (int i = 0; i < 2000000; i++) //Limit for bad files that cause loop
             {
+                _iPRObjectDepth++;
+                if (_iPRObjectDepth > 1000) //Check that recursion depth from ReadPrObject calls isn't too much
+                {
+                    break;
+                }
                 PdfObject obj = ReadPrObject();
+                _iPRObjectDepth--;
                 int type = obj.Type;
                 if (-type == PrTokeniser.TK_END_ARRAY)
                     break;
@@ -2372,8 +2381,9 @@ namespace iTextSharp.text.pdf
         protected internal PdfDictionary ReadDictionary()
         {
             PdfDictionary dic = new PdfDictionary();
-            while (true)
+            for (int i = 0; i < 1000000; i++) //Limit for bad files that cause loop
             {
+                i++;
                 Tokens.NextValidToken();
                 if (Tokens.TokenType == PrTokeniser.TK_END_DIC)
                     break;
@@ -2558,6 +2568,10 @@ namespace iTextSharp.text.pdf
         protected internal void ReadPages()
         {
             catalog = trailer.GetAsDict(PdfName.Root);
+            if (catalog == null)
+            {
+                throw new Exception("In ItextSharp PdfReader Readpages method, catalog is null.");
+            }
             _rootPages = catalog.GetAsDict(PdfName.Pages);
             pageRefs = new PageRefs(this);
         }
@@ -2570,7 +2584,8 @@ namespace iTextSharp.text.pdf
                 pdfVersion = Tokens.CheckPdfHeader();
                 try
                 {
-                    ReadXref();
+                    if (_bBailout == false)
+                        ReadXref();
                 }
                 catch (Exception e)
                 {
@@ -2587,7 +2602,8 @@ namespace iTextSharp.text.pdf
                 }
                 try
                 {
-                    ReadDocObj();
+                    if (_bBailout == false)
+                        ReadDocObj();
                 }
                 catch (Exception ne)
                 {
@@ -2628,7 +2644,8 @@ namespace iTextSharp.text.pdf
                 pdfVersion = Tokens.CheckPdfHeader();
                 try
                 {
-                    ReadXref();
+                    if (_bBailout == false)
+                        ReadXref();
                 }
                 catch (Exception e)
                 {
@@ -2643,8 +2660,11 @@ namespace iTextSharp.text.pdf
                         throw new InvalidPdfException("Rebuild failed: " + ne.Message + "; Original message: " + e.Message);
                     }
                 }
-                ReadDocObjPartial();
-                ReadPages();
+                if (_bBailout == false)
+                {
+                    ReadDocObjPartial();
+                    ReadPages();
+                }
             }
             catch (IOException)
             {
@@ -2831,18 +2851,21 @@ namespace iTextSharp.text.pdf
             }
             catch { }
             xrefByteOffset.Add(startxref);
-            Xref = null;
-            Tokens.Seek(startxref);
-            trailer = ReadXrefSection();
-            PdfDictionary trailer2 = trailer;
-            while (true)
+            if (_bBailout == false)
             {
-                PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
-                if (prev == null)
-                    break;
-                xrefByteOffset.Add(prev.IntValue);
-                Tokens.Seek(prev.IntValue);
-                trailer2 = ReadXrefSection();
+                Xref = null;
+                Tokens.Seek(startxref);
+                trailer = ReadXrefSection();
+                PdfDictionary trailer2 = trailer;
+                while (true)
+                {
+                    PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
+                    if (prev == null)
+                        break;
+                    xrefByteOffset.Add(prev.IntValue);
+                    Tokens.Seek(prev.IntValue);
+                    trailer2 = ReadXrefSection();
+                }
             }
         }
 
@@ -3051,6 +3074,13 @@ namespace iTextSharp.text.pdf
 
             if (prev == -1)
                 return true;
+            
+            //before we go on, let's make sure we haven't done this a number of times that indicates a problematic recursion loop
+            if (new StackTrace().FrameCount > 200)
+            {
+                _bBailout = true;
+                throw new StackOverflowException("Likely recursion loop issue.");
+            }
             return ReadXRefStream(prev);
         }
 
@@ -3967,7 +3997,7 @@ namespace iTextSharp.text.pdf
                 _refsp = null;
                 _refsn = new ArrayList();
                 _pageInh = new ArrayList();
-                iteratePages((PrIndirectReference)_reader.catalog.Get(PdfName.Pages));
+                iteratePages((PrIndirectReference)_reader.catalog.Get(PdfName.Pages), 0);
                 _pageInh = null;
                 _reader._rootPages.Put(PdfName.Count, new PdfNumber(_refsn.Count));
             }
@@ -4075,43 +4105,48 @@ namespace iTextSharp.text.pdf
                 }
             }
 
-            private void iteratePages(PrIndirectReference rpage)
+            private void iteratePages(PrIndirectReference rpage, int depth)
             {
-                PdfDictionary page = (PdfDictionary)GetPdfObject(rpage);
-                PdfArray kidsPr = page.GetAsArray(PdfName.Kids);
-                if (kidsPr == null)
+                try
                 {
-                    page.Put(PdfName.TYPE, PdfName.Page);
-                    PdfDictionary dic = (PdfDictionary)_pageInh[_pageInh.Count - 1];
-                    foreach (PdfName key in dic.Keys)
+                    PdfDictionary page = (PdfDictionary)GetPdfObject(rpage);
+                    PdfArray kidsPr = page.GetAsArray(PdfName.Kids);
+                    if (kidsPr == null)
                     {
-                        if (page.Get(key) == null)
-                            page.Put(key, dic.Get(key));
-                    }
-                    if (page.Get(PdfName.Mediabox) == null)
-                    {
-                        PdfArray arr = new PdfArray(new[] { 0, 0, PageSize.Letter.Right, PageSize.Letter.Top });
-                        page.Put(PdfName.Mediabox, arr);
-                    }
-                    _refsn.Add(rpage);
-                }
-                else
-                {
-                    page.Put(PdfName.TYPE, PdfName.Pages);
-                    pushPageAttributes(page);
-                    for (int k = 0; k < kidsPr.Size; ++k)
-                    {
-                        PdfObject obj = kidsPr[k];
-                        if (!obj.IsIndirect())
+                        page.Put(PdfName.TYPE, PdfName.Page);
+                        PdfDictionary dic = (PdfDictionary)_pageInh[_pageInh.Count - 1];
+                        foreach (PdfName key in dic.Keys)
                         {
-                            while (k < kidsPr.Size)
-                                kidsPr.Remove(k);
-                            break;
+                            if (page.Get(key) == null)
+                                page.Put(key, dic.Get(key));
                         }
-                        iteratePages((PrIndirectReference)obj);
+                        if (page.Get(PdfName.Mediabox) == null)
+                        {
+                            PdfArray arr = new PdfArray(new[] { 0, 0, PageSize.Letter.Right, PageSize.Letter.Top });
+                            page.Put(PdfName.Mediabox, arr);
+                        }
+                        _refsn.Add(rpage);
                     }
-                    popPageAttributes();
+                    else
+                    {
+                        page.Put(PdfName.TYPE, PdfName.Pages);
+                        pushPageAttributes(page);
+                        for (int k = 0; k < kidsPr.Size; ++k)
+                        {
+                            PdfObject obj = kidsPr[k];
+                            if (!obj.IsIndirect())
+                            {
+                                while (k < kidsPr.Size)
+                                    kidsPr.Remove(k);
+                                break;
+                            }
+                            if (depth < 2000) //Depth limit for bad files that cause loop
+                                iteratePages((PrIndirectReference)obj, depth + 1);
+                        }
+                        popPageAttributes();
+                    }
                 }
+                catch { }
             }
 
             private void popPageAttributes()

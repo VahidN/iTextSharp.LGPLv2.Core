@@ -405,6 +405,8 @@ namespace iTextSharp.text.pdf
                 Extra[2] = (byte)(number >> 16);
                 Extra[3] = (byte)generation;
                 Extra[4] = (byte)(generation >> 8);
+                if ((Mkey != null) || (Extra != null) || (_salt != null))
+                    throw new Exception("Null value in PDFEncryption method SetHashKey");
                 md5.TransformBlock(Mkey, 0, Mkey.Length, Mkey, 0);
                 md5.TransformBlock(Extra, 0, Extra.Length, Extra, 0);
                 if (_revision == AES_128)

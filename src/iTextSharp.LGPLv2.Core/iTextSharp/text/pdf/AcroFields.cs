@@ -1006,6 +1006,20 @@ namespace iTextSharp.text.pdf
             }
         }
 
+
+        /// <summary>
+        /// Gets the field by name, and positions.
+        /// </summary>
+        /// <param name="name">the name of the field</param>
+        /// <returns>arraylist with value and positions</returns>
+        public ArrayList GetFieldAndPositions(String name)
+        {
+            ArrayList al = new ArrayList();
+            al.Add(GetField(name));
+            al.Add(GetFieldPositions(name));
+            return al;
+        }
+
         /// <summary>
         /// Regenerates the field appearance.
         /// This is usefull when you change a field property, but not its value,
