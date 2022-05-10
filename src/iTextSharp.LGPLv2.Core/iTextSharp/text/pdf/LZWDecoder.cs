@@ -217,7 +217,10 @@ namespace iTextSharp.text.pdf
         /// </summary>
         public void WriteString(byte[] str)
         {
-            _uncompData.Write(str, 0, str.Length);
+            if (str == null)
+                throw new Exception("Tried to write from null location in LZWdecoder, method WriteString.");
+            else
+                _uncompData.Write(str, 0, str.Length);
         }
     }
 }
