@@ -2,7 +2,7 @@
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
     <LangVersion>latest</LangVersion>
-    <TargetFramework>net6</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>iTextSharp.LGPLv2.Core.FunctionalTests</AssemblyName>
     <PackageId>iTextSharp.LGPLv2.Core.FunctionalTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
