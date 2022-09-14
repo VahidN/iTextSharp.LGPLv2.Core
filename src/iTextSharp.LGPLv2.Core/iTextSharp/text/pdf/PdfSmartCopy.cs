@@ -176,7 +176,7 @@ namespace iTextSharp.text.pdf
                     serDic((PdfDictionary)obj, level - 1, bb);
                     if (level > 0)
                     {
-                        using (var md5 = MD5.Create())
+                        using (var md5 = MD5BouncyCastle.Create())
                         {
                             bb.Append(md5.ComputeHash(PdfReader.GetStreamBytesRaw((PrStream)obj)));
                         }
