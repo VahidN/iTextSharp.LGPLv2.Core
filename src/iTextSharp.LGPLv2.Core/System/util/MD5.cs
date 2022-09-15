@@ -11,8 +11,15 @@ namespace iTextSharp
     /// </summary>
     public sealed class MD5BouncyCastle : HashAlgorithm
     {
+#if NET40
+        public static new HashAlgorithm Create() =>	MD5.Create();
+#else	
         public static new HashAlgorithm Create() =>
-            System.Runtime.InteropServices.RuntimeInformation.OSDescription == "Browser" ? new MD5BouncyCastle() : MD5.Create();
+            string.Equals(System.Runtime.InteropServices.RuntimeInformation.OSDescription, "Browser", StringComparison.OrdinalIgnoreCase) ? 
+			new MD5BouncyCastle() : 
+			MD5.Create();
+#endif			
+			
         private MD5BouncyCastle() { }
 
         private MD5Digest _digestInternal = new();
