@@ -116,7 +116,7 @@ namespace iTextSharp.text.pdf
             long time = DateTime.Now.Ticks + Environment.TickCount;
             long mem = GC.GetTotalMemory(false);
             string s = time + "+" + mem + "+" + (Seq++);
-            return MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(s));
+            return MD5BouncyCastle.Create().ComputeHash(Encoding.ASCII.GetBytes(s));
         }
 
         public static PdfObject CreateInfoId(byte[] id)
@@ -396,8 +396,7 @@ namespace iTextSharp.text.pdf
 
         public void SetHashKey(int number, int generation)
         {
-#if NET40
-            using (var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = MD5BouncyCastle.Create())
             {
                 md5.Initialize();
                 Extra[0] = (byte)number;
@@ -415,22 +414,6 @@ namespace iTextSharp.text.pdf
                 md5.TransformFinalBlock(Extra, 0, 0);
                 Key = md5.Hash;
             }
-#else
-            using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
-            {
-                Extra[0] = (byte)number;
-                Extra[1] = (byte)(number >> 8);
-                Extra[2] = (byte)(number >> 16);
-                Extra[3] = (byte)generation;
-                Extra[4] = (byte)(generation >> 8);
-                md5.AppendData(Mkey, 0, Mkey.Length);
-                md5.AppendData(Extra, 0, Extra.Length);
-                if (_revision == AES_128)
-                    md5.AppendData(_salt, 0, _salt.Length);
-
-                Key = md5.GetHashAndReset();
-            }
-#endif
 
             KeySize = Mkey.Length + 5;
             if (KeySize > 16)
@@ -443,7 +426,7 @@ namespace iTextSharp.text.pdf
         public void SetupAllKeys(byte[] userPassword, byte[] ownerPassword, int permissions)
         {
             if (ownerPassword == null || ownerPassword.Length == 0)
-                ownerPassword = MD5.Create().ComputeHash(CreateDocumentId());
+                ownerPassword = MD5BouncyCastle.Create().ComputeHash(CreateDocumentId());
 
             permissions |= (int)((_revision == STANDARD_ENCRYPTION_128 || _revision == AES_128) ? 0xfffff0c0 : 0xffffffc0);
             permissions &= unchecked((int)0xfffffffc);
@@ -480,7 +463,7 @@ namespace iTextSharp.text.pdf
         private byte[] computeOwnerKey(byte[] userPad, byte[] ownerPad)
         {
             byte[] ownerKey = new byte[32];
-            var md5 = MD5.Create();
+            var md5 = MD5BouncyCastle.Create();
             byte[] digest = md5.ComputeHash(ownerPad);
             if (_revision == STANDARD_ENCRYPTION_128 || _revision == AES_128)
             {
@@ -549,9 +532,8 @@ namespace iTextSharp.text.pdf
             Mkey = new byte[_keyLength / 8];
             byte[] digest = new byte[Mkey.Length];
 
-#if NET40
             //fixed by ujihara in order to follow PDF refrence
-            using (var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = MD5BouncyCastle.Create())
             {
                 md5.Initialize();
                 md5.TransformBlock(userPad, 0, userPad.Length, userPad, 0);
@@ -571,25 +553,6 @@ namespace iTextSharp.text.pdf
 
                 Array.Copy(md5.Hash, 0, digest, 0, Mkey.Length);
             }
-#else
-            //fixed by ujihara in order to follow PDF refrence
-            var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
-            md5.AppendData(userPad, 0, userPad.Length);
-            md5.AppendData(ownerKey, 0, ownerKey.Length);
-
-            byte[] ext = new byte[4];
-            ext[0] = (byte)permissions;
-            ext[1] = (byte)(permissions >> 8);
-            ext[2] = (byte)(permissions >> 16);
-            ext[3] = (byte)(permissions >> 24);
-            md5.AppendData(ext, 0, 4);
-            if (documentId != null)
-                md5.AppendData(documentId, 0, documentId.Length);
-            if (!_encryptMetadata)
-                md5.AppendData(MetadataPad, 0, MetadataPad.Length);
-
-            Array.Copy(md5.GetHashAndReset(), 0, digest, 0, Mkey.Length);
-#endif
 
 
             // only use the really needed bits as input for the hash
@@ -597,7 +560,7 @@ namespace iTextSharp.text.pdf
             {
                 for (int k = 0; k < 50; ++k)
                 {
-                    using (var md5Hash = MD5.Create())
+                    using (var md5Hash = MD5BouncyCastle.Create())
                     {
                         Array.Copy(md5Hash.ComputeHash(digest), 0, digest, 0, Mkey.Length);
                     }
@@ -617,22 +580,13 @@ namespace iTextSharp.text.pdf
             if (_revision == STANDARD_ENCRYPTION_128 || _revision == AES_128)
             {
                 byte[] digest;
-#if NET40
-                using (var md5 = new MD5CryptoServiceProvider())
+                using (var md5 = MD5BouncyCastle.Create())
                 {
                     md5.Initialize();
                     md5.TransformBlock(_pad, 0, _pad.Length, _pad, 0);
                     md5.TransformFinalBlock(DocumentId, 0, DocumentId.Length);
                     digest = md5.Hash;
                 }
-#else
-                using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
-                {
-                    md5.AppendData(_pad, 0, _pad.Length);
-                    md5.AppendData(DocumentId, 0, DocumentId.Length);
-                    digest = md5.GetHashAndReset();
-                }
-#endif
                 Array.Copy(digest, 0, UserKey, 0, 16);
                 for (int k = 16; k < 32; ++k)
                     UserKey[k] = 0;

@@ -52,7 +52,7 @@ namespace iTextSharp.text
                 _global = globals;
                 try
                 {
-                    using (var md5 = MD5.Create())
+                    using (var md5 = MD5BouncyCastle.Create())
                     {
                         _globalHash = md5.ComputeHash(_global);
                     }
