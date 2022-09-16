@@ -14,6 +14,7 @@ steps:
   inputs:
     command: 'test'
     arguments: '--filter "TestCategory!=Not working&TestCategory!=Manual Only"'
+    publishTestResults: false
 - task: DotNetCoreCLI@2
   displayName: Pack
   inputs: 
