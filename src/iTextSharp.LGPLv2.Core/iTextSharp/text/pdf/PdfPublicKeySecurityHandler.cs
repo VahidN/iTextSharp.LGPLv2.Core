@@ -72,7 +72,7 @@ namespace iTextSharp.text.pdf
 
             MemoryStream baos = new MemoryStream();
 
-            DerOutputStream k = new DerOutputStream(baos);
+            Asn1OutputStream k = Asn1OutputStream.Create(baos, Asn1Encodable.Der);
 
             k.WriteObject(obj);
 
