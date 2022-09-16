@@ -8,6 +8,8 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace iTextSharp.text.pdf
 {
@@ -54,34 +56,20 @@ namespace iTextSharp.text.pdf
         {
             OcspReq request = generateOcspRequest(_rootCert, _checkCert.SerialNumber);
             byte[] array = request.GetEncoded();
-            HttpWebRequest con = (HttpWebRequest)WebRequest.Create(_url);
-            con.ContentType = "application/ocsp-request";
-            con.Accept = "application/ocsp-response";
-            con.Method = "POST";
-#if NET40
-            Stream outp = con.GetRequestStream();
-#else
-            Stream outp = con.GetRequestStreamAsync().Result;
-#endif
-            outp.Write(array, 0, array.Length);
-            outp.Dispose();
+            ByteArrayContent content = new ByteArrayContent(array);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/ocsp-request");
+            using HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/ocsp-response"));
 
-#if NET40
-            HttpWebResponse response = (HttpWebResponse)con.GetResponse();
-#else
-            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().GetAwaiter().GetResult();
-#endif
+            HttpResponseMessage response = client.PostAsync(_url, content).Result;
+            content.Dispose();
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException($"Invalid HTTP response: {(int)response.StatusCode}");
-            Stream inp = response.GetResponseStream();
+            Stream inp = response.Content.ReadAsStream();
             OcspResp ocspResponse = new OcspResp(inp);
             inp.Dispose();
-#if NET40
-            response.Close();
-#else
             response.Dispose();
-#endif
 
             if (ocspResponse.Status != 0)
                 throw new IOException("Invalid status: " + ocspResponse.Status);

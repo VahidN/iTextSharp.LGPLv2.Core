@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.util;
 using Org.BouncyCastle.Math;
@@ -151,33 +154,21 @@ namespace iTextSharp.text.pdf
         /// <returns>- byte[] - TSA response, raw bytes (RFC 3161 encoded)</returns>
         protected internal virtual byte[] GetTsaResponse(byte[] requestBytes)
         {
-            HttpWebRequest con = (HttpWebRequest)WebRequest.Create(TsaUrl);
-            con.ContentType = "application/timestamp-query";
-            con.Method = "POST";
+            using HttpClient client = new HttpClient();
+            ByteArrayContent content = new ByteArrayContent(requestBytes);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/timestamp-query");
             if ((TsaUsername != null) && !TsaUsername.Equals(""))
             {
                 string authInfo = TsaUsername + ":" + TsaPassword;
                 authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
-                con.Headers["Authorization"] = "Basic " + authInfo;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authInfo);
             }
-
-#if NET40
-            Stream outp = con.GetRequestStream();
-#else
-            Stream outp = con.GetRequestStreamAsync().Result;
-#endif
-            outp.Write(requestBytes, 0, requestBytes.Length);
-            outp.Dispose();
-
-#if NET40
-            HttpWebResponse response = (HttpWebResponse)con.GetResponse();
-#else
-            HttpWebResponse response = (HttpWebResponse)con.GetResponseAsync().GetAwaiter().GetResult();
-#endif
+            HttpResponseMessage response = client.PostAsync(TsaUrl, content).Result;
+            content.Dispose();
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException("Invalid HTTP response: " + (int)response.StatusCode);
-            Stream inp = response.GetResponseStream();
-            string encoding = response.Headers["Content-Encoding"];
+            Stream inp = response.Content.ReadAsStream();
+            string encoding = response.Headers.GetValues("Content-Encoding").FirstOrDefault();
 
             MemoryStream baos = new MemoryStream();
             byte[] buffer = new byte[1024];
@@ -187,11 +178,7 @@ namespace iTextSharp.text.pdf
                 baos.Write(buffer, 0, bytesRead);
             }
             inp.Dispose();
-#if NET40
-            response.Close();
-#else
             response.Dispose();
-#endif
 
             byte[] respBytes = baos.ToArray();
 
