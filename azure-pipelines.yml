@@ -1,27 +1,34 @@
-variables:
-  ${{ if eq(length(split(variables['Build.SourceBranchName'], '.')), 2) }}:
-    otxVersion: ${{ variables['Build.SourceBranchName'] }}
-  ${{ else }}:
-    otxVersion: '22.5'
-name: $(otxVersion).$(Rev:r)
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
 trigger:
 - master
+
 pool:
   vmImage: 'windows-latest'
+
+variables:
+    major: 1
+    minor: 0
+name: $(major).$(minor).$(Rev:r)
 steps:
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: 'build'
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
     command: 'test'
-    arguments: '--filter "TestCategory!=Not working&TestCategory!=Manual Only"'
-    publishTestResults: false
+    arguments: '--filter "TestCategory!=Not working&TestCategory!=Manual Only" --collect "Code Coverage"'
 - task: DotNetCoreCLI@2
   displayName: Pack
   inputs: 
     command: 'pack'
     outputDir: '$(Build.ArtifactStagingDirectory)'
     versioningScheme: byBuildNumber
-    buildProperties: 'Version=$(Build.BuildNumber)'
 - task: NuGetCommand@2
   displayName: 'NuGet push'
   inputs:
