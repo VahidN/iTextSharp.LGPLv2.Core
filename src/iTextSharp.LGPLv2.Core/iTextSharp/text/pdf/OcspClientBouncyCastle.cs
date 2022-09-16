@@ -66,7 +66,7 @@ namespace iTextSharp.text.pdf
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException($"Invalid HTTP response: {(int)response.StatusCode}");
-            Stream inp = response.Content.ReadAsStream();
+            Stream inp = response.Content.ReadAsStreamAsync().Result;
             OcspResp ocspResponse = new OcspResp(inp);
             inp.Dispose();
             response.Dispose();

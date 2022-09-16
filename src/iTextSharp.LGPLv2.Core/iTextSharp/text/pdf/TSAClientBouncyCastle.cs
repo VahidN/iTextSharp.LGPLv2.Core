@@ -167,7 +167,7 @@ namespace iTextSharp.text.pdf
             content.Dispose();
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new IOException("Invalid HTTP response: " + (int)response.StatusCode);
-            Stream inp = response.Content.ReadAsStream();
+            Stream inp = response.Content.ReadAsStreamAsync().Result;
             string encoding = response.Headers.GetValues("Content-Encoding").FirstOrDefault();
 
             MemoryStream baos = new MemoryStream();
