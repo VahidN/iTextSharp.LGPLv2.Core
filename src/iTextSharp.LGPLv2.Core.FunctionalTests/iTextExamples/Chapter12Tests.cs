@@ -9,8 +9,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
     [TestClass]
     public class Chapter12Tests
     {
-        readonly byte[] _ownerPassword = Encoding.UTF8.GetBytes("World");
-        readonly byte[] _userPassword = Encoding.UTF8.GetBytes("Hello");
+        private readonly string _ownerPassword = "World";
+        private readonly string _userPassword = "Hello";
 
         [TestMethod]
         public void Verify_EncryptionPdf_CanBeCreated()
@@ -28,7 +28,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
 
         private byte[] createPdf()
         {
-            using (var ms = new MemoryStream())
+            using (var output = new MemoryStream())
             {
                 // step 1
                 var document = new Document();
@@ -38,12 +38,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
                 permissions |= PdfWriter.AllowCopy;
                 permissions |= PdfWriter.AllowScreenReaders;
 
-                var writer = PdfWriter.GetInstance(document, ms);
-                writer.SetEncryption(
-                  _userPassword, _ownerPassword,
-                  permissions,
-                  PdfWriter.STANDARD_ENCRYPTION_128
-                );
+                var writer = PdfWriter.GetInstance(document, output);
+                writer.SetEncryption(PdfWriter.STANDARD_ENCRYPTION_128, _userPassword, _ownerPassword, permissions);
                 document.AddAuthor(TestUtils.Author);
                 writer.CreateXmpMetadata();
                 // step 3
@@ -53,42 +49,38 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
 
                 document.Close();
 
-                return ms.ToArray();
+                return output.ToArray();
             }
         }
 
         private byte[] decryptPdf(byte[] src)
         {
-            using (var ms = new MemoryStream())
+            using (var output = new MemoryStream())
             {
-                var reader = new PdfReader(src, _ownerPassword);
+                var reader = new PdfReader(src, DocWriter.GetIsoBytes(_ownerPassword));
 
-                var stamper = new PdfStamper(reader, ms);
+                var stamper = new PdfStamper(reader, output);
                 stamper.Close();
                 reader.Close();
 
-                return ms.ToArray();
+                return output.ToArray();
             }
         }
 
         private byte[] encryptPdf(byte[] src)
         {
-            using (var ms = new MemoryStream())
+            using (var output = new MemoryStream())
             {
                 var reader = new PdfReader(src);
+                var stamper = new PdfStamper(reader, output);
 
-                var stamper = new PdfStamper(reader, ms);
+                stamper.SetEncryption(PdfWriter.ENCRYPTION_AES_128, _userPassword, _ownerPassword,
+                                      PdfWriter.ALLOW_PRINTING);
 
-                stamper.SetEncryption(
-                  _userPassword, _ownerPassword,
-                  PdfWriter.ALLOW_PRINTING,
-                  PdfWriter.ENCRYPTION_AES_128 | PdfWriter.DO_NOT_ENCRYPT_METADATA
-                );
-
-                stamper.Close();
+                stamper.Close();                
                 reader.Close();
 
-                return ms.ToArray();
+                return output.ToArray();
             }
         }
     }
