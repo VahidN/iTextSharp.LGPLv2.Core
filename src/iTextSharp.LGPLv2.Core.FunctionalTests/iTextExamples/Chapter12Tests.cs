@@ -17,13 +17,13 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
         {
             var pdfFilePath = TestUtils.GetOutputFileName();
             var enc1 = createPdf();
-            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath,".enc1.pdf"), enc1);
+            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath,".STANDARD_ENCRYPTION_128.pdf"), enc1);
 
             var enc2 = decryptPdf(enc1);
-            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".enc2.pdf"), enc2);
+            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".Decrypt_STANDARD_ENCRYPTION_128.pdf"), enc2);
 
             var enc3 = encryptPdf(enc2);
-            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".enc3.pdf"), enc3);
+            File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".ENCRYPTION_AES_128_DO_NOT_ENCRYPT_METADATA.pdf"), enc3);
         }
 
         private byte[] createPdf()
@@ -74,7 +74,8 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.iTextExamples
                 var reader = new PdfReader(src);
                 var stamper = new PdfStamper(reader, output);
 
-                stamper.SetEncryption(PdfWriter.ENCRYPTION_AES_128, _userPassword, _ownerPassword,
+                stamper.SetEncryption(PdfWriter.ENCRYPTION_AES_128 | PdfWriter.DO_NOT_ENCRYPT_METADATA, 
+                                      _userPassword, _ownerPassword,
                                       PdfWriter.ALLOW_PRINTING);
 
                 stamper.Close();                

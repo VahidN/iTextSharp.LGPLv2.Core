@@ -366,8 +366,8 @@ namespace iTextSharp.text.pdf
         public void SetCryptoMode(int mode, int kl)
         {
             _cryptoMode = mode;
-            _encryptMetadata = (mode & PdfWriter.DO_NOT_ENCRYPT_METADATA) == 0;
-            _embeddedFilesOnly = (mode & PdfWriter.EMBEDDED_FILES_ONLY) != 0;
+            _encryptMetadata = (mode & PdfWriter.DO_NOT_ENCRYPT_METADATA) != PdfWriter.DO_NOT_ENCRYPT_METADATA;
+            _embeddedFilesOnly = (mode & PdfWriter.EMBEDDED_FILES_ONLY) == PdfWriter.EMBEDDED_FILES_ONLY;
             mode &= PdfWriter.ENCRYPTION_MASK;
             switch (mode)
             {

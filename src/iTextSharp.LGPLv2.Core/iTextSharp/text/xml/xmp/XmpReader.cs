@@ -102,7 +102,7 @@ namespace iTextSharp.text.xml.xmp
                 };
                 var xw = XmlWriter.Create(fout, xwSettings);
                 var xmlNode = xmpmeta[0];
-                xmlNode.WriteContentTo(xw);
+                xmlNode.WriteTo(xw);
                 xw.Flush();
                 b = new UTF8Encoding(false).GetBytes(XmpWriter.XPACKET_PI_END_W);
                 fout.Write(b, 0, b.Length);
