@@ -12,6 +12,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.X509;
 using System.Diagnostics;
+using System.Linq;
 
 namespace iTextSharp.text.pdf
 {
@@ -3076,7 +3077,7 @@ namespace iTextSharp.text.pdf
                 return true;
             
             //before we go on, let's make sure we haven't done this a number of times that indicates a problematic recursion loop
-            if (new StackTrace().FrameCount > 200)
+            if ((new StackTrace().GetFrames() ?? Array.Empty<StackFrame>()).Count(frame => frame.GetMethod().Name == nameof(ReadXRefStream)) > 200)
             {
                 _bBailout = true;
                 throw new StackOverflowException("Likely recursion loop issue.");
