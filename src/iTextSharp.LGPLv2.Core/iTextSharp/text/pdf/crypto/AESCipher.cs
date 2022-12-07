@@ -21,7 +21,7 @@ namespace iTextSharp.text.pdf.crypto
         {
             IBlockCipher aes = new AesEngine();
             IBlockCipher cbc = new CbcBlockCipher(aes);
-            _bp = new PaddedBufferedBlockCipher(cbc);
+            _bp = new PaddedBufferedBlockCipher(cbc, new Pkcs7Padding());
             KeyParameter kp = new KeyParameter(key);
             ParametersWithIV piv = new ParametersWithIV(kp, iv);
             _bp.Init(forEncryption, piv);

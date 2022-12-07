@@ -129,8 +129,8 @@ namespace iTextSharp.text.pdf
             gen.AddRequest(id);
 
             // create details for nonce extension
-            var oids = new List<object>();
-            var values = new List<object>();
+            var oids = new List<DerObjectIdentifier>();
+            var values = new List<X509Extension>();
 
             oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
             values.Add(new X509Extension(false, new DerOctetString(new DerOctetString(PdfEncryption.CreateDocumentId()).GetEncoded())));
