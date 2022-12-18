@@ -13,5 +13,5 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.101
-    - name: Build PdfRpt.Core lib
+    - name: Build iTextSharp.LGPLv2.Core lib
       run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
