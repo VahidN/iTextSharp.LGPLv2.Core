@@ -1311,7 +1311,7 @@ namespace iTextSharp.text.pdf
             attribute.Add(new DerSequence(v));
             v = new Asn1EncodableVector();
             v.Add(new DerObjectIdentifier(IdSigningTime));
-            v.Add(new DerSet(new DerUtcTime(signingTime)));
+            v.Add(new DerSet(new DerUtcTime(signingTime, DateTimeFormatInfo.InvariantInfo.Calendar.TwoDigitYearMax)));
             attribute.Add(new DerSequence(v));
             v = new Asn1EncodableVector();
             v.Add(new DerObjectIdentifier(IdMessageDigest));

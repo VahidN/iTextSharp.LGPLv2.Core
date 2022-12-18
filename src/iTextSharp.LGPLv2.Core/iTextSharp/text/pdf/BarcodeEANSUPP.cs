@@ -54,7 +54,7 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        public override System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
+        public override SkiaSharp.SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
         {
             throw new InvalidOperationException("The two barcodes must be composed externally.");
         }

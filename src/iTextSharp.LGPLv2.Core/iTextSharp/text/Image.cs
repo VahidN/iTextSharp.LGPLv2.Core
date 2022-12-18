@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.NetUtils;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
+using SkiaSharp;
 
 namespace iTextSharp.text
 {
@@ -1126,21 +1128,25 @@ namespace iTextSharp.text
             }
             throw new IOException("The byte array is not a recognized imageformat.");
         }
+
         /// <summary>
         /// Converts a .NET image to a Native(PNG, JPG, GIF, WMF) image
         /// </summary>
         /// <param name="image"></param>
         /// <param name="format"></param>
+        /// <param name="quality"></param>
         /// <returns></returns>
-        public static Image GetInstance(System.Drawing.Image image, System.Drawing.Imaging.ImageFormat format)
+        public static Image GetInstance(SkiaSharp.SKBitmap image, SKEncodedImageFormat format, int quality = 100)
         {
-            MemoryStream ms = new MemoryStream();
-            image.Save(ms, format);
-            return GetInstance(ms.ToArray());
+            using var data = image.Encode(format, quality);
+            using var stream = new MemoryStream();
+            data.SaveTo(stream);
+            var imageArray = stream.ToArray();
+            return GetInstance(imageArray);
         }
 
         /// <summary>
-        /// Gets an instance of an Image from a System.Drwaing.Image.
+        /// Gets an instance of an Image from a SkiaSharp.SKBitmap.
         /// </summary>
         /// <param name="image">the System.Drawing.Image to convert</param>
         /// <param name="color">
@@ -1149,9 +1155,9 @@ namespace iTextSharp.text
         /// </param>
         /// <param name="forceBw">if true the image is treated as black and white</param>
         /// <returns>an object of type ImgRaw</returns>
-        public static Image GetInstance(System.Drawing.Image image, BaseColor color, bool forceBw)
+        public static Image GetInstance(SkiaSharp.SKBitmap image, BaseColor color, bool forceBw)
         {
-            System.Drawing.Bitmap bm = (System.Drawing.Bitmap)image;
+            var bm = image;
             int w = bm.Width;
             int h = bm.Height;
             int pxv = 0;
@@ -1177,7 +1183,7 @@ namespace iTextSharp.text
                     {
                         for (int i = 0; i < w; i++)
                         {
-                            int alpha = bm.GetPixel(i, j).A;
+                            int alpha = bm.GetPixel(i, j).Alpha;
                             if (alpha < 250)
                             {
                                 if (transColor == 1)
@@ -1209,7 +1215,7 @@ namespace iTextSharp.text
                         {
                             if (transparency == null)
                             {
-                                int alpha = bm.GetPixel(i, j).A;
+                                int alpha = bm.GetPixel(i, j).Alpha;
                                 if (alpha == 0)
                                 {
                                     transparency = new int[2];
@@ -1338,7 +1344,7 @@ namespace iTextSharp.text
         /// pixels are replaced by this color
         /// </param>
         /// <returns>an object of type ImgRaw</returns>
-        public static Image GetInstance(System.Drawing.Image image, BaseColor color)
+        public static Image GetInstance(SkiaSharp.SKBitmap image, BaseColor color)
         {
             return GetInstance(image, color, false);
         }

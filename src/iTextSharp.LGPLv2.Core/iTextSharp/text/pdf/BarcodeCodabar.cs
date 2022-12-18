@@ -1,4 +1,5 @@
 using System;
+using iTextSharp.LGPLv2.Core.System.Drawing;
 
 namespace iTextSharp.text.pdf
 {
@@ -151,7 +152,7 @@ namespace iTextSharp.text.pdf
             return bars;
         }
 
-        public override System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
+        public override SkiaSharp.SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
         {
             string fullCode = code;
             if (generateChecksum && checksumText)
@@ -167,7 +168,7 @@ namespace iTextSharp.text.pdf
             int narrow = bars.Length - wide;
             int fullWidth = narrow + wide * (int)n;
             int height = (int)barHeight;
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(fullWidth, height);
+            var bmp = new SkiaSharp.SKBitmap(fullWidth, height);
             for (int h = 0; h < height; ++h)
             {
                 bool print = true;
@@ -180,7 +181,7 @@ namespace iTextSharp.text.pdf
                         c = foreground;
                     print = !print;
                     for (int j = 0; j < w; ++j)
-                        bmp.SetPixel(ptr++, h, c);
+                        bmp.SetPixel(ptr++, h, c.ToSKColor());
                 }
             }
             return bmp;

@@ -1,3 +1,5 @@
+using SkiaSharp;
+
 namespace iTextSharp.text.pdf
 {
     /// <summary>
@@ -416,7 +418,7 @@ namespace iTextSharp.text.pdf
                 x = value;
             }
         }
-        public abstract System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background);
+        public abstract SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background);
 
         /// <summary>
         /// Creates an  Image  with the barcode.

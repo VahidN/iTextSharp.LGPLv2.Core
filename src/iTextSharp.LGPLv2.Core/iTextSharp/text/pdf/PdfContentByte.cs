@@ -2352,12 +2352,6 @@ namespace iTextSharp.text.pdf
             return Content.ToString();
         }
 
-        public void Transform(System.Drawing.Drawing2D.Matrix tx)
-        {
-            float[] c = tx.Elements;
-            ConcatCtm(c[0], c[1], c[2], c[3], c[4], c[5]);
-        }
-
         /// <summary>
         /// Adds a variable width border to the current path.
         /// Only use if {@link com.lowagie.text.Rectangle#isUseVariableBorders() Rectangle.isUseVariableBorders}

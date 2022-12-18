@@ -1,4 +1,5 @@
 using System;
+using iTextSharp.LGPLv2.Core.System.Drawing;
 
 namespace iTextSharp.text.pdf
 {
@@ -81,7 +82,7 @@ namespace iTextSharp.text.pdf
             }
             return bars;
         }
-        public override System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
+        public override SkiaSharp.SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
         {
             int barWidth = (int)x;
             if (barWidth <= 0)
@@ -104,7 +105,7 @@ namespace iTextSharp.text.pdf
                 bars[0] = 0;
                 bars[bars.Length - 1] = 0;
             }
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(width, barTall);
+            var bmp = new SkiaSharp.SKBitmap(width, barTall);
             int seg1 = barTall - barShort;
             for (int i = 0; i < seg1; ++i)
             {
@@ -114,7 +115,7 @@ namespace iTextSharp.text.pdf
                     bool dot = (bars[k] == flip);
                     for (int j = 0; j < barDistance; ++j)
                     {
-                        bmp.SetPixel(idx++, i, (dot && j < barWidth) ? foreground : background);
+                        bmp.SetPixel(idx++, i, (dot && j < barWidth) ? foreground.ToSKColor() : background.ToSKColor());
                     }
                 }
             }
@@ -125,7 +126,7 @@ namespace iTextSharp.text.pdf
                 {
                     for (int j = 0; j < barDistance; ++j)
                     {
-                        bmp.SetPixel(idx++, i, (j < barWidth) ? foreground : background);
+                        bmp.SetPixel(idx++, i, (j < barWidth) ? foreground.ToSKColor() : background.ToSKColor());
                     }
                 }
             }

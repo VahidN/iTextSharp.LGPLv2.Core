@@ -49,45 +49,6 @@ FAQ
 
  It has been renamed to [HtmlWorker](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/HtmlWorkerTests.cs#L42).
 
-Note
------------------
-To run this project on non-Windows-based operating systems, you will need to install `libgdiplus` too:
-- Ubuntu 16.04 and above:
-	- apt-get install libgdiplus
-	- cd /usr/lib
-	- ln -s libgdiplus.so gdiplus.dll
-- Fedora 23 and above:
-	- dnf install libgdiplus
-	- cd /usr/lib64/
-	- ln -s libgdiplus.so.0 gdiplus.dll
-- CentOS 7 and above:
-	- yum install autoconf automake libtool
-	- yum install freetype-devel fontconfig libXft-devel
-	- yum install libjpeg-turbo-devel libpng-devel giflib-devel libtiff-devel libexif-devel
-	- yum install glib2-devel cairo-devel
-	- git clone https://github.com/mono/libgdiplus
-	- cd libgdiplus
-	- ./autogen.sh
-	- make
-	- make install
-	- cd /usr/lib64/
-	- ln -s /usr/local/lib/libgdiplus.so libgdiplus.so
-- Docker
-	- RUN apt-get update \\
-
-      && apt-get install -y libgdiplus
-- MacOS
-	- brew install mono-libgdiplus
-
-      After installing the [Mono MDK](http://www.mono-project.com/download/#download-mac), Copy Mono MDK Files:
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.0.dylib
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.0.dylib.dSYM
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.dylib
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.la
-
-      And paste them to: /usr/local/lib
-
-
 Licensing
 ---------
 You have three license choices when it comes to iTextSharp: LGPL/MPL, AGPL, or a commercial license. The LGPL/MPL license is only an option with the older 4.1.6 version (used here). After that version, they switched to a dual AGPL/Commercial.

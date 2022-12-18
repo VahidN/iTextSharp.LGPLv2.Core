@@ -2,7 +2,7 @@
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
     <LangVersion>latest</LangVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>iTextSharp.LGPLv2.Core.FunctionalTests</AssemblyName>
     <PackageId>iTextSharp.LGPLv2.Core.FunctionalTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -15,9 +15,9 @@
     <ProjectReference Include="..\iTextSharp.LGPLv2.Core\iTextSharp.LGPLv2.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

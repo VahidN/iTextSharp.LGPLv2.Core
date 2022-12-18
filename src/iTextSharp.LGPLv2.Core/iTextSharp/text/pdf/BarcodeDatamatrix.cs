@@ -1,6 +1,7 @@
 using System;
 using iTextSharp.text.pdf.codec;
 using System.Collections;
+using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.Encodings;
 
 namespace iTextSharp.text.pdf
@@ -236,14 +237,14 @@ namespace iTextSharp.text.pdf
         /// <param name="foreground">the color of the bars</param>
         /// <param name="background">the color of the background</param>
         /// <returns>the image</returns>
-        public virtual System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
+        public virtual SkiaSharp.SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
         {
             if (BitImage == null)
                 return null;
             int h = Height + 2 * Ws;
             int w = Width + 2 * Ws;
             int stride = (w + 7) / 8;
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(w, h);
+            var bmp = new SkiaSharp.SKBitmap(w, h);
             for (int k = 0; k < h; ++k)
             {
                 int p = k * stride;
@@ -251,7 +252,7 @@ namespace iTextSharp.text.pdf
                 {
                     int b = BitImage[p + (j / 8)] & 0xff;
                     b <<= j % 8;
-                    bmp.SetPixel(j, k, (b & 0x80) == 0 ? background : foreground);
+                    bmp.SetPixel(j, k, (b & 0x80) == 0 ? background.ToSKColor() : foreground.ToSKColor());
                 }
             }
             return bmp;

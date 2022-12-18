@@ -2,6 +2,7 @@ using System;
 using iTextSharp.text.pdf.codec;
 using System.Collections;
 using System.Text;
+using iTextSharp.LGPLv2.Core.System.Drawing;
 
 namespace iTextSharp.text.pdf
 {
@@ -800,12 +801,12 @@ namespace iTextSharp.text.pdf
             }
         }
 
-        public virtual System.Drawing.Image CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
+        public virtual SkiaSharp.SKBitmap CreateDrawingImage(System.Drawing.Color foreground, System.Drawing.Color background)
         {
             PaintCode();
             int h = (int)_yHeight;
             int stride = (_bitColumns + 7) / 8;
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(_bitColumns, _codeRows * h);
+            var bmp = new SkiaSharp.SKBitmap(_bitColumns, _codeRows * h);
             int y = 0;
             for (int k = 0; k < _codeRows; ++k)
             {
@@ -816,7 +817,7 @@ namespace iTextSharp.text.pdf
                     {
                         int b = _outBits[p + (j / 8)] & 0xff;
                         b <<= j % 8;
-                        bmp.SetPixel(j, y, (b & 0x80) == 0 ? background : foreground);
+                        bmp.SetPixel(j, y, (b & 0x80) == 0 ? background.ToSKColor() : foreground.ToSKColor());
                     }
                     ++y;
                 }
