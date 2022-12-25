@@ -315,7 +315,7 @@ namespace iTextSharp.text.rtf.parser.destinations
         /// <param name="value">Bias value</param>
         public void SetBias(string value)
         {
-            _fbias = int.Parse(value);
+            _fbias = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace iTextSharp.text.rtf.parser.destinations
         /// <param name="value">Pitch value</param>
         public void SetPitch(string value)
         {
-            _fprq = int.Parse(value);
+            _fprq = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -531,11 +531,11 @@ namespace iTextSharp.text.rtf.parser.destinations
                 //                  }
                 //              }
                 //          } else {
-                if (!_importHeader.ImportFont(_fontNr, _fontName, int.Parse(_charset == "" ? CharsetDefault : _charset)))
+                if (!_importHeader.ImportFont(_fontNr, _fontName, int.Parse(_charset == "" ? CharsetDefault : _charset, CultureInfo.InvariantCulture)))
                 {
                     if (_falt.Length > 0)
                     {
-                        _importHeader.ImportFont(_fontNr, _falt, int.Parse(_charset == "" ? CharsetDefault : _charset));
+                        _importHeader.ImportFont(_fontNr, _falt, int.Parse(_charset == "" ? CharsetDefault : _charset, CultureInfo.InvariantCulture));
                     }
                 }
                 //          }

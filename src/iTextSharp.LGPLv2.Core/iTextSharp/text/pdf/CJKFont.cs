@@ -520,8 +520,8 @@ namespace iTextSharp.text.pdf
             StringTokenizer tk = new StringTokenizer(s);
             while (tk.HasMoreTokens())
             {
-                int n1 = int.Parse(tk.NextToken());
-                h[n1] = int.Parse(tk.NextToken());
+                int n1 = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
+                h[n1] = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
             }
             return h;
         }
@@ -640,7 +640,7 @@ namespace iTextSharp.text.pdf
             string ret = tk.NextToken();
             for (int k = 0; k < idx; ++k)
                 ret = tk.NextToken();
-            return int.Parse(ret);
+            return int.Parse(ret, CultureInfo.InvariantCulture);
         }
 
         private PdfDictionary getCidFont(PdfIndirectReference fontDescriptor, IntHashtable cjkTag)
@@ -671,7 +671,7 @@ namespace iTextSharp.text.pdf
 
         private float getDescNumber(string name)
         {
-            return int.Parse((string)_fontDesc[name]);
+            return int.Parse((string)_fontDesc[name], CultureInfo.InvariantCulture);
         }
 
         private PdfDictionary getFontBaseType(PdfIndirectReference cidFont)

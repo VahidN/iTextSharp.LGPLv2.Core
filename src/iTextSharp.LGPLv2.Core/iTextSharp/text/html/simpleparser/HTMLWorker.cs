@@ -575,7 +575,7 @@ namespace iTextSharp.text.html.simpleparser
             {
                 if (!h.ContainsKey(ElementTags.SIZE))
                 {
-                    int v = 7 - int.Parse(tag.Substring(1));
+                    int v = 7 - int.Parse(tag.Substring(1), CultureInfo.InvariantCulture);
                     h[ElementTags.SIZE] = v.ToString();
                 }
                 _cprops.AddToChain(tag, h);

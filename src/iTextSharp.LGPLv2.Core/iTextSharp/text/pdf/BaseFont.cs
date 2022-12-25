@@ -1656,12 +1656,12 @@ namespace iTextSharp.text.pdf
                     {
                         string order = tok.NextToken();
                         string name = tok.NextToken();
-                        char uni = (char)int.Parse(tok.NextToken(), NumberStyles.HexNumber);
+                        char uni = (char)int.Parse(tok.NextToken(), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                         int orderK;
                         if (order.StartsWith("'"))
                             orderK = order[1];
                         else
-                            orderK = int.Parse(order);
+                            orderK = int.Parse(order, CultureInfo.InvariantCulture);
                         orderK %= 256;
                         SpecialMap[uni] = orderK;
                         differences[orderK] = name;
@@ -1674,11 +1674,11 @@ namespace iTextSharp.text.pdf
                 {
                     int k = 0;
                     if (tok.HasMoreTokens())
-                        k = int.Parse(tok.NextToken());
+                        k = int.Parse(tok.NextToken(), CultureInfo.InvariantCulture);
                     while (tok.HasMoreTokens() && k < 256)
                     {
                         string hex = tok.NextToken();
-                        int uni = int.Parse(hex, NumberStyles.HexNumber) % 0x10000;
+                        int uni = int.Parse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture) % 0x10000;
                         string name = GlyphList.UnicodeToName(uni);
                         if (name != null)
                         {

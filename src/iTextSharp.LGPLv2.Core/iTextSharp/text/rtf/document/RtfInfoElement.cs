@@ -117,7 +117,7 @@ namespace iTextSharp.text.rtf.document
             DateTime d;
             try
             {
-                d = DateTime.Parse(date);
+                d = DateTime.Parse(date, CultureInfo.InvariantCulture);
             }
             catch
             {

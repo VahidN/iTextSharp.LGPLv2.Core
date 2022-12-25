@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Globalization;
 using System.util;
 
 namespace iTextSharp.text.pdf
@@ -624,17 +625,17 @@ namespace iTextSharp.text.pdf
                         continue;
                     ident = tokc.NextToken();
                     if (ident.Equals("C"))
-                        c = int.Parse(tokc.NextToken());
+                        c = int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture);
                     else if (ident.Equals("WX"))
                         wx = (int)float.Parse(tokc.NextToken(), System.Globalization.NumberFormatInfo.InvariantInfo);
                     else if (ident.Equals("N"))
                         n = tokc.NextToken();
                     else if (ident.Equals("B"))
                     {
-                        b = new[]{int.Parse(tokc.NextToken()),
-                                            int.Parse(tokc.NextToken()),
-                                            int.Parse(tokc.NextToken()),
-                                            int.Parse(tokc.NextToken())};
+                        b = new[]{int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture),
+                                            int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture),
+                                            int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture),
+                                            int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture)};
                     }
                 }
                 object[] metrics = { c, wx, n, b };

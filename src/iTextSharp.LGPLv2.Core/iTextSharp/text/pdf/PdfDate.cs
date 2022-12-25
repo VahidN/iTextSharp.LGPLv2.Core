@@ -57,22 +57,22 @@ namespace iTextSharp.text.pdf
             int year, month = 1, day = 1, hour = 0, minute = 0, second = 0;
             int offsetHour = 0, offsetMinute = 0;
             char variation = '\0';
-            year = int.Parse(date.Substring(0, 4));
+            year = int.Parse(date.Substring(0, 4), CultureInfo.InvariantCulture);
             if (date.Length >= 6)
             {
-                month = int.Parse(date.Substring(4, 2));
+                month = int.Parse(date.Substring(4, 2), CultureInfo.InvariantCulture);
                 if (date.Length >= 8)
                 {
-                    day = int.Parse(date.Substring(6, 2));
+                    day = int.Parse(date.Substring(6, 2), CultureInfo.InvariantCulture);
                     if (date.Length >= 10)
                     {
-                        hour = int.Parse(date.Substring(8, 2));
+                        hour = int.Parse(date.Substring(8, 2), CultureInfo.InvariantCulture);
                         if (date.Length >= 12)
                         {
-                            minute = int.Parse(date.Substring(10, 2));
+                            minute = int.Parse(date.Substring(10, 2), CultureInfo.InvariantCulture);
                             if (date.Length >= 14)
                             {
-                                second = int.Parse(date.Substring(12, 2));
+                                second = int.Parse(date.Substring(12, 2), CultureInfo.InvariantCulture);
                             }
                         }
                     }
@@ -86,10 +86,10 @@ namespace iTextSharp.text.pdf
                 return d.ToLocalTime();
             if (date.Length >= 17)
             {
-                offsetHour = int.Parse(date.Substring(15, 2));
+                offsetHour = int.Parse(date.Substring(15, 2), CultureInfo.InvariantCulture);
                 if (date.Length >= 20)
                 {
-                    offsetMinute = int.Parse(date.Substring(18, 2));
+                    offsetMinute = int.Parse(date.Substring(18, 2), CultureInfo.InvariantCulture);
                 }
             }
             TimeSpan span = new TimeSpan(offsetHour, offsetMinute, 0);

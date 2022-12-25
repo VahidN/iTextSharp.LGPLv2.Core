@@ -329,7 +329,7 @@ namespace iTextSharp.text.xml.simpleparser
             {
                 try
                 {
-                    return (char)int.Parse(name.Substring(2), NumberStyles.AllowHexSpecifier);
+                    return (char)int.Parse(name.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture);
                 }
                 catch
                 {
@@ -340,7 +340,7 @@ namespace iTextSharp.text.xml.simpleparser
             {
                 try
                 {
-                    return (char)int.Parse(name.Substring(1));
+                    return (char)int.Parse(name.Substring(1), CultureInfo.InvariantCulture);
                 }
                 catch
                 {

@@ -1243,7 +1243,7 @@ namespace iTextSharp.text.rtf.parser
                                 hexChars.Append(nextChar);
                                 try
                                 {
-                                    nextChar = int.Parse(hexChars.ToString(), NumberStyles.HexNumber);
+                                    nextChar = int.Parse(hexChars.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                                 }
                                 catch
                                 {

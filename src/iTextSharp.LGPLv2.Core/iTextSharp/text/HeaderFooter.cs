@@ -82,7 +82,7 @@ namespace iTextSharp.text
             }
             if ((value = attributes.Remove("border")) != null)
             {
-                Border = int.Parse(value);
+                Border = int.Parse(value, CultureInfo.InvariantCulture);
             }
             else
             {

@@ -307,7 +307,7 @@ namespace iTextSharp.text.rtf.parser.destinations
                     {
                         try
                         {
-                            _data.Append((char)int.Parse(_hexChars.ToString(), NumberStyles.HexNumber));
+                            _data.Append((char)int.Parse(_hexChars.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
                         }
                         catch
                         {

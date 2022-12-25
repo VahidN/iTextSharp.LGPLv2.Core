@@ -913,7 +913,7 @@ namespace iTextSharp.text
                 value = value.Substring(0, value.Length - 1);
                 Percentage = true;
             }
-            width = int.Parse(value);
+            width = int.Parse(value, CultureInfo.InvariantCulture);
         }
         /// <summary>
         /// Makes sure there is at least 1 object in the Cell.

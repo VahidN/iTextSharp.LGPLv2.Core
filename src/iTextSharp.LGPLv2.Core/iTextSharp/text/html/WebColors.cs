@@ -178,16 +178,16 @@ namespace iTextSharp.text.html
             {
                 if (name.Length == 4)
                 {
-                    c[0] = int.Parse(name.Substring(1, 1), NumberStyles.HexNumber) * 16;
-                    c[1] = int.Parse(name.Substring(2, 1), NumberStyles.HexNumber) * 16;
-                    c[2] = int.Parse(name.Substring(3), NumberStyles.HexNumber) * 16;
+                    c[0] = int.Parse(name.Substring(1, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture) * 16;
+                    c[1] = int.Parse(name.Substring(2, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture) * 16;
+                    c[2] = int.Parse(name.Substring(3), NumberStyles.HexNumber, CultureInfo.InvariantCulture) * 16;
                     return new BaseColor(c[0], c[1], c[2], c[3]);
                 }
                 if (name.Length == 7)
                 {
-                    c[0] = int.Parse(name.Substring(1, 2), NumberStyles.HexNumber);
-                    c[1] = int.Parse(name.Substring(3, 2), NumberStyles.HexNumber);
-                    c[2] = int.Parse(name.Substring(5), NumberStyles.HexNumber);
+                    c[0] = int.Parse(name.Substring(1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    c[1] = int.Parse(name.Substring(3, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    c[2] = int.Parse(name.Substring(5), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                     return new BaseColor(c[0], c[1], c[2], c[3]);
                 }
                 throw new ArgumentException(
@@ -200,9 +200,9 @@ namespace iTextSharp.text.html
                 {
                     string v = tok.NextToken();
                     if (v.EndsWith("%"))
-                        c[k] = int.Parse(v.Substring(0, v.Length - 1)) * 255 / 100;
+                        c[k] = int.Parse(v.Substring(0, v.Length - 1), CultureInfo.InvariantCulture) * 255 / 100;
                     else
-                        c[k] = int.Parse(v);
+                        c[k] = int.Parse(v, CultureInfo.InvariantCulture);
                     if (c[k] < 0)
                         c[k] = 0;
                     else if (c[k] > 255)

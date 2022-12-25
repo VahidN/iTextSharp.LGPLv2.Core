@@ -353,7 +353,7 @@ namespace iTextSharp.text.pdf
                         string sai = localCode.Substring(idx + 1, end - (idx + 1));
                         if (sai.Length < 2)
                             throw new ArgumentException("AI too short: (" + sai + ")");
-                        int ai = int.Parse(sai);
+                        int ai = int.Parse(sai, CultureInfo.InvariantCulture);
                         int len = _ais[ai];
                         if (len == 0)
                             throw new ArgumentException("AI not found: (" + sai + ")");
@@ -426,7 +426,7 @@ namespace iTextSharp.text.pdf
                     {
                         if (code.Length < k)
                             break;
-                        if ((n = _ais[int.Parse(code.Substring(0, k))]) != 0)
+                        if ((n = _ais[int.Parse(code.Substring(0, k), CultureInfo.InvariantCulture)]) != 0)
                         {
                             idlen = k;
                             break;

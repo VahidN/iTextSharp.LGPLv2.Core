@@ -811,7 +811,7 @@ namespace iTextSharp.text.pdf
                     string part = (string)stack[k];
                     int idx = part.LastIndexOf("[", StringComparison.Ordinal);
                     string name = part.Substring(0, idx);
-                    idx = int.Parse(part.Substring(idx + 1, part.Length - idx - 2));
+                    idx = int.Parse(part.Substring(idx + 1, part.Length - idx - 2), CultureInfo.InvariantCulture);
                     int found = -1;
                     for (n2 = n.FirstChild; n2 != null; n2 = n2.NextSibling)
                     {
@@ -1038,13 +1038,13 @@ namespace iTextSharp.text.pdf
                             int max = 1;
                             XmlNode a = n2.Attributes.GetNamedItem("initial");
                             if (a != null)
-                                try { initial = int.Parse(a.Value.Trim()); } catch { };
+                                try { initial = int.Parse(a.Value.Trim(), CultureInfo.InvariantCulture); } catch { };
                             a = n2.Attributes.GetNamedItem("min");
                             if (a != null)
-                                try { min = int.Parse(a.Value.Trim()); } catch { };
+                                try { min = int.Parse(a.Value.Trim(), CultureInfo.InvariantCulture); } catch { };
                             a = n2.Attributes.GetNamedItem("max");
                             if (a != null)
-                                try { max = int.Parse(a.Value.Trim()); } catch { };
+                                try { max = int.Parse(a.Value.Trim(), CultureInfo.InvariantCulture); } catch { };
                             if (initial != min || min != max)
                                 DynamicForm = true;
                         }

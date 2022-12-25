@@ -624,7 +624,7 @@ namespace iTextSharp.text.pdf
                     int idx = 0;
                     try
                     {
-                        idx = int.Parse(value);
+                        idx = int.Parse(value, CultureInfo.InvariantCulture);
                         PdfString ps = opts.GetAsString(idx);
                         value = ps.ToUnicodeString();
                         _lastWasString = true;

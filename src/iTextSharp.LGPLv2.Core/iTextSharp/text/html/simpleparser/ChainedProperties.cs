@@ -53,14 +53,14 @@ namespace iTextSharp.text.html.simpleparser
                                 break;
                             }
                         }
-                        int inc = int.Parse(value.StartsWith("+") ? value.Substring(1) : value);
+                        int inc = int.Parse(value.StartsWith("+") ? value.Substring(1) : value, CultureInfo.InvariantCulture);
                         s += inc;
                     }
                     else
                     {
                         try
                         {
-                            s = int.Parse(value) - 1;
+                            s = int.Parse(value, CultureInfo.InvariantCulture) - 1;
                         }
                         catch
                         {

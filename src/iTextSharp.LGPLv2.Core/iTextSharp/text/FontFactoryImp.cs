@@ -297,9 +297,9 @@ namespace iTextSharp.text
                     int red = 0;
                     int green = 0;
                     int blue = 0;
-                    if (r != null) red = int.Parse(r);
-                    if (g != null) green = int.Parse(g);
-                    if (b != null) blue = int.Parse(b);
+                    if (r != null) red = int.Parse(r, CultureInfo.InvariantCulture);
+                    if (g != null) green = int.Parse(g, CultureInfo.InvariantCulture);
+                    if (b != null) blue = int.Parse(b, CultureInfo.InvariantCulture);
                     color = new BaseColor(red, green, blue);
                 }
                 else if ((value = attributes[ElementTags.COLOR]) != null)

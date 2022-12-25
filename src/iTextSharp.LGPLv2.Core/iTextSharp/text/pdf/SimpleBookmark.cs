@@ -85,9 +85,9 @@ namespace iTextSharp.text.pdf
                         int idx = page.IndexOf(" ", StringComparison.Ordinal);
                         int pageNum;
                         if (idx < 0)
-                            pageNum = int.Parse(page);
+                            pageNum = int.Parse(page, CultureInfo.InvariantCulture);
                         else
-                            pageNum = int.Parse(page.Substring(0, idx));
+                            pageNum = int.Parse(page.Substring(0, idx), CultureInfo.InvariantCulture);
                         int len = pageRange.Length & 0x7ffffffe;
                         for (int k = 0; k < len; k += 2)
                         {
@@ -410,9 +410,9 @@ namespace iTextSharp.text.pdf
                         int idx = page.IndexOf(" ", StringComparison.Ordinal);
                         int pageNum;
                         if (idx < 0)
-                            pageNum = int.Parse(page);
+                            pageNum = int.Parse(page, CultureInfo.InvariantCulture);
                         else
-                            pageNum = int.Parse(page.Substring(0, idx));
+                            pageNum = int.Parse(page.Substring(0, idx), CultureInfo.InvariantCulture);
                         bool hit = false;
                         if (pageRange == null)
                             hit = true;
@@ -581,7 +581,7 @@ namespace iTextSharp.text.pdf
                     {
                         PdfArray ar = new PdfArray();
                         StringTokenizer tk = new StringTokenizer(p);
-                        int n = int.Parse(tk.NextToken());
+                        int n = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
                         ar.Add(writer.GetPageReference(n));
                         if (!tk.HasMoreTokens())
                         {

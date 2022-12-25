@@ -144,12 +144,12 @@ namespace iTextSharp.text.html.simpleparser
             pos = s.IndexOf(",", StringComparison.Ordinal);
             if (pos == -1)
             {
-                leftMin = int.Parse(s);
+                leftMin = int.Parse(s, CultureInfo.InvariantCulture);
             }
             else
             {
-                leftMin = int.Parse(s.Substring(0, pos));
-                rightMin = int.Parse(s.Substring(pos + 1));
+                leftMin = int.Parse(s.Substring(0, pos), CultureInfo.InvariantCulture);
+                rightMin = int.Parse(s.Substring(pos + 1), CultureInfo.InvariantCulture);
             }
             return new HyphenationAuto(lang, country, leftMin, rightMin);
         }

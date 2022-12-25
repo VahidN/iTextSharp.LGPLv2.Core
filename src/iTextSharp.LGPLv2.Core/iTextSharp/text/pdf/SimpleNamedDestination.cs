@@ -292,7 +292,7 @@ namespace iTextSharp.text.pdf
         {
             PdfArray ar = new PdfArray();
             StringTokenizer tk = new StringTokenizer(value);
-            int n = int.Parse(tk.NextToken());
+            int n = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
             ar.Add(writer.GetPageReference(n));
             if (!tk.HasMoreTokens())
             {

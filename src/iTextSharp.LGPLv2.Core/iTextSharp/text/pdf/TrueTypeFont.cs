@@ -781,7 +781,7 @@ namespace iTextSharp.text.pdf
                     Rf = new RandomAccessFileOrArray(ttfAfm);
                 if (TtcIndex.Length > 0)
                 {
-                    int dirIdx = int.Parse(TtcIndex);
+                    int dirIdx = int.Parse(TtcIndex, CultureInfo.InvariantCulture);
                     if (dirIdx < 0)
                         throw new DocumentException("The font index for " + FileName + " must be positive.");
                     string mainTag = ReadStandardString(4);

@@ -312,7 +312,7 @@ namespace iTextSharp.text.xml.simpleparser
             {
                 try
                 {
-                    return new Chunk("" + (char)int.Parse(e), font);
+                    return new Chunk("" + (char)int.Parse(e, CultureInfo.InvariantCulture), font);
                 }
                 catch (Exception)
                 {

@@ -752,7 +752,7 @@ namespace iTextSharp.text
             string value;
             if ((value = attributes.Remove(ElementTags.NUMBERDEPTH)) != null)
             {
-                NumberDepth = int.Parse(value);
+                NumberDepth = int.Parse(value, CultureInfo.InvariantCulture);
             }
             if ((value = attributes.Remove(ElementTags.INDENT)) != null)
             {

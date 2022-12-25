@@ -19,11 +19,11 @@ namespace iTextSharp.text.html.simpleparser
 
             string value = props["colspan"];
             if (value != null)
-                Cell.Colspan = int.Parse(value);
+                Cell.Colspan = int.Parse(value, CultureInfo.InvariantCulture);
 
             value = props["rowspan"];
             if (value != null)
-                Cell.Rowspan = int.Parse(value);
+                Cell.Rowspan = int.Parse(value, CultureInfo.InvariantCulture);
 
             value = props["align"];
             if (tag.Equals("th"))

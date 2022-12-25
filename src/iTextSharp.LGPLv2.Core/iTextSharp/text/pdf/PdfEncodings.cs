@@ -476,11 +476,11 @@ namespace iTextSharp.text.pdf
                             StringTokenizer tk = new StringTokenizer(line);
                             string t = tk.NextToken();
                             int size = t.Length / 2 - 1;
-                            long start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber);
+                            long start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                             t = tk.NextToken();
-                            long end = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber);
+                            long end = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                             t = tk.NextToken();
-                            int cid = int.Parse(t);
+                            int cid = int.Parse(t, CultureInfo.InvariantCulture);
                             for (long k = start; k <= end; ++k)
                             {
                                 BreakLong(k, size, seqs);
@@ -501,7 +501,7 @@ namespace iTextSharp.text.pdf
                             int size = t.Length / 2 - 1;
                             long start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber);
                             t = tk.NextToken();
-                            int cid = int.Parse(t);
+                            int cid = int.Parse(t, CultureInfo.InvariantCulture);
                             BreakLong(start, size, seqs);
                             EncodeSequence(size, seqs, (char)cid, planes);
                             break;

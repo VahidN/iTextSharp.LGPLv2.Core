@@ -73,7 +73,7 @@ namespace iTextSharp.text.pdf
         {
             get
             {
-                return int.Parse(stringValue);
+                return int.Parse(stringValue, CultureInfo.InvariantCulture);
             }
         }
 
@@ -494,8 +494,8 @@ namespace iTextSharp.text.pdf
                                 return;
                             }
                             Type = TK_REF;
-                            reference = int.Parse(n1);
-                            generation = int.Parse(n2);
+                            reference = int.Parse(n1, CultureInfo.InvariantCulture);
+                            generation = int.Parse(n2, CultureInfo.InvariantCulture);
                             return;
                         }
                 }

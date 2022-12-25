@@ -75,7 +75,7 @@ namespace iTextSharp.text.factories
             value = attributes[ElementTags.NAMED];
             if (value != null)
             {
-                return new Annotation(llx, lly, urx, ury, int.Parse(value));
+                return new Annotation(llx, lly, urx, ury, int.Parse(value, CultureInfo.InvariantCulture));
             }
             var file = attributes[ElementTags.FILE];
             var destination = attributes[ElementTags.DESTINATION];
@@ -88,7 +88,7 @@ namespace iTextSharp.text.factories
                 }
                 if (page != null)
                 {
-                    return new Annotation(llx, lly, urx, ury, file, int.Parse(page));
+                    return new Annotation(llx, lly, urx, ury, file, int.Parse(page, CultureInfo.InvariantCulture));
                 }
             }
             title = "";
@@ -115,12 +115,12 @@ namespace iTextSharp.text.factories
             value = attributes[ElementTags.COLSPAN];
             if (value != null)
             {
-                cell.Colspan = int.Parse(value);
+                cell.Colspan = int.Parse(value, CultureInfo.InvariantCulture);
             }
             value = attributes[ElementTags.ROWSPAN];
             if (value != null)
             {
-                cell.Rowspan = int.Parse(value);
+                cell.Rowspan = int.Parse(value, CultureInfo.InvariantCulture);
             }
             value = attributes[ElementTags.LEADING];
             if (value != null)
@@ -173,7 +173,7 @@ namespace iTextSharp.text.factories
                 string page = attributes[ElementTags.PAGE];
                 if (page != null)
                 {
-                    chunk.SetRemoteGoto(value, int.Parse(page));
+                    chunk.SetRemoteGoto(value, int.Parse(page, CultureInfo.InvariantCulture));
                 }
                 else
                 {
@@ -295,7 +295,7 @@ namespace iTextSharp.text.factories
             if (value != null)
             {
                 char character = value[0];
-                list.First = char.IsLetter(character) ? character : int.Parse(value);
+                list.First = char.IsLetter(character) ? character : int.Parse(value, CultureInfo.InvariantCulture);
             }
 
             value = attributes[ElementTags.LISTSYMBOL];
@@ -437,7 +437,7 @@ namespace iTextSharp.text.factories
                 value = attributes[ElementTags.COLUMNS];
                 try
                 {
-                    table = new Table(int.Parse(value));
+                    table = new Table(int.Parse(value, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -452,7 +452,7 @@ namespace iTextSharp.text.factories
             value = attributes[ElementTags.LASTHEADERROW];
             if (value != null)
             {
-                table.LastHeaderRow = int.Parse(value);
+                table.LastHeaderRow = int.Parse(value, CultureInfo.InvariantCulture);
             }
             value = attributes[ElementTags.ALIGN];
             if (value != null)
@@ -532,9 +532,9 @@ namespace iTextSharp.text.factories
                 int red = 0;
                 int green = 0;
                 int blue = 0;
-                if (r != null) red = int.Parse(r);
-                if (g != null) green = int.Parse(g);
-                if (b != null) blue = int.Parse(b);
+                if (r != null) red = int.Parse(r, CultureInfo.InvariantCulture);
+                if (g != null) green = int.Parse(g, CultureInfo.InvariantCulture);
+                if (b != null) blue = int.Parse(b, CultureInfo.InvariantCulture);
                 rect.BorderColor = new BaseColor(red, green, blue);
             }
             else
@@ -550,9 +550,9 @@ namespace iTextSharp.text.factories
                 int red = 0;
                 int green = 0;
                 int blue = 0;
-                if (r != null) red = int.Parse(r);
-                if (g != null) green = int.Parse(g);
-                if (b != null) blue = int.Parse(b);
+                if (r != null) red = int.Parse(r, CultureInfo.InvariantCulture);
+                if (g != null) green = int.Parse(g, CultureInfo.InvariantCulture);
+                if (b != null) blue = int.Parse(b, CultureInfo.InvariantCulture);
                 rect.BackgroundColor = new BaseColor(red, green, blue);
             }
             else if (value != null)
@@ -574,7 +574,7 @@ namespace iTextSharp.text.factories
             var value = attributes[ElementTags.NUMBERDEPTH];
             if (value != null)
             {
-                section.NumberDepth = int.Parse(value);
+                section.NumberDepth = int.Parse(value, CultureInfo.InvariantCulture);
             }
             value = attributes[ElementTags.INDENT];
             if (value != null)

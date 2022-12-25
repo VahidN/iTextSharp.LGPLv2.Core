@@ -52,7 +52,7 @@ namespace iTextSharp.text.pdf
                     if (!t2.HasMoreTokens())
                         continue;
                     hex = t2.NextToken();
-                    int num = int.Parse(hex, NumberStyles.HexNumber);
+                    int num = int.Parse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                     _unicode2Names[num] = name;
                     _names2Unicode[name] = new[] { num };
                 }

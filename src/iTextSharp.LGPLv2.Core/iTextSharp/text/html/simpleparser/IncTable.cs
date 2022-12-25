@@ -60,7 +60,7 @@ namespace iTextSharp.text.html.simpleparser
                 var intWidths = new List<int>();
                 foreach (var widthElement in widths.Split(','))
                 {
-                    intWidths.Add(int.Parse(widthElement));
+                    intWidths.Add(int.Parse(widthElement, CultureInfo.InvariantCulture));
                 }
                 table.SetWidths(intWidths.ToArray());
             }

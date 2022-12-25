@@ -59,7 +59,7 @@ namespace iTextSharp.text.pdf
                     {
                         if (state == Digit)
                         {
-                            Number = int.Parse(other = buf.ToString());
+                            Number = int.Parse(other = buf.ToString(), CultureInfo.InvariantCulture);
                             return NUMBER;
                         }
                         else if (state == Other)
@@ -93,7 +93,7 @@ namespace iTextSharp.text.pdf
                             else
                             {
                                 PutBack();
-                                Number = int.Parse(other = buf.ToString());
+                                Number = int.Parse(other = buf.ToString(), CultureInfo.InvariantCulture);
                                 return NUMBER;
                             }
                             break;

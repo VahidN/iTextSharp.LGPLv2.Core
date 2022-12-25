@@ -54,7 +54,7 @@ namespace iTextSharp.text.rtf.parser.ctrlwords
         public int IntValue()
         {
             int value;
-            value = int.Parse(Param);
+            value = int.Parse(Param, CultureInfo.InvariantCulture);
             if (IsNeg) value = (-value);
             return value;
         }
@@ -67,7 +67,7 @@ namespace iTextSharp.text.rtf.parser.ctrlwords
         public long LongValue()
         {
             long value;
-            value = long.Parse(Param);
+            value = long.Parse(Param, CultureInfo.InvariantCulture);
             if (IsNeg) value = (-value);
             return value;
         }
