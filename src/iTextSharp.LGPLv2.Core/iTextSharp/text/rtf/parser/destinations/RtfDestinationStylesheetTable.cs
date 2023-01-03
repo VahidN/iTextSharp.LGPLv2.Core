@@ -1,621 +1,741 @@
-﻿using iTextSharp.text.rtf.style;
-using iTextSharp.text.rtf.parser.ctrlwords;
+﻿using iTextSharp.text.rtf.parser.ctrlwords;
+using iTextSharp.text.rtf.style;
 
-namespace iTextSharp.text.rtf.parser.destinations
+namespace iTextSharp.text.rtf.parser.destinations;
+
+/// <summary>
+///     RtfDestinationStylesheetTable  handles data destined for the
+///     Stylesheet Table destination
+///     @author Howard Shank (hgshank@yahoo.com)
+/// </summary>
+public class RtfDestinationStylesheetTable : RtfDestination
 {
+    /// <summary>
+    ///     Automatically adjust right indentation when docunent grid is defined
+    /// </summary>
+    private int _adustRightIndent;
 
     /// <summary>
-    ///  RtfDestinationStylesheetTable  handles data destined for the
-    /// Stylesheet Table destination
-    /// @author Howard Shank (hgshank@yahoo.com)
+    ///     Alignment
     /// </summary>
-    public class RtfDestinationStylesheetTable : RtfDestination
+    /// <summary>
+    ///     Alignment - page 85
+    ///     \qc, \qj, \ql, \qr, \qd, \qkN, \qt
+    /// </summary>
+    private int _alignment = Element.ALIGN_LEFT;
+
+    /// <summary>
+    ///     Asian Typography
+    /// </summary>
+    /// <summary>
+    ///     auto spacing betwee DBC and English
+    /// </summary>
+    private int _autoSpaceBetweenDbcEnglish;
+
+    /// <summary>
+    ///     auto spacing betwee DBC and numbers
+    /// </summary>
+    private int _autoSpaceBetweenDbcNumbers;
+
+    private string _elementName = "";
+
+    /// <summary>
+    ///     Indentation
+    /// </summary>
+    /// <summary>
+    ///     First line indentation.
+    /// </summary>
+    private int _firstLineIndent;
+
+    /// <summary>
+    /// </summary>
+    /// <summary>
+    ///     The RtfImportHeader to add color mappings to.
+    /// </summary>
+    private RtfImportMgr _importHeader;
+
+    /// <summary>
+    ///     Percentage of line occupied by Kashida justification (0 � low, 10 � medium, 20 � high).
+    ///     \qkN
+    /// </summary>
+    private int _justificationPercentage;
+
+    /// <summary>
+    ///     Left indentation
+    /// </summary>
+    private int _leftIndent;
+
+    /// <summary>
+    ///     Mirror indents?
+    /// </summary>
+    private int _mirrorIndent;
+
+    /// <summary>
+    ///     No Character wrapping
+    /// </summary>
+    private int _noCharacterWrapping;
+
+    /// <summary>
+    ///     No overflow period and comma
+    /// </summary>
+    private int _noOverflowPeriodComma;
+
+    /// <summary>
+    ///     No Word wrapping
+    /// </summary>
+    private int _noWordWrapping;
+
+    /// <summary>
+    ///     Document Foratting Properties
+    /// </summary>
+    /// <summary>
+    ///     Override orphan/widow control.
+    /// </summary>
+    private int _overrideWidowControl = -1;
+
+    /// <summary>
+    ///     Right indentation
+    /// </summary>
+    private int _rightIndent;
+
+    private string _styleName = "";
+
+    /// <summary>
+    ///     RtfParagraphStyle  object for setting styleshee values
+    ///     as they are parsed from the input.
+    /// </summary>
+    /// <summary>
+    ///     private RtfParagraphStyle rtfParagraphStyle = null;
+    /// </summary>
+    /// <summary>
+    ///     RTF Style number from stylesheet table.
+    /// </summary>
+    private int _styleNr;
+
+    /// <summary>
+    ///     What kind of style is this, Paragraph or Character or Table
+    /// </summary>
+    private int _styleType = RtfStyleTypes.PARAGRAPH;
+
+    private string _type = "";
+
+    public RtfDestinationStylesheetTable() : base(null)
     {
-        /// <summary>
-        /// Automatically adjust right indentation when docunent grid is defined
-        /// </summary>
-        private int _adustRightIndent;
+    }
 
-        /// <summary>
-        /// Alignment
-        /// </summary>
-        /// <summary>
-        /// Alignment - page 85
-        /// \qc, \qj, \ql, \qr, \qd, \qkN, \qt
-        /// </summary>
-        private int _alignment = Element.ALIGN_LEFT;
+    public RtfDestinationStylesheetTable(RtfParser parser, string type) : base(parser)
+    {
+        _importHeader = parser.GetImportManager();
+        _type = type;
+    }
 
-        /// <summary>
-        /// Asian Typography
-        /// </summary>
-        /// <summary>
-        /// auto spacing betwee DBC and English
-        /// </summary>
-        private int _autoSpaceBetweenDbcEnglish;
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.direct.RtfDestination#closeDestination()
+    /// </summary>
+    public override bool CloseDestination() => true;
 
-        /// <summary>
-        /// auto spacing betwee DBC and numbers
-        /// </summary>
-        private int _autoSpaceBetweenDbcNumbers;
+    public void CreateNewStyle()
+    {
+        //public RtfParagraphStyle(String styleName, String fontName, int fontSize, int fontStyle, Color fontColor)
+        //this.rtfParagraphStyle = new RtfParagraphStyle();
+    }
 
-        private string _elementName = "";
-        /// <summary>
-        /// Indentation
-        /// </summary>
-        /// <summary>
-        /// First line indentation.
-        /// </summary>
-        private int _firstLineIndent;
+    /// <summary>
+    ///     Get the right indent adjustment value
+    /// </summary>
+    /// <returns>the adustRightIndent value</returns>
+    public int GetAdustRightIndent() => _adustRightIndent;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <summary>
-        /// The RtfImportHeader to add color mappings to.
-        /// </summary>
-        private RtfImportMgr _importHeader;
+    /// <summary>
+    ///     Get the alignment value.
+    /// </summary>
+    /// <returns>The alignment value.</returns>
+    public int GetAlignment() => _alignment;
 
-        /// <summary>
-        /// Percentage of line occupied by Kashida justification (0 � low, 10 � medium, 20 � high).
-        /// \qkN
-        /// </summary>
-        private int _justificationPercentage;
+    /// <summary>
+    ///     Get the auto space between DBC and English indicator.
+    /// </summary>
+    /// <returns>the autoSpaceBetweenDBCEnglish</returns>
+    public int GetAutoSpaceBetweenDbcEnglish() => _autoSpaceBetweenDbcEnglish;
 
-        /// <summary>
-        /// Left indentation
-        /// </summary>
-        private int _leftIndent;
+    /// <summary>
+    ///     Get the auto space between DBC and Numbers indicator.
+    /// </summary>
+    /// <returns>the autoSpaceBetweenDBCNumbers</returns>
+    public int GetAutoSpaceBetweenDbcNumbers() => _autoSpaceBetweenDbcNumbers;
 
-        /// <summary>
-        /// Mirror indents?
-        /// </summary>
-        private int _mirrorIndent;
+    /// <summary>
+    ///     Get the first line indent value.
+    /// </summary>
+    /// <returns>the firstLineIndent</returns>
+    public int GetFirstLineIndent() => _firstLineIndent;
 
-        /// <summary>
-        /// No Character wrapping
-        /// </summary>
-        private int _noCharacterWrapping;
+    /// <summary>
+    ///     Get the left indent value
+    /// </summary>
+    /// <returns>the left indent</returns>
+    public int GetIndent() => _leftIndent;
 
-        /// <summary>
-        /// No overflow period and comma
-        /// </summary>
-        private int _noOverflowPeriodComma;
+    /// <summary>
+    ///     Get the justification percentage.
+    /// </summary>
+    /// <returns>The justification percentage value.</returns>
+    public int GetJustificationPercentage() => _justificationPercentage;
 
-        /// <summary>
-        /// No Word wrapping
-        /// </summary>
-        private int _noWordWrapping;
+    /// <summary>
+    ///     Get the left indent value
+    /// </summary>
+    /// <returns>the leftIndent</returns>
+    public int GetLeftIndent() => _leftIndent;
 
-        /// <summary>
-        /// Document Foratting Properties
-        /// </summary>
-        /// <summary>
-        /// Override orphan/widow control.
-        /// </summary>
-        private int _overrideWidowControl = -1;
+    /// <summary>
+    ///     Get the value indicating if document has mirrored indents.
+    /// </summary>
+    /// <returns>the mirrorIndent</returns>
+    public int GetMirrorIndent() => _mirrorIndent;
 
-        /// <summary>
-        /// Right indentation
-        /// </summary>
-        private int _rightIndent;
+    /// <summary>
+    ///     Get no character wrapping indicator.
+    /// </summary>
+    /// <returns>the noCharacterWrapping</returns>
+    public int GetNoCharacterWrapping() => _noCharacterWrapping;
 
-        private string _styleName = "";
-        /// <summary>
-        ///  RtfParagraphStyle  object for setting styleshee values
-        /// as they are parsed from the input.
-        /// </summary>
-        /// <summary>
-        /// private RtfParagraphStyle rtfParagraphStyle = null;
-        /// </summary>
-        /// <summary>
-        /// RTF Style number from stylesheet table.
-        /// </summary>
-        private int _styleNr;
+    /// <summary>
+    ///     Get the no overflow period comma indicator.
+    /// </summary>
+    /// <returns>the noOverflowPeriodComma</returns>
+    public int GetNoOverflowPeriodComma() => _noOverflowPeriodComma;
 
-        /// <summary>
-        /// What kind of style is this, Paragraph or Character or Table
-        /// </summary>
-        private int _styleType = RtfStyleTypes.PARAGRAPH;
-        private string _type = "";
+    /// <summary>
+    ///     Get the no word wrapping indicator.
+    /// </summary>
+    /// <returns>the noWordWrapping</returns>
+    public int GetNoWordWrapping() => _noWordWrapping;
 
-        public RtfDestinationStylesheetTable() : base(null)
+    /// <summary>
+    ///     Get the ovirride widow control value.
+    /// </summary>
+    /// <returns>the overrideWidowControl</returns>
+    public int GetOverrideWidowControl() => _overrideWidowControl;
+
+    /// <summary>
+    ///     Get the right indent value.
+    /// </summary>
+    /// <returns>the rightIndent</returns>
+    public int GetRightIndent() => _rightIndent;
+
+    /// <summary>
+    ///     Get this style number.
+    /// </summary>
+    /// <returns>the styleNr</returns>
+    public int GetStyleNr() => _styleNr;
+
+    /// <summary>
+    ///     Get this style type.
+    ///     For example Style, Character Style, etc.
+    /// </summary>
+    /// <returns>the styleType</returns>
+    public int GetStyleType() => _styleType;
+
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.direct.RtfDestination#handleCharacter(int)
+    /// </summary>
+    public override bool HandleCharacter(int ch)
+    {
+        _styleName += (char)ch;
+        return true;
+    }
+
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.direct.RtfDestination#handleGroupEnd()
+    /// </summary>
+    public override bool HandleCloseGroup() => true;
+
+    public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
+    {
+        var result = true;
+        OnCtrlWord(ctrlWordData); // event handler
+
+        if (RtfParser.IsImport())
         {
-        }
-
-        public RtfDestinationStylesheetTable(RtfParser parser, string type) : base(parser)
-        {
-            _importHeader = parser.GetImportManager();
-            _type = type;
-        }
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.direct.RtfDestination#closeDestination()
-        /// </summary>
-        public override bool CloseDestination()
-        {
-
-            return true;
-        }
-
-        public void CreateNewStyle()
-        {
-            //public RtfParagraphStyle(String styleName, String fontName, int fontSize, int fontStyle, Color fontColor)
-            //this.rtfParagraphStyle = new RtfParagraphStyle();
-        }
-
-        /// <summary>
-        /// Get the right indent adjustment value
-        /// </summary>
-        /// <returns>the adustRightIndent value</returns>
-        public int GetAdustRightIndent()
-        {
-            return _adustRightIndent;
-        }
-
-        /// <summary>
-        /// Get the alignment value.
-        /// </summary>
-        /// <returns>The alignment value.</returns>
-        public int GetAlignment()
-        {
-            return _alignment;
-        }
-
-        /// <summary>
-        /// Get the auto space between DBC and English indicator.
-        /// </summary>
-        /// <returns>the autoSpaceBetweenDBCEnglish</returns>
-        public int GetAutoSpaceBetweenDbcEnglish()
-        {
-            return _autoSpaceBetweenDbcEnglish;
-        }
-
-        /// <summary>
-        /// Get the auto space between DBC and Numbers indicator.
-        /// </summary>
-        /// <returns>the autoSpaceBetweenDBCNumbers</returns>
-        public int GetAutoSpaceBetweenDbcNumbers()
-        {
-            return _autoSpaceBetweenDbcNumbers;
-        }
-
-        /// <summary>
-        /// Get the first line indent value.
-        /// </summary>
-        /// <returns>the firstLineIndent</returns>
-        public int GetFirstLineIndent()
-        {
-            return _firstLineIndent;
-        }
-
-        /// <summary>
-        /// Get the left indent value
-        /// </summary>
-        /// <returns>the left indent</returns>
-        public int GetIndent()
-        {
-            return _leftIndent;
-        }
-
-        /// <summary>
-        /// Get the justification percentage.
-        /// </summary>
-        /// <returns>The justification percentage value.</returns>
-        public int GetJustificationPercentage()
-        {
-            return _justificationPercentage;
-        }
-
-        /// <summary>
-        /// Get the left indent value
-        /// </summary>
-        /// <returns>the leftIndent</returns>
-        public int GetLeftIndent()
-        {
-            return _leftIndent;
-        }
-
-        /// <summary>
-        /// Get the value indicating if document has mirrored indents.
-        /// </summary>
-        /// <returns>the mirrorIndent</returns>
-        public int GetMirrorIndent()
-        {
-            return _mirrorIndent;
-        }
-
-        /// <summary>
-        /// Get no character wrapping indicator.
-        /// </summary>
-        /// <returns>the noCharacterWrapping</returns>
-        public int GetNoCharacterWrapping()
-        {
-            return _noCharacterWrapping;
-        }
-
-        /// <summary>
-        /// Get the no overflow period comma indicator.
-        /// </summary>
-        /// <returns>the noOverflowPeriodComma</returns>
-        public int GetNoOverflowPeriodComma()
-        {
-            return _noOverflowPeriodComma;
-        }
-
-        /// <summary>
-        /// Get the no word wrapping indicator.
-        /// </summary>
-        /// <returns>the noWordWrapping</returns>
-        public int GetNoWordWrapping()
-        {
-            return _noWordWrapping;
-        }
-
-        /// <summary>
-        /// Get the ovirride widow control value.
-        /// </summary>
-        /// <returns>the overrideWidowControl</returns>
-        public int GetOverrideWidowControl()
-        {
-            return _overrideWidowControl;
-        }
-
-        /// <summary>
-        /// Get the right indent value.
-        /// </summary>
-        /// <returns>the rightIndent</returns>
-        public int GetRightIndent()
-        {
-            return _rightIndent;
-        }
-
-        /// <summary>
-        /// Get this style number.
-        /// </summary>
-        /// <returns>the styleNr</returns>
-        public int GetStyleNr()
-        {
-            return _styleNr;
-        }
-
-        /// <summary>
-        /// Get this style type.
-        /// For example Style, Character Style, etc.
-        /// </summary>
-        /// <returns>the styleType</returns>
-        public int GetStyleType()
-        {
-            return _styleType;
-        }
-
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.direct.RtfDestination#handleCharacter(int)
-        /// </summary>
-        public override bool HandleCharacter(int ch)
-        {
-            _styleName += (char)ch;
-            return true;
-        }
-
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.direct.RtfDestination#handleGroupEnd()
-        /// </summary>
-        public override bool HandleCloseGroup()
-        {
-
-            return true;
-        }
-
-        public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
-        {
-            bool result = true;
-            OnCtrlWord(ctrlWordData);  // event handler
-
-            if (RtfParser.IsImport())
+            // information
+            if (ctrlWordData.CtrlWord.Equals("s"))
             {
-                // information
-                if (ctrlWordData.CtrlWord.Equals("s")) { }
-                if (ctrlWordData.CtrlWord.Equals("cs")) { }
-                if (ctrlWordData.CtrlWord.Equals("ds")) { }
-                if (ctrlWordData.CtrlWord.Equals("ts")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsrowd")) { }
-
-                if (ctrlWordData.CtrlWord.Equals("keycode")) { }
-                if (ctrlWordData.CtrlWord.Equals("shift")) { }
-                if (ctrlWordData.CtrlWord.Equals("ctrl")) { }
-                if (ctrlWordData.CtrlWord.Equals("alt")) { }
-                //cells
-                if (ctrlWordData.CtrlWord.Equals("fn")) { }
-                if (ctrlWordData.CtrlWord.Equals("additive")) { }
-                if (ctrlWordData.CtrlWord.Equals("sbasedon")) { }
-                if (ctrlWordData.CtrlWord.Equals("snext")) { }
-                if (ctrlWordData.CtrlWord.Equals("sautoupd")) { }
-                if (ctrlWordData.CtrlWord.Equals("shidden")) { }
-                if (ctrlWordData.CtrlWord.Equals("slink")) { }
-                if (ctrlWordData.CtrlWord.Equals("slocked")) { }
-                if (ctrlWordData.CtrlWord.Equals("spersonal")) { }
-                if (ctrlWordData.CtrlWord.Equals("scompose")) { }
-                if (ctrlWordData.CtrlWord.Equals("sreply")) { }
-                /* FORMATTING */
-                // brdrdef/parfmt/apoctl/tabdef/shading/chrfmt
-
-
-
-                if (ctrlWordData.CtrlWord.Equals("styrsid")) { }
-                if (ctrlWordData.CtrlWord.Equals("ssemihidden")) { }
-                if (ctrlWordData.CtrlWord.Equals("sqformat")) { }
-                if (ctrlWordData.CtrlWord.Equals("spriority")) { }
-                if (ctrlWordData.CtrlWord.Equals("sunhideused")) { }
-
-                /* TABLE STYLES */
-                if (ctrlWordData.CtrlWord.Equals("tscellwidth")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellwidthfts")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddt")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddl")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddr")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddb")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddft"))/*0-auto, 3-twips*/ { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddfl"))/*0-auto, 3-twips*/ { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddfr"))/*0-auto, 3-twips*/ { }
-                if (ctrlWordData.CtrlWord.Equals("tscellpaddfb"))/*0-auto, 3-twips*/ { }
-                if (ctrlWordData.CtrlWord.Equals("tsvertalt")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsvertalc")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsvertalb")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsnowrap")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellcfpat")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscellcbpat")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgbdiag")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgfdiag")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgcross")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgdcross")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgdkcross ")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgdkdcross")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbghoriz")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgvert")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgdkhor")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbgdkvert")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrt")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrb")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrl")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrr")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrh")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrv")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrdgl")) { }
-                if (ctrlWordData.CtrlWord.Equals("tsbrdrdgr")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscbandsh")) { }
-                if (ctrlWordData.CtrlWord.Equals("tscbandsv")) { }
-            }
-            if (ctrlWordData.CtrlWordType == RtfCtrlWordType.FLAG ||
-                    ctrlWordData.CtrlWordType == RtfCtrlWordType.TOGGLE ||
-                    ctrlWordData.CtrlWordType == RtfCtrlWordType.VALUE)
-            {
-                RtfParser.GetState().Properties.SetProperty(ctrlWordData);
             }
 
-            switch (RtfParser.GetConversionType())
+            if (ctrlWordData.CtrlWord.Equals("cs"))
             {
-                case RtfParser.TYPE_IMPORT_FULL:
-                    result = true;
-                    break;
-                case RtfParser.TYPE_IMPORT_FRAGMENT:
-                    result = true;
-                    break;
-                case RtfParser.TYPE_CONVERT:
-                    result = true;
-                    break;
-                default:    // error because is should be an import or convert
-                    result = false;
-                    break;
             }
-            return result;
+
+            if (ctrlWordData.CtrlWord.Equals("ds"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("ts"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsrowd"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("keycode"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("shift"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("ctrl"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("alt"))
+            {
+            }
+
+            //cells
+            if (ctrlWordData.CtrlWord.Equals("fn"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("additive"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("sbasedon"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("snext"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("sautoupd"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("shidden"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("slink"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("slocked"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("spersonal"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("scompose"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("sreply"))
+            {
+            }
+            /* FORMATTING */
+            // brdrdef/parfmt/apoctl/tabdef/shading/chrfmt
+
+
+            if (ctrlWordData.CtrlWord.Equals("styrsid"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("ssemihidden"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("sqformat"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("spriority"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("sunhideused"))
+            {
+            }
+
+            /* TABLE STYLES */
+            if (ctrlWordData.CtrlWord.Equals("tscellwidth"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellwidthfts"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddt"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddl"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddr"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddb"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddft")) /*0-auto, 3-twips*/
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfl")) /*0-auto, 3-twips*/
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfr")) /*0-auto, 3-twips*/
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfb")) /*0-auto, 3-twips*/
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsvertalt"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsvertalc"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsvertalb"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsnowrap"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellcfpat"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscellcbpat"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgbdiag"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgfdiag"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgcross"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgdcross"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkcross "))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkdcross"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbghoriz"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgvert"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkhor"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkvert"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrt"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrb"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrl"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrr"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrh"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrv"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgl"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgr"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscbandsh"))
+            {
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("tscbandsv"))
+            {
+            }
         }
 
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.direct.RtfDestination#handleGroupStart()
-        /// </summary>
-        public override bool HandleOpenGroup()
+        if (ctrlWordData.CtrlWordType == RtfCtrlWordType.FLAG ||
+            ctrlWordData.CtrlWordType == RtfCtrlWordType.TOGGLE ||
+            ctrlWordData.CtrlWordType == RtfCtrlWordType.VALUE)
         {
-
-            return true;
+            RtfParser.GetState().Properties.SetProperty(ctrlWordData);
         }
 
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.parser.destinations.RtfDestination#handleOpenNewGroup()
-        /// </summary>
-        public override bool HandleOpeningSubGroup()
+        switch (RtfParser.GetConversionType())
         {
-            // TODO Auto-generated method stub
-            return false;
+            case RtfParser.TYPE_IMPORT_FULL:
+                result = true;
+                break;
+            case RtfParser.TYPE_IMPORT_FRAGMENT:
+                result = true;
+                break;
+            case RtfParser.TYPE_CONVERT:
+                result = true;
+                break;
+            default: // error because is should be an import or convert
+                result = false;
+                break;
         }
 
-        /// <summary>
-        /// Set the right indent adjustment value
-        /// </summary>
-        /// <param name="adustRightIndent">the adustRightIndent to set</param>
-        public void SetAdustRightIndent(int adustRightIndent)
-        {
-            _adustRightIndent = adustRightIndent;
-        }
+        return result;
+    }
 
-        /// <summary>
-        /// Set the alignment value from the parsed value.
-        /// </summary>
-        /// <param name="alignment">The alignment value.</param>
-        /// <returns>The alignment value.</returns>
-        public int SetAlignment(int alignment)
-        {
-            _alignment = alignment;
-            return _alignment;
-        }
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.direct.RtfDestination#handleGroupStart()
+    /// </summary>
+    public override bool HandleOpenGroup() => true;
 
-        /// <summary>
-        /// Set the auto space between DBC and English indicator.
-        /// </summary>
-        /// <param name="autoSpaceBetweenDbcEnglish">the autoSpaceBetweenDBCEnglish to set</param>
-        public void SetAutoSpaceBetweenDbcEnglish(int autoSpaceBetweenDbcEnglish)
-        {
-            _autoSpaceBetweenDbcEnglish = autoSpaceBetweenDbcEnglish;
-        }
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.parser.destinations.RtfDestination#handleOpenNewGroup()
+    /// </summary>
+    public override bool HandleOpeningSubGroup() =>
+        // TODO Auto-generated method stub
+        false;
 
-        /// <summary>
-        /// Set the auto space between DBC and Numbers indicator.
-        /// </summary>
-        /// <param name="autoSpaceBetweenDbcNumbers">the autoSpaceBetweenDBCNumbers to set</param>
-        public void SetAutoSpaceBetweenDbcNumbers(int autoSpaceBetweenDbcNumbers)
-        {
-            _autoSpaceBetweenDbcNumbers = autoSpaceBetweenDbcNumbers;
-        }
+    /// <summary>
+    ///     Set the right indent adjustment value
+    /// </summary>
+    /// <param name="adustRightIndent">the adustRightIndent to set</param>
+    public void SetAdustRightIndent(int adustRightIndent)
+    {
+        _adustRightIndent = adustRightIndent;
+    }
 
-        public void SetElementName(string value)
-        {
-            _elementName = value;
-        }
+    /// <summary>
+    ///     Set the alignment value from the parsed value.
+    /// </summary>
+    /// <param name="alignment">The alignment value.</param>
+    /// <returns>The alignment value.</returns>
+    public int SetAlignment(int alignment)
+    {
+        _alignment = alignment;
+        return _alignment;
+    }
 
-        /// <summary>
-        /// Set the first line indent value.
-        /// </summary>
-        /// <param name="firstLineIndent">the firstLineIndent to set</param>
-        public void SetFirstLineIndent(int firstLineIndent)
-        {
-            _firstLineIndent = firstLineIndent;
-        }
+    /// <summary>
+    ///     Set the auto space between DBC and English indicator.
+    /// </summary>
+    /// <param name="autoSpaceBetweenDbcEnglish">the autoSpaceBetweenDBCEnglish to set</param>
+    public void SetAutoSpaceBetweenDbcEnglish(int autoSpaceBetweenDbcEnglish)
+    {
+        _autoSpaceBetweenDbcEnglish = autoSpaceBetweenDbcEnglish;
+    }
 
-        /// <summary>
-        /// Set the left indent value from the value parsed.
-        /// </summary>
-        /// <param name="indent">the left indent value.</param>
-        public void SetIndent(int indent)
-        {
-            _leftIndent = indent;
-        }
+    /// <summary>
+    ///     Set the auto space between DBC and Numbers indicator.
+    /// </summary>
+    /// <param name="autoSpaceBetweenDbcNumbers">the autoSpaceBetweenDBCNumbers to set</param>
+    public void SetAutoSpaceBetweenDbcNumbers(int autoSpaceBetweenDbcNumbers)
+    {
+        _autoSpaceBetweenDbcNumbers = autoSpaceBetweenDbcNumbers;
+    }
 
-        /// <summary>
-        /// Set the justification percentage from parsed value.
-        /// </summary>
-        /// <param name="percent">The justification percentage</param>
-        /// <returns>The justification percentage</returns>
-        public int SetJustificationPercentage(int percent)
-        {
-            _justificationPercentage = percent;
-            return _justificationPercentage;
-        }
+    public void SetElementName(string value)
+    {
+        _elementName = value;
+    }
 
-        /// <summary>
-        /// Set the left indent value
-        /// </summary>
-        /// <param name="leftIndent">the leftIndent to set</param>
-        public void SetLeftIndent(int leftIndent)
-        {
-            _leftIndent = leftIndent;
-        }
+    /// <summary>
+    ///     Set the first line indent value.
+    /// </summary>
+    /// <param name="firstLineIndent">the firstLineIndent to set</param>
+    public void SetFirstLineIndent(int firstLineIndent)
+    {
+        _firstLineIndent = firstLineIndent;
+    }
 
-        /// <summary>
-        /// Set the mirrored indent value from the parsed value.
-        /// </summary>
-        /// <param name="mirrorIndent">the mirrorIndent to set</param>
-        public void SetMirrorIndent(int mirrorIndent)
-        {
-            _mirrorIndent = mirrorIndent;
-        }
+    /// <summary>
+    ///     Set the left indent value from the value parsed.
+    /// </summary>
+    /// <param name="indent">the left indent value.</param>
+    public void SetIndent(int indent)
+    {
+        _leftIndent = indent;
+    }
 
-        /// <summary>
-        /// Set the no character wrapping indicator from parsed value
-        /// </summary>
-        /// <param name="noCharacterWrapping">the noCharacterWrapping to set</param>
-        public void SetNoCharacterWrapping(int noCharacterWrapping)
-        {
-            _noCharacterWrapping = noCharacterWrapping;
-        }
+    /// <summary>
+    ///     Set the justification percentage from parsed value.
+    /// </summary>
+    /// <param name="percent">The justification percentage</param>
+    /// <returns>The justification percentage</returns>
+    public int SetJustificationPercentage(int percent)
+    {
+        _justificationPercentage = percent;
+        return _justificationPercentage;
+    }
 
-        /// <summary>
-        /// Set the no overflow period comma indicator from the parsed value.
-        /// </summary>
-        /// <param name="noOverflowPeriodComma">the noOverflowPeriodComma to set</param>
-        public void SetNoOverflowPeriodComma(int noOverflowPeriodComma)
-        {
-            _noOverflowPeriodComma = noOverflowPeriodComma;
-        }
+    /// <summary>
+    ///     Set the left indent value
+    /// </summary>
+    /// <param name="leftIndent">the leftIndent to set</param>
+    public void SetLeftIndent(int leftIndent)
+    {
+        _leftIndent = leftIndent;
+    }
 
-        /// <summary>
-        /// Set the no word wrapping indicator from the parsed value.
-        /// </summary>
-        /// <param name="noWordWrapping">the noWordWrapping to set</param>
-        public void SetNoWordWrapping(int noWordWrapping)
-        {
-            _noWordWrapping = noWordWrapping;
-        }
+    /// <summary>
+    ///     Set the mirrored indent value from the parsed value.
+    /// </summary>
+    /// <param name="mirrorIndent">the mirrorIndent to set</param>
+    public void SetMirrorIndent(int mirrorIndent)
+    {
+        _mirrorIndent = mirrorIndent;
+    }
 
-        /// <summary>
-        /// Set the override widow control.
-        /// </summary>
-        /// <param name="overrideWidowControl">the overrideWidowControl to set</param>
-        public void SetOverrideWidowControl(int overrideWidowControl)
-        {
-            _overrideWidowControl = overrideWidowControl;
-        }
+    /// <summary>
+    ///     Set the no character wrapping indicator from parsed value
+    /// </summary>
+    /// <param name="noCharacterWrapping">the noCharacterWrapping to set</param>
+    public void SetNoCharacterWrapping(int noCharacterWrapping)
+    {
+        _noCharacterWrapping = noCharacterWrapping;
+    }
 
-        public override void SetParser(RtfParser parser)
-        {
-            RtfParser = parser;
-            _importHeader = parser.GetImportManager();
-        }
-        /// <summary>
-        /// Set the right indent value.
-        /// </summary>
-        /// <param name="rightIndent">the rightIndent to set</param>
-        public void SetRightIndent(int rightIndent)
-        {
-            _rightIndent = rightIndent;
-        }
+    /// <summary>
+    ///     Set the no overflow period comma indicator from the parsed value.
+    /// </summary>
+    /// <param name="noOverflowPeriodComma">the noOverflowPeriodComma to set</param>
+    public void SetNoOverflowPeriodComma(int noOverflowPeriodComma)
+    {
+        _noOverflowPeriodComma = noOverflowPeriodComma;
+    }
 
-        /// <summary>
-        /// Set this style number from the parsed value.
-        /// </summary>
-        /// <param name="styleNr">the styleNr to set</param>
-        public void SetStyleNr(int styleNr)
-        {
-            _styleNr = styleNr;
-        }
+    /// <summary>
+    ///     Set the no word wrapping indicator from the parsed value.
+    /// </summary>
+    /// <param name="noWordWrapping">the noWordWrapping to set</param>
+    public void SetNoWordWrapping(int noWordWrapping)
+    {
+        _noWordWrapping = noWordWrapping;
+    }
 
-        /// <summary>
-        /// Set the style type.
-        /// </summary>
-        /// <param name="styleType">the styleType to set</param>
-        public void SetStyleType(int styleType)
-        {
-            _styleType = styleType;
-        }
+    /// <summary>
+    ///     Set the override widow control.
+    /// </summary>
+    /// <param name="overrideWidowControl">the overrideWidowControl to set</param>
+    public void SetOverrideWidowControl(int overrideWidowControl)
+    {
+        _overrideWidowControl = overrideWidowControl;
+    }
 
-        /// <summary>
-        /// (non-Javadoc)
-        /// @see com.lowagie.text.rtf.parser.destinations.RtfDestination#setToDefaults()
-        /// </summary>
-        public override void SetToDefaults()
-        {
-            _styleName = "";
-            _styleNr = 0;
-            _alignment = Element.ALIGN_LEFT;
-            _justificationPercentage = 0;
-            _firstLineIndent = 0;
-            _leftIndent = 0;
-            _rightIndent = 0;
-            _adustRightIndent = 0;
-            _mirrorIndent = 0;
-            _overrideWidowControl = -1;
-            _autoSpaceBetweenDbcEnglish = 0;
-            _autoSpaceBetweenDbcNumbers = 0;
-            _noCharacterWrapping = 0;
-            _noWordWrapping = 0;
-            _noOverflowPeriodComma = 0;
-        }
+    public override void SetParser(RtfParser parser)
+    {
+        RtfParser = parser;
+        _importHeader = parser.GetImportManager();
+    }
 
-        public void SetType(string value)
-        {
-            _type = value;
-        }
+    /// <summary>
+    ///     Set the right indent value.
+    /// </summary>
+    /// <param name="rightIndent">the rightIndent to set</param>
+    public void SetRightIndent(int rightIndent)
+    {
+        _rightIndent = rightIndent;
+    }
+
+    /// <summary>
+    ///     Set this style number from the parsed value.
+    /// </summary>
+    /// <param name="styleNr">the styleNr to set</param>
+    public void SetStyleNr(int styleNr)
+    {
+        _styleNr = styleNr;
+    }
+
+    /// <summary>
+    ///     Set the style type.
+    /// </summary>
+    /// <param name="styleType">the styleType to set</param>
+    public void SetStyleType(int styleType)
+    {
+        _styleType = styleType;
+    }
+
+    /// <summary>
+    ///     (non-Javadoc)
+    ///     @see com.lowagie.text.rtf.parser.destinations.RtfDestination#setToDefaults()
+    /// </summary>
+    public override void SetToDefaults()
+    {
+        _styleName = "";
+        _styleNr = 0;
+        _alignment = Element.ALIGN_LEFT;
+        _justificationPercentage = 0;
+        _firstLineIndent = 0;
+        _leftIndent = 0;
+        _rightIndent = 0;
+        _adustRightIndent = 0;
+        _mirrorIndent = 0;
+        _overrideWidowControl = -1;
+        _autoSpaceBetweenDbcEnglish = 0;
+        _autoSpaceBetweenDbcNumbers = 0;
+        _noCharacterWrapping = 0;
+        _noWordWrapping = 0;
+        _noOverflowPeriodComma = 0;
+    }
+
+    public void SetType(string value)
+    {
+        _type = value;
     }
 }

@@ -1,77 +1,76 @@
-using System;
+namespace iTextSharp.text.pdf.collection;
 
-namespace iTextSharp.text.pdf.collection
+/// <summary>
+/// </summary>
+public class PdfCollectionSort : PdfDictionary
 {
     /// <summary>
-    ///
+    ///     Constructs a PDF Collection Sort Dictionary.
     /// </summary>
-    public class PdfCollectionSort : PdfDictionary
+    /// <param name="key">the key of the field that will be used to sort entries</param>
+    public PdfCollectionSort(string key) : base(PdfName.Collectionsort)
     {
+        Put(PdfName.S, new PdfName(key));
+    }
 
-        /// <summary>
-        /// Constructs a PDF Collection Sort Dictionary.
-        /// </summary>
-        /// <param name="key">the key of the field that will be used to sort entries</param>
-        public PdfCollectionSort(string key) : base(PdfName.Collectionsort)
+    /// <summary>
+    ///     Constructs a PDF Collection Sort Dictionary.
+    /// </summary>
+    /// <param name="keys">the keys of the fields that will be used to sort entries</param>
+    public PdfCollectionSort(string[] keys) : base(PdfName.Collectionsort)
+    {
+        var array = new PdfArray();
+        for (var i = 0; i < keys.Length; i++)
         {
-            Put(PdfName.S, new PdfName(key));
+            array.Add(new PdfName(keys[i]));
         }
 
-        /// <summary>
-        /// Constructs a PDF Collection Sort Dictionary.
-        /// </summary>
-        /// <param name="keys">the keys of the fields that will be used to sort entries</param>
-        public PdfCollectionSort(string[] keys) : base(PdfName.Collectionsort)
-        {
-            PdfArray array = new PdfArray();
-            for (int i = 0; i < keys.Length; i++)
-            {
-                array.Add(new PdfName(keys[i]));
-            }
-            Put(PdfName.S, array);
-        }
+        Put(PdfName.S, array);
+    }
 
-        /// <summary>
-        /// Defines the sort order of the field (ascending or descending).
-        /// </summary>
-        /// <param name="ascending">true is the default, use false for descending order</param>
-        public void SetSortOrder(bool ascending)
+    /// <summary>
+    ///     Defines the sort order of the field (ascending or descending).
+    /// </summary>
+    /// <param name="ascending">true is the default, use false for descending order</param>
+    public void SetSortOrder(bool ascending)
+    {
+        var o = Get(PdfName.S);
+        if (o is PdfName)
         {
-            PdfObject o = Get(PdfName.S);
-            if (o is PdfName)
-            {
-                Put(PdfName.A, new PdfBoolean(ascending));
-            }
-            else
-            {
-                throw new InvalidOperationException("You have to define a bool array for this collection sort dictionary.");
-            }
+            Put(PdfName.A, new PdfBoolean(ascending));
         }
-
-        /// <summary>
-        /// Defines the sort order of the field (ascending or descending).
-        /// </summary>
-        /// <param name="ascending">an array with every element corresponding with a name of a field.</param>
-        public void SetSortOrder(bool[] ascending)
+        else
         {
-            PdfObject o = Get(PdfName.S);
-            if (o is PdfArray)
+            throw new InvalidOperationException("You have to define a bool array for this collection sort dictionary.");
+        }
+    }
+
+    /// <summary>
+    ///     Defines the sort order of the field (ascending or descending).
+    /// </summary>
+    /// <param name="ascending">an array with every element corresponding with a name of a field.</param>
+    public void SetSortOrder(bool[] ascending)
+    {
+        var o = Get(PdfName.S);
+        if (o is PdfArray)
+        {
+            if (((PdfArray)o).Size != ascending.Length)
             {
-                if (((PdfArray)o).Size != ascending.Length)
-                {
-                    throw new InvalidOperationException("The number of booleans in this array doesn't correspond with the number of fields.");
-                }
-                PdfArray array = new PdfArray();
-                for (int i = 0; i < ascending.Length; i++)
-                {
-                    array.Add(new PdfBoolean(ascending[i]));
-                }
-                Put(PdfName.A, array);
+                throw new
+                    InvalidOperationException("The number of booleans in this array doesn't correspond with the number of fields.");
             }
-            else
+
+            var array = new PdfArray();
+            for (var i = 0; i < ascending.Length; i++)
             {
-                throw new InvalidOperationException("You need a single bool for this collection sort dictionary.");
+                array.Add(new PdfBoolean(ascending[i]));
             }
+
+            Put(PdfName.A, array);
+        }
+        else
+        {
+            throw new InvalidOperationException("You need a single bool for this collection sort dictionary.");
         }
     }
 }

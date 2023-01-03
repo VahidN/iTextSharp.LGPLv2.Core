@@ -1,18 +1,15 @@
-using System.IO;
+namespace iTextSharp.text.exceptions;
 
-namespace iTextSharp.text.exceptions
+/// <summary>
+///     Typed exception used when opening an existing PDF document.
+///     Gets thrown when the document isn't a valid PDF document.
+/// </summary>
+public class BadPasswordException : IOException
 {
     /// <summary>
-    /// Typed exception used when opening an existing PDF document.
-    /// Gets thrown when the document isn't a valid PDF document.
+    ///     Creates an exception saying the user password was incorrect.
     /// </summary>
-    public class BadPasswordException : IOException
+    public BadPasswordException(string message) : base(message)
     {
-        /// <summary>
-        /// Creates an exception saying the user password was incorrect.
-        /// </summary>
-        public BadPasswordException(string message) : base(message)
-        {
-        }
     }
 }

@@ -1,7 +1,6 @@
-namespace iTextSharp.text.html.simpleparser
+namespace iTextSharp.text.html.simpleparser;
+
+public interface IALink
 {
-    public interface IALink
-    {
-        bool Process(Paragraph current, ChainedProperties cprops);
-    }
+    bool Process(Paragraph current, ChainedProperties cprops);
 }

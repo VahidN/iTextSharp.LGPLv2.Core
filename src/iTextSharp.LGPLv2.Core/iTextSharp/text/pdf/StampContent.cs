@@ -1,51 +1,37 @@
-namespace iTextSharp.text.pdf
+namespace iTextSharp.text.pdf;
+
+/// <summary>
+/// </summary>
+public class StampContent : PdfContentByte
 {
+    internal PageResources pageResources;
+    internal PdfStamperImp.PageStamp Ps;
+
     /// <summary>
-    ///
+    ///     Creates a new instance of StampContent
     /// </summary>
-    public class StampContent : PdfContentByte
+    internal StampContent(PdfStamperImp stamper, PdfStamperImp.PageStamp ps) : base(stamper)
     {
-        internal PageResources pageResources;
-        internal PdfStamperImp.PageStamp Ps;
+        Ps = ps;
+        pageResources = ps.PageResources;
+    }
 
-        /// <summary>
-        /// Creates a new instance of StampContent
-        /// </summary>
-        internal StampContent(PdfStamperImp stamper, PdfStamperImp.PageStamp ps) : base(stamper)
-        {
-            Ps = ps;
-            pageResources = ps.PageResources;
-        }
+    /// <summary>
+    ///     Gets a duplicate of this  PdfContentByte . All
+    ///     the members are copied by reference but the buffer stays different.
+    /// </summary>
+    /// <returns>a copy of this  PdfContentByte </returns>
+    public override PdfContentByte Duplicate => new StampContent((PdfStamperImp)Writer, Ps);
 
-        /// <summary>
-        /// Gets a duplicate of this  PdfContentByte . All
-        /// the members are copied by reference but the buffer stays different.
-        /// </summary>
-        /// <returns>a copy of this  PdfContentByte </returns>
-        public override PdfContentByte Duplicate
-        {
-            get
-            {
-                return new StampContent((PdfStamperImp)Writer, Ps);
-            }
-        }
+    internal override PageResources PageResources => pageResources;
 
-        internal override PageResources PageResources
-        {
-            get
-            {
-                return pageResources;
-            }
-        }
+    public override void SetAction(PdfAction action, float llx, float lly, float urx, float ury)
+    {
+        ((PdfStamperImp)Writer).AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, action), Ps.PageN);
+    }
 
-        public override void SetAction(PdfAction action, float llx, float lly, float urx, float ury)
-        {
-            ((PdfStamperImp)Writer).AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, action), Ps.PageN);
-        }
-
-        internal override void AddAnnotation(PdfAnnotation annot)
-        {
-            ((PdfStamperImp)Writer).AddAnnotation(annot, Ps.PageN);
-        }
+    internal override void AddAnnotation(PdfAnnotation annot)
+    {
+        ((PdfStamperImp)Writer).AddAnnotation(annot, Ps.PageN);
     }
 }

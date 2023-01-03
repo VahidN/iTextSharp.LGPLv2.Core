@@ -1,0 +1,14 @@
+# Code files
+[*.{cs,csx,vb,vbx,razor,html,htm,js,md,cshtml,xaml,vbhtml,aspx,txt,asax,ashx,asmx,master,config}]
+charset = utf-8-bom
+
+[*.cs]
+
+# BannedApiAnalyzers
+dotnet_diagnostic.RS0030.severity = error
+
+
+
+
+# force file scoped namespaces
+csharp_style_namespace_declarations = file_scoped:error

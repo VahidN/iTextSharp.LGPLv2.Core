@@ -1,531 +1,604 @@
-using System;
-using System.IO;
 using System.Text;
 
-namespace iTextSharp.text.pdf
+namespace iTextSharp.text.pdf;
+
+/// <summary>
+///     @author  Paulo Soares (psoares@consiste.pt)
+/// </summary>
+public class PrTokeniser
 {
+    public const int TK_COMMENT = 4;
+    public const int TK_END_ARRAY = 6;
+    public const int TK_END_DIC = 8;
+    public const int TK_NAME = 3;
+    public const int TK_NUMBER = 1;
+    public const int TK_OTHER = 10;
+    public const int TK_REF = 9;
+    public const int TK_START_ARRAY = 5;
+    public const int TK_START_DIC = 7;
+    public const int TK_STRING = 2;
+    internal const string EMPTY = "";
 
-    /// <summary>
-    /// @author  Paulo Soares (psoares@consiste.pt)
-    /// </summary>
-    public class PrTokeniser
+
+    protected RandomAccessFileOrArray file;
+    protected int generation;
+    protected bool HexString;
+    protected int reference;
+    protected string stringValue;
+    protected int Type;
+
+    public PrTokeniser(string filename) => file = new RandomAccessFileOrArray(filename);
+
+    public PrTokeniser(byte[] pdfIn) => file = new RandomAccessFileOrArray(pdfIn);
+
+    public PrTokeniser(RandomAccessFileOrArray file) => this.file = file;
+
+    public RandomAccessFileOrArray File => file;
+
+    public int FilePointer => file.FilePointer;
+
+    public int Generation => generation;
+
+    public int IntValue => int.Parse(stringValue, CultureInfo.InvariantCulture);
+
+    public int Length => file.Length;
+
+    public int Reference => reference;
+
+    public RandomAccessFileOrArray SafeFile => new RandomAccessFileOrArray(file);
+
+    public long Startxref
     {
-
-        public const int TK_COMMENT = 4;
-        public const int TK_END_ARRAY = 6;
-        public const int TK_END_DIC = 8;
-        public const int TK_NAME = 3;
-        public const int TK_NUMBER = 1;
-        public const int TK_OTHER = 10;
-        public const int TK_REF = 9;
-        public const int TK_START_ARRAY = 5;
-        public const int TK_START_DIC = 7;
-        public const int TK_STRING = 2;
-        internal const string EMPTY = "";
-
-
-        protected RandomAccessFileOrArray file;
-        protected int generation;
-        protected bool HexString;
-        protected int reference;
-        protected string stringValue;
-        protected int Type;
-        public PrTokeniser(string filename)
+        get
         {
-            file = new RandomAccessFileOrArray(filename);
-        }
-
-        public PrTokeniser(byte[] pdfIn)
-        {
-            file = new RandomAccessFileOrArray(pdfIn);
-        }
-
-        public PrTokeniser(RandomAccessFileOrArray file)
-        {
-            this.file = file;
-        }
-
-        public RandomAccessFileOrArray File
-        {
-            get
+            const int arrLength = 1024;
+            const string startxref = "startxref";
+            var startxrefLength = startxref.Length;
+            long fileLength = file.Length;
+            var pos = fileLength - arrLength;
+            if (pos < 1)
             {
-                return file;
+                pos = 1;
             }
-        }
 
-        public int FilePointer
-        {
-            get
+            while (pos > 0)
             {
-                return file.FilePointer;
-            }
-        }
-
-        public int Generation
-        {
-            get
-            {
-                return generation;
-            }
-        }
-
-        public int IntValue
-        {
-            get
-            {
-                return int.Parse(stringValue, CultureInfo.InvariantCulture);
-            }
-        }
-
-        public int Length
-        {
-            get
-            {
-                return file.Length;
-            }
-        }
-
-        public int Reference
-        {
-            get
-            {
-                return reference;
-            }
-        }
-
-        public RandomAccessFileOrArray SafeFile
-        {
-            get
-            {
-                return new RandomAccessFileOrArray(file);
-            }
-        }
-
-        public long Startxref
-        {
-            get
-            {
-                const int arrLength = 1024;
-                const string startxref = "startxref";
-                var startxrefLength = startxref.Length;
-                long fileLength = file.Length;
-                long pos = fileLength - arrLength;
-                if (pos < 1) pos = 1;
-                while (pos > 0)
+                file.Seek(pos);
+                var str = ReadString(arrLength);
+                var idx = str.LastIndexOf(startxref, StringComparison.Ordinal);
+                if (idx >= 0)
                 {
-                    file.Seek(pos);
-                    var str = ReadString(arrLength);
-                    int idx = str.LastIndexOf(startxref, StringComparison.Ordinal);
-                    if (idx >= 0) return pos + idx;
-                    pos = pos - arrLength + startxrefLength;
+                    return pos + idx;
                 }
-                throw new IOException("PDF startxref not found.");
+
+                pos = pos - arrLength + startxrefLength;
             }
-        }
 
-        public string StringValue
+            throw new IOException("PDF startxref not found.");
+        }
+    }
+
+    public string StringValue => stringValue;
+
+    public int TokenType => Type;
+
+    public static int[] CheckObjectStart(byte[] line)
+    {
+        try
         {
-            get
+            var tk = new PrTokeniser(line);
+            var num = 0;
+            var gen = 0;
+            if (!tk.NextToken() || tk.TokenType != TK_NUMBER)
             {
-                return stringValue;
+                return null;
             }
-        }
 
-        public int TokenType
-        {
-            get
+            num = tk.IntValue;
+            if (!tk.NextToken() || tk.TokenType != TK_NUMBER)
             {
-                return Type;
+                return null;
             }
-        }
 
-        public static int[] CheckObjectStart(byte[] line)
-        {
-            try
+            gen = tk.IntValue;
+            if (!tk.NextToken())
             {
-                PrTokeniser tk = new PrTokeniser(line);
-                int num = 0;
-                int gen = 0;
-                if (!tk.NextToken() || tk.TokenType != TK_NUMBER)
-                    return null;
-                num = tk.IntValue;
-                if (!tk.NextToken() || tk.TokenType != TK_NUMBER)
-                    return null;
-                gen = tk.IntValue;
-                if (!tk.NextToken())
-                    return null;
-                if (!tk.StringValue.Equals("obj"))
-                    return null;
-                return new[] { num, gen };
+                return null;
             }
-            catch
+
+            if (!tk.StringValue.Equals("obj"))
             {
+                return null;
             }
-            return null;
+
+            return new[] { num, gen };
+        }
+        catch
+        {
         }
 
-        public static int GetHex(int v)
+        return null;
+    }
+
+    public static int GetHex(int v)
+    {
+        if (v >= '0' && v <= '9')
         {
-            if (v >= '0' && v <= '9')
-                return v - '0';
-            if (v >= 'A' && v <= 'F')
-                return v - 'A' + 10;
-            if (v >= 'a' && v <= 'f')
-                return v - 'a' + 10;
-            return -1;
+            return v - '0';
         }
 
-        public static bool IsDelimiter(int ch)
+        if (v >= 'A' && v <= 'F')
         {
-            return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']' || ch == '/' || ch == '%');
+            return v - 'A' + 10;
         }
 
-        public static bool IsWhitespace(int ch)
+        if (v >= 'a' && v <= 'f')
         {
-            return (ch == 0 || ch == 9 || ch == 10 || ch == 12 || ch == 13 || ch == 32);
+            return v - 'a' + 10;
         }
 
-        public void BackOnePosition(int ch)
+        return -1;
+    }
+
+    public static bool IsDelimiter(int ch) => ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' ||
+                                              ch == ']' || ch == '/' || ch == '%';
+
+    public static bool IsWhitespace(int ch) => ch == 0 || ch == 9 || ch == 10 || ch == 12 || ch == 13 || ch == 32;
+
+    public void BackOnePosition(int ch)
+    {
+        if (ch != -1)
         {
-            if (ch != -1)
-                file.PushBack((byte)ch);
+            file.PushBack((byte)ch);
+        }
+    }
+
+    public void CheckFdfHeader()
+    {
+        file.StartOffset = 0;
+        var str = ReadString(1024);
+        var idx = str.IndexOf("%FDF-1.2", StringComparison.Ordinal);
+        if (idx < 0)
+        {
+            throw new IOException("FDF header signature not found.");
         }
 
-        public void CheckFdfHeader()
+        file.StartOffset = idx;
+    }
+
+    public char CheckPdfHeader()
+    {
+        file.StartOffset = 0;
+        var str = ReadString(1024);
+        var idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
+        if (idx < 0)
         {
-            file.StartOffset = 0;
-            string str = ReadString(1024);
-            int idx = str.IndexOf("%FDF-1.2", StringComparison.Ordinal);
-            if (idx < 0)
-                throw new IOException("FDF header signature not found.");
-            file.StartOffset = idx;
+            throw new IOException("PDF header signature not found.");
         }
 
-        public char CheckPdfHeader()
+        file.StartOffset = idx;
+        return str[idx + 7];
+    }
+
+    public void Close()
+    {
+        file.Close();
+    }
+
+    public bool IsHexString() => HexString;
+
+    public bool NextToken()
+    {
+        var ch = 0;
+        do
         {
-            file.StartOffset = 0;
-            string str = ReadString(1024);
-            int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
-            if (idx < 0)
-                throw new IOException("PDF header signature not found.");
-            file.StartOffset = idx;
-            return str[idx + 7];
+            ch = file.Read();
+        } while (ch != -1 && IsWhitespace(ch));
+
+        if (ch == -1)
+        {
+            return false;
         }
 
-        public void Close()
+        // Note:  We have to initialize stringValue here, after we've looked for the end of the stream,
+        // to ensure that we don't lose the value of a token that might end exactly at the end
+        // of the stream
+        StringBuilder outBuf = null;
+        stringValue = EMPTY;
+        switch (ch)
         {
-            file.Close();
-        }
-
-        public bool IsHexString()
-        {
-            return HexString;
-        }
-
-        public bool NextToken()
-        {
-            int ch = 0;
-            do
+            case '[':
+                Type = TK_START_ARRAY;
+                break;
+            case ']':
+                Type = TK_END_ARRAY;
+                break;
+            case '/':
             {
-                ch = file.Read();
-            } while (ch != -1 && IsWhitespace(ch));
-            if (ch == -1)
-                return false;
-            // Note:  We have to initialize stringValue here, after we've looked for the end of the stream,
-            // to ensure that we don't lose the value of a token that might end exactly at the end
-            // of the stream
-            StringBuilder outBuf = null;
-            stringValue = EMPTY;
-            switch (ch)
-            {
-                case '[':
-                    Type = TK_START_ARRAY;
-                    break;
-                case ']':
-                    Type = TK_END_ARRAY;
-                    break;
-                case '/':
-                    {
-                        outBuf = new StringBuilder();
-                        Type = TK_NAME;
-                        while (true)
-                        {
-                            ch = file.Read();
-                            if (ch == -1 || IsDelimiter(ch) || IsWhitespace(ch))
-                                break;
-                            if (ch == '#')
-                            {
-                                ch = (GetHex(file.Read()) << 4) + GetHex(file.Read());
-                            }
-                            outBuf.Append((char)ch);
-                        }
-                        BackOnePosition(ch);
-                        break;
-                    }
-                case '>':
+                outBuf = new StringBuilder();
+                Type = TK_NAME;
+                while (true)
+                {
                     ch = file.Read();
-                    if (ch != '>')
-                        ThrowError("'>' not expected");
-                    Type = TK_END_DIC;
-                    break;
-                case '<':
+                    if (ch == -1 || IsDelimiter(ch) || IsWhitespace(ch))
                     {
-                        int v1 = file.Read();
-                        if (v1 == '<')
-                        {
-                            Type = TK_START_DIC;
-                            break;
-                        }
-                        outBuf = new StringBuilder();
-                        Type = TK_STRING;
-                        HexString = true;
-                        int v2 = 0;
-                        while (true)
-                        {
-                            while (IsWhitespace(v1))
-                                v1 = file.Read();
-                            if (v1 == '>')
-                                break;
-                            v1 = GetHex(v1);
-                            if (v1 < 0)
-                                break;
-                            v2 = file.Read();
-                            while (IsWhitespace(v2))
-                                v2 = file.Read();
-                            if (v2 == '>')
-                            {
-                                ch = v1 << 4;
-                                outBuf.Append((char)ch);
-                                break;
-                            }
-                            v2 = GetHex(v2);
-                            if (v2 < 0)
-                                break;
-                            ch = (v1 << 4) + v2;
-                            outBuf.Append((char)ch);
-                            v1 = file.Read();
-                        }
-                        if (v1 < 0 || v2 < 0)
-                            ThrowError("Error reading string");
                         break;
                     }
-                case '%':
-                    Type = TK_COMMENT;
-                    do
+
+                    if (ch == '#')
                     {
-                        ch = file.Read();
-                    } while (ch != -1 && ch != '\r' && ch != '\n');
+                        ch = (GetHex(file.Read()) << 4) + GetHex(file.Read());
+                    }
+
+                    outBuf.Append((char)ch);
+                }
+
+                BackOnePosition(ch);
+                break;
+            }
+            case '>':
+                ch = file.Read();
+                if (ch != '>')
+                {
+                    ThrowError("'>' not expected");
+                }
+
+                Type = TK_END_DIC;
+                break;
+            case '<':
+            {
+                var v1 = file.Read();
+                if (v1 == '<')
+                {
+                    Type = TK_START_DIC;
                     break;
-                case '(':
+                }
+
+                outBuf = new StringBuilder();
+                Type = TK_STRING;
+                HexString = true;
+                var v2 = 0;
+                while (true)
+                {
+                    while (IsWhitespace(v1))
                     {
-                        outBuf = new StringBuilder();
-                        Type = TK_STRING;
-                        HexString = false;
-                        int nesting = 0;
-                        while (true)
+                        v1 = file.Read();
+                    }
+
+                    if (v1 == '>')
+                    {
+                        break;
+                    }
+
+                    v1 = GetHex(v1);
+                    if (v1 < 0)
+                    {
+                        break;
+                    }
+
+                    v2 = file.Read();
+                    while (IsWhitespace(v2))
+                    {
+                        v2 = file.Read();
+                    }
+
+                    if (v2 == '>')
+                    {
+                        ch = v1 << 4;
+                        outBuf.Append((char)ch);
+                        break;
+                    }
+
+                    v2 = GetHex(v2);
+                    if (v2 < 0)
+                    {
+                        break;
+                    }
+
+                    ch = (v1 << 4) + v2;
+                    outBuf.Append((char)ch);
+                    v1 = file.Read();
+                }
+
+                if (v1 < 0 || v2 < 0)
+                {
+                    ThrowError("Error reading string");
+                }
+
+                break;
+            }
+            case '%':
+                Type = TK_COMMENT;
+                do
+                {
+                    ch = file.Read();
+                } while (ch != -1 && ch != '\r' && ch != '\n');
+
+                break;
+            case '(':
+            {
+                outBuf = new StringBuilder();
+                Type = TK_STRING;
+                HexString = false;
+                var nesting = 0;
+                while (true)
+                {
+                    ch = file.Read();
+                    if (ch == -1)
+                    {
+                        break;
+                    }
+
+                    if (ch == '(')
+                    {
+                        ++nesting;
+                    }
+                    else if (ch == ')')
+                    {
+                        --nesting;
+                    }
+                    else if (ch == '\\')
+                    {
+                        var lineBreak = false;
+                        ch = file.Read();
+                        switch (ch)
                         {
-                            ch = file.Read();
-                            if (ch == -1)
+                            case 'n':
+                                ch = '\n';
                                 break;
-                            if (ch == '(')
-                            {
-                                ++nesting;
-                            }
-                            else if (ch == ')')
-                            {
-                                --nesting;
-                            }
-                            else if (ch == '\\')
-                            {
-                                bool lineBreak = false;
+                            case 'r':
+                                ch = '\r';
+                                break;
+                            case 't':
+                                ch = '\t';
+                                break;
+                            case 'b':
+                                ch = '\b';
+                                break;
+                            case 'f':
+                                ch = '\f';
+                                break;
+                            case '(':
+                            case ')':
+                            case '\\':
+                                break;
+                            case '\r':
+                                lineBreak = true;
                                 ch = file.Read();
-                                switch (ch)
-                                {
-                                    case 'n':
-                                        ch = '\n';
-                                        break;
-                                    case 'r':
-                                        ch = '\r';
-                                        break;
-                                    case 't':
-                                        ch = '\t';
-                                        break;
-                                    case 'b':
-                                        ch = '\b';
-                                        break;
-                                    case 'f':
-                                        ch = '\f';
-                                        break;
-                                    case '(':
-                                    case ')':
-                                    case '\\':
-                                        break;
-                                    case '\r':
-                                        lineBreak = true;
-                                        ch = file.Read();
-                                        if (ch != '\n')
-                                            BackOnePosition(ch);
-                                        break;
-                                    case '\n':
-                                        lineBreak = true;
-                                        break;
-                                    default:
-                                        {
-                                            if (ch < '0' || ch > '7')
-                                            {
-                                                break;
-                                            }
-                                            int octal = ch - '0';
-                                            ch = file.Read();
-                                            if (ch < '0' || ch > '7')
-                                            {
-                                                BackOnePosition(ch);
-                                                ch = octal;
-                                                break;
-                                            }
-                                            octal = (octal << 3) + ch - '0';
-                                            ch = file.Read();
-                                            if (ch < '0' || ch > '7')
-                                            {
-                                                BackOnePosition(ch);
-                                                ch = octal;
-                                                break;
-                                            }
-                                            octal = (octal << 3) + ch - '0';
-                                            ch = octal & 0xff;
-                                            break;
-                                        }
-                                }
-                                if (lineBreak)
-                                    continue;
-                                if (ch < 0)
-                                    break;
-                            }
-                            else if (ch == '\r')
-                            {
-                                ch = file.Read();
-                                if (ch < 0)
-                                    break;
                                 if (ch != '\n')
                                 {
                                     BackOnePosition(ch);
-                                    ch = '\n';
                                 }
-                            }
-                            if (nesting == -1)
+
                                 break;
-                            outBuf.Append((char)ch);
+                            case '\n':
+                                lineBreak = true;
+                                break;
+                            default:
+                            {
+                                if (ch < '0' || ch > '7')
+                                {
+                                    break;
+                                }
+
+                                var octal = ch - '0';
+                                ch = file.Read();
+                                if (ch < '0' || ch > '7')
+                                {
+                                    BackOnePosition(ch);
+                                    ch = octal;
+                                    break;
+                                }
+
+                                octal = (octal << 3) + ch - '0';
+                                ch = file.Read();
+                                if (ch < '0' || ch > '7')
+                                {
+                                    BackOnePosition(ch);
+                                    ch = octal;
+                                    break;
+                                }
+
+                                octal = (octal << 3) + ch - '0';
+                                ch = octal & 0xff;
+                                break;
+                            }
                         }
-                        if (ch == -1)
-                            ThrowError("Error reading string");
-                        break;
+
+                        if (lineBreak)
+                        {
+                            continue;
+                        }
+
+                        if (ch < 0)
+                        {
+                            break;
+                        }
                     }
-                default:
+                    else if (ch == '\r')
                     {
-                        outBuf = new StringBuilder();
-                        if (ch == '-' || ch == '+' || ch == '.' || (ch >= '0' && ch <= '9'))
+                        ch = file.Read();
+                        if (ch < 0)
                         {
-                            Type = TK_NUMBER;
-                            do
-                            {
-                                outBuf.Append((char)ch);
-                                ch = file.Read();
-                            } while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.'));
+                            break;
                         }
-                        else
+
+                        if (ch != '\n')
                         {
-                            Type = TK_OTHER;
-                            do
-                            {
-                                outBuf.Append((char)ch);
-                                ch = file.Read();
-                            } while (ch != -1 && !IsDelimiter(ch) && !IsWhitespace(ch));
+                            BackOnePosition(ch);
+                            ch = '\n';
                         }
-                        BackOnePosition(ch);
+                    }
+
+                    if (nesting == -1)
+                    {
                         break;
                     }
+
+                    outBuf.Append((char)ch);
+                }
+
+                if (ch == -1)
+                {
+                    ThrowError("Error reading string");
+                }
+
+                break;
             }
-            if (outBuf != null)
-                stringValue = outBuf.ToString();
-            return true;
+            default:
+            {
+                outBuf = new StringBuilder();
+                if (ch == '-' || ch == '+' || ch == '.' || (ch >= '0' && ch <= '9'))
+                {
+                    Type = TK_NUMBER;
+                    do
+                    {
+                        outBuf.Append((char)ch);
+                        ch = file.Read();
+                    } while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.'));
+                }
+                else
+                {
+                    Type = TK_OTHER;
+                    do
+                    {
+                        outBuf.Append((char)ch);
+                        ch = file.Read();
+                    } while (ch != -1 && !IsDelimiter(ch) && !IsWhitespace(ch));
+                }
+
+                BackOnePosition(ch);
+                break;
+            }
         }
 
-        public void NextValidToken()
+        if (outBuf != null)
         {
-            int level = 0;
-            string n1 = null;
-            string n2 = null;
-            int ptr = 0;
-            while (NextToken())
+            stringValue = outBuf.ToString();
+        }
+
+        return true;
+    }
+
+    public void NextValidToken()
+    {
+        var level = 0;
+        string n1 = null;
+        string n2 = null;
+        var ptr = 0;
+        while (NextToken())
+        {
+            if (Type == TK_COMMENT)
             {
-                if (Type == TK_COMMENT)
-                    continue;
-                switch (level)
+                continue;
+            }
+
+            switch (level)
+            {
+                case 0:
                 {
-                    case 0:
-                        {
-                            if (Type != TK_NUMBER)
-                                return;
-                            ptr = file.FilePointer;
-                            n1 = stringValue;
-                            ++level;
-                            break;
-                        }
-                    case 1:
-                        {
-                            if (Type != TK_NUMBER)
-                            {
-                                file.Seek(ptr);
-                                Type = TK_NUMBER;
-                                stringValue = n1;
-                                return;
-                            }
-                            n2 = stringValue;
-                            ++level;
-                            break;
-                        }
-                    default:
-                        {
-                            if (Type != TK_OTHER || !stringValue.Equals("R"))
-                            {
-                                file.Seek(ptr);
-                                Type = TK_NUMBER;
-                                stringValue = n1;
-                                return;
-                            }
-                            Type = TK_REF;
-                            reference = int.Parse(n1, CultureInfo.InvariantCulture);
-                            generation = int.Parse(n2, CultureInfo.InvariantCulture);
-                            return;
-                        }
+                    if (Type != TK_NUMBER)
+                    {
+                        return;
+                    }
+
+                    ptr = file.FilePointer;
+                    n1 = stringValue;
+                    ++level;
+                    break;
+                }
+                case 1:
+                {
+                    if (Type != TK_NUMBER)
+                    {
+                        file.Seek(ptr);
+                        Type = TK_NUMBER;
+                        stringValue = n1;
+                        return;
+                    }
+
+                    n2 = stringValue;
+                    ++level;
+                    break;
+                }
+                default:
+                {
+                    if (Type != TK_OTHER || !stringValue.Equals("R"))
+                    {
+                        file.Seek(ptr);
+                        Type = TK_NUMBER;
+                        stringValue = n1;
+                        return;
+                    }
+
+                    Type = TK_REF;
+                    reference = int.Parse(n1, CultureInfo.InvariantCulture);
+                    generation = int.Parse(n2, CultureInfo.InvariantCulture);
+                    return;
                 }
             }
-            // if we hit here, the file is either corrupt (stream ended unexpectedly),
-            // or the last token ended exactly at the end of a stream.  This last
-            // case can occur inside an Object Stream.
         }
+        // if we hit here, the file is either corrupt (stream ended unexpectedly),
+        // or the last token ended exactly at the end of a stream.  This last
+        // case can occur inside an Object Stream.
+    }
 
-        public int Read()
-        {
-            return file.Read();
-        }
+    public int Read() => file.Read();
 
-        public bool ReadLineSegment(byte[] input)
+    public bool ReadLineSegment(byte[] input)
+    {
+        var c = -1;
+        var eol = false;
+        var ptr = 0;
+        var len = input.Length;
+        // ssteward, pdftk-1.10, 040922:
+        // skip initial whitespace; added this because PdfReader.RebuildXref()
+        // assumes that line provided by readLineSegment does not have init. whitespace;
+        if (ptr < len)
         {
-            int c = -1;
-            bool eol = false;
-            int ptr = 0;
-            int len = input.Length;
-            // ssteward, pdftk-1.10, 040922:
-            // skip initial whitespace; added this because PdfReader.RebuildXref()
-            // assumes that line provided by readLineSegment does not have init. whitespace;
-            if (ptr < len)
+            while (IsWhitespace(c = Read()))
             {
-                while (IsWhitespace((c = Read()))) ;
+                ;
             }
-            while (!eol && ptr < len)
+        }
+
+        while (!eol && ptr < len)
+        {
+            switch (c)
             {
-                switch (c)
+                case -1:
+                case '\n':
+                    eol = true;
+                    break;
+                case '\r':
+                    eol = true;
+                    var cur = FilePointer;
+                    if (Read() != '\n')
+                    {
+                        Seek(cur);
+                    }
+
+                    break;
+                default:
+                    input[ptr++] = (byte)c;
+                    break;
+            }
+
+            // break loop? do it before we Read() again
+            if (eol || len <= ptr)
+            {
+                break;
+            }
+
+            c = Read();
+        }
+
+        if (ptr >= len)
+        {
+            eol = false;
+            while (!eol)
+            {
+                switch (c = Read())
                 {
                     case -1:
                     case '\n':
@@ -533,83 +606,56 @@ namespace iTextSharp.text.pdf
                         break;
                     case '\r':
                         eol = true;
-                        int cur = FilePointer;
-                        if ((Read()) != '\n')
+                        var cur = FilePointer;
+                        if (Read() != '\n')
                         {
                             Seek(cur);
                         }
-                        break;
-                    default:
-                        input[ptr++] = (byte)c;
+
                         break;
                 }
-
-                // break loop? do it before we Read() again
-                if (eol || len <= ptr)
-                {
-                    break;
-                }
-                else
-                {
-                    c = Read();
-                }
             }
-            if (ptr >= len)
-            {
-                eol = false;
-                while (!eol)
-                {
-                    switch (c = Read())
-                    {
-                        case -1:
-                        case '\n':
-                            eol = true;
-                            break;
-                        case '\r':
-                            eol = true;
-                            int cur = FilePointer;
-                            if ((Read()) != '\n')
-                            {
-                                Seek(cur);
-                            }
-                            break;
-                    }
-                }
-            }
-
-            if ((c == -1) && (ptr == 0))
-            {
-                return false;
-            }
-            if (ptr + 2 <= len)
-            {
-                input[ptr++] = (byte)' ';
-                input[ptr] = (byte)'X';
-            }
-            return true;
         }
 
-        public string ReadString(int size)
+        if (c == -1 && ptr == 0)
         {
-            StringBuilder buf = new StringBuilder();
-            int ch;
-            while ((size--) > 0)
-            {
-                ch = file.Read();
-                if (ch == -1)
-                    break;
-                buf.Append((char)ch);
-            }
-            return buf.ToString();
+            return false;
         }
 
-        public void Seek(int pos)
+        if (ptr + 2 <= len)
         {
-            file.Seek(pos);
+            input[ptr++] = (byte)' ';
+            input[ptr] = (byte)'X';
         }
-        public void ThrowError(string error)
+
+        return true;
+    }
+
+    public string ReadString(int size)
+    {
+        var buf = new StringBuilder();
+        int ch;
+        while (size-- > 0)
         {
-            throw new IOException(error + " at file pointer " + file.FilePointer);
+            ch = file.Read();
+            if (ch == -1)
+            {
+                break;
+            }
+
+            buf.Append((char)ch);
         }
+
+        return buf.ToString();
+    }
+
+    public void Seek(int pos)
+    {
+        file.Seek(pos);
+    }
+
+    public void ThrowError(string error)
+    {
+        throw new IOException(error + " at file pointer " + file.FilePointer);
     }
 }

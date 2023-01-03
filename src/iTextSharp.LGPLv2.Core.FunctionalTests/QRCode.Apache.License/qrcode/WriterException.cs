@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.Serialization;
+
 /*
  * Copyright 2008 ZXing authors
  *
@@ -15,29 +17,27 @@ using System;
  * limitations under the License.
  */
 
-namespace iTextSharp.text.pdf.qrcode
+namespace iTextSharp.text.pdf.qrcode;
+
+/**
+ * A base class which covers the range of exceptions which may occur when encoding a barcode using
+ * the Writer framework.
+ * 
+ * @author dswitkin@google.com (Daniel Switkin)
+ */
+[Serializable]
+public class WriterException : Exception
 {
-
-    /**
-     * A base class which covers the range of exceptions which may occur when encoding a barcode using
-     * the Writer framework.
-     *
-     * @author dswitkin@google.com (Daniel Switkin)
-     */
-    [Serializable]
-    public class WriterException : Exception
+    public WriterException()
     {
+    }
 
-        public WriterException()
-            : base()
-        {
-        }
+    public WriterException(string message)
+        : base(message)
+    {
+    }
 
-        public WriterException(String message)
-            : base(message)
-        {
-        }
-
-        protected WriterException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    protected WriterException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

@@ -1,101 +1,52 @@
-using System;
-using System.IO;
+namespace iTextSharp.text.pdf;
 
-namespace iTextSharp.text.pdf
+/// <summary>
+/// </summary>
+public class OutputStreamCounter : Stream
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class OutputStreamCounter : Stream
+    protected int counter;
+    protected Stream Outc;
+
+    public OutputStreamCounter(Stream _outc) => Outc = _outc;
+
+    public override bool CanRead => false;
+
+    public override bool CanSeek => false;
+
+    public override bool CanWrite => true;
+
+    public int Counter => counter;
+
+    public override long Length => throw new NotSupportedException();
+
+    public override long Position
     {
-        protected int counter;
-        protected Stream Outc;
+        get => throw new NotSupportedException();
+        set => throw new NotSupportedException();
+    }
 
-        public OutputStreamCounter(Stream _outc)
-        {
-            Outc = _outc;
-        }
+    public override void Flush()
+    {
+        Outc.Flush();
+    }
 
-        public override bool CanRead
-        {
-            get
-            {
-                return false;
-            }
-        }
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
-        public override bool CanSeek
-        {
-            get
-            {
-                return false;
-            }
-        }
+    public void ResetCounter()
+    {
+        counter = 0;
+    }
 
-        public override bool CanWrite
-        {
-            get
-            {
-                return true;
-            }
-        }
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
-        public int Counter
-        {
-            get
-            {
-                return counter;
-            }
-        }
+    public override void SetLength(long value)
+    {
+        throw new NotSupportedException();
+    }
 
-        public override long Length
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        public override long Position
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        public override void Flush()
-        {
-            Outc.Flush();
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            throw new NotSupportedException();
-        }
-
-        public void ResetCounter()
-        {
-            counter = 0;
-        }
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void SetLength(long value)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            counter += count;
-            Outc.Write(buffer, offset, count);
-        }
+    public override void Write(byte[] buffer, int offset, int count)
+    {
+        counter += count;
+        Outc.Write(buffer, offset, count);
     }
 }
