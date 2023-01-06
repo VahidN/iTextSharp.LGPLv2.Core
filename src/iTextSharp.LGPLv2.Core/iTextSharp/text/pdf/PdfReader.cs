@@ -17,7 +17,7 @@ namespace iTextSharp.text.pdf;
 ///     @author Paulo Soares (psoares@consiste.pt)
 ///     @author Kazuya Ujihara
 /// </summary>
-public class PdfReader : IPdfViewerPreferences
+public class PdfReader : IPdfViewerPreferences, IDisposable
 {
     private static readonly byte[] _endobj = PdfEncodings.ConvertToBytes("endobj", null);
 
@@ -573,6 +573,11 @@ public class PdfReader : IPdfViewerPreferences
     public int XrefSize => _xrefObj.Count;
 
     internal PdfEncryption Decrypt => decrypt;
+
+    public void Dispose()
+    {
+        Close();
+    }
 
     /// <summary>
     ///     Sets the viewer preferences as the sum of several constants.

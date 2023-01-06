@@ -14,7 +14,7 @@ namespace iTextSharp.text.pdf;
 ///     flatten them. New fields can be added but not flattened.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings
+public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDisposable
 {
     private bool _hasSignature;
 
@@ -164,6 +164,11 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings
     public byte[] XmpMetadata
     {
         set => Stamper.XmpMetadata = value;
+    }
+
+    public void Dispose()
+    {
+        Close();
     }
 
     /// <summary>

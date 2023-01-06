@@ -607,4 +607,12 @@ public class Document : IDocListener
 
         return true;
     }
+
+    public void Dispose()
+    {
+        if (IsOpen())
+        {
+            Close();
+        }
+    }
 }

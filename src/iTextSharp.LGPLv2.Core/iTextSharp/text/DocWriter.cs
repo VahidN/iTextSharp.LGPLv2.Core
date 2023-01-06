@@ -254,6 +254,11 @@ public abstract class DocWriter : IDocListener
         return true;
     }
 
+    public void Dispose()
+    {
+        Close();
+    }
+
     /// <summary>
     ///     Converts a string into a Byte array
     ///     according to the ISO-8859-1 codepage.
@@ -383,7 +388,7 @@ public abstract class DocWriter : IDocListener
             return false;
         }
 
-        foreach (string name in markup.Keys)
+        foreach (var name in markup.Keys)
         {
             Write(name, markup[name]);
         }

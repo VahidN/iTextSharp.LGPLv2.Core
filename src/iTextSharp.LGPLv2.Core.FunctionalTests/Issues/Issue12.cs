@@ -15,7 +15,7 @@ public class Issue12
     [TestMethod]
     public void Verify_Issue12_CanBe_Processed()
     {
-        var document = new Document(PageSize.A4.Rotate());
+        using var document = new Document(PageSize.A4.Rotate());
         var table = new PdfPTable(7);
         //actual width of table in points
 
@@ -42,7 +42,7 @@ public class Issue12
         var font14 = new Font(arial.BaseFont, 14, Font.NORMAL);
         var font16 = new Font(arial.BaseFont, 16, Font.BOLD);
         var filePath = TestUtils.GetOutputFileName();
-        var fs = new FileStream(filePath, FileMode.Create);
+        using var fs = new FileStream(filePath, FileMode.Create);
 
         PdfWriter.GetInstance(document, fs);
 

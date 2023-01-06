@@ -118,6 +118,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
     public bool SetPageSize(Rectangle pageSize) => true;
 
+    public void Dispose()
+    {
+        Close();
+    }
+
     public virtual void EndDocument()
     {
         foreach (var e in _stack)
