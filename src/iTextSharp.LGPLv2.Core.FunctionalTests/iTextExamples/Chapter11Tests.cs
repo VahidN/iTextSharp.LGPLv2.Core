@@ -45,33 +45,32 @@ public class Chapter11Tests
 
 
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
-
-        // step 1
-        var document = new Document();
-
-        // step 2
-        PdfWriter.GetInstance(document, stream);
-        // step 3
-        document.AddAuthor(TestUtils.Author);
-        document.Open();
-
-        // step 4
-        var font = TestUtils.GetTahomaFontPath();
-        for (var i = 0; i < 4; i++)
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
         {
-            var bf = BaseFont.CreateFont(font, movies[i][0], BaseFont.EMBEDDED);
-            document.Add(new Paragraph(
-                                       $"Font: {bf.PostscriptFontName} with encoding: {bf.Encoding}"
-                                      ));
-            document.Add(new Paragraph(movies[i][1]));
-            document.Add(new Paragraph(movies[i][2]));
-            document.Add(new Paragraph(movies[i][3], new Font(bf, 12)));
-            document.Add(Chunk.Newline);
-        }
+            // step 1
+            using (var document = new Document())
+            {
+                // step 2
+                PdfWriter.GetInstance(document, stream);
+                // step 3
+                document.AddAuthor(TestUtils.Author);
+                document.Open();
 
-        document.Close();
-        stream.Dispose();
+                // step 4
+                var font = TestUtils.GetTahomaFontPath();
+                for (var i = 0; i < 4; i++)
+                {
+                    var bf = BaseFont.CreateFont(font, movies[i][0], BaseFont.EMBEDDED);
+                    document.Add(new Paragraph(
+                                               $"Font: {bf.PostscriptFontName} with encoding: {bf.Encoding}"
+                                              ));
+                    document.Add(new Paragraph(movies[i][1]));
+                    document.Add(new Paragraph(movies[i][2]));
+                    document.Add(new Paragraph(movies[i][3], new Font(bf, 12)));
+                    document.Add(Chunk.Newline);
+                }
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -79,31 +78,31 @@ public class Chapter11Tests
     [TestMethod]
     public void Verify_Unicode_PDF_File_CanBeCreated_Using_Chunks()
     {
-        var pdfDoc = new Document(PageSize.A4);
-
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        var pdfWriter = PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                var pdfWriter = PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        var tahomaFont =
-            TestUtils.GetUnicodeFont("Tahoma", TestUtils.GetTahomaFontPath(), 10, Font.NORMAL, BaseColor.Black);
+                var tahomaFont =
+                    TestUtils.GetUnicodeFont("Tahoma", TestUtils.GetTahomaFontPath(), 10, Font.NORMAL, BaseColor.Black);
 
-        var ct = new ColumnText(pdfWriter.DirectContent)
-                 {
-                     RunDirection = PdfWriter.RUN_DIRECTION_RTL,
-                 };
-        ct.SetSimpleColumn(100, 100, 500, 800, 24, Element.ALIGN_RIGHT);
+                var ct = new ColumnText(pdfWriter.DirectContent)
+                         {
+                             RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                         };
+                ct.SetSimpleColumn(100, 100, 500, 800, 24, Element.ALIGN_RIGHT);
 
-        var chunk = new Chunk("آزمایش", tahomaFont);
+                var chunk = new Chunk("آزمایش", tahomaFont);
 
-        ct.AddElement(chunk);
-        ct.Go();
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                ct.AddElement(chunk);
+                ct.Go();
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -111,33 +110,33 @@ public class Chapter11Tests
     [TestMethod]
     public void Verify_Unicode_PDF_File_CanBeCreated_Using_Phrases()
     {
-        var pdfDoc = new Document(PageSize.A4);
-
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        var fontFilePath = TestUtils.GetFontPath("IRANSans(FaNum)_Medium.ttf");
-        var sansFont = TestUtils.GetUnicodeFont(fontFilePath, fontFilePath, 10, Font.NORMAL, BaseColor.Black);
-        var table = new PdfPTable(1)
-                    {
-                        RunDirection = PdfWriter.RUN_DIRECTION_RTL,
-                        ExtendLastRow = true,
-                    };
+                var fontFilePath = TestUtils.GetFontPath("IRANSans(FaNum)_Medium.ttf");
+                var sansFont = TestUtils.GetUnicodeFont(fontFilePath, fontFilePath, 10, Font.NORMAL, BaseColor.Black);
+                var table = new PdfPTable(1)
+                            {
+                                RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                                ExtendLastRow = true,
+                            };
 
-        var pdfCell = new PdfPCell(new Phrase("آزمایش", sansFont))
-                      {
-                          RunDirection = PdfWriter.RUN_DIRECTION_RTL,
-                      };
+                var pdfCell = new PdfPCell(new Phrase("آزمایش", sansFont))
+                              {
+                                  RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                              };
 
-        table.AddCell(pdfCell);
-        pdfDoc.Add(table);
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                table.AddCell(pdfCell);
+                pdfDoc.Add(table);
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -145,34 +144,34 @@ public class Chapter11Tests
     [TestMethod]
     public void Verify_Unicode_PDF_File_CanBeCreated_Using_PdfTable()
     {
-        var pdfDoc = new Document(PageSize.A4);
-
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        var tahomaFont =
-            TestUtils.GetUnicodeFont("Tahoma", TestUtils.GetTahomaFontPath(), 10, Font.NORMAL, BaseColor.Black);
+                var tahomaFont =
+                    TestUtils.GetUnicodeFont("Tahoma", TestUtils.GetTahomaFontPath(), 10, Font.NORMAL, BaseColor.Black);
 
-        var table = new PdfPTable(1)
-                    {
-                        RunDirection = PdfWriter.RUN_DIRECTION_RTL,
-                        ExtendLastRow = true,
-                    };
+                var table = new PdfPTable(1)
+                            {
+                                RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                                ExtendLastRow = true,
+                            };
 
-        var pdfCell = new PdfPCell(new Phrase("آزمایش", tahomaFont))
-                      {
-                          RunDirection = PdfWriter.RUN_DIRECTION_RTL,
-                      };
+                var pdfCell = new PdfPCell(new Phrase("آزمایش", tahomaFont))
+                              {
+                                  RunDirection = PdfWriter.RUN_DIRECTION_RTL,
+                              };
 
-        table.AddCell(pdfCell);
-        pdfDoc.Add(table);
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                table.AddCell(pdfCell);
+                pdfDoc.Add(table);
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -180,28 +179,28 @@ public class Chapter11Tests
     [TestMethod]
     public void Verify_Chinese_PDF_File_CanBeCreated()
     {
-        var pdfDoc = new Document(PageSize.A4);
-
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        var text = "These are the protagonists in 'Hero', a movie by Zhang Yimou:\n"
-                   + "\u7121\u540d (Nameless), \u6b98\u528d (Broken Sword), "
-                   + "\u98db\u96ea (Flying Snow), \u5982\u6708 (Moon), "
-                   + "\u79e6\u738b (the King), and \u9577\u7a7a (Sky).";
-        var chinese = "Chinese: \u5341\u950a\u57cb\u4f0f";
+                var text = "These are the protagonists in 'Hero', a movie by Zhang Yimou:\n"
+                           + "\u7121\u540d (Nameless), \u6b98\u528d (Broken Sword), "
+                           + "\u98db\u96ea (Flying Snow), \u5982\u6708 (Moon), "
+                           + "\u79e6\u738b (the King), and \u9577\u7a7a (Sky).";
+                var chinese = "Chinese: \u5341\u950a\u57cb\u4f0f";
 
-        var tahomaFont =
-            TestUtils.GetUnicodeFont("SimSun", TestUtils.GetSimSunFontPath(), 10, Font.NORMAL, BaseColor.Black);
-        pdfDoc.Add(new Paragraph(text, tahomaFont));
-        pdfDoc.Add(new Paragraph(chinese, tahomaFont));
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                var tahomaFont =
+                    TestUtils.GetUnicodeFont("SimSun", TestUtils.GetSimSunFontPath(), 10, Font.NORMAL, BaseColor.Black);
+                pdfDoc.Add(new Paragraph(text, tahomaFont));
+                pdfDoc.Add(new Paragraph(chinese, tahomaFont));
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -209,23 +208,24 @@ public class Chapter11Tests
     [TestMethod]
     public void Verify_Thai_PDF_File_CanBeCreated()
     {
-        var pdfDoc = new Document(PageSize.A4);
-
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        var chinese = "ทดสอบ ภาษาไทย ฝีมือ พึ่ง พ่อ กู รู้ ดู กันต์ ก๋ยวเตี๋ยว";
+                var chinese = "ทดสอบ ภาษาไทย ฝีมือ พึ่ง พ่อ กู รู้ ดู กันต์ ก๋ยวเตี๋ยว";
 
-        var tahomaFont =
-            TestUtils.GetUnicodeFont("THSarabunNew", TestUtils.GetThaiFontPath(), 20, Font.NORMAL, BaseColor.Black);
-        pdfDoc.Add(new Paragraph(chinese, tahomaFont));
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                var tahomaFont =
+                    TestUtils.GetUnicodeFont("THSarabunNew", TestUtils.GetThaiFontPath(), 20, Font.NORMAL,
+                                             BaseColor.Black);
+                pdfDoc.Add(new Paragraph(chinese, tahomaFont));
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }

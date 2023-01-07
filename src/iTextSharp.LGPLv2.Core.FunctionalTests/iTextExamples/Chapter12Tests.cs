@@ -15,23 +15,22 @@ public class Chapter12Tests
     public void Verify_EncryptionPdf_CanBeCreated()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var enc1 = createPdf();
+        var enc1 = CreatePdf();
         File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".STANDARD_ENCRYPTION_128.pdf"), enc1);
 
-        var enc2 = decryptPdf(enc1);
+        var enc2 = DecryptPdf(enc1);
         File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".Decrypt_STANDARD_ENCRYPTION_128.pdf"), enc2);
 
-        var enc3 = encryptPdf(enc2);
+        var enc3 = EncryptPdf(enc2);
         File.WriteAllBytes(Path.ChangeExtension(pdfFilePath, ".ENCRYPTION_AES_128_DO_NOT_ENCRYPT_METADATA.pdf"), enc3);
     }
 
-    private byte[] createPdf()
+    private byte[] CreatePdf()
     {
-        using (var output = new MemoryStream())
+        using var output = new MemoryStream();
+        // step 1
+        using (var document = new Document())
         {
-            // step 1
-            var document = new Document();
-
             var permissions = 0;
             permissions |= PdfWriter.AllowPrinting;
             permissions |= PdfWriter.AllowCopy;
@@ -45,42 +44,37 @@ public class Chapter12Tests
             document.Open();
             // step 4
             document.Add(new Paragraph("Hello World"));
-
-            document.Close();
-
-            return output.ToArray();
         }
+
+        return output.ToArray();
     }
 
-    private byte[] decryptPdf(byte[] src)
+    private byte[] DecryptPdf(byte[] src)
     {
-        using (var output = new MemoryStream())
+        using var output = new MemoryStream();
+        using (var reader = new PdfReader(src, DocWriter.GetIsoBytes(_ownerPassword)))
         {
-            var reader = new PdfReader(src, DocWriter.GetIsoBytes(_ownerPassword));
-
-            var stamper = new PdfStamper(reader, output);
-            stamper.Close();
-            reader.Close();
-
-            return output.ToArray();
+            using (var stamper = new PdfStamper(reader, output))
+            {
+            }
         }
+
+        return output.ToArray();
     }
 
-    private byte[] encryptPdf(byte[] src)
+    private byte[] EncryptPdf(byte[] src)
     {
-        using (var output = new MemoryStream())
+        using var output = new MemoryStream();
+        using (var reader = new PdfReader(src))
         {
-            var reader = new PdfReader(src);
-            var stamper = new PdfStamper(reader, output);
-
-            stamper.SetEncryption(PdfWriter.ENCRYPTION_AES_128 | PdfWriter.DO_NOT_ENCRYPT_METADATA,
-                                  _userPassword, _ownerPassword,
-                                  PdfWriter.ALLOW_PRINTING);
-
-            stamper.Close();
-            reader.Close();
-
-            return output.ToArray();
+            using (var stamper = new PdfStamper(reader, output))
+            {
+                stamper.SetEncryption(PdfWriter.ENCRYPTION_AES_128 | PdfWriter.DO_NOT_ENCRYPT_METADATA,
+                                      _userPassword, _ownerPassword,
+                                      PdfWriter.ALLOW_PRINTING);
+            }
         }
+
+        return output.ToArray();
     }
 }

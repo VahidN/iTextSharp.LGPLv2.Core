@@ -49,7 +49,7 @@ public class XmlITextTests
 ";
 
         var pdfFilePath = TestUtils.GetOutputFileName();
-        converITextXmlToPdfFile(iTextXML, pdfFilePath);
+        ConverITextXmlToPdfFile(iTextXML, pdfFilePath);
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
@@ -1979,29 +1979,23 @@ public class XmlITextTests
 </itext>
 ";
         var pdfFilePath = TestUtils.GetOutputFileName();
-        converITextXmlToPdfFile(iTextXML, pdfFilePath);
+        ConverITextXmlToPdfFile(iTextXML, pdfFilePath);
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
 
-    private static void converITextXmlToPdfFile(string iTextXML, string pdfFilePath)
+    private static void ConverITextXmlToPdfFile(string iTextXML, string pdfFilePath)
     {
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-
-        var document = new Document();
-        var pdfWriter = PdfWriter.GetInstance(document, fileStream);
+        using var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+        using var document = new Document();
+        PdfWriter.GetInstance(document, fileStream);
 
         document.AddAuthor(TestUtils.Author);
         document.Open();
 
-        var xmlReader = XmlReader.Create(new StringReader(iTextXML));
+        using var xmlReader = XmlReader.Create(new StringReader(iTextXML));
 
         var parser = new XmlParser();
         parser.Go(document, xmlReader);
-
-        pdfWriter.Close();
-        document.Close();
-        fileStream.Dispose();
-        xmlReader.Dispose();
     }
 }

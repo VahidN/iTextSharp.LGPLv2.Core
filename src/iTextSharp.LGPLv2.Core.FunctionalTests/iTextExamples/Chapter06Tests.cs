@@ -14,39 +14,36 @@ public class Chapter06Tests
     {
         var pdfFiles = new List<byte[]>
                        {
-                           createSamplePdfFile("Hello World!"),
-                           createSamplePdfFile("Hello DNT!"),
+                           CreateSamplePdfFile("Hello World!"),
+                           CreateSamplePdfFile("Hello DNT!"),
                        };
 
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
-
-        // step 1
-        var document = new Document();
-
-        // step 2
-        var pdfCopy = new PdfCopy(document, stream);
-
-        // step 3
-        document.AddAuthor(TestUtils.Author);
-        document.Open();
-
-        // step 4
-        foreach (var pdf in pdfFiles)
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
         {
-            var reader = new PdfReader(pdf);
-            var n = reader.NumberOfPages;
-            for (var page = 0; page < n;)
+            // step 1
+            using (var document = new Document())
             {
-                pdfCopy.AddPage(pdfCopy.GetImportedPage(reader, ++page));
+                // step 2
+                using (var pdfCopy = new PdfCopy(document, stream))
+                {
+                    // step 3
+                    document.AddAuthor(TestUtils.Author);
+                    document.Open();
+
+                    // step 4
+                    foreach (var pdf in pdfFiles)
+                    {
+                        using var reader = new PdfReader(pdf);
+                        var n = reader.NumberOfPages;
+                        for (var page = 0; page < n;)
+                        {
+                            pdfCopy.AddPage(pdfCopy.GetImportedPage(reader, ++page));
+                        }
+                    }
+                }
             }
-
-            reader.Close();
         }
-
-        document.Close();
-        pdfCopy.Close();
-        stream.Dispose();
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
@@ -55,33 +52,32 @@ public class Chapter06Tests
     public void Verify_StampText_CanBeCreated()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
-
-        var pdfFile = createSamplePdfFile("Hello DNT!");
-        var reader = new PdfReader(pdfFile);
-        var stamper = new PdfStamper(reader, stream);
-
-        var canvas = stamper.GetOverContent(1);
-        ColumnText.ShowTextAligned(
-                                   canvas,
-                                   Element.ALIGN_LEFT,
-                                   new Phrase("Hello people!"),
-                                   36, 540, 0
-                                  );
-
-        reader.Close();
-        stamper.Close();
-        stream.Dispose();
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            var pdfFile = CreateSamplePdfFile("Hello DNT!");
+            using (var reader = new PdfReader(pdfFile))
+            {
+                using (var stamper = new PdfStamper(reader, stream))
+                {
+                    var canvas = stamper.GetOverContent(1);
+                    ColumnText.ShowTextAligned(
+                                               canvas,
+                                               Element.ALIGN_LEFT,
+                                               new Phrase("Hello people!"),
+                                               36, 540, 0
+                                              );
+                }
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
-    private static byte[] createSamplePdfFile(string msg)
+    private static byte[] CreateSamplePdfFile(string msg)
     {
-        using (var stream = new MemoryStream())
+        using var stream = new MemoryStream();
+        using (var document = new Document())
         {
-            var document = new Document();
-
             // step 2
             PdfWriter.GetInstance(document, stream);
             // step 3
@@ -89,9 +85,8 @@ public class Chapter06Tests
             document.Open();
             // step 4
             document.Add(new Paragraph(msg));
-
-            document.Close();
-            return stream.ToArray();
         }
+
+        return stream.ToArray();
     }
 }

@@ -19,8 +19,9 @@ public class RtfTests
         var rtfFilePath =
             Path.Combine(TestUtils.GetOutputFolder(), $"{nameof(Verify_PDF_To_RTF_File_CanBeCreated)}.rtf");
 
-        var document = new Document();
-        var fileStream = new FileStream(rtfFilePath, FileMode.Create);
+        using var fileStream = new FileStream(rtfFilePath, FileMode.Create);
+
+        using var document = new Document();
         RtfWriter2.GetInstance(document, fileStream);
 
         document.AddAuthor(TestUtils.Author);
@@ -29,9 +30,6 @@ public class RtfTests
         var font = FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD);
         var parTitle = new Paragraph("This is a new document", font);
         document.Add(parTitle);
-
-        document.Close();
-        fileStream.Dispose();
     }
 
     /// <summary>
@@ -44,21 +42,17 @@ public class RtfTests
 
         var rtfFilePath =
             Path.Combine(TestUtils.GetOutputFolder(), $"{nameof(Verify_PDF_To_RTF_File_CanBeCreated)}.rtf");
-        var inputStream = new FileStream(rtfFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var inputStream = new FileStream(rtfFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var outputStream = new FileStream(pdfFilePath, FileMode.Create);
+        using var outputStream = new FileStream(pdfFilePath, FileMode.Create);
 
-        var document = new Document();
+        using var document = new Document();
         PdfWriter.GetInstance(document, outputStream);
 
         document.Open();
 
         var parser = new RtfParser(null);
         parser.ConvertRtfDocument(inputStream, document);
-
-        document.Close();
-        outputStream.Dispose();
-        inputStream.Dispose();
     }
 }

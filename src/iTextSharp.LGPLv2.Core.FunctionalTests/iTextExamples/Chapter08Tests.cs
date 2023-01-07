@@ -14,46 +14,45 @@ public class Chapter08Tests
     public void Verify_RadioButtons_CanBeCreated()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
-
-        // step 1
-        var document = new Document();
-
-        // step 2
-        var writer = PdfWriter.GetInstance(document, stream);
-        // step 3
-        document.AddAuthor(TestUtils.Author);
-        document.Open();
-        // step 4
-        var cb = writer.DirectContent;
-        var bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-
-        var radiogroup = PdfFormField.CreateRadioButton(writer, true);
-        radiogroup.FieldName = "language";
-        var rect = new Rectangle(40, 806, 60, 788);
-        for (var page = 0; page < _languages.Length;)
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
         {
-            var radio = new RadioCheckField(writer, rect, null, _languages[page])
-                        {
-                            BackgroundColor = new GrayColor(0.8f),
-                        };
-            var radiofield = radio.RadioField;
-            radiofield.PlaceInPage = ++page;
-            radiogroup.AddKid(radiofield);
-        }
+            // step 1
+            using (var document = new Document())
+            {
+                // step 2
+                var writer = PdfWriter.GetInstance(document, stream);
+                // step 3
+                document.AddAuthor(TestUtils.Author);
+                document.Open();
+                // step 4
+                var cb = writer.DirectContent;
+                var bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
 
-        writer.AddAnnotation(radiogroup);
-        foreach (var lang in _languages)
-        {
-            cb.BeginText();
-            cb.SetFontAndSize(bf, 18);
-            cb.ShowTextAligned(Element.ALIGN_LEFT, lang, 70, 790, 0);
-            cb.EndText();
-            document.NewPage();
-        }
+                var radiogroup = PdfFormField.CreateRadioButton(writer, true);
+                radiogroup.FieldName = "language";
+                var rect = new Rectangle(40, 806, 60, 788);
+                for (var page = 0; page < _languages.Length;)
+                {
+                    var radio = new RadioCheckField(writer, rect, null, _languages[page])
+                                {
+                                    BackgroundColor = new GrayColor(0.8f),
+                                };
+                    var radiofield = radio.RadioField;
+                    radiofield.PlaceInPage = ++page;
+                    radiogroup.AddKid(radiofield);
+                }
 
-        document.Close();
-        stream.Dispose();
+                writer.AddAnnotation(radiogroup);
+                foreach (var lang in _languages)
+                {
+                    cb.BeginText();
+                    cb.SetFontAndSize(bf, 18);
+                    cb.ShowTextAligned(Element.ALIGN_LEFT, lang, 70, 790, 0);
+                    cb.EndText();
+                    document.NewPage();
+                }
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }

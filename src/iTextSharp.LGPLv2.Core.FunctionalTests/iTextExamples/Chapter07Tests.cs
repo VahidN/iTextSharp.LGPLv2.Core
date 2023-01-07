@@ -12,38 +12,36 @@ public class Chapter07Tests
     public void Verify_NamedActions_CanBeCreated()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
-
-        // Create a reader
-        var pdfFile = createSamplePdfFile();
-        var reader = new PdfReader(pdfFile);
-
-        // Create a stamper
-        var stamper = new PdfStamper(reader, stream);
-
-        var table = createTableWithNamedActions();
-
-        // Add the table to each page
-        for (var i = 0; i < reader.NumberOfPages;)
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
         {
-            var canvas = stamper.GetOverContent(++i);
-            table.WriteSelectedRows(0, -1, 696, 36, canvas);
-        }
+            // Create a reader
+            var pdfFile = CreateSamplePdfFile();
+            using (var reader = new PdfReader(pdfFile))
+            {
+                // Create a stamper
+                using (var stamper = new PdfStamper(reader, stream))
+                {
+                    var table = CreateTableWithNamedActions();
 
-        reader.Close();
-        stamper.Close();
-        stream.Dispose();
+                    // Add the table to each page
+                    for (var i = 0; i < reader.NumberOfPages;)
+                    {
+                        var canvas = stamper.GetOverContent(++i);
+                        table.WriteSelectedRows(0, -1, 696, 36, canvas);
+                    }
+                }
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
-    private static byte[] createSamplePdfFile()
+    private static byte[] CreateSamplePdfFile()
     {
-        using (var stream = new MemoryStream())
+        using var stream = new MemoryStream();
+        // step 1
+        using (var document = new Document(PageSize.A4))
         {
-            // step 1
-            var document = new Document(PageSize.A4);
-
             // step 2
             var writer = PdfWriter.GetInstance(document, stream);
             // step 3
@@ -59,14 +57,12 @@ public class Chapter07Tests
             writer.PageEmpty = false;
             document.NewPage();
             document.Add(new Paragraph("The previous page was a blank page!"));
-
-            document.Close();
-
-            return stream.ToArray();
         }
+
+        return stream.ToArray();
     }
 
-    private static PdfPTable createTableWithNamedActions()
+    private static PdfPTable CreateTableWithNamedActions()
     {
         var symbol = new Font(Font.SYMBOL, 20);
         var table = new PdfPTable(4);

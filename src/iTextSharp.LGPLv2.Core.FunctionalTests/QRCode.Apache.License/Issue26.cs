@@ -17,20 +17,20 @@ public class Issue26
     public void Verify_Issue26_CanBe_Processed()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var stream = new FileStream(pdfFilePath, FileMode.Create);
+        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var document = new Document())
+            {
+                PdfWriter.GetInstance(document, stream);
+                document.AddAuthor(TestUtils.Author);
+                document.Open();
+                var qrcodeImage = CreateQrCodeImage("This is a text ...");
 
-        var document = new Document();
-        PdfWriter.GetInstance(document, stream);
-        document.AddAuthor(TestUtils.Author);
-        document.Open();
-        var qrcodeImage = CreateQrCodeImage("This is a text ...");
-
-        //qrcodeImage.SetAbsolutePosition(10, 500);
-        qrcodeImage.ScalePercent(200);
-        document.Add(qrcodeImage);
-
-        document.Close();
-        stream.Dispose();
+                //qrcodeImage.SetAbsolutePosition(10, 500);
+                qrcodeImage.ScalePercent(200);
+                document.Add(qrcodeImage);
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }

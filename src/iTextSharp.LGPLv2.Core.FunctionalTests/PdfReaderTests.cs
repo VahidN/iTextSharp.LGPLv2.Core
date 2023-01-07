@@ -17,8 +17,8 @@ public class PdfReaderTests
         // can be much higher or lower depending of what is considered as a blank page
         const int blankThreshold = 20;
 
-        var pdfFile = createSamplePdfFile();
-        var reader = new PdfReader(pdfFile);
+        var pdfFile = CreateSamplePdfFile();
+        using var reader = new PdfReader(pdfFile);
 
         var blankPages = 0;
         for (var pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
@@ -50,8 +50,6 @@ public class PdfReaderTests
             }
         }
 
-        reader.Close();
-
         Assert.AreEqual(1, blankPages, $"{reader.NumberOfPages} page(s) with {blankPages} blank page(s).");
     }
 
@@ -59,9 +57,8 @@ public class PdfReaderTests
     [TestMethod]
     public void Test_Extract_Text()
     {
-        var pdfFile = createSamplePdfFile();
-        var reader = new PdfReader(pdfFile);
-
+        var pdfFile = CreateSamplePdfFile();
+        using var reader = new PdfReader(pdfFile);
         var streamBytes = reader.GetPageContent(1);
         var tokenizer = new PrTokeniser(new RandomAccessFileOrArray(streamBytes));
 
@@ -74,17 +71,14 @@ public class PdfReaderTests
             }
         }
 
-        reader.Close();
-
         Assert.IsTrue(stringsList.Contains("Hello DNT!"));
     }
 
-    private static byte[] createSamplePdfFile()
+    private static byte[] CreateSamplePdfFile()
     {
-        using (var stream = new MemoryStream())
+        using var stream = new MemoryStream();
+        using (var document = new Document())
         {
-            var document = new Document();
-
             // step 2
             var writer = PdfWriter.GetInstance(document, stream);
             // step 3
@@ -99,49 +93,49 @@ public class PdfReaderTests
 
             document.NewPage();
             writer.PageEmpty = false;
-
-            document.Close();
-            return stream.ToArray();
         }
+
+        return stream.ToArray();
     }
 
     [TestMethod]
     public void Test_Draw_Text()
     {
         var pdfFilePath = TestUtils.GetOutputFileName();
-        var fileStream = new FileStream(pdfFilePath, FileMode.Create);
-        var pdfDoc = new Document(PageSize.A4);
-        var pdfWriter = PdfWriter.GetInstance(pdfDoc, fileStream);
+        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+        {
+            using (var pdfDoc = new Document(PageSize.A4))
+            {
+                var pdfWriter = PdfWriter.GetInstance(pdfDoc, fileStream);
 
-        pdfDoc.AddAuthor(TestUtils.Author);
-        pdfDoc.Open();
+                pdfDoc.AddAuthor(TestUtils.Author);
+                pdfDoc.Open();
 
-        pdfDoc.Add(new Paragraph("Test"));
+                pdfDoc.Add(new Paragraph("Test"));
 
-        var cb = pdfWriter.DirectContent;
-        var bf = BaseFont.CreateFont();
-        cb.BeginText();
-        cb.SetFontAndSize(bf, 12);
-        cb.MoveText(88.66f, 367);
-        cb.ShowText("ld");
-        cb.MoveText(-22f, 0);
-        cb.ShowText("Wor");
-        cb.MoveText(-15.33f, 0);
-        cb.ShowText("llo");
-        cb.MoveText(-15.33f, 0);
-        cb.ShowText("He");
-        cb.EndText();
+                var cb = pdfWriter.DirectContent;
+                var bf = BaseFont.CreateFont();
+                cb.BeginText();
+                cb.SetFontAndSize(bf, 12);
+                cb.MoveText(88.66f, 367);
+                cb.ShowText("ld");
+                cb.MoveText(-22f, 0);
+                cb.ShowText("Wor");
+                cb.MoveText(-15.33f, 0);
+                cb.ShowText("llo");
+                cb.MoveText(-15.33f, 0);
+                cb.ShowText("He");
+                cb.EndText();
 
-        var tmp = cb.CreateTemplate(250, 25);
-        tmp.BeginText();
-        tmp.SetFontAndSize(bf, 12);
-        tmp.MoveText(0, 7);
-        tmp.ShowText("Hello People");
-        tmp.EndText();
-        cb.AddTemplate(tmp, 36, 343);
-
-        pdfDoc.Close();
-        fileStream.Dispose();
+                var tmp = cb.CreateTemplate(250, 25);
+                tmp.BeginText();
+                tmp.SetFontAndSize(bf, 12);
+                tmp.MoveText(0, 7);
+                tmp.ShowText("Hello People");
+                tmp.EndText();
+                cb.AddTemplate(tmp, 36, 343);
+            }
+        }
 
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
