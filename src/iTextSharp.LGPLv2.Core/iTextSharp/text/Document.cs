@@ -49,6 +49,9 @@ public class Document : IDocListener
     ///<summary> Scales the WMF font size. The default value is 0.86.  </summary>
     public static readonly float WmfFontCorrection = 0.86f;
 
+    ///<summary> The IDocListener. </summary>
+    private readonly List<IDocListener> _listeners = new();
+
     /// <summary>
     ///     This is a chapter number in case ChapterAutoNumber is used.
     /// </summary>
@@ -73,9 +76,6 @@ public class Document : IDocListener
     ///     @since	2.1.6
     /// </summary>
     protected bool MarginMirroringTopBottom;
-
-    ///<summary> The IDocListener. </summary>
-    private readonly List<IDocListener> _listeners = new();
 
     /// <summary>
     ///     membervariables concerning the layout
@@ -126,17 +126,11 @@ public class Document : IDocListener
     /// </summary>
     public static string Product { get; } = "iTextSharp.LGPLv2.Core";
 
-#if NET40
-        /// <summary>
-        /// Gets the release number.
-        /// </summary>
-        public static string Release { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-#else
     /// <summary>
     ///     Gets the release number.
     /// </summary>
     public static string Release { get; } = typeof(Document).GetTypeInfo().Assembly.GetName().Version.ToString();
-#endif
+
     /// <summary>
     ///     Returns the lower left y-coordinate.
     /// </summary>
@@ -148,38 +142,6 @@ public class Document : IDocListener
     /// </summary>
     /// <value>the bottom margin</value>
     public float BottomMargin { get; protected set; }
-
-    /// <summary>
-    ///     Changes the footer of this document.
-    /// </summary>
-    /// <value>a HeaderFooter</value>
-    public virtual HeaderFooter Footer
-    {
-        set
-        {
-            footer = value;
-            foreach (var listener in _listeners)
-            {
-                listener.Footer = value;
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Changes the header of this document.
-    /// </summary>
-    /// <value>a HeaderFooter</value>
-    public virtual HeaderFooter Header
-    {
-        set
-        {
-            header = value;
-            foreach (var listener in _listeners)
-            {
-                listener.Header = value;
-            }
-        }
-    }
 
     /// <summary>
     ///     Gets the style class of the HTML body tag
@@ -210,22 +172,6 @@ public class Document : IDocListener
     /// </summary>
     /// <value>the left margin</value>
     public float LeftMargin { get; protected set; }
-
-    /// <summary>
-    ///     Sets the page number.
-    /// </summary>
-    /// <value>an int</value>
-    public virtual int PageCount
-    {
-        set
-        {
-            PageNumber = value;
-            foreach (var listener in _listeners)
-            {
-                listener.PageCount = value;
-            }
-        }
-    }
 
     /// <summary>
     ///     Returns the current page number.
@@ -273,6 +219,54 @@ public class Document : IDocListener
     public static string Version => $"{Product} {Release}";
 
     /// <summary>
+    ///     Changes the footer of this document.
+    /// </summary>
+    /// <value>a HeaderFooter</value>
+    public virtual HeaderFooter Footer
+    {
+        set
+        {
+            footer = value;
+            foreach (var listener in _listeners)
+            {
+                listener.Footer = value;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Changes the header of this document.
+    /// </summary>
+    /// <value>a HeaderFooter</value>
+    public virtual HeaderFooter Header
+    {
+        set
+        {
+            header = value;
+            foreach (var listener in _listeners)
+            {
+                listener.Header = value;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Sets the page number.
+    /// </summary>
+    /// <value>an int</value>
+    public virtual int PageCount
+    {
+        set
+        {
+            PageNumber = value;
+            foreach (var listener in _listeners)
+            {
+                listener.PageCount = value;
+            }
+        }
+    }
+
+    /// <summary>
     ///     Adds an Element to the Document.
     /// </summary>
     /// <param name="element">the Element to add</param>
@@ -315,74 +309,6 @@ public class Document : IDocListener
     }
 
     /// <summary>
-    ///     Adds the author to a Document.
-    /// </summary>
-    /// <param name="author">the name of the author</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddAuthor(string author) => Add(new Meta(Element.AUTHOR, author));
-
-    /// <summary>
-    ///     Adds the current date and time to a Document.
-    /// </summary>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddCreationDate() =>
-        Add(new Meta(Element.CREATIONDATE, DateTime.Now.ToString("ddd MMM dd HH:mm:ss zzz yyyy")));
-
-    /// <summary>
-    ///     Adds the creator to a Document.
-    /// </summary>
-    /// <param name="creator">the name of the creator</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddCreator(string creator) => Add(new Meta(Element.CREATOR, creator));
-
-    /// <summary>
-    ///     Adds a IDocListener to the Document.
-    /// </summary>
-    /// <param name="listener">the new IDocListener</param>
-    public void AddDocListener(IDocListener listener)
-    {
-        _listeners.Add(listener);
-    }
-
-    /// <summary>
-    ///     Adds a user defined header to the document.
-    /// </summary>
-    /// <param name="name">the name of the header</param>
-    /// <param name="content">the content of the header</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddHeader(string name, string content) => Add(new Header(name, content));
-
-    /// <summary>
-    ///     Adds the keywords to a Document.
-    /// </summary>
-    /// <param name="keywords">keywords to add</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddKeywords(string keywords) => Add(new Meta(Element.KEYWORDS, keywords));
-
-    /// <summary>
-    ///     Adds the producer to a Document.
-    /// </summary>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddProducer() => Add(new Meta(Element.PRODUCER, Version));
-
-    /// <summary>
-    ///     Adds the subject to a Document.
-    /// </summary>
-    /// <param name="subject">the subject</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddSubject(string subject) => Add(new Meta(Element.SUBJECT, subject));
-
-    /// <summary>
-    ///     methods concerning the header or some meta information
-    /// </summary>
-    /// <summary>
-    ///     Adds the title to a Document.
-    /// </summary>
-    /// <param name="title">the title</param>
-    /// <returns>true if successful, false otherwise</returns>
-    public bool AddTitle(string title) => Add(new Meta(Element.TITLE, title));
-
-    /// <summary>
     ///     Closes the document.
     /// </summary>
     /// <remarks>
@@ -402,46 +328,6 @@ public class Document : IDocListener
             listener.Close();
         }
     }
-
-    /// <summary>
-    ///     Returns the lower left y-coordinate, considering a given margin.
-    /// </summary>
-    /// <param name="margin">a margin</param>
-    /// <returns>the lower left y-coordinate</returns>
-    public float GetBottom(float margin) => PageSize.GetBottom(BottomMargin + margin);
-
-    /// <summary>
-    ///     Returns the lower left x-coordinate considering a given margin.
-    /// </summary>
-    /// <param name="margin">a margin</param>
-    /// <returns>the lower left x-coordinate</returns>
-    public float GetLeft(float margin) => PageSize.GetLeft(LeftMargin + margin);
-
-    /// <summary>
-    ///     Returns the upper right x-coordinate, considering a given margin.
-    /// </summary>
-    /// <param name="margin">a margin</param>
-    /// <returns>the upper right x-coordinate</returns>
-    public float GetRight(float margin) => PageSize.GetRight(RightMargin + margin);
-
-    /// <summary>
-    ///     Returns the upper right y-coordinate, considering a given margin.
-    /// </summary>
-    /// <param name="margin">a margin</param>
-    /// <returns>the upper right y-coordinate</returns>
-    public float GetTop(float margin) => PageSize.GetTop(TopMargin + margin);
-
-    /// <summary>
-    ///     Gets the margin mirroring flag.
-    /// </summary>
-    /// <returns>the margin mirroring flag</returns>
-    public bool IsMarginMirroring() => MarginMirroring;
-
-    /// <summary>
-    ///     Checks if the document is open.
-    /// </summary>
-    /// <returns>true if the document is open</returns>
-    public bool IsOpen() => IsDocumentOpen;
 
     /// <summary>
     ///     Signals that an new page has to be started.
@@ -486,15 +372,6 @@ public class Document : IDocListener
             listener.SetMargins(LeftMargin, RightMargin, TopMargin, BottomMargin);
             listener.Open();
         }
-    }
-
-    /// <summary>
-    ///     Removes a IDocListener from the Document.
-    /// </summary>
-    /// <param name="listener">the IDocListener that has to be removed.</param>
-    public void RemoveIDocListener(IDocListener listener)
-    {
-        _listeners.Remove(listener);
     }
 
     /// <summary>
@@ -614,5 +491,122 @@ public class Document : IDocListener
         {
             Close();
         }
+    }
+
+    /// <summary>
+    ///     Adds the author to a Document.
+    /// </summary>
+    /// <param name="author">the name of the author</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddAuthor(string author) => Add(new Meta(Element.AUTHOR, author));
+
+    /// <summary>
+    ///     Adds the current date and time to a Document.
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddCreationDate() =>
+        Add(new Meta(Element.CREATIONDATE, DateTime.Now.ToString("ddd MMM dd HH:mm:ss zzz yyyy")));
+
+    /// <summary>
+    ///     Adds the creator to a Document.
+    /// </summary>
+    /// <param name="creator">the name of the creator</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddCreator(string creator) => Add(new Meta(Element.CREATOR, creator));
+
+    /// <summary>
+    ///     Adds a IDocListener to the Document.
+    /// </summary>
+    /// <param name="listener">the new IDocListener</param>
+    public void AddDocListener(IDocListener listener)
+    {
+        _listeners.Add(listener);
+    }
+
+    /// <summary>
+    ///     Adds a user defined header to the document.
+    /// </summary>
+    /// <param name="name">the name of the header</param>
+    /// <param name="content">the content of the header</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddHeader(string name, string content) => Add(new Header(name, content));
+
+    /// <summary>
+    ///     Adds the keywords to a Document.
+    /// </summary>
+    /// <param name="keywords">keywords to add</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddKeywords(string keywords) => Add(new Meta(Element.KEYWORDS, keywords));
+
+    /// <summary>
+    ///     Adds the producer to a Document.
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddProducer() => Add(new Meta(Element.PRODUCER, Version));
+
+    /// <summary>
+    ///     Adds the subject to a Document.
+    /// </summary>
+    /// <param name="subject">the subject</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddSubject(string subject) => Add(new Meta(Element.SUBJECT, subject));
+
+    /// <summary>
+    ///     methods concerning the header or some meta information
+    /// </summary>
+    /// <summary>
+    ///     Adds the title to a Document.
+    /// </summary>
+    /// <param name="title">the title</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool AddTitle(string title) => Add(new Meta(Element.TITLE, title));
+
+    /// <summary>
+    ///     Returns the lower left y-coordinate, considering a given margin.
+    /// </summary>
+    /// <param name="margin">a margin</param>
+    /// <returns>the lower left y-coordinate</returns>
+    public float GetBottom(float margin) => PageSize.GetBottom(BottomMargin + margin);
+
+    /// <summary>
+    ///     Returns the lower left x-coordinate considering a given margin.
+    /// </summary>
+    /// <param name="margin">a margin</param>
+    /// <returns>the lower left x-coordinate</returns>
+    public float GetLeft(float margin) => PageSize.GetLeft(LeftMargin + margin);
+
+    /// <summary>
+    ///     Returns the upper right x-coordinate, considering a given margin.
+    /// </summary>
+    /// <param name="margin">a margin</param>
+    /// <returns>the upper right x-coordinate</returns>
+    public float GetRight(float margin) => PageSize.GetRight(RightMargin + margin);
+
+    /// <summary>
+    ///     Returns the upper right y-coordinate, considering a given margin.
+    /// </summary>
+    /// <param name="margin">a margin</param>
+    /// <returns>the upper right y-coordinate</returns>
+    public float GetTop(float margin) => PageSize.GetTop(TopMargin + margin);
+
+    /// <summary>
+    ///     Gets the margin mirroring flag.
+    /// </summary>
+    /// <returns>the margin mirroring flag</returns>
+    public bool IsMarginMirroring() => MarginMirroring;
+
+    /// <summary>
+    ///     Checks if the document is open.
+    /// </summary>
+    /// <returns>true if the document is open</returns>
+    public bool IsOpen() => IsDocumentOpen;
+
+    /// <summary>
+    ///     Removes a IDocListener from the Document.
+    /// </summary>
+    /// <param name="listener">the IDocListener that has to be removed.</param>
+    public void RemoveIDocListener(IDocListener listener)
+    {
+        _listeners.Remove(listener);
     }
 }

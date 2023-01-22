@@ -628,7 +628,7 @@ internal class CjkFont : BaseFont
         var w2 = CreateMetric(p["W2"]);
         p.Remove("W2");
         var map = new NullValueDictionary<string, object>();
-        foreach (string key in p.Keys)
+        foreach (var key in p.Keys)
         {
             map[key] = p[key];
         }
@@ -680,18 +680,26 @@ internal class CjkFont : BaseFont
                 return;
             }
 
-            var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
-            if (isp != null)
+            try
             {
-                CjkFonts.Load(isp);
-                isp.Dispose();
-
-                isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
+                var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
                 if (isp != null)
                 {
-                    CjkEncodings.Load(isp);
+                    CjkFonts.Load(isp);
                     isp.Dispose();
+
+                    isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
+                    if (isp != null)
+                    {
+                        CjkEncodings.Load(isp);
+                        isp.Dispose();
+                    }
                 }
+            }
+            catch
+            {
+                CjkFonts = new Properties();
+                CjkEncodings = new Properties();
             }
 
             _propertiesLoaded = true;
