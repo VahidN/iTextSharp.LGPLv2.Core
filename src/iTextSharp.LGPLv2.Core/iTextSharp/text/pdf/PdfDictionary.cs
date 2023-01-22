@@ -238,6 +238,11 @@ public class PdfDictionary : PdfObject
     /// <returns> true  if it is,  false  if it isn't.</returns>
     public void Merge(PdfDictionary other)
     {
+        if (other is null)
+        {
+            return;
+        }
+
         foreach (var key in other.HashMap.Keys)
         {
             HashMap[key] = other.HashMap[key];

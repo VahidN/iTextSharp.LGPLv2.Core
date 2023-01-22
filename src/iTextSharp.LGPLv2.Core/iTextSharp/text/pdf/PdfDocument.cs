@@ -1073,6 +1073,7 @@ public class PdfDocument : Document
 
         var page = new PdfPage(new PdfRectangle(PageSize, rotation), ThisBoxSize, resources, rotation);
         page.Put(PdfName.Tabs, Writer.Tabs);
+        page.Merge(Writer.PageDictionary);
 
         // we complete the page dictionary
 
@@ -1908,7 +1909,7 @@ public class PdfDocument : Document
         float tabPosition = 0;
 
         // looping over all the chunks in 1 line
-        foreach (PdfChunk chunk in line)
+        foreach (var chunk in line)
         {
             var color = chunk.Color;
             hScale = 1;

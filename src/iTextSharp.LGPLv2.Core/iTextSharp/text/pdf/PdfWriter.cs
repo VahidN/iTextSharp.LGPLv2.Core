@@ -1106,6 +1106,11 @@ public class PdfWriter : DocWriter,
     }
 
     /// <summary>
+    ///     Adds additional entries to the page dictionary.
+    /// </summary>
+    public PdfDictionary PageDictionary { set; get; } = new();
+
+    /// <summary>
     ///     Sets the the thumbnail image for the current page.
     ///     @throws PdfException on error
     ///     @throws DocumentException or error
