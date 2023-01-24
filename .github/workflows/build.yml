@@ -15,3 +15,6 @@ jobs:
         dotnet-version: 7.0.101
     - name: Build iTextSharp.LGPLv2.Core lib
       run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
+      
+    - name: Push Package to NuGet.org
+      run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
