@@ -8,9 +8,6 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests;
 [TestClass]
 public class AddPageDictEntryTests
 {
-    /// <summary>
-    ///     The RtfWriter allows the creation of rtf documents via the iText system
-    /// </summary>
     [TestMethod]
     public void Verify_Equivalent_Of_AddPageDictEntry_CanBeCreated()
     {

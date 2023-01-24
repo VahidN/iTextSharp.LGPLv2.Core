@@ -2902,7 +2902,18 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                 if (map.ContainsKey(k))
                 {
                     Tokens.Seek(address[k]);
-                    var obj = ReadPrObject();
+                    Tokens.NextToken();
+                    PdfObject obj;
+                    if (Tokens.TokenType == PrTokeniser.TK_NUMBER)
+                    {
+                        obj = new PdfNumber(Tokens.StringValue);
+                    }
+                    else
+                    {
+                        Tokens.Seek(address[k]);
+                        obj = ReadPrObject();
+                    }
+
                     _xrefObj[objNumber[k]] = obj;
                 }
             }
