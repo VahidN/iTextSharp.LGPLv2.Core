@@ -156,6 +156,11 @@ public class PdfWriter : DocWriter,
     public const int ENCRYPTION_AES_128 = 2;
 
     /// <summary>
+    ///     Type of encryption
+    /// </summary>
+    public const int ENCRYPTION_AES_256_V3 = 4;
+
+    /// <summary>
     ///     A viewer preference
     /// </summary>
     public const int FitWindow = 1 << 15;

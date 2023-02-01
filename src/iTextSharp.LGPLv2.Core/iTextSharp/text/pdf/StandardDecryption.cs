@@ -5,6 +5,7 @@ namespace iTextSharp.text.pdf.crypto;
 public class StandardDecryption
 {
     private const int Aes128 = 4;
+    private const int AES_256_V3 = 6;
     private readonly bool _aes;
     private readonly byte[] _iv = new byte[16];
     private readonly byte[] _key;
@@ -18,7 +19,7 @@ public class StandardDecryption
     /// </summary>
     public StandardDecryption(byte[] key, int off, int len, int revision)
     {
-        _aes = revision == Aes128;
+        _aes = revision == Aes128 || revision == AES_256_V3;
         if (_aes)
         {
             _key = new byte[len];
@@ -33,7 +34,7 @@ public class StandardDecryption
 
     public byte[] Finish()
     {
-        if (_aes)
+        if (_aes && Cipher != null)
         {
             return Cipher.DoFinal();
         }

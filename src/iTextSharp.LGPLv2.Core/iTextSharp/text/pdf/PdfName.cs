@@ -821,6 +821,11 @@ public class PdfName : PdfObject, IComparable
     public static readonly PdfName Docopen = new("DocOpen");
 
     /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName AESV3 = new("AESV3");
+
+    /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
@@ -1261,6 +1266,16 @@ public class PdfName : PdfObject, IComparable
     ///     A name of an attribute.
     /// </summary>
     public static readonly PdfName Gotoe = new("GoToE");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName OE = new("OE");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName UE = new("UE");
 
     /// <summary>
     ///     A name of an attribute.

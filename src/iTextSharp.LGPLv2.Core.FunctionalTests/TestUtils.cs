@@ -61,6 +61,9 @@ public static class TestUtils
     public static string GetPdfsPath(string fileName) =>
         Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
 
+    public static string GetIssuePdfsPath(string issueFolder, string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", issueFolder, fileName);
+
     public static Font GetUnicodeFont(
         string fontName, string fontFilePath, float size, int style, BaseColor color)
     {

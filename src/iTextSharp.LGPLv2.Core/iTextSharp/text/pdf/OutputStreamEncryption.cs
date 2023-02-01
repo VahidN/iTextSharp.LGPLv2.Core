@@ -8,6 +8,7 @@ public class OutputStreamEncryption : Stream
     protected AesCipher Cipher;
     protected Stream Outc;
     private const int Aes128 = 4;
+    private const int AES_256_V3 = 6;
     private readonly bool _aes;
     private readonly byte[] _buf = new byte[1];
     private bool _finished;
@@ -15,7 +16,7 @@ public class OutputStreamEncryption : Stream
     public OutputStreamEncryption(Stream outc, byte[] key, int off, int len, int revision)
     {
         Outc = outc;
-        _aes = revision == Aes128;
+        _aes = revision == Aes128 || revision == AES_256_V3;
         if (_aes)
         {
             var iv = IvGenerator.GetIv();
@@ -31,7 +32,8 @@ public class OutputStreamEncryption : Stream
         }
     }
 
-    public OutputStreamEncryption(Stream outc, byte[] key, int revision) : this(outc, key, 0, key.Length, revision)
+    public OutputStreamEncryption(Stream outc, byte[] key, int revision) :
+        this(outc, key, 0, key.Length, revision)
     {
     }
 

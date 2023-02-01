@@ -3033,7 +3033,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
                 if (Rebuilt || _encryptionError)
                 {
-                    throw new InvalidPdfException(ne.Message);
+                    throw;
                 }
 
                 Rebuilt = true;
@@ -3657,7 +3657,8 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
             if (line[0] == 't')
             {
-                if (!PdfEncodings.ConvertToString(line, null).StartsWith("trailer"))
+                var lineStr = PdfEncodings.ConvertToString(line, null);
+                if (!lineStr.StartsWith("trailer"))
                 {
                     continue;
                 }
@@ -4012,7 +4013,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             return;
         }
 
-        var encDic = trailer.Get(PdfName.Encrypt);
+        var encDic = trailer?.Get(PdfName.Encrypt);
         if (encDic == null || encDic.ToString().Equals("null"))
         {
             return;
@@ -4044,7 +4045,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         // just in case we have a broken producer
         if (documentId == null)
         {
-            documentId = new byte[0];
+            documentId = Array.Empty<byte>();
         }
 
         byte[] uValue = null;
@@ -4066,7 +4067,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             o = enc.Get(PdfName.P);
             if (!o.IsNumber())
             {
-                throw new InvalidPdfException("Illegal P value.");
+                throw new InvalidPdfException($"Illegal P = {o} value.");
             }
 
             PValue = ((PdfNumber)o).IntValue;
@@ -4074,7 +4075,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             o = enc.Get(PdfName.R);
             if (!o.IsNumber())
             {
-                throw new InvalidPdfException("Illegal R value.");
+                throw new InvalidPdfException($"Illegal R = {o} value.");
             }
 
             RValue = ((PdfNumber)o).IntValue;
@@ -4126,6 +4127,15 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                     }
 
                     var em = enc.Get(PdfName.Encryptmetadata);
+                    if (em != null && em.ToString().Equals("false"))
+                    {
+                        cryptoMode |= PdfWriter.DO_NOT_ENCRYPT_METADATA;
+                    }
+
+                    break;
+                case 6:
+                    cryptoMode = PdfWriter.ENCRYPTION_AES_256_V3;
+                    em = enc.Get(PdfName.Encryptmetadata);
                     if (em != null && em.ToString().Equals("false"))
                     {
                         cryptoMode |= PdfWriter.DO_NOT_ENCRYPT_METADATA;
@@ -4275,20 +4285,89 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
         if (filter.Equals(PdfName.Standard))
         {
-            //check by owner password
-            decrypt.SetupByOwnerPassword(documentId, Password, uValue, oValue, PValue);
-            if (!equalsArray(uValue, decrypt.UserKey, RValue == 3 || RValue == 4 ? 16 : 32))
+            if (RValue < 6)
             {
-                //check by user password
-                decrypt.SetupByUserPassword(documentId, Password, oValue, PValue);
+                //check by owner password
+                decrypt.SetupByOwnerPassword(documentId, Password, uValue, oValue, PValue);
                 if (!equalsArray(uValue, decrypt.UserKey, RValue == 3 || RValue == 4 ? 16 : 32))
                 {
-                    throw new BadPasswordException("Bad user password");
+                    //check by user password
+                    decrypt.SetupByUserPassword(documentId, Password, oValue, PValue);
+                    if (!equalsArray(uValue, decrypt.UserKey, RValue == 3 || RValue == 4 ? 16 : 32))
+                    {
+                        throw new BadPasswordException("Bad user password");
+                    }
+                }
+                else
+                {
+                    _ownerPasswordUsed = true;
                 }
             }
             else
             {
-                _ownerPasswordUsed = true;
+                // implements Algorithm 2.A: Retrieving the file encryption key from an encrypted document in order to decrypt it (revision 6 and later) - ISO 32000-2 section 7.6.4.3.3
+                s = enc.Get(PdfName.UE).ToString();
+                Strings.Remove((PdfString)enc.Get(PdfName.UE));
+                var ueValue = DocWriter.GetIsoBytes(s);
+                s = enc.Get(PdfName.OE).ToString();
+                Strings.Remove((PdfString)enc.Get(PdfName.OE));
+                var oeValue = DocWriter.GetIsoBytes(s);
+                s = enc.Get(PdfName.Perms).ToString();
+                Strings.Remove((PdfString)enc.Get(PdfName.Perms));
+                var permsValue = DocWriter.GetIsoBytes(s);
+
+                // step b of Algorithm 2.A
+                var password = Password;
+                if (password == null)
+                {
+                    password = Array.Empty<byte>();
+                }
+                else if (password.Length > 127)
+                {
+                    password = password.CopyOf(127);
+                }
+
+                // According to ISO 32000-2 the uValue is expected to be 48 bytes in length.
+                // Actual documents from the wild tend to have the uValue filled with zeroes
+                // to a 127 bytes length. As input to computeHash for owner password related
+                // operations, though, we must only use the 48 bytes.
+                if (uValue != null && uValue.Length > 48)
+                {
+                    uValue = uValue.CopyOf(48);
+                }
+
+                // step c of Algorithm 2.A
+                var hashAlg2B = decrypt.HashAlg2B(password, oValue.CopyOfRange(32, 40), uValue);
+                if (equalsArray(hashAlg2B, oValue, 32))
+                {
+                    // step d of Algorithm 2.A
+                    decrypt.SetupByOwnerPassword(documentId, password, uValue, ueValue, oValue, oeValue, PValue);
+                    // step f of Algorithm 2.A
+                    if (decrypt.DecryptAndCheckPerms(permsValue))
+                    {
+                        _ownerPasswordUsed = true;
+                    }
+                }
+
+                if (!_ownerPasswordUsed)
+                {
+                    // analog of step c of Algorithm 2.A for user password
+                    hashAlg2B = decrypt.HashAlg2B(password, uValue.CopyOfRange(32, 40), null);
+                    if (!equalsArray(hashAlg2B, uValue, 32))
+                    {
+                        throw new BadPasswordException("Bad user password");
+                    }
+
+                    // step e of Algorithm 2.A
+                    decrypt.SetupByUserPassword(documentId, password, uValue, ueValue, oValue, oeValue, PValue);
+                    // step f of Algorithm 2.A
+                    if (!decrypt.DecryptAndCheckPerms(permsValue))
+                    {
+                        throw new BadPasswordException("Bad user password");
+                    }
+                }
+
+                PValue = decrypt.Permissions;
             }
         }
         else if (filter.Equals(PdfName.Pubsec))
