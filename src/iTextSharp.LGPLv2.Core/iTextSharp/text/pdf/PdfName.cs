@@ -2997,6 +2997,11 @@ public class PdfName : PdfObject, IComparable
     /// <summary>
     ///     A name
     /// </summary>
+    public static readonly PdfName TYPES = new("Types");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
     public static readonly PdfName Type0 = new("Type0");
 
     /// <summary>

@@ -2980,14 +2980,26 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
     protected internal void ReadPages()
     {
-        catalog = trailer.GetAsDict(PdfName.Root);
+        catalog = trailer?.GetAsDict(PdfName.Root);
         if (catalog == null)
         {
-            throw new Exception("In ItextSharp PdfReader Readpages method, catalog is null.");
+            throw new InvalidPdfException("This invalid PDF file doesn't have a catalog.");
         }
 
         _rootPages = catalog.GetAsDict(PdfName.Pages);
+        if (_rootPages == null || !HasRootPage())
+        {
+            throw new InvalidPdfException("This invalid PDF file doesn't have a page root.");
+        }
+
         pageRefs = new PageRefs(this);
+    }
+
+    private bool HasRootPage()
+    {
+        var type = _rootPages.Get(PdfName.TYPE);
+        var types = _rootPages.Get(PdfName.TYPES);
+        return PdfName.Pages.Equals(type) || PdfName.Pages.Equals(types);
     }
 
     protected internal virtual void ReadPdf()
