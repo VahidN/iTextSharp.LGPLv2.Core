@@ -17,10 +17,7 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
         <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-        <IncludeSymbols>true</IncludeSymbols>
-        <DebugSymbols>true</DebugSymbols>
         <DebugType>embedded</DebugType>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <ImplicitUsings>enable</ImplicitUsings>
