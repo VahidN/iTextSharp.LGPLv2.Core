@@ -307,6 +307,18 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         _ownerPasswordUsed = reader._ownerPasswordUsed;
     }
 
+    /// <summary>
+    ///     Reads and parses a pdf document.
+    ///     It allows working with streams.
+    /// </summary>
+    public PdfReader(Stream isp, X509Certificate certificate, ICipherParameters certificateKey)
+    {
+        Certificate = certificate;
+        CertificateKey = certificateKey;
+        Tokens = new PrTokeniser(new RandomAccessFileOrArray(isp));
+        ReadPdf();
+    }
+
     protected internal PdfReader()
     {
     }

@@ -58,6 +58,9 @@ public static class TestUtils
     public static string GetTxtPath(string fileName) =>
         Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
 
+    public static string GetPfxPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pfx", fileName);
+
     public static string GetPdfsPath(string fileName) =>
         Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
 

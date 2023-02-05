@@ -103,14 +103,13 @@ public class PdfEncryption
 
     public PdfEncryption(PdfEncryption enc) : this()
     {
-        if (enc.Key != null)
-        {
-            Key = (byte[])enc.Key.Clone();
-        }
-
         KeySize = enc.KeySize;
 
-        Mkey = (byte[])enc.Mkey.Clone();
+        if (enc.Mkey != null)
+        {
+            Mkey = (byte[])enc.Mkey.Clone();
+        }
+
         OwnerKey = (byte[])enc.OwnerKey.Clone();
         UserKey = (byte[])enc.UserKey.Clone();
         Permissions = enc.Permissions;
