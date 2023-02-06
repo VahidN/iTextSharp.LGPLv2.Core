@@ -27,6 +27,8 @@ steps:
   displayName: Pack
   inputs: 
     command: 'pack'
+    includesymbols: true
+    includesource: true
     outputDir: '$(Build.ArtifactStagingDirectory)'
     versioningScheme: byBuildNumber
 - task: NuGetCommand@2
@@ -36,3 +38,7 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '62adf057-2d2d-45b0-b31b-74d4937bec2a/550162c4-88e9-4747-a6b9-396b939f9346'
+- task: PublishSymbols@2
+  inputs:
+    SearchPattern: '**/bin/**/*.pdb'
+    SymbolServerType: 'TeamServices'
