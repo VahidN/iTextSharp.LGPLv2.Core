@@ -36,7 +36,7 @@ namespace iTextSharp.text.pdf.crypto
 
         public byte[] Finish()
         {
-            if (_aes)
+            if (_aes && Cipher != null)
             {
                 return Cipher.DoFinal();
             }
