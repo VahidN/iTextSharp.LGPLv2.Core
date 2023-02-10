@@ -4,7 +4,7 @@
     <VersionPrefix>1.7.1</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <Authors>Fiftytwo A/S</Authors>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
