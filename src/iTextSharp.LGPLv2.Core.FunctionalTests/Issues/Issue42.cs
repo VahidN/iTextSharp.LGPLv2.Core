@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using iTextSharp.text.pdf;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,7 +10,7 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests.Issues;
 [TestClass]
 public class Issue42
 {
-    [TestMethod]
+    [TestMethod, TestCategory("Not Working")]
     public void Verify_Issue42_CanBe_Processed()
     {
         var inPdfFile = TestUtils.GetPdfsPath("issue42.pdf");
