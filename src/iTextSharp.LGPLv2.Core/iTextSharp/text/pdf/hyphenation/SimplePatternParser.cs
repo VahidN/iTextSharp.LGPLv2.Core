@@ -1,256 +1,268 @@
-using System.IO;
 using System.Text;
-using System.Collections;
 using System.util;
-using iTextSharp.text.xml.simpleparser;
 using iTextSharp.text.html;
+using iTextSharp.text.xml.simpleparser;
 
-namespace iTextSharp.text.pdf.hyphenation
+namespace iTextSharp.text.pdf.hyphenation;
+
+/// <summary>
+///     Parses the xml hyphenation pattern.
+///     @author Paulo Soares (psoares@consiste.pt)
+/// </summary>
+public class SimplePatternParser : ISimpleXmlDocHandler
 {
+    internal const int ELEM_CLASSES = 1;
+    internal const int ELEM_EXCEPTIONS = 2;
+    internal const int ELEM_HYPHEN = 4;
+    internal const int ELEM_PATTERNS = 3;
+    internal IPatternConsumer Consumer;
+    internal int CurrElement;
+    internal List<object> Exception;
+    internal char HyphenChar;
+    internal StringBuilder Token;
+
     /// <summary>
-    /// Parses the xml hyphenation pattern.
-    /// @author Paulo Soares (psoares@consiste.pt)
+    ///     Creates a new instance of PatternParser2
     /// </summary>
-    public class SimplePatternParser : ISimpleXmlDocHandler
+    public SimplePatternParser()
     {
-        internal const int ELEM_CLASSES = 1;
-        internal const int ELEM_EXCEPTIONS = 2;
-        internal const int ELEM_HYPHEN = 4;
-        internal const int ELEM_PATTERNS = 3;
-        internal IPatternConsumer Consumer;
-        internal int CurrElement;
-        internal ArrayList Exception;
-        internal char HyphenChar;
-        internal StringBuilder Token;
+        Token = new StringBuilder();
+        HyphenChar = '-'; // default
+    }
 
-        /// <summary>
-        /// Creates a new instance of PatternParser2
-        /// </summary>
-        public SimplePatternParser()
+    public void EndDocument()
+    {
+    }
+
+    public void EndElement(string tag)
+    {
+        if (Token.Length > 0)
         {
-            Token = new StringBuilder();
-            HyphenChar = '-';    // default
+            var word = Token.ToString();
+            switch (CurrElement)
+            {
+                case ELEM_CLASSES:
+                    Consumer.AddClass(word);
+                    break;
+                case ELEM_EXCEPTIONS:
+                    Exception.Add(word);
+                    Exception = NormalizeException(Exception);
+                    Consumer.AddException(GetExceptionWord(Exception),
+                                          new List<object>(Exception));
+                    break;
+                case ELEM_PATTERNS:
+                    Consumer.AddPattern(GetPattern(word),
+                                        GetInterletterValues(word));
+                    break;
+                case ELEM_HYPHEN:
+                    // nothing to do
+                    break;
+            }
+
+            if (CurrElement != ELEM_HYPHEN)
+            {
+                Token.Length = 0;
+            }
         }
 
-        public void EndDocument()
+        if (CurrElement == ELEM_HYPHEN)
         {
+            CurrElement = ELEM_EXCEPTIONS;
         }
+        else
+        {
+            CurrElement = 0;
+        }
+    }
 
-        public void EndElement(string tag)
+    public void StartDocument()
+    {
+    }
+
+    public void Text(string str)
+    {
+        var tk = new StringTokenizer(str);
+        while (tk.HasMoreTokens())
+        {
+            var word = tk.NextToken();
+            // System.out.Println("\"" + word + "\"");
+            switch (CurrElement)
+            {
+                case ELEM_CLASSES:
+                    Consumer.AddClass(word);
+                    break;
+                case ELEM_EXCEPTIONS:
+                    Exception.Add(word);
+                    Exception = NormalizeException(Exception);
+                    Consumer.AddException(GetExceptionWord(Exception),
+                                          new List<object>(Exception));
+                    Exception.Clear();
+                    break;
+                case ELEM_PATTERNS:
+                    Consumer.AddPattern(GetPattern(word),
+                                        GetInterletterValues(word));
+                    break;
+            }
+        }
+    }
+
+    public void StartElement(string tag, INullValueDictionary<string, string> h)
+    {
+        if (tag.Equals("hyphen-char"))
+        {
+            var hh = h["value"];
+            if (hh != null && hh.Length == 1)
+            {
+                HyphenChar = hh[0];
+            }
+        }
+        else if (tag.Equals("classes"))
+        {
+            CurrElement = ELEM_CLASSES;
+        }
+        else if (tag.Equals("patterns"))
+        {
+            CurrElement = ELEM_PATTERNS;
+        }
+        else if (tag.Equals("exceptions"))
+        {
+            CurrElement = ELEM_EXCEPTIONS;
+            Exception = new List<object>();
+        }
+        else if (tag.Equals("hyphen"))
         {
             if (Token.Length > 0)
             {
-                string word = Token.ToString();
-                switch (CurrElement)
-                {
-                    case ELEM_CLASSES:
-                        Consumer.AddClass(word);
-                        break;
-                    case ELEM_EXCEPTIONS:
-                        Exception.Add(word);
-                        Exception = NormalizeException(Exception);
-                        Consumer.AddException(GetExceptionWord(Exception),
-                                            (ArrayList)Exception.Clone());
-                        break;
-                    case ELEM_PATTERNS:
-                        Consumer.AddPattern(GetPattern(word),
-                                            GetInterletterValues(word));
-                        break;
-                    case ELEM_HYPHEN:
-                        // nothing to do
-                        break;
-                }
-                if (CurrElement != ELEM_HYPHEN)
-                {
-                    Token.Length = 0;
-                }
+                Exception.Add(Token.ToString());
             }
-            if (CurrElement == ELEM_HYPHEN)
+
+            Exception.Add(new Hyphen(h[HtmlTags.PRE],
+                                     h["no"],
+                                     h["post"]));
+            CurrElement = ELEM_HYPHEN;
+        }
+
+        Token.Length = 0;
+    }
+
+    public void Parse(Stream stream, IPatternConsumer consumer)
+    {
+        Consumer = consumer;
+        try
+        {
+            SimpleXmlParser.Parse(this, stream);
+        }
+        finally
+        {
+            try
             {
-                CurrElement = ELEM_EXCEPTIONS;
+                stream.Dispose();
+            }
+            catch
+            {
+            }
+        }
+    }
+
+    protected static string GetInterletterValues(string pat)
+    {
+        var il = new StringBuilder();
+        var word = pat + "a"; // add dummy letter to serve as sentinel
+        var len = word.Length;
+        for (var i = 0; i < len; i++)
+        {
+            var c = word[i];
+            if (char.IsDigit(c))
+            {
+                il.Append(c);
+                i++;
             }
             else
             {
-                CurrElement = 0;
+                il.Append('0');
             }
         }
 
-        public void Parse(Stream stream, IPatternConsumer consumer)
+        return il.ToString();
+    }
+
+    protected static string GetPattern(string word)
+    {
+        var pat = new StringBuilder();
+        var len = word.Length;
+        for (var i = 0; i < len; i++)
         {
-            Consumer = consumer;
-            try
+            if (!char.IsDigit(word[i]))
             {
-                SimpleXmlParser.Parse(this, stream);
-            }
-            finally
-            {
-                try { stream.Dispose(); } catch { }
+                pat.Append(word[i]);
             }
         }
 
-        public void StartDocument()
-        {
-        }
+        return pat.ToString();
+    }
 
-        public void StartElement(string tag, Hashtable h)
+    protected string GetExceptionWord(List<object> ex)
+    {
+        var res = new StringBuilder();
+        for (var i = 0; i < ex.Count; i++)
         {
-            if (tag.Equals("hyphen-char"))
+            var item = ex[i];
+            if (item is string)
             {
-                string hh = (string)h["value"];
-                if (hh != null && hh.Length == 1)
+                res.Append((string)item);
+            }
+            else
+            {
+                if (((Hyphen)item).NoBreak != null)
                 {
-                    HyphenChar = hh[0];
-                }
-            }
-            else if (tag.Equals("classes"))
-            {
-                CurrElement = ELEM_CLASSES;
-            }
-            else if (tag.Equals("patterns"))
-            {
-                CurrElement = ELEM_PATTERNS;
-            }
-            else if (tag.Equals("exceptions"))
-            {
-                CurrElement = ELEM_EXCEPTIONS;
-                Exception = new ArrayList();
-            }
-            else if (tag.Equals("hyphen"))
-            {
-                if (Token.Length > 0)
-                {
-                    Exception.Add(Token.ToString());
-                }
-                Exception.Add(new Hyphen((string)h[HtmlTags.PRE],
-                                                (string)h["no"],
-                                                (string)h["post"]));
-                CurrElement = ELEM_HYPHEN;
-            }
-            Token.Length = 0;
-        }
-
-        public void Text(string str)
-        {
-            StringTokenizer tk = new StringTokenizer(str);
-            while (tk.HasMoreTokens())
-            {
-                string word = tk.NextToken();
-                // System.out.Println("\"" + word + "\"");
-                switch (CurrElement)
-                {
-                    case ELEM_CLASSES:
-                        Consumer.AddClass(word);
-                        break;
-                    case ELEM_EXCEPTIONS:
-                        Exception.Add(word);
-                        Exception = NormalizeException(Exception);
-                        Consumer.AddException(GetExceptionWord(Exception),
-                                            (ArrayList)Exception.Clone());
-                        Exception.Clear();
-                        break;
-                    case ELEM_PATTERNS:
-                        Consumer.AddPattern(GetPattern(word),
-                                            GetInterletterValues(word));
-                        break;
+                    res.Append(((Hyphen)item).NoBreak);
                 }
             }
         }
 
-        protected static string GetInterletterValues(string pat)
-        {
-            StringBuilder il = new StringBuilder();
-            string word = pat + "a";    // add dummy letter to serve as sentinel
-            int len = word.Length;
-            for (int i = 0; i < len; i++)
-            {
-                char c = word[i];
-                if (char.IsDigit(c))
-                {
-                    il.Append(c);
-                    i++;
-                }
-                else
-                {
-                    il.Append('0');
-                }
-            }
-            return il.ToString();
-        }
+        return res.ToString();
+    }
 
-        protected static string GetPattern(string word)
+    protected List<object> NormalizeException(List<object> ex)
+    {
+        var res = new List<object>();
+        for (var i = 0; i < ex.Count; i++)
         {
-            StringBuilder pat = new StringBuilder();
-            int len = word.Length;
-            for (int i = 0; i < len; i++)
+            var item = ex[i];
+            if (item is string)
             {
-                if (!char.IsDigit(word[i]))
+                var str = (string)item;
+                var buf = new StringBuilder();
+                for (var j = 0; j < str.Length; j++)
                 {
-                    pat.Append(word[i]);
-                }
-            }
-            return pat.ToString();
-        }
-
-        protected string GetExceptionWord(ArrayList ex)
-        {
-            StringBuilder res = new StringBuilder();
-            for (int i = 0; i < ex.Count; i++)
-            {
-                object item = ex[i];
-                if (item is string)
-                {
-                    res.Append((string)item);
-                }
-                else
-                {
-                    if (((Hyphen)item).NoBreak != null)
+                    var c = str[j];
+                    if (c != HyphenChar)
                     {
-                        res.Append(((Hyphen)item).NoBreak);
+                        buf.Append(c);
                     }
-                }
-            }
-            return res.ToString();
-        }
-
-        protected ArrayList NormalizeException(ArrayList ex)
-        {
-            ArrayList res = new ArrayList();
-            for (int i = 0; i < ex.Count; i++)
-            {
-                object item = ex[i];
-                if (item is string)
-                {
-                    string str = (string)item;
-                    StringBuilder buf = new StringBuilder();
-                    for (int j = 0; j < str.Length; j++)
-                    {
-                        char c = str[j];
-                        if (c != HyphenChar)
-                        {
-                            buf.Append(c);
-                        }
-                        else
-                        {
-                            res.Add(buf.ToString());
-                            buf.Length = 0;
-                            char[] h = new char[1];
-                            h[0] = HyphenChar;
-                            // we use here hyphenChar which is not necessarily
-                            // the one to be printed
-                            res.Add(new Hyphen(new string(h), null, null));
-                        }
-                    }
-                    if (buf.Length > 0)
+                    else
                     {
                         res.Add(buf.ToString());
+                        buf.Length = 0;
+                        var h = new char[1];
+                        h[0] = HyphenChar;
+                        // we use here hyphenChar which is not necessarily
+                        // the one to be printed
+                        res.Add(new Hyphen(new string(h), null, null));
                     }
                 }
-                else
+
+                if (buf.Length > 0)
                 {
-                    res.Add(item);
+                    res.Add(buf.ToString());
                 }
             }
-            return res;
+            else
+            {
+                res.Add(item);
+            }
         }
+
+        return res;
     }
 }

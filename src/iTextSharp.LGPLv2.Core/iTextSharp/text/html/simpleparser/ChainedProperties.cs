@@ -1,103 +1,135 @@
-using System.Collections;
+using System.util;
 
-namespace iTextSharp.text.html.simpleparser
+namespace iTextSharp.text.html.simpleparser;
+
+public class ChainedProperties
 {
+    public static int[] FontSizes = { 8, 10, 12, 14, 18, 24, 36 };
+    public IList<TagAttributes> Chain = new List<TagAttributes>();
 
-    public class ChainedProperties
+    public string this[string key]
     {
-
-        public static int[] FontSizes = { 8, 10, 12, 14, 18, 24, 36 };
-        public ArrayList Chain = new ArrayList();
-
-        public string this[string key]
+        get
         {
-            get
+            for (var k = Chain.Count - 1; k >= 0; --k)
             {
-                for (int k = Chain.Count - 1; k >= 0; --k)
+                var p = Chain[k];
+                var attrs = p.Attrs;
+                if (attrs.ContainsKey(key))
                 {
-                    object[] obj = (object[])Chain[k];
-                    Hashtable prop = (Hashtable)obj[1];
-                    string ret = (string)prop[key];
-                    if (ret != null)
-                        return ret;
+                    return attrs[key];
                 }
-                return null;
             }
+
+            return null;
+        }
+    }
+
+    public void AddToChain(string key, INullValueDictionary<string, string> prop)
+    {
+        // adjust the font size
+        prop.TryGetValue(HtmlTags.SIZE, out var value);
+        if (value == null)
+        {
+            return;
         }
 
-        public void AddToChain(string key, Hashtable prop)
+        if (value.EndsWith("pt"))
         {
-            // adjust the font size
-            string value = (string)prop[ElementTags.SIZE];
-            if (value != null)
+            prop[ElementTags.SIZE] = value.Substring(0, value.Length - 2);
+        }
+        else
+        {
+            var s = 0;
+            if (value.StartsWith("+") || value.StartsWith("-"))
             {
-                if (value.EndsWith("pt"))
+                var old = this["basefontsize"];
+                if (old == null)
                 {
-                    prop[ElementTags.SIZE] = value.Substring(0, value.Length - 2);
+                    old = "12";
                 }
-                else
+
+                var f = float.Parse(old, NumberFormatInfo.InvariantInfo);
+                var c = (int)f;
+                for (var k = FontSizes.Length - 1; k >= 0; --k)
                 {
-                    int s = 0;
-                    if (value.StartsWith("+") || value.StartsWith("-"))
+                    if (c >= FontSizes[k])
                     {
-                        string old = this["basefontsize"];
-                        if (old == null)
-                            old = "12";
-                        float f = float.Parse(old, System.Globalization.NumberFormatInfo.InvariantInfo);
-                        int c = (int)f;
-                        for (int k = FontSizes.Length - 1; k >= 0; --k)
-                        {
-                            if (c >= FontSizes[k])
-                            {
-                                s = k;
-                                break;
-                            }
-                        }
-                        int inc = int.Parse(value.StartsWith("+") ? value.Substring(1) : value);
-                        s += inc;
+                        s = k;
+                        break;
                     }
-                    else
-                    {
-                        try
-                        {
-                            s = int.Parse(value) - 1;
-                        }
-                        catch
-                        {
-                            s = 0;
-                        }
-                    }
-                    if (s < 0)
-                        s = 0;
-                    else if (s >= FontSizes.Length)
-                        s = FontSizes.Length - 1;
-                    prop[ElementTags.SIZE] = FontSizes[s].ToString();
+                }
+
+                var inc = int.Parse(value.StartsWith("+") ? value.Substring(1) : value,
+                                    CultureInfo.InvariantCulture);
+                s += inc;
+            }
+            else
+            {
+                try
+                {
+                    s = int.Parse(value, CultureInfo.InvariantCulture) - 1;
+                }
+                catch
+                {
+                    s = 0;
                 }
             }
-            Chain.Add(new object[] { key, prop });
+
+            if (s < 0)
+            {
+                s = 0;
+            }
+            else if (s >= FontSizes.Length)
+            {
+                s = FontSizes.Length - 1;
+            }
+
+            prop[ElementTags.SIZE] = FontSizes[s].ToString();
         }
 
-        public bool HasProperty(string key)
+        Chain.Add(new TagAttributes(key, prop));
+    }
+
+    public bool HasProperty(string key)
+    {
+        for (var k = Chain.Count - 1; k >= 0; --k)
         {
-            for (int k = Chain.Count - 1; k >= 0; --k)
+            var p = Chain[k];
+            var attrs = p.Attrs;
+            if (attrs.ContainsKey(key))
             {
-                object[] obj = (object[])Chain[k];
-                Hashtable prop = (Hashtable)obj[1];
-                if (prop.ContainsKey(key))
-                    return true;
-            }
-            return false;
-        }
-        public void RemoveChain(string key)
-        {
-            for (int k = Chain.Count - 1; k >= 0; --k)
-            {
-                if (key.Equals(((object[])Chain[k])[0]))
-                {
-                    Chain.RemoveAt(k);
-                    return;
-                }
+                return true;
             }
         }
+
+        return false;
+    }
+
+    public void RemoveChain(string key)
+    {
+        for (var k = Chain.Count - 1; k >= 0; --k)
+        {
+            if (key.Equals(Chain[k].Tag))
+            {
+                Chain.RemoveAt(k);
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Class that stores the info about one tag in the chain.
+    /// </summary>
+    public sealed class TagAttributes
+    {
+        public TagAttributes(string tag, INullValueDictionary<string, string> attrs)
+        {
+            Tag = tag;
+            Attrs = attrs;
+        }
+
+        public INullValueDictionary<string, string> Attrs { set; get; }
+        public string Tag { set; get; }
     }
 }

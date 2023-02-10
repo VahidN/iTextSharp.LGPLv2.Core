@@ -1,0 +1,7 @@
+# https://github.com/dotnet/roslyn-analyzers/blob/main/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/BannedApiAnalyzers.Help.md
+T:System.Collections.ICollection;Don't use a non-generic data structure.
+T:System.Collections.Hashtable;Don't use a non-generic data structure.
+T:System.Collections.ArrayList;Don't use a non-generic data structure.
+T:System.Collections.SortedList;Don't use a non-generic data structure.
+T:System.Collections.Stack;Don't use a non-generic data structure.
+T:System.Collections.Queue;Don't use a non-generic data structure.

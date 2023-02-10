@@ -1,103 +1,128 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.util;
 using iTextSharp.text.pdf;
 
-namespace iTextSharp.text.html.simpleparser
+namespace iTextSharp.text.html.simpleparser;
+
+/// <summary>
+///     @author  psoares
+/// </summary>
+public class IncTable : IElement
 {
+    private readonly INullValueDictionary<string, string> _props = new NullValueDictionary<string, string>();
+    private List<PdfPCell> _cols;
 
     /// <summary>
-    /// @author  psoares
+    ///     Creates a new instance of IncTable
     /// </summary>
-    public class IncTable
+    public IncTable(INullValueDictionary<string, string> props)
     {
-        private readonly Hashtable _props = new Hashtable();
-        private ArrayList _cols;
-
-        /// <summary>
-        /// Creates a new instance of IncTable
-        /// </summary>
-        public IncTable(Hashtable props)
+        foreach (var dc in props)
         {
-            foreach (DictionaryEntry dc in props)
-                _props[dc.Key] = dc.Value;
+            _props[dc.Key] = dc.Value;
+        }
+    }
+
+    public IList<IList<PdfPCell>> Rows { get; } = new List<IList<PdfPCell>>();
+
+    public virtual bool Process(IElementListener listener) => false;
+
+    public virtual int Type => 0;
+
+    public virtual bool IsContent() => false;
+
+    public virtual bool IsNestable() => false;
+
+    public virtual IList<Chunk> Chunks => null;
+
+    public void AddCol(PdfPCell cell)
+    {
+        if (_cols == null)
+        {
+            _cols = new List<PdfPCell>();
         }
 
-        public ArrayList Rows { get; } = new ArrayList();
+        _cols.Add(cell);
+    }
 
-        public void AddCol(PdfPCell cell)
+    public void AddCols(IEnumerable<PdfPCell> ncols)
+    {
+        if (_cols == null)
         {
-            if (_cols == null)
-                _cols = new ArrayList();
-            _cols.Add(cell);
+            _cols = new List<PdfPCell>(ncols);
+        }
+        else
+        {
+            _cols.AddRange(ncols);
+        }
+    }
+
+    public PdfPTable BuildTable()
+    {
+        if (Rows.Count == 0)
+        {
+            return new PdfPTable(1);
         }
 
-        public void AddCols(ArrayList ncols)
+        var ncol = 0;
+
+        var c0 = Rows[0];
+        for (var k = 0; k < c0.Count; ++k)
         {
-            if (_cols == null)
-                _cols = new ArrayList(ncols);
+            ncol += c0[k].Colspan;
+        }
+
+        var table = new PdfPTable(ncol);
+
+        var widths = _props["widths"];
+        if (widths != null)
+        {
+            var intWidths = new List<int>();
+            foreach (var widthElement in widths.Split(','))
+            {
+                intWidths.Add(int.Parse(widthElement, CultureInfo.InvariantCulture));
+            }
+
+            table.SetWidths(intWidths.ToArray());
+        }
+
+        var width = _props["width"];
+        if (width == null)
+        {
+            table.WidthPercentage = 100;
+        }
+        else
+        {
+            if (width.EndsWith("%"))
+            {
+                table.WidthPercentage =
+                    float.Parse(width.Substring(0, width.Length - 1), NumberFormatInfo.InvariantInfo);
+            }
             else
-                _cols.AddRange(ncols);
+            {
+                table.TotalWidth = float.Parse(width, NumberFormatInfo.InvariantInfo);
+                table.LockedWidth = true;
+            }
         }
 
-        public PdfPTable BuildTable()
+        for (var row = 0; row < Rows.Count; ++row)
         {
-            if (Rows.Count == 0)
-                return new PdfPTable(1);
-
-            int ncol = 0;
-
-            ArrayList c0 = (ArrayList)Rows[0];
-            for (int k = 0; k < c0.Count; ++k)
+            var col = Rows[row];
+            for (var k = 0; k < col.Count; ++k)
             {
-                ncol += ((PdfPCell)c0[k]).Colspan;
+                table.AddCell(col[k]);
             }
-
-            PdfPTable table = new PdfPTable(ncol);
-
-            var widths = (string)_props["widths"];
-            if (widths != null)
-            {
-                var intWidths = new List<int>();
-                foreach (var widthElement in widths.Split(','))
-                {
-                    intWidths.Add(int.Parse(widthElement));
-                }
-                table.SetWidths(intWidths.ToArray());
-            }
-
-            string width = (string)_props["width"];
-            if (width == null)
-                table.WidthPercentage = 100;
-            else
-            {
-                if (width.EndsWith("%"))
-                    table.WidthPercentage = float.Parse(width.Substring(0, width.Length - 1), System.Globalization.NumberFormatInfo.InvariantInfo);
-                else
-                {
-                    table.TotalWidth = float.Parse(width, System.Globalization.NumberFormatInfo.InvariantInfo);
-                    table.LockedWidth = true;
-                }
-            }
-
-            for (int row = 0; row < Rows.Count; ++row)
-            {
-                ArrayList col = (ArrayList)Rows[row];
-                for (int k = 0; k < col.Count; ++k)
-                {
-                    table.AddCell((PdfPCell)col[k]);
-                }
-            }
-            return table;
         }
 
-        public void EndRow()
+        return table;
+    }
+
+    public void EndRow()
+    {
+        if (_cols != null)
         {
-            if (_cols != null)
-            {
-                _cols.Reverse();
-                Rows.Add(_cols);
-                _cols = null;
-            }
+            _cols.Reverse();
+            Rows.Add(_cols);
+            _cols = null;
         }
     }
 }

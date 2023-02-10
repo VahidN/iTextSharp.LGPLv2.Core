@@ -1,108 +1,75 @@
-using System;
+namespace iTextSharp.text.pdf;
 
-namespace iTextSharp.text.pdf
+/// <summary>
+///     Implements the shading pattern dictionary.
+///     @author Paulo Soares (psoares@consiste.pt)
+/// </summary>
+public class PdfShadingPattern : PdfDictionary
 {
+    protected float[] matrix = { 1, 0, 0, 1, 0, 0 };
+    protected PdfName patternName;
+    protected PdfIndirectReference patternReference;
+    protected PdfShading shading;
+
+    protected PdfWriter Writer;
 
     /// <summary>
-    /// Implements the shading pattern dictionary.
-    /// @author Paulo Soares (psoares@consiste.pt)
+    ///     Creates new PdfShadingPattern
     /// </summary>
-    public class PdfShadingPattern : PdfDictionary
+    public PdfShadingPattern(PdfShading shading)
     {
+        Writer = shading.Writer;
+        Put(PdfName.Patterntype, new PdfNumber(2));
+        this.shading = shading;
+    }
 
-        protected float[] matrix = { 1, 0, 0, 1, 0, 0 };
-        protected PdfName patternName;
-        protected PdfIndirectReference patternReference;
-        protected PdfShading shading;
+    public float[] Matrix
+    {
+        get => matrix;
 
-        protected PdfWriter Writer;
-
-        /// <summary>
-        /// Creates new PdfShadingPattern
-        /// </summary>
-        public PdfShadingPattern(PdfShading shading)
+        set
         {
-            Writer = shading.Writer;
-            Put(PdfName.Patterntype, new PdfNumber(2));
-            this.shading = shading;
-        }
-
-        public float[] Matrix
-        {
-            get
+            if (value.Length != 6)
             {
-                return matrix;
+                throw new Exception("The matrix size must be 6.");
             }
 
-            set
-            {
-                if (value.Length != 6)
-                    throw new Exception("The matrix size must be 6.");
-                matrix = value;
-            }
+            matrix = value;
         }
+    }
 
-        public PdfShading Shading
-        {
-            get
-            {
-                return shading;
-            }
-        }
+    public PdfShading Shading => shading;
 
-        internal ColorDetails ColorDetails
-        {
-            get
-            {
-                return shading.ColorDetails;
-            }
-        }
+    internal ColorDetails ColorDetails => shading.ColorDetails;
 
-        internal int Name
-        {
-            set
-            {
-                patternName = new PdfName("P" + value);
-            }
-        }
+    internal int Name
+    {
+        set => patternName = new PdfName("P" + value);
+    }
 
-        internal PdfName PatternName
-        {
-            get
-            {
-                return patternName;
-            }
-        }
+    internal PdfName PatternName => patternName;
 
-        internal PdfIndirectReference PatternReference
+    internal PdfIndirectReference PatternReference
+    {
+        get
         {
-            get
+            if (patternReference == null)
             {
-                if (patternReference == null)
-                    patternReference = Writer.PdfIndirectReference;
-                return patternReference;
+                patternReference = Writer.PdfIndirectReference;
             }
-        }
 
-        internal PdfName ShadingName
-        {
-            get
-            {
-                return shading.ShadingName;
-            }
+            return patternReference;
         }
-        internal PdfIndirectReference ShadingReference
-        {
-            get
-            {
-                return shading.ShadingReference;
-            }
-        }
-        internal void AddToBody()
-        {
-            Put(PdfName.Shading, ShadingReference);
-            Put(PdfName.Matrix, new PdfArray(matrix));
-            Writer.AddToBody(this, PatternReference);
-        }
+    }
+
+    internal PdfName ShadingName => shading.ShadingName;
+
+    internal PdfIndirectReference ShadingReference => shading.ShadingReference;
+
+    internal void AddToBody()
+    {
+        Put(PdfName.Shading, ShadingReference);
+        Put(PdfName.Matrix, new PdfArray(matrix));
+        Writer.AddToBody(this, PatternReference);
     }
 }

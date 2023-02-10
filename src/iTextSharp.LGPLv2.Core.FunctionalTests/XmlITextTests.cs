@@ -5,19 +5,19 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace iTextSharp.LGPLv2.Core.FunctionalTests
+namespace iTextSharp.LGPLv2.Core.FunctionalTests;
+
+[TestClass]
+public class XmlITextTests
 {
-    [TestClass]
-    public class XmlITextTests
+	/// <summary>
+	///     iTextXML can be used as a report generator
+	/// </summary>
+	[TestMethod]
+    public void Verify_iTextXML_To_PDF_File_CanBeCreated()
     {
-        /// <summary>
-        /// iTextXML can be used as a report generator
-        /// </summary>
-        [TestMethod]
-        public void Verify_iTextXML_To_PDF_File_CanBeCreated()
-        {
-            var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
-            var iTextXML = $@"
+        var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
+        var iTextXML = $@"
 <itext creationdate='1395/06/14' producer='iTextSharp.LGPLv2.Core'>
 
 	<paragraph style='font-family:Helvetica;font-size:18;font-weight:bold;font-style:italic;'>
@@ -48,17 +48,17 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 </itext>
 ";
 
-            var pdfFilePath = TestUtils.GetOutputFileName();
-            converITextXmlToPdfFile(iTextXML, pdfFilePath);
-            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-        }
+        var pdfFilePath = TestUtils.GetOutputFileName();
+        ConverITextXmlToPdfFile(iTextXML, pdfFilePath);
+        TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+    }
 
 
-        [TestMethod]
-        public void Verify_iTextXML_CanBeParsed()
-        {
-            var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
-            var iTextXML = $@"
+    [TestMethod]
+    public void Verify_iTextXML_CanBeParsed()
+    {
+        var img = Path.Combine(TestUtils.GetBaseDir(), @"iTextExamples", "resources", "img", "hitchcock.png");
+        var iTextXML = $@"
 <itext creationdate='Thu Jun 26 14:25:52 CEST 2003' producer='iTextXML by lowagie.com'>
 	<paragraph leading='18.0' font='unknown' align='Default'>
 		Please visit my
@@ -1978,31 +1978,24 @@ namespace iTextSharp.LGPLv2.Core.FunctionalTests
 	</chapter>
 </itext>
 ";
-            var pdfFilePath = TestUtils.GetOutputFileName();
-            converITextXmlToPdfFile(iTextXML, pdfFilePath);
-            TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-        }
+        var pdfFilePath = TestUtils.GetOutputFileName();
+        ConverITextXmlToPdfFile(iTextXML, pdfFilePath);
+        TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+    }
 
 
-        private static void converITextXmlToPdfFile(string iTextXML, string pdfFilePath)
-        {
-            var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+    private static void ConverITextXmlToPdfFile(string iTextXML, string pdfFilePath)
+    {
+        using var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+        using var document = new Document();
+        PdfWriter.GetInstance(document, fileStream);
 
-            var document = new Document();
-            var pdfWriter = PdfWriter.GetInstance(document, fileStream);
+        document.AddAuthor(TestUtils.Author);
+        document.Open();
 
-            document.AddAuthor(TestUtils.Author);
-            document.Open();
+        using var xmlReader = XmlReader.Create(new StringReader(iTextXML));
 
-            var xmlReader = XmlReader.Create(new StringReader(iTextXML));
-
-            var parser = new XmlParser();
-            parser.Go(document, xmlReader);
-
-            pdfWriter.Close();
-            document.Close();
-            fileStream.Dispose();
-            xmlReader.Dispose();
-        }
+        var parser = new XmlParser();
+        parser.Go(document, xmlReader);
     }
 }

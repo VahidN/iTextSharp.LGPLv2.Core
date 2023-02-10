@@ -1,6 +1,5 @@
-namespace iTextSharp.text.rtf
+namespace iTextSharp.text.rtf;
+
+public interface IEventListener
 {
-    public interface IEventListener
-    {
-    }
 }

@@ -1,12 +1,8 @@
-using System.IO;
+namespace iTextSharp.text.pdf;
 
-namespace iTextSharp.text.pdf
+public class BadPasswordException : IOException
 {
-
-    public class BadPasswordException : IOException
+    public BadPasswordException(string message) : base(message)
     {
-        public BadPasswordException(string message) : base(message)
-        {
-        }
     }
 }

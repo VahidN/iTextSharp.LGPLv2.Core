@@ -1,129 +1,142 @@
-using System;
-using System.Collections;
+using System.util;
 
-namespace iTextSharp.text.pdf
+namespace iTextSharp.text.pdf;
+
+/// <summary>
+///     Creates a name tree.
+///     @author Paulo Soares (psoares@consiste.pt)
+/// </summary>
+public class PdfNameTree
 {
-    /// <summary>
-    /// Creates a name tree.
-    /// @author Paulo Soares (psoares@consiste.pt)
-    /// </summary>
-    public class PdfNameTree
+    private const int LeafSize = 64;
+
+    public static INullValueDictionary<string, PdfObject> ReadTree(PdfDictionary dic)
     {
-
-        private const int LeafSize = 64;
-
-        public static Hashtable ReadTree(PdfDictionary dic)
+        var items = new NullValueDictionary<string, PdfObject>();
+        if (dic != null)
         {
-            Hashtable items = new Hashtable();
-            if (dic != null)
-                iterateItems(dic, items);
-            return items;
+            iterateItems(dic, items);
         }
 
-        /// <summary>
-        /// Creates a name tree.
-        /// and the value is a  PdfObject . Note that although the
-        /// keys are strings only the lower byte is used and no check is made for chars
-        /// with the same lower byte and different upper byte. This will generate a wrong
-        /// tree name.
-        /// @throws IOException on error
-        /// generally pointed to by the key /Dests, for example
-        /// </summary>
-        /// <param name="items">the item of the name tree. The key is a  String </param>
-        /// <param name="writer">the writer</param>
-        /// <returns>the dictionary with the name tree. This dictionary is the one</returns>
-        public static PdfDictionary WriteTree(Hashtable items, PdfWriter writer)
+        return items;
+    }
+
+    /// <summary>
+    ///     Creates a name tree.
+    ///     and the value is a  PdfObject . Note that although the
+    ///     keys are strings only the lower byte is used and no check is made for chars
+    ///     with the same lower byte and different upper byte. This will generate a wrong
+    ///     tree name.
+    ///     @throws IOException on error
+    ///     generally pointed to by the key /Dests, for example
+    /// </summary>
+    /// <param name="items">the item of the name tree. The key is a  String </param>
+    /// <param name="writer">the writer</param>
+    /// <returns>the dictionary with the name tree. This dictionary is the one</returns>
+    public static PdfDictionary WriteTree(INullValueDictionary<string, PdfObject> items, PdfWriter writer)
+    {
+        if (items.Count == 0)
         {
-            if (items.Count == 0)
-                return null;
-            string[] names = new string[items.Count];
-            items.Keys.CopyTo(names, 0);
-            Array.Sort(names);
-            if (names.Length <= LeafSize)
+            return null;
+        }
+
+        var names = new string[items.Count];
+        items.Keys.CopyTo(names, 0);
+        Array.Sort(names);
+        if (names.Length <= LeafSize)
+        {
+            var dic = new PdfDictionary();
+            var ar = new PdfArray();
+            for (var k = 0; k < names.Length; ++k)
             {
-                PdfDictionary dic = new PdfDictionary();
-                PdfArray ar = new PdfArray();
-                for (int k = 0; k < names.Length; ++k)
+                ar.Add(new PdfString(names[k], null));
+                ar.Add(items[names[k]]);
+            }
+
+            dic.Put(PdfName.Names, ar);
+            return dic;
+        }
+
+        var skip = LeafSize;
+        var kids = new PdfIndirectReference[(names.Length + LeafSize - 1) / LeafSize];
+        for (var k = 0; k < kids.Length; ++k)
+        {
+            var offset = k * LeafSize;
+            var end = Math.Min(offset + LeafSize, names.Length);
+            var dic = new PdfDictionary();
+            var arr = new PdfArray();
+            arr.Add(new PdfString(names[offset], null));
+            arr.Add(new PdfString(names[end - 1], null));
+            dic.Put(PdfName.Limits, arr);
+            arr = new PdfArray();
+            for (; offset < end; ++offset)
+            {
+                arr.Add(new PdfString(names[offset], null));
+                arr.Add(items[names[offset]]);
+            }
+
+            dic.Put(PdfName.Names, arr);
+            kids[k] = writer.AddToBody(dic).IndirectReference;
+        }
+
+        var top = kids.Length;
+        while (true)
+        {
+            if (top <= LeafSize)
+            {
+                var arr = new PdfArray();
+                for (var k = 0; k < top; ++k)
                 {
-                    ar.Add(new PdfString(names[k], null));
-                    ar.Add((PdfObject)items[names[k]]);
+                    arr.Add(kids[k]);
                 }
-                dic.Put(PdfName.Names, ar);
+
+                var dic = new PdfDictionary();
+                dic.Put(PdfName.Kids, arr);
                 return dic;
             }
-            int skip = LeafSize;
-            PdfIndirectReference[] kids = new PdfIndirectReference[(names.Length + LeafSize - 1) / LeafSize];
-            for (int k = 0; k < kids.Length; ++k)
+
+            skip *= LeafSize;
+            var tt = (names.Length + skip - 1) / skip;
+            for (var k = 0; k < tt; ++k)
             {
-                int offset = k * LeafSize;
-                int end = Math.Min(offset + LeafSize, names.Length);
-                PdfDictionary dic = new PdfDictionary();
-                PdfArray arr = new PdfArray();
-                arr.Add(new PdfString(names[offset], null));
-                arr.Add(new PdfString(names[end - 1], null));
+                var offset = k * LeafSize;
+                var end = Math.Min(offset + LeafSize, top);
+                var dic = new PdfDictionary();
+                var arr = new PdfArray();
+                arr.Add(new PdfString(names[k * skip], null));
+                arr.Add(new PdfString(names[Math.Min((k + 1) * skip, names.Length) - 1], null));
                 dic.Put(PdfName.Limits, arr);
                 arr = new PdfArray();
                 for (; offset < end; ++offset)
                 {
-                    arr.Add(new PdfString(names[offset], null));
-                    arr.Add((PdfObject)items[names[offset]]);
+                    arr.Add(kids[offset]);
                 }
-                dic.Put(PdfName.Names, arr);
+
+                dic.Put(PdfName.Kids, arr);
                 kids[k] = writer.AddToBody(dic).IndirectReference;
             }
-            int top = kids.Length;
-            while (true)
+
+            top = tt;
+        }
+    }
+
+    private static void iterateItems(PdfDictionary dic, INullValueDictionary<string, PdfObject> items)
+    {
+        var nn = (PdfArray)PdfReader.GetPdfObjectRelease(dic.Get(PdfName.Names));
+        if (nn != null)
+        {
+            for (var k = 0; k < nn.Size; ++k)
             {
-                if (top <= LeafSize)
-                {
-                    PdfArray arr = new PdfArray();
-                    for (int k = 0; k < top; ++k)
-                        arr.Add(kids[k]);
-                    PdfDictionary dic = new PdfDictionary();
-                    dic.Put(PdfName.Kids, arr);
-                    return dic;
-                }
-                skip *= LeafSize;
-                int tt = (names.Length + skip - 1) / skip;
-                for (int k = 0; k < tt; ++k)
-                {
-                    int offset = k * LeafSize;
-                    int end = Math.Min(offset + LeafSize, top);
-                    PdfDictionary dic = new PdfDictionary();
-                    PdfArray arr = new PdfArray();
-                    arr.Add(new PdfString(names[k * skip], null));
-                    arr.Add(new PdfString(names[Math.Min((k + 1) * skip, names.Length) - 1], null));
-                    dic.Put(PdfName.Limits, arr);
-                    arr = new PdfArray();
-                    for (; offset < end; ++offset)
-                    {
-                        arr.Add(kids[offset]);
-                    }
-                    dic.Put(PdfName.Kids, arr);
-                    kids[k] = writer.AddToBody(dic).IndirectReference;
-                }
-                top = tt;
+                var s = (PdfString)PdfReader.GetPdfObjectRelease(nn[k++]);
+                items[PdfEncodings.ConvertToString(s.GetBytes(), null)] = nn[k];
             }
         }
-
-        private static void iterateItems(PdfDictionary dic, Hashtable items)
+        else if ((nn = (PdfArray)PdfReader.GetPdfObjectRelease(dic.Get(PdfName.Kids))) != null)
         {
-            PdfArray nn = (PdfArray)PdfReader.GetPdfObjectRelease(dic.Get(PdfName.Names));
-            if (nn != null)
+            for (var k = 0; k < nn.Size; ++k)
             {
-                for (int k = 0; k < nn.Size; ++k)
-                {
-                    PdfString s = (PdfString)PdfReader.GetPdfObjectRelease(nn[k++]);
-                    items[PdfEncodings.ConvertToString(s.GetBytes(), null)] = nn[k];
-                }
-            }
-            else if ((nn = (PdfArray)PdfReader.GetPdfObjectRelease(dic.Get(PdfName.Kids))) != null)
-            {
-                for (int k = 0; k < nn.Size; ++k)
-                {
-                    PdfDictionary kid = (PdfDictionary)PdfReader.GetPdfObjectRelease(nn[k]);
-                    iterateItems(kid, items);
-                }
+                var kid = (PdfDictionary)PdfReader.GetPdfObjectRelease(nn[k]);
+                iterateItems(kid, items);
             }
         }
     }

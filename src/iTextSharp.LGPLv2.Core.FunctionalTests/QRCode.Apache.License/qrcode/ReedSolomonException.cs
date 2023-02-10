@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.Serialization;
+
 /*
  * Copyright 2007 ZXing authors
  *
@@ -15,24 +17,24 @@ using System;
  * limitations under the License.
  */
 
-namespace iTextSharp.text.pdf.qrcode
+namespace iTextSharp.text.pdf.qrcode;
+
+/**
+ * <p>
+ *     Thrown when an exception occurs during Reed-Solomon decoding, such as when
+ *     there are too many errors to correct.
+ * </p>
+ * @author Sean Owen
+ */
+[Serializable]
+public class ReedSolomonException : Exception
 {
-
-    /**
-     * <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when
-     * there are too many errors to correct.</p>
-     *
-     * @author Sean Owen
-     */
-    [Serializable]
-    public class ReedSolomonException : Exception
+    public ReedSolomonException(string message)
+        : base(message)
     {
+    }
 
-        public ReedSolomonException(String message)
-            : base(message)
-        {
-        }
-
-        protected ReedSolomonException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    protected ReedSolomonException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

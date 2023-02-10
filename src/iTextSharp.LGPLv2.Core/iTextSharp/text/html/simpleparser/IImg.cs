@@ -1,9 +1,8 @@
-using System.Collections;
+using System.util;
 
-namespace iTextSharp.text.html.simpleparser
+namespace iTextSharp.text.html.simpleparser;
+
+public interface IImg
 {
-    public interface IImg
-    {
-        bool Process(Image img, Hashtable h, ChainedProperties cprops, IDocListener doc);
-    }
+    bool Process(Image img, INullValueDictionary<string, string> h, ChainedProperties cprops, IDocListener doc);
 }

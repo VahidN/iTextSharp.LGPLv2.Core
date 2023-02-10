@@ -22,6 +22,24 @@ PM> Install-Package iTextSharp.LGPLv2.Core
 You can also view the [package page](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/) on NuGet.
 
 
+## Linux (and containers) support
+
+The `SkiaSharp` library needs extra dependencies to work on Linux and containers. Please install the following NuGet packages:
+
+```
+PM> Install-Package SkiaSharp.NativeAssets.Linux.NoDependencies
+PM> Install-Package HarfBuzzSharp.NativeAssets.Linux
+```
+
+You also need to modify your `.csproj` file to include some MSBuild directives that ensure the required files are in a good place. These extra steps are normally not required but seems to be some issues on how .NET loads them.
+
+```xml
+<Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
+    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />
+    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libHarfBuzzSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />    
+</Target>
+```
+
 Usage
 ------
 [Functional Tests](/src/iTextSharp.LGPLv2.Core.FunctionalTests)
@@ -48,45 +66,6 @@ FAQ
  > iTextSharp.text.html.simpleparser.HTMLWorker does not exist.
 
  It has been renamed to [HtmlWorker](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/HtmlWorkerTests.cs#L42).
-
-Note
------------------
-To run this project on non-Windows-based operating systems, you will need to install `libgdiplus` too:
-- Ubuntu 16.04 and above:
-	- apt-get install libgdiplus
-	- cd /usr/lib
-	- ln -s libgdiplus.so gdiplus.dll
-- Fedora 23 and above:
-	- dnf install libgdiplus
-	- cd /usr/lib64/
-	- ln -s libgdiplus.so.0 gdiplus.dll
-- CentOS 7 and above:
-	- yum install autoconf automake libtool
-	- yum install freetype-devel fontconfig libXft-devel
-	- yum install libjpeg-turbo-devel libpng-devel giflib-devel libtiff-devel libexif-devel
-	- yum install glib2-devel cairo-devel
-	- git clone https://github.com/mono/libgdiplus
-	- cd libgdiplus
-	- ./autogen.sh
-	- make
-	- make install
-	- cd /usr/lib64/
-	- ln -s /usr/local/lib/libgdiplus.so libgdiplus.so
-- Docker
-	- RUN apt-get update \\
-
-      && apt-get install -y libgdiplus
-- MacOS
-	- brew install mono-libgdiplus
-
-      After installing the [Mono MDK](http://www.mono-project.com/download/#download-mac), Copy Mono MDK Files:
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.0.dylib
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.0.dylib.dSYM
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.dylib
-	   - /Library/Frameworks/Mono.framework/Versions/4.6.2/lib/libgdiplus.la
-
-      And paste them to: /usr/local/lib
-
 
 Licensing
 ---------

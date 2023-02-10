@@ -6,116 +6,98 @@ using iTextSharp.text;
 using iTextSharp.text.exceptions;
 using iTextSharp.text.pdf;
 
-namespace iTextSharp.LGPLv2.Core.FunctionalTests
+namespace iTextSharp.LGPLv2.Core.FunctionalTests;
+
+public static class TestUtils
 {
-    public static class TestUtils
+    private const string ITextExamplesFolder = "iTextExamples";
+    private const string ResourcesFolder = "resources";
+
+    public static string Author => "VahidN";
+
+    public static string GetBaseDir()
     {
-        const string ITextExamplesFolder = "iTextExamples";
-        const string ResourcesFolder = "resources";
+        var currentAssembly = typeof(TestUtils).GetTypeInfo().Assembly;
+        var root = Path.GetDirectoryName(currentAssembly.Location);
+        var idx = root.IndexOf($"{Path.DirectorySeparatorChar}bin", StringComparison.OrdinalIgnoreCase);
+        return root.Substring(0, idx);
+    }
 
-        public static string Author => "VahidN";
+    public static string GetImagePath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "img", fileName);
 
-        public static string GetBaseDir()
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static string GetOutputFileName([CallerMemberName] string methodName = null) =>
+        Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
+
+    public static string GetOutputFolder()
+    {
+        var dir = Path.Combine(GetBaseDir(), "bin", "out");
+        if (!Directory.Exists(dir))
         {
-            var currentAssembly = typeof(TestUtils).GetTypeInfo().Assembly;
-            var root = Path.GetDirectoryName(currentAssembly.Location);
-            var idx = root.IndexOf($"{Path.DirectorySeparatorChar}bin", StringComparison.OrdinalIgnoreCase);
-            return root.Substring(0, idx);
+            Directory.CreateDirectory(dir);
         }
 
-        public static string GetImagePath(string fileName)
-        {
+        return dir;
+    }
 
-            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "img", fileName);
+    public static string GetPosterPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "posters", fileName);
+
+    public static string GetFontPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", fileName);
+
+    public static string GetTahomaFontPath() => GetFontPath("tahoma.ttf");
+
+    public static string GetArialUnicodeMSFontPath() => GetFontPath("arialuni.ttf");
+
+    public static string GetSimSunFontPath() => GetFontPath("simsun.ttf");
+
+    public static string GetThaiFontPath() => GetFontPath("thsarabunnew.ttf");
+
+    public static string GetTxtPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
+
+    public static string GetPfxPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pfx", fileName);
+
+    public static string GetPdfsPath(string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
+
+    public static string GetIssuePdfsPath(string issueFolder, string fileName) =>
+        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", issueFolder, fileName);
+
+    public static Font GetUnicodeFont(
+        string fontName, string fontFilePath, float size, int style, BaseColor color)
+    {
+        if (!FontFactory.IsRegistered(fontName))
+        {
+            FontFactory.Register(fontFilePath);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static string GetOutputFileName([CallerMemberName] string methodName = null)
-        {
-            return Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
-        }
+        return FontFactory.GetFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, size, style, color);
+    }
 
-        public static string GetOutputFolder()
+    public static void VerifyPdfFileIsReadable(byte[] file)
+    {
+        PdfReader reader = null;
+        try
         {
-            var dir = Path.Combine(GetBaseDir(), "bin", "out");
-            if (!Directory.Exists(dir))
+            reader = new PdfReader(file);
+            var author = reader.Info["Author"];
+            if (string.IsNullOrWhiteSpace(author) || !author.Equals(Author))
             {
-                Directory.CreateDirectory(dir);
-            }
-            return dir;
-        }
-
-        public static string GetPosterPath(string fileName)
-        {
-            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "posters", fileName);
-        }
-
-        public static string GetFontPath(string fileName)
-        {
-            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", fileName);
-        }
-
-        public static string GetTahomaFontPath()
-        {
-            return GetFontPath("tahoma.ttf");
-        }
-
-        public static string GetArialUnicodeMSFontPath()
-        {
-            return GetFontPath("arialuni.ttf");
-        }
-
-        public static string GetSimSunFontPath()
-        {
-            return GetFontPath("simsun.ttf");
-        }
-
-        public static string GetThaiFontPath()
-        {
-            return GetFontPath("thsarabunnew.ttf");
-        }
-
-        public static string GetTxtPath(string fileName)
-        {
-            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
-        }
-
-        public static string GetPdfsPath(string fileName)
-        {
-            return Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
-        }
-
-        public static Font GetUnicodeFont(
-                    string fontName, string fontFilePath, float size, int style, BaseColor color)
-        {
-            if (!FontFactory.IsRegistered(fontName))
-            {
-                FontFactory.Register(fontFilePath);
-            }
-            return FontFactory.GetFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, size, style, color);
-        }
-
-        public static void VerifyPdfFileIsReadable(byte[] file)
-        {
-            PdfReader reader = null;
-            try
-            {
-                reader = new PdfReader(file);
-                var author = reader.Info["Author"] as string;
-                if (string.IsNullOrWhiteSpace(author) || !author.Equals(Author))
-                {
-                    throw new InvalidPdfException("This is not a valid PDF file.");
-                }
-            }
-            finally
-            {
-                reader?.Close();
+                throw new InvalidPdfException("This is not a valid PDF file.");
             }
         }
-
-        public static void VerifyPdfFileIsReadable(string filePath)
+        finally
         {
-            VerifyPdfFileIsReadable(File.ReadAllBytes(filePath));
+            reader?.Close();
         }
+    }
+
+    public static void VerifyPdfFileIsReadable(string filePath)
+    {
+        VerifyPdfFileIsReadable(File.ReadAllBytes(filePath));
     }
 }

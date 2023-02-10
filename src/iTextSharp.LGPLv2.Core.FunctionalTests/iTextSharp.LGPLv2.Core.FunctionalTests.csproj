@@ -1,25 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <VersionPrefix>1.0.0.0</VersionPrefix>
-    <LangVersion>latest</LangVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>iTextSharp.LGPLv2.Core.FunctionalTests</AssemblyName>
-    <PackageId>iTextSharp.LGPLv2.Core.FunctionalTests</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\iTextSharp.LGPLv2.Core\iTextSharp.LGPLv2.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
+    <PropertyGroup>
+        <VersionPrefix>1.0.0.0</VersionPrefix>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>iTextSharp.LGPLv2.Core.FunctionalTests</AssemblyName>
+        <PackageId>iTextSharp.LGPLv2.Core.FunctionalTests</PackageId>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\iTextSharp.LGPLv2.Core\iTextSharp.LGPLv2.Core.csproj"/>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="3.0.0"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}"/>
+    </ItemGroup>
 </Project>

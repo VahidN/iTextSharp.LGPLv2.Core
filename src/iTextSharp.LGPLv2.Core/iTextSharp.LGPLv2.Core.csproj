@@ -1,74 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Description> iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-    <VersionPrefix>1.7.1</VersionPrefix>
-    <LangVersion>latest</LangVersion>
-    <Authors>Fiftytwo A/S</Authors>
-    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3;netstandard2.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
-    <PackageId>OneTooX.iTextSharp</PackageId>
-    <PackageTags>OneTooX;iTextSharp;PDF;.NET Core;aspnetcore</PackageTags>
-    <PackageProjectUrl>https://github.com/OneTooX/iTextSharp.LGPLv2.Core</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html</PackageLicenseUrl>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <Version>1.0.0</Version>
-  </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PlatformTarget>anycpu</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
-  </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <DefineConstants>NETSTANDARD1_3</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
-  </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
-  </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <DefineConstants>NET40</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
+        <VersionPrefix>3.3.2</VersionPrefix>
+        <LangVersion>latest</LangVersion>
+        <Authors>Vahid Nasiri</Authors>
+        <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
+        <PackageId>iTextSharp.LGPLv2.Core</PackageId>
+        <PackageTags>PdfReport;Excel;Export;iTextSharp;PDF;Report;Reporting;Persian;.NET Core;aspnetcore</PackageTags>
+        <PackageProjectUrl>https://github.com/VahidN/iTextSharp.LGPLv2.Core</PackageProjectUrl>
+        <PackageLicenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html</PackageLicenseUrl>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+        <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+        <DebugType>embedded</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt"/>
+        <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)"/>
+    </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <PlatformTarget>anycpu</PlatformTarget>
+    </PropertyGroup>
+    <ItemGroup>
+        <Using Include="System.Globalization"/>
+        <Using Include="System.IO"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" Version="2.88.3"/>
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.0.0"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    </ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+        <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0"/>
+        <PackageReference Include="System.Net.Requests" Version="4.3.0"/>
+        <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0"/>
+        <PackageReference Include="System.Runtime.Loader" Version="4.3.0"/>
+        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1"/>
+        <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1"/>
+        <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0"/>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0"/>
+    </ItemGroup>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <DefineConstants>NETSTANDARD2_0</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+        <DefineConstants>NET40</DefineConstants>
+    </PropertyGroup>
 </Project>

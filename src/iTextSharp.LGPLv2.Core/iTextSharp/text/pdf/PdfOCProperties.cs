@@ -1,9 +1,7 @@
-namespace iTextSharp.text.pdf
+namespace iTextSharp.text.pdf;
+
+/// <summary>
+/// </summary>
+public class PdfOcProperties : PdfDictionary
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class PdfOcProperties : PdfDictionary
-    {
-    }
 }

@@ -1,9 +1,8 @@
-using System.Collections;
+using System.util;
 
-namespace iTextSharp.text.html.simpleparser
+namespace iTextSharp.text.html.simpleparser;
+
+public interface IImageProvider
 {
-    public interface IImageProvider
-    {
-        Image GetImage(string src, Hashtable h, ChainedProperties cprops, IDocListener doc);
-    }
+    Image GetImage(string src, INullValueDictionary<string, string> h, ChainedProperties cprops, IDocListener doc);
 }
