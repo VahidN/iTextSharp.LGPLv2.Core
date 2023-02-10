@@ -1,4 +1,4 @@
-using System.util;
+﻿using System.util;
 
 namespace iTextSharp.text.pdf;
 
@@ -180,7 +180,7 @@ public class PdfPages
                 }
                 else
                 {
-                    top.Put(PdfName.Itxt, new PdfString(Document.Release));
+                    //top.Put(PdfName.Itxt, new PdfString(Document.Release));
                 }
 
                 _writer.AddToBody(top, tParents[p]);
