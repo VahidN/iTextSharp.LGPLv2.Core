@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.3.2</VersionPrefix>
+        <VersionPrefix>3.3.3</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
         <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>

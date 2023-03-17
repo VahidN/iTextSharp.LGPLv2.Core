@@ -918,6 +918,13 @@ public class PdfStamperImp : PdfWriter
         SetOutlines();
         SetJavaScript();
         addFileAttachments();
+
+        // [C11] Output Intents
+        if (extraCatalog != null)
+        {
+            catalog.MergeDifferent(extraCatalog);
+        }
+
         if (OpenAction != null)
         {
             catalog.Put(PdfName.Openaction, OpenAction);
