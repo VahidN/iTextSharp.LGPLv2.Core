@@ -27,7 +27,8 @@ public class PdfDate : PdfString
         //d = d.ToUniversalTime();
 
         Value = d.ToString("\\D\\:yyyyMMddHHmmss", DateTimeFormatInfo.InvariantInfo);
-        var timezone = d.ToString("zzz", DateTimeFormatInfo.InvariantInfo);
+        // bug fix for .NET Framework - see https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#zzzSpecifier
+        var timezone = d.Kind == DateTimeKind.Utc ? "+00:00" : d.ToString("zzz", DateTimeFormatInfo.InvariantInfo);
         timezone = timezone.Replace(":", "'");
         Value += timezone + "'";
     }
