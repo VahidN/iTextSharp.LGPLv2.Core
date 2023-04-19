@@ -37,8 +37,14 @@ public class PdfSmartCopy : PdfCopy
     protected override PdfIndirectReference CopyIndirect(PrIndirectReference inp)
     {
         var srcObj = PdfReader.GetPdfObjectRelease(inp);
+        if (srcObj == null)
+        {
+            return null;
+        }
+
         ByteStore streamKey = null;
         var validStream = false;
+
         if (srcObj.IsStream())
         {
             streamKey = new ByteStore((PrStream)srcObj);

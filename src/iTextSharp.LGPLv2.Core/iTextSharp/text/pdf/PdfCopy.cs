@@ -376,7 +376,8 @@ public class PdfCopy : PdfWriter
             case PdfObject.DICTIONARY:
                 return CopyDictionary((PdfDictionary)inp);
             case PdfObject.INDIRECT:
-                return CopyIndirect((PrIndirectReference)inp);
+                PdfObject obj = CopyIndirect((PrIndirectReference)inp);
+                return obj ?? PdfNull.Pdfnull;
             case PdfObject.ARRAY:
                 return CopyArray((PdfArray)inp);
             case PdfObject.NUMBER:
