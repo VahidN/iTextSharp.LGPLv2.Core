@@ -45,9 +45,9 @@ public class PdfSmartCopy : PdfCopy
         ByteStore streamKey = null;
         var validStream = false;
 
-        if (srcObj.IsStream())
+        if (srcObj.IsStream() || srcObj.IsDictionary())
         {
-            streamKey = new ByteStore((PrStream)srcObj);
+            streamKey = new ByteStore(srcObj);
             validStream = true;
             var streamRef = _streamMap[streamKey];
             if (streamRef != null)
@@ -74,7 +74,7 @@ public class PdfSmartCopy : PdfCopy
             Indirects[key] = iRef;
         }
 
-        if (srcObj != null && srcObj.IsDictionary())
+        if (srcObj.IsDictionary())
         {
             var type = PdfReader.GetPdfObjectRelease(((PdfDictionary)srcObj).Get(PdfName.TYPE));
             if (type != null && PdfName.Page.Equals(type))
@@ -99,7 +99,7 @@ public class PdfSmartCopy : PdfCopy
     {
         private readonly byte[] _b;
 
-        internal ByteStore(PrStream str)
+        internal ByteStore(PdfObject str)
         {
             var bb = new ByteBuffer();
             var level = 100;
@@ -109,17 +109,17 @@ public class PdfSmartCopy : PdfCopy
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is ByteStore))
+            if (obj is not ByteStore store)
             {
                 return false;
             }
 
-            if (GetHashCode() != obj.GetHashCode())
+            if (GetHashCode() != store.GetHashCode())
             {
                 return false;
             }
 
-            var b2 = ((ByteStore)obj)._b;
+            var b2 = store._b;
             if (b2.Length != _b.Length)
             {
                 return false;
