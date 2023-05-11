@@ -367,6 +367,11 @@ public abstract class BaseField
     /// <param name="to">the destination. It may be  null </param>
     public static void MoveFields(PdfDictionary from, PdfDictionary to)
     {
+        if (from == null)
+        {
+            throw new ArgumentNullException(nameof(from));
+        }
+
         var keys = new PdfName[from.Size];
         foreach (var key in keys)
         {
@@ -389,11 +394,26 @@ public abstract class BaseField
     /// <param name="page">the page</param>
     public void SetRotationFromPage(Rectangle page)
     {
+        if (page == null)
+        {
+            throw new ArgumentNullException(nameof(page));
+        }
+
         Rotation = page.Rotation;
     }
 
     protected static IList<string> BreakLines(List<string> breaks, BaseFont font, float fontSize, float width)
     {
+        if (breaks == null)
+        {
+            throw new ArgumentNullException(nameof(breaks));
+        }
+
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         List<string> lines = new();
         var buf = new StringBuilder();
         for (var ck = 0; ck < breaks.Count; ++ck)
@@ -507,6 +527,11 @@ public abstract class BaseField
 
     protected static IList<string> GetHardBreaks(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         List<string> arr = new();
         var cs = text.ToCharArray();
         var len = cs.Length;
@@ -541,6 +566,11 @@ public abstract class BaseField
 
     protected static void TrimRight(StringBuilder buf)
     {
+        if (buf == null)
+        {
+            throw new ArgumentNullException(nameof(buf));
+        }
+
         var len = buf.Length;
         while (true)
         {

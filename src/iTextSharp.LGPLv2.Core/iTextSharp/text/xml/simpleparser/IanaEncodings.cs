@@ -7,7 +7,7 @@ namespace iTextSharp.text.xml.simpleparser;
 /// <summary>
 ///     Translates a IANA encoding name to a Java encoding.
 /// </summary>
-public class IanaEncodings
+public static class IanaEncodings
 {
     /// <summary>
     ///     The object that maps IANA to Java encodings.
@@ -461,6 +461,11 @@ public class IanaEncodings
 
     public static int GetEncodingNumber(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         object n = _map[name.ToUpper(CultureInfo.InvariantCulture)];
         if (n == null)
         {
@@ -472,32 +477,37 @@ public class IanaEncodings
 
     public static Encoding GetEncodingEncoding(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var nameU = name.ToUpper(CultureInfo.InvariantCulture);
-        if (nameU.Equals("UNICODEBIGUNMARKED"))
+        if (nameU.Equals("UNICODEBIGUNMARKED", StringComparison.Ordinal))
         {
             return new UnicodeEncoding(true, false);
         }
 
-        if (nameU.Equals("UNICODEBIG"))
+        if (nameU.Equals("UNICODEBIG", StringComparison.Ordinal))
         {
             return new UnicodeEncoding(true, true);
         }
 
-        if (nameU.Equals("UNICODELITTLEUNMARKED"))
+        if (nameU.Equals("UNICODELITTLEUNMARKED", StringComparison.Ordinal))
         {
             return new UnicodeEncoding(false, false);
         }
 
-        if (nameU.Equals("UNICODELITTLE"))
+        if (nameU.Equals("UNICODELITTLE", StringComparison.Ordinal))
         {
             return new UnicodeEncoding(false, true);
         }
 
-        if (_map.ContainsKey(nameU))
+        if (_map.TryGetValue(nameU, out var value))
         {
-            return EncodingsRegistry.Instance.GetEncoding(_map[nameU]);
+            return EncodingsRegistry.GetEncoding(value);
         }
 
-        return EncodingsRegistry.Instance.GetEncoding(name);
+        return EncodingsRegistry.GetEncoding(name);
     }
 }

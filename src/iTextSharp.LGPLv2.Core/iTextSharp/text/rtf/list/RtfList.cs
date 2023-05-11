@@ -180,6 +180,15 @@ public class RtfList : RtfElement, IRtfExtendedElement
     /// <param name="list">The List this RtfList is based on</param>
     public RtfList(RtfDocument doc, List list) : base(doc)
     {
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
+        }
+
+        if (list == null)
+        {
+            throw new ArgumentNullException(nameof(list));
+        }
         // setup the listlevels
         // Then, setup the list data below
 
@@ -289,7 +298,8 @@ public class RtfList : RtfElement, IRtfExtendedElement
 
                     ll.SetFontNumber(new RtfFont(Document,
                                                  new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, new BaseColor(0, 0, 0))));
-                    if (list.Symbol != null && list.Symbol.Font != null && !list.Symbol.Content.StartsWith("-") &&
+                    if (list.Symbol != null && list.Symbol.Font != null &&
+                        !list.Symbol.Content.StartsWith("-", StringComparison.Ordinal) &&
                         list.Symbol.Content.Length > 0)
                     {
                         // only set this to bullet symbol is not default
@@ -353,11 +363,16 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     Writes the content of the RtfList
     ///     @since 2.1.3
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         if (!InTable)
         {
-            result.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(OpenGroup, 0, OpenGroup.Length);
         }
 
         var itemNr = 0;
@@ -379,36 +394,36 @@ public class RtfList : RtfElement, IRtfExtendedElement
 
                     if (i == 0)
                     {
-                        listLevel.WriteListBeginning(result);
-                        WriteListNumbers(result);
+                        listLevel.WriteListBeginning(outp);
+                        WriteListNumbers(outp);
                     }
 
-                    WriteListTextBlock(result, itemNr, listLevel);
+                    WriteListTextBlock(outp, itemNr, listLevel);
 
-                    rtfElement.WriteContent(result);
+                    rtfElement.WriteContent(outp);
 
                     if (i < _items.Count - 1 || !InTable || listLevel.GetListType() > 0)
                     {
                         // TODO Fix no paragraph on last list item in tables
-                        result.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+                        outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
                     }
 
-                    Document.OutputDebugLinebreak(result);
+                    Document.OutputDebugLinebreak(outp);
                 }
                 else if (thisRtfElement is RtfList)
                 {
-                    ((RtfList)thisRtfElement).WriteContent(result);
+                    ((RtfList)thisRtfElement).WriteContent(outp);
                     //              ((RtfList)thisRtfElement).WriteListBeginning(result);
-                    WriteListNumbers(result);
-                    Document.OutputDebugLinebreak(result);
+                    WriteListNumbers(outp);
+                    Document.OutputDebugLinebreak(outp);
                 }
             }
         }
 
         if (!InTable)
         {
-            result.Write(CloseGroup, 0, CloseGroup.Length);
-            result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+            outp.Write(CloseGroup, 0, CloseGroup.Length);
+            outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
         }
     }
 
@@ -417,14 +432,19 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     @throws IOException
     ///     @since 2.1.3
     /// </summary>
-    /// <param name="result"></param>
-    public void WriteDefinition(Stream result)
+    /// <param name="outp"></param>
+    public void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_list, 0, _list.Length);
-        result.Write(_listTemplateId, 0, _listTemplateId.Length);
-        result.Write(t = IntToByteArray(Document.GetRandomInt()), 0, t.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_list, 0, _list.Length);
+        outp.Write(_listTemplateId, 0, _listTemplateId.Length);
+        outp.Write(t = IntToByteArray(Document.GetRandomInt()), 0, t.Length);
 
         var levelsToWrite = -1;
 
@@ -434,17 +454,17 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 levelsToWrite = _listLevels.Count;
                 break;
             case LIST_TYPE_SIMPLE:
-                result.Write(_listSimple, 0, _listSimple.Length);
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(_listSimple, 0, _listSimple.Length);
+                outp.Write(t = IntToByteArray(1), 0, t.Length);
                 levelsToWrite = 1;
                 break;
             case LIST_TYPE_HYBRID:
-                result.Write(_listHybrid, 0, _listHybrid.Length);
+                outp.Write(_listHybrid, 0, _listHybrid.Length);
                 levelsToWrite = _listLevels.Count;
                 break;
         }
 
-        Document.OutputDebugLinebreak(result);
+        Document.OutputDebugLinebreak(outp);
 
         // TODO: Figure out hybrid because multi-level hybrid does not work.
         // Seems hybrid is mixed type all single level - Simple = single level
@@ -460,14 +480,14 @@ public class RtfList : RtfElement, IRtfExtendedElement
         // write the listlevels here
         for (var i = 0; i < levelsToWrite; i++)
         {
-            _listLevels[i].WriteDefinition(result);
-            Document.OutputDebugLinebreak(result);
+            _listLevels[i].WriteDefinition(outp);
+            Document.OutputDebugLinebreak(outp);
         }
 
-        result.Write(ListId, 0, ListId.Length);
-        result.Write(t = IntToByteArray(_listId), 0, t.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(ListId, 0, ListId.Length);
+        outp.Write(t = IntToByteArray(_listId), 0, t.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
         if (_items != null)
         {
             for (var i = 0; i < _items.Count; i++)
@@ -476,14 +496,14 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 if (rtfElement is RtfList)
                 {
                     var rl = (RtfList)rtfElement;
-                    rl.WriteDefinition(result);
+                    rl.WriteDefinition(outp);
                     break;
                 }
 
                 if (rtfElement is RtfListItem)
                 {
                     var rli = (RtfListItem)rtfElement;
-                    if (rli.WriteDefinition(result))
+                    if (rli.WriteDefinition(outp))
                     {
                         break;
                     }
@@ -665,6 +685,11 @@ public class RtfList : RtfElement, IRtfExtendedElement
     /// <param name="result">The  Stream  to write to</param>
     protected void WriteListNumbers(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         result.Write(ListNumber, 0, ListNumber.Length);
         result.Write(t = IntToByteArray(_listNumber), 0, t.Length);
@@ -679,6 +704,16 @@ public class RtfList : RtfElement, IRtfExtendedElement
     /// <param name="listLevel"></param>
     protected void WriteListTextBlock(Stream result, int itemNr, RtfListLevel listLevel)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
+        if (listLevel == null)
+        {
+            throw new ArgumentNullException(nameof(listLevel));
+        }
+
         byte[] t;
         result.Write(OpenGroup, 0, OpenGroup.Length);
         result.Write(ListText, 0, ListText.Length);

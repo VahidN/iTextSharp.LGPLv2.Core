@@ -19,6 +19,8 @@ public sealed class RtfDestinationMgr
     /// </summary>
     public const string DESTINATION_NULL = "null";
 
+    private const bool _ignoreUnknownDestinations = false;
+
     /// <summary>
     ///     Destination objects.
     ///     There is only one of each destination.
@@ -36,8 +38,6 @@ public sealed class RtfDestinationMgr
     private static readonly INullValueDictionary<string, RtfDestination> _destinations =
         new NullValueDictionary<string, RtfDestination>();
 
-    private static readonly bool _ignoreUnknownDestinations = false;
-
     /// <summary>
     ///     Destinations
     /// </summary>
@@ -54,6 +54,11 @@ public sealed class RtfDestinationMgr
 
     public static bool AddDestination(string destination, object[] args)
     {
+        if (args == null)
+        {
+            throw new ArgumentNullException(nameof(args));
+        }
+
         if (_destinations.ContainsKey(destination))
         {
             return true;
@@ -130,7 +135,7 @@ public sealed class RtfDestinationMgr
         var dest = GetDestination(destination);
         if (dest != null)
         {
-            return dest.AddListener(listener);
+            return RtfDestination.AddListener(listener);
         }
 
         return false;
@@ -145,14 +150,7 @@ public sealed class RtfDestinationMgr
         }
         else
         {
-            if (_ignoreUnknownDestinations)
-            {
-                dest = _destinations[DESTINATION_NULL];
-            }
-            else
-            {
-                dest = _destinations[DESTINATION_DOCUMENT];
-            }
+            dest = _destinations[DESTINATION_DOCUMENT];
         }
 
         dest.SetParser(_rtfParser);
@@ -206,7 +204,7 @@ public sealed class RtfDestinationMgr
         var dest = GetDestination(destination);
         if (dest != null)
         {
-            return dest.RemoveListener(listener);
+            return RtfDestination.RemoveListener(listener);
         }
 
         return false;

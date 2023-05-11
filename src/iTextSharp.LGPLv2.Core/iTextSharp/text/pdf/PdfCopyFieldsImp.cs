@@ -7,11 +7,11 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 internal class PdfCopyFieldsImp : PdfWriter
 {
+    private const int _zero = 0;
     protected internal static INullValueDictionary<PdfName, int> FieldKeys = new NullValueDictionary<PdfName, int>();
     protected internal static INullValueDictionary<PdfName, int> WidgetKeys = new NullValueDictionary<PdfName, int>();
 
     private static readonly PdfName _iTextTag = new("_iTextTag_");
-    private static readonly int _zero = 0;
     private readonly List<string> _calculationOrder = new();
     private List<object> _calculationOrderRefs;
     private bool _closing;
@@ -25,16 +25,18 @@ internal class PdfCopyFieldsImp : PdfWriter
     internal List<PdfDictionary> PageDics = new();
     internal List<PdfIndirectReference> PageRefs = new();
 
-    internal INullValueDictionary<PdfReader, IntHashtable> Pages2Intrefs =
-        new NullValueDictionary<PdfReader, IntHashtable>();
+    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Pages2Intrefs =
+        new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     internal List<PdfReader> Readers = new();
 
-    internal INullValueDictionary<PdfReader, IntHashtable> Readers2Intrefs =
-        new NullValueDictionary<PdfReader, IntHashtable>();
+    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
+        new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     internal PdfDictionary Resources = new();
-    internal INullValueDictionary<PdfReader, IntHashtable> Visited = new NullValueDictionary<PdfReader, IntHashtable>();
+
+    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Visited =
+        new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     static PdfCopyFieldsImp()
     {
@@ -154,10 +156,10 @@ internal class PdfCopyFieldsImp : PdfWriter
         }
 
         reader.ShuffleSubsetNames();
-        Readers2Intrefs[reader] = new IntHashtable();
+        Readers2Intrefs[reader] = new NullValueDictionary<int, int>();
         Readers.Add(reader);
         var len = reader.NumberOfPages;
-        var refs = new IntHashtable();
+        var refs = new NullValueDictionary<int, int>();
         for (var p = 1; p <= len; ++p)
         {
             refs[reader.GetPageOrigRef(p).Number] = 1;
@@ -165,12 +167,12 @@ internal class PdfCopyFieldsImp : PdfWriter
         }
 
         Pages2Intrefs[reader] = refs;
-        Visited[reader] = new IntHashtable();
+        Visited[reader] = new NullValueDictionary<int, int>();
         Fields.Add(reader.AcroFields);
         UpdateCalculationOrder(reader);
     }
 
-    internal void AddPageOffsetToField(INullValueDictionary<string, AcroFields.Item> fd, int pageOffset)
+    internal static void AddPageOffsetToField(INullValueDictionary<string, AcroFields.Item> fd, int pageOffset)
     {
         if (pageOffset == 0)
         {
@@ -421,7 +423,7 @@ internal class PdfCopyFieldsImp : PdfWriter
             }
             case PdfObject.INDIRECT:
             {
-                throw new Exception("Reference pointing to reference.");
+                throw new InvalidOperationException("Reference pointing to reference.");
             }
         }
     }
@@ -661,7 +663,7 @@ internal class PdfCopyFieldsImp : PdfWriter
                 File.ReOpen();
                 var t = entry.Value;
                 var keys = t.ToOrderedKeys();
-                for (var k = 0; k < keys.Length; ++k)
+                for (var k = 0; k < keys.Count; ++k)
                 {
                     var refi = new PrIndirectReference(reader, keys[k]);
                     AddToBody(PdfReader.GetPdfObjectRelease(refi), t[keys[k]]);
@@ -755,7 +757,7 @@ internal class PdfCopyFieldsImp : PdfWriter
             refi = (PrIndirectReference)dic.Get(PdfName.Parent);
         }
 
-        if (name.EndsWith("."))
+        if (name.EndsWith(".", StringComparison.Ordinal))
         {
             name = name.Substring(0, name.Length - 1);
         }

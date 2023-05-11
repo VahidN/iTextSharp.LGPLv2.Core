@@ -80,6 +80,11 @@ public class PrAcroForm : PdfDictionary
     /// <param name="title">the pathname of the field, up to this point or null</param>
     protected void IterateFields(PdfArray fieldlist, PrIndirectReference fieldDict, string title)
     {
+        if (fieldlist == null)
+        {
+            throw new ArgumentNullException(nameof(fieldlist));
+        }
+
         foreach (PrIndirectReference refi in fieldlist.ArrayList)
         {
             var dict = (PdfDictionary)PdfReader.GetPdfObjectRelease(refi);
@@ -136,8 +141,13 @@ public class PrAcroForm : PdfDictionary
     /// <param name="parent">one dictionary</param>
     /// <param name="child">the other dictionary</param>
     /// <returns>a merged dictionary</returns>
-    protected PdfDictionary MergeAttrib(PdfDictionary parent, PdfDictionary child)
+    protected static PdfDictionary MergeAttrib(PdfDictionary parent, PdfDictionary child)
     {
+        if (child == null)
+        {
+            throw new ArgumentNullException(nameof(child));
+        }
+
         var targ = new PdfDictionary();
         if (parent != null)
         {

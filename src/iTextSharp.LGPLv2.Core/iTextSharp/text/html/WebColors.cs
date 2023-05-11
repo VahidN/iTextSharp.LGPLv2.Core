@@ -168,8 +168,13 @@ public class WebColors : NullValueDictionary<string, int[]>
     /// <returns>the corresponding Color object</returns>
     public static BaseColor GetRgbColor(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         int[] c = { 0, 0, 0, 0 };
-        if (name.StartsWith("#"))
+        if (name.StartsWith("#", StringComparison.OrdinalIgnoreCase))
         {
             if (name.Length == 4)
             {
@@ -191,13 +196,13 @@ public class WebColors : NullValueDictionary<string, int[]>
                                         "Unknown color format. Must be #RGB or #RRGGBB");
         }
 
-        if (name.StartsWith("rgb("))
+        if (name.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
         {
             var tok = new StringTokenizer(name, "rgb(), \t\r\n\f");
             for (var k = 0; k < 3; ++k)
             {
                 var v = tok.NextToken();
-                if (v.EndsWith("%"))
+                if (v.EndsWith("%", StringComparison.OrdinalIgnoreCase))
                 {
                     c[k] = int.Parse(v.Substring(0, v.Length - 1), CultureInfo.InvariantCulture) * 255 / 100;
                 }

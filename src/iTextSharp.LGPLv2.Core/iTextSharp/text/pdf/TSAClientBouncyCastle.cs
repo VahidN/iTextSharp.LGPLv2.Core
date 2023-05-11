@@ -117,7 +117,7 @@ public class TsaClientBouncyCastle : ITsaClient
         if (value != 0)
         {
             // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
-            throw new Exception($"Invalid TSA \'{TsaUrl}\' response, code {value}");
+            throw new InvalidOperationException($"Invalid TSA \'{TsaUrl}\' response, code {value}");
         }
         // @todo: validate the time stap certificate chain (if we want
         //        assure we do not sign using an invalid timestamp).
@@ -126,7 +126,8 @@ public class TsaClientBouncyCastle : ITsaClient
         var tsToken = response.TimeStampToken;
         if (tsToken == null)
         {
-            throw new Exception($"TSA \'{TsaUrl}\' failed to return time stamp token: {response.GetStatusString()}");
+            throw new
+                InvalidOperationException($"TSA \'{TsaUrl}\' failed to return time stamp token: {response.GetStatusString()}");
         }
 
         var info = tsToken.TimeStampInfo; // to view details
@@ -143,10 +144,15 @@ public class TsaClientBouncyCastle : ITsaClient
     /// <returns>- byte[] - TSA response, raw bytes (RFC 3161 encoded)</returns>
     protected internal virtual byte[] GetTsaResponse(byte[] requestBytes)
     {
+        if (requestBytes == null)
+        {
+            throw new ArgumentNullException(nameof(requestBytes));
+        }
+
         var con = (HttpWebRequest)WebRequest.Create(TsaUrl);
         con.ContentType = "application/timestamp-query";
         con.Method = "POST";
-        if (TsaUsername != null && !TsaUsername.Equals(""))
+        if (!string.IsNullOrEmpty(TsaUsername))
         {
             var authInfo = TsaUsername + ":" + TsaPassword;
             authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));

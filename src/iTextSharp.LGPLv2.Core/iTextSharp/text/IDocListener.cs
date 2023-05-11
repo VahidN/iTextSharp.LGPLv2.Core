@@ -4,9 +4,6 @@ namespace iTextSharp.text;
 ///     A class that implements DocListener will perform some
 ///     actions when some actions are performed on a Document.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.IElementListener" />
-/// <seealso cref="T:iTextSharp.text.Document" />
-/// <seealso cref="T:iTextSharp.text.DocWriter" />
 public interface IDocListener : IElementListener, IDisposable
 {
     /// <summary>

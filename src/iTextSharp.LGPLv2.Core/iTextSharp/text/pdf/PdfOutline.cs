@@ -64,6 +64,11 @@ public class PdfOutline : PdfDictionary
     /// <param name="open"> true  if the children are visible</param>
     public PdfOutline(PdfOutline parent, PdfAction action, string title, bool open)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
         _action = action;
         InitOutline(parent, title, open);
     }
@@ -83,6 +88,11 @@ public class PdfOutline : PdfDictionary
     /// <param name="open"> true  if the children are visible</param>
     public PdfOutline(PdfOutline parent, PdfDestination destination, string title, bool open)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
         _destination = destination;
         InitOutline(parent, title, open);
     }
@@ -107,8 +117,10 @@ public class PdfOutline : PdfDictionary
     /// <param name="action">the  PdfAction  for this outline item</param>
     /// <param name="title">the title of this outline item</param>
     /// <param name="open"> true  if the children are visible</param>
-    public PdfOutline(PdfOutline parent, PdfAction action, PdfString title, bool open) : this(parent, action,
-                                                                                              title.ToString(), open)
+    public PdfOutline(PdfOutline parent, PdfAction action, PdfString title, bool open) : this(parent,
+                                                                                              action,
+                                                                                              title?.ToString() ?? throw new ArgumentNullException(nameof(title)),
+                                                                                              open)
     {
     }
 
@@ -126,7 +138,7 @@ public class PdfOutline : PdfDictionary
     /// <param name="title">the title of this outline item</param>
     /// <param name="open"> true  if the children are visible</param>
     public PdfOutline(PdfOutline parent, PdfDestination destination, PdfString title, bool open) :
-        this(parent, destination, title.ToString(), true)
+        this(parent, destination, title?.ToString() ?? throw new ArgumentNullException(nameof(title)), true)
     {
     }
 
@@ -144,6 +156,16 @@ public class PdfOutline : PdfDictionary
     /// <param name="open"> true  if the children are visible</param>
     public PdfOutline(PdfOutline parent, PdfAction action, Paragraph title, bool open)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
+        if (title == null)
+        {
+            throw new ArgumentNullException(nameof(title));
+        }
+
         var buf = new StringBuilder();
         foreach (var chunk in title.Chunks)
         {
@@ -169,6 +191,16 @@ public class PdfOutline : PdfDictionary
     /// <param name="open"> true  if the children are visible</param>
     public PdfOutline(PdfOutline parent, PdfDestination destination, Paragraph title, bool open)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
+        if (title == null)
+        {
+            throw new ArgumentNullException(nameof(title));
+        }
+
         var buf = new StringBuilder();
         foreach (var chunk in title.Chunks)
         {

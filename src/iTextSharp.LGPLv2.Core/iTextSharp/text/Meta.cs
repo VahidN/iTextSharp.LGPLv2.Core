@@ -12,8 +12,6 @@ namespace iTextSharp.text;
 ///     Meta is reserved for: Subject, Keywords, Author, Title, Producer
 ///     and Creationdate information.
 /// </remarks>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Header" />
 public class Meta : IElement
 {
     /// <summary>
@@ -122,6 +120,11 @@ public class Meta : IElement
     /// <returns>true if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -139,32 +142,32 @@ public class Meta : IElement
     /// <returns>a string</returns>
     public static int GetType(string tag)
     {
-        if (ElementTags.SUBJECT.Equals(tag))
+        if (ElementTags.SUBJECT.Equals(tag, StringComparison.Ordinal))
         {
             return Element.SUBJECT;
         }
 
-        if (ElementTags.KEYWORDS.Equals(tag))
+        if (ElementTags.KEYWORDS.Equals(tag, StringComparison.Ordinal))
         {
             return Element.KEYWORDS;
         }
 
-        if (ElementTags.AUTHOR.Equals(tag))
+        if (ElementTags.AUTHOR.Equals(tag, StringComparison.Ordinal))
         {
             return Element.AUTHOR;
         }
 
-        if (ElementTags.TITLE.Equals(tag))
+        if (ElementTags.TITLE.Equals(tag, StringComparison.Ordinal))
         {
             return Element.TITLE;
         }
 
-        if (ElementTags.PRODUCER.Equals(tag))
+        if (ElementTags.PRODUCER.Equals(tag, StringComparison.Ordinal))
         {
             return Element.PRODUCER;
         }
 
-        if (ElementTags.CREATIONDATE.Equals(tag))
+        if (ElementTags.CREATIONDATE.Equals(tag, StringComparison.Ordinal))
         {
             return Element.CREATIONDATE;
         }

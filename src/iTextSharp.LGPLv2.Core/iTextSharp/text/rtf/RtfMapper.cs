@@ -37,6 +37,11 @@ public class RtfMapper
     /// <returns>An array of RtfBasicElement wrapping the Element</returns>
     public IRtfBasicElement[] MapElement(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         var rtfElements = new List<IRtfBasicElement>();
 
         if (element is IRtfBasicElement)
@@ -60,9 +65,9 @@ public class RtfMapper
                     {
                         rtfElements.Add(new RtfNewPage(_rtfDoc));
                     }
-                    else if (chunk.Attributes.ContainsKey(Chunk.TAB))
+                    else if (chunk.Attributes.TryGetValue(Chunk.TAB, out var attribute))
                     {
-                        var tabPos = (float)((object[])chunk.Attributes[Chunk.TAB])[1];
+                        var tabPos = (float)((object[])attribute)[1];
                         var tab = new RtfTab(tabPos, RtfTab.TAB_LEFT_ALIGN);
                         tab.SetRtfDocument(_rtfDoc);
                         rtfElements.Add(tab);

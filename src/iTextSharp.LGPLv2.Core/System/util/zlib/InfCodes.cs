@@ -108,15 +108,15 @@ internal sealed class InfCodes
     // literal/length/eob tree
     // distance tree
 
-    internal void Free(ZStream z)
+    internal static void Free(ZStream z)
     {
         //  ZFREE(z, c);
     }
 
-    internal int inflate_fast(int bl, int bd,
-                              int[] tl, int tlIndex,
-                              int[] td, int tdIndex,
-                              InfBlocks s, ZStream z)
+    internal static int inflate_fast(int bl, int bd,
+                                     int[] tl, int tlIndex,
+                                     int[] td, int tdIndex,
+                                     InfBlocks s, ZStream z)
     {
         int t; // temporary pointer
         int[] tp; // temporary pointer

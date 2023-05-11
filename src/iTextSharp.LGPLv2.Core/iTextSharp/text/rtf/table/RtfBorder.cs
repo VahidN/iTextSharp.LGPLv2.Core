@@ -400,6 +400,11 @@ public class RtfBorder : RtfElement
     /// <param name="border">The RtfBorder to copy</param>
     protected internal RtfBorder(RtfDocument doc, int borderType, RtfBorder border) : base(doc)
     {
+        if (border == null)
+        {
+            throw new ArgumentNullException(nameof(border));
+        }
+
         _borderType = borderType;
         _borderPosition = border.GetBorderPosition();
         _borderStyle = border.GetBorderStyle();
@@ -441,8 +446,13 @@ public class RtfBorder : RtfElement
     /// <summary>
     ///     Writes the RtfBorder settings
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         if (_borderStyle == BORDER_NONE || _borderPosition == NO_BORDER || _borderWidth == 0)
         {
             return;
@@ -454,60 +464,60 @@ public class RtfBorder : RtfElement
             switch (_borderPosition)
             {
                 case LEFT_BORDER:
-                    result.Write(RowBorderLeft, 0, RowBorderLeft.Length);
+                    outp.Write(RowBorderLeft, 0, RowBorderLeft.Length);
                     break;
                 case TOP_BORDER:
-                    result.Write(RowBorderTop, 0, RowBorderTop.Length);
+                    outp.Write(RowBorderTop, 0, RowBorderTop.Length);
                     break;
                 case RIGHT_BORDER:
-                    result.Write(RowBorderRight, 0, RowBorderRight.Length);
+                    outp.Write(RowBorderRight, 0, RowBorderRight.Length);
                     break;
                 case BOTTOM_BORDER:
-                    result.Write(RowBorderBottom, 0, RowBorderBottom.Length);
+                    outp.Write(RowBorderBottom, 0, RowBorderBottom.Length);
                     break;
                 case HORIZONTAL_BORDER:
-                    result.Write(RowBorderHorizontal, 0, RowBorderHorizontal.Length);
+                    outp.Write(RowBorderHorizontal, 0, RowBorderHorizontal.Length);
                     break;
                 case VERTICAL_BORDER:
-                    result.Write(RowBorderVertical, 0, RowBorderVertical.Length);
+                    outp.Write(RowBorderVertical, 0, RowBorderVertical.Length);
                     break;
                 default:
                     return;
             }
 
-            result.Write(t = writeBorderStyle(), 0, t.Length);
-            result.Write(BorderWidth, 0, BorderWidth.Length);
-            result.Write(t = IntToByteArray(_borderWidth), 0, t.Length);
-            result.Write(BorderColorNumber, 0, BorderColorNumber.Length);
-            result.Write(t = IntToByteArray(_borderColor.GetColorNumber()), 0, t.Length);
-            Document.OutputDebugLinebreak(result);
+            outp.Write(t = writeBorderStyle(), 0, t.Length);
+            outp.Write(BorderWidth, 0, BorderWidth.Length);
+            outp.Write(t = IntToByteArray(_borderWidth), 0, t.Length);
+            outp.Write(BorderColorNumber, 0, BorderColorNumber.Length);
+            outp.Write(t = IntToByteArray(_borderColor.GetColorNumber()), 0, t.Length);
+            Document.OutputDebugLinebreak(outp);
         }
         else if (_borderType == CELL_BORDER)
         {
             switch (_borderPosition)
             {
                 case LEFT_BORDER:
-                    result.Write(CellBorderLeft, 0, CellBorderLeft.Length);
+                    outp.Write(CellBorderLeft, 0, CellBorderLeft.Length);
                     break;
                 case TOP_BORDER:
-                    result.Write(CellBorderTop, 0, CellBorderTop.Length);
+                    outp.Write(CellBorderTop, 0, CellBorderTop.Length);
                     break;
                 case RIGHT_BORDER:
-                    result.Write(CellBorderRight, 0, CellBorderRight.Length);
+                    outp.Write(CellBorderRight, 0, CellBorderRight.Length);
                     break;
                 case BOTTOM_BORDER:
-                    result.Write(CellBorderBottom, 0, CellBorderBottom.Length);
+                    outp.Write(CellBorderBottom, 0, CellBorderBottom.Length);
                     break;
                 default:
                     return;
             }
 
-            result.Write(t = writeBorderStyle(), 0, t.Length);
-            result.Write(BorderWidth, 0, BorderWidth.Length);
-            result.Write(t = IntToByteArray(_borderWidth), 0, t.Length);
-            result.Write(BorderColorNumber, 0, BorderColorNumber.Length);
-            result.Write(t = IntToByteArray(_borderColor.GetColorNumber()), 0, t.Length);
-            Document.OutputDebugLinebreak(result);
+            outp.Write(t = writeBorderStyle(), 0, t.Length);
+            outp.Write(BorderWidth, 0, BorderWidth.Length);
+            outp.Write(t = IntToByteArray(_borderWidth), 0, t.Length);
+            outp.Write(BorderColorNumber, 0, BorderColorNumber.Length);
+            outp.Write(t = IntToByteArray(_borderColor.GetColorNumber()), 0, t.Length);
+            Document.OutputDebugLinebreak(outp);
         }
     }
 
@@ -549,7 +559,7 @@ public class RtfBorder : RtfElement
     {
         switch (_borderStyle)
         {
-            case BORDER_NONE: return new byte[0];
+            case BORDER_NONE: return Array.Empty<byte>();
             case BORDER_SINGLE: return BorderStyleSingle;
             case BORDER_DOUBLE_THICK: return BorderStyleDoubleThick;
             case BORDER_SHADOWED: return BorderStyleShadowed;

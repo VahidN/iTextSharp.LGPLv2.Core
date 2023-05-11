@@ -13,4 +13,12 @@ public class InvalidPdfException : IOException
     public InvalidPdfException(string message) : base(message)
     {
     }
+
+    public InvalidPdfException()
+    {
+    }
+
+    public InvalidPdfException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

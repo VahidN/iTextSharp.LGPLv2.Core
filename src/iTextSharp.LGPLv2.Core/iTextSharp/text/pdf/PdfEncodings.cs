@@ -8,11 +8,11 @@ namespace iTextSharp.text.pdf;
 ///     Supports fast encodings for winansi and PDFDocEncoding.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class PdfEncodings
+public static class PdfEncodings
 {
-    protected const int CIDCHAR = 2;
-    protected const int CIDNONE = 0;
-    protected const int CIDRANGE = 1;
+    private const int CIDCHAR = 2;
+    private const int CIDNONE = 0;
+    private const int CIDRANGE = 1;
 
     /// <summary>
     ///     Assumes that '\\n' and '\\r\\n' are the newline sequences. It may not work for
@@ -26,7 +26,7 @@ public class PdfEncodings
     internal static INullValueDictionary<string, IExtraEncoding> ExtraEncodings =
         new NullValueDictionary<string, IExtraEncoding>();
 
-    internal static IntHashtable PdfEncoding = new();
+    internal static NullValueDictionary<int, int> PdfEncoding = new();
 
     internal static char[] PdfEncodingByteToChar =
     {
@@ -82,7 +82,7 @@ public class PdfEncodings
         (char)252, (char)253, (char)254, (char)255,
     };
 
-    internal static IntHashtable Winansi = new();
+    internal static NullValueDictionary<int, int> Winansi = new();
 
     internal static char[] WinansiByteToChar =
     {
@@ -170,6 +170,11 @@ public class PdfEncodings
     /// <param name="enc">the conversion class</param>
     public static void AddExtraEncoding(string name, IExtraEncoding enc)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         // This serializes concurrent updates
         var newEncodings = ExtraEncodings.Clone();
         newEncodings[name.ToLower(CultureInfo.InvariantCulture)] = enc;
@@ -185,6 +190,11 @@ public class PdfEncodings
     /// <param name="name">the name of the cmap to clear or all the cmaps if the empty string</param>
     public static void ClearCmap(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         if (name.Length == 0)
         {
             Cmaps.Clear();
@@ -206,7 +216,15 @@ public class PdfEncodings
     /// <param name="name">the CJK encoding name</param>
     /// <param name="seq">the  byte  array to be decoded</param>
     /// <returns>the CID string</returns>
-    public static string ConvertCmap(string name, byte[] seq) => ConvertCmap(name, seq, 0, seq.Length);
+    public static string ConvertCmap(string name, byte[] seq)
+    {
+        if (seq == null)
+        {
+            throw new ArgumentNullException(nameof(seq));
+        }
+
+        return ConvertCmap(name, seq, 0, seq.Length);
+    }
 
     /// <summary>
     ///     Converts a  byte  array encoded as  name
@@ -223,6 +241,11 @@ public class PdfEncodings
     /// <returns>the CID string</returns>
     public static string ConvertCmap(string name, byte[] seq, int start, int length)
     {
+        if (seq == null)
+        {
+            throw new ArgumentNullException(nameof(seq));
+        }
+
         char[][] planes = null;
         planes = Cmaps[name];
 
@@ -246,7 +269,7 @@ public class PdfEncodings
     {
         if (text == null)
         {
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         if (string.IsNullOrEmpty(encoding))
@@ -271,12 +294,12 @@ public class PdfEncodings
             }
         }
 
-        IntHashtable hash = null;
-        if (encoding.Equals(BaseFont.CP1252))
+        NullValueDictionary<int, int> hash = null;
+        if (encoding.Equals(BaseFont.CP1252, StringComparison.Ordinal))
         {
             hash = Winansi;
         }
-        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING))
+        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING, StringComparison.Ordinal))
         {
             hash = PdfEncoding;
         }
@@ -354,12 +377,12 @@ public class PdfEncodings
             }
         }
 
-        IntHashtable hash = null;
-        if (encoding.Equals(BaseFont.WINANSI))
+        NullValueDictionary<int, int> hash = null;
+        if (encoding.Equals(BaseFont.WINANSI, StringComparison.Ordinal))
         {
             hash = Winansi;
         }
-        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING))
+        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING, StringComparison.Ordinal))
         {
             hash = PdfEncoding;
         }
@@ -381,7 +404,7 @@ public class PdfEncodings
                 return new[] { (byte)c };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         var encw = IanaEncodings.GetEncodingEncoding(encoding);
@@ -428,11 +451,11 @@ public class PdfEncodings
         }
 
         char[] ch = null;
-        if (encoding.Equals(BaseFont.WINANSI))
+        if (encoding.Equals(BaseFont.WINANSI, StringComparison.Ordinal))
         {
             ch = WinansiByteToChar;
         }
-        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING))
+        else if (encoding.Equals(PdfObject.TEXT_PDFDOCENCODING, StringComparison.Ordinal))
         {
             ch = PdfEncodingByteToChar;
         }
@@ -470,12 +493,14 @@ public class PdfEncodings
         }
 
         Encoding enc = null;
-        if (nameU.Equals("UNICODEBIGUNMARKED") || nameU.Equals("UNICODEBIG"))
+        if (nameU.Equals("UNICODEBIGUNMARKED", StringComparison.Ordinal) ||
+            nameU.Equals("UNICODEBIG", StringComparison.Ordinal))
         {
             enc = new UnicodeEncoding(marker ? big : true, false);
         }
 
-        if (nameU.Equals("UNICODELITTLEUNMARKED") || nameU.Equals("UNICODELITTLE"))
+        if (nameU.Equals("UNICODELITTLEUNMARKED", StringComparison.Ordinal) ||
+            nameU.Equals("UNICODELITTLE", StringComparison.Ordinal))
         {
             enc = new UnicodeEncoding(marker ? big : false, false);
         }
@@ -580,7 +605,7 @@ public class PdfEncodings
             var c = plane[one];
             if (c != 0 && (c & 0x8000) == 0)
             {
-                throw new Exception("Inconsistent mapping.");
+                throw new InvalidOperationException("Inconsistent mapping.");
             }
 
             if (c == 0)
@@ -598,7 +623,7 @@ public class PdfEncodings
         var cc = plane[ones];
         if ((cc & 0x8000) != 0)
         {
-            throw new Exception("Inconsistent mapping.");
+            throw new InvalidOperationException("Inconsistent mapping.");
         }
 
         plane[ones] = cid;
@@ -676,7 +701,8 @@ public class PdfEncodings
                     var tk = new StringTokenizer(line);
                     var t = tk.NextToken();
                     var size = t.Length / 2 - 1;
-                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber);
+                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                                           CultureInfo.InvariantCulture);
                     t = tk.NextToken();
                     var cid = int.Parse(t, CultureInfo.InvariantCulture);
                     BreakLong(start, size, seqs);
@@ -720,7 +746,7 @@ public class PdfEncodings
 
     private class Cp437Conversion : IExtraEncoding
     {
-        private static readonly IntHashtable _c2B = new();
+        private static readonly NullValueDictionary<int, int> _c2B = new();
 
         private static readonly char[] _table =
         {
@@ -831,14 +857,14 @@ public class PdfEncodings
                 return new[] { v };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
     }
 
     private class SymbolConversion : IExtraEncoding
     {
-        private static readonly IntHashtable _t1 = new();
-        private static readonly IntHashtable _t2 = new();
+        private static readonly NullValueDictionary<int, int> _t1 = new();
+        private static readonly NullValueDictionary<int, int> _t2 = new();
 
         private static readonly char[] _table1 =
         {
@@ -926,7 +952,7 @@ public class PdfEncodings
             '\u27BC', '\u27BD', '\u27BE', '\u0000',
         };
 
-        private readonly IntHashtable _translation;
+        private readonly NullValueDictionary<int, int> _translation;
 
         static SymbolConversion()
         {
@@ -997,7 +1023,7 @@ public class PdfEncodings
                 return new[] { v };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
     }
 
@@ -1012,7 +1038,7 @@ public class PdfEncodings
                 return new[] { (byte)char1 };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         public byte[] CharToByte(string text, string encoding)
@@ -1088,7 +1114,7 @@ public class PdfEncodings
                 }
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         public byte[] CharToByte(string text, string encoding)

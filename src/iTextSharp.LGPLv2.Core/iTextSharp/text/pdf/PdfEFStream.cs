@@ -31,6 +31,11 @@ public class PdfEFStream : PdfStream
     /// </summary>
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (InputStream != null && Compressed)
         {
             Put(PdfName.Filter, PdfName.Flatedecode);

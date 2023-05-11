@@ -101,7 +101,7 @@ internal sealed class Inflate
     // flag for no wrapper
     internal int Wbits;
 
-    internal int inflate(ZStream z, int f)
+    internal static int inflate(ZStream z, int f)
     {
         int r;
         int b;
@@ -386,7 +386,7 @@ internal sealed class Inflate
         return ZOk;
     }
 
-    internal int InflateReset(ZStream z)
+    internal static int InflateReset(ZStream z)
     {
         if (z == null || z.Istate == null)
         {
@@ -400,7 +400,7 @@ internal sealed class Inflate
         return ZOk;
     }
 
-    internal int InflateSetDictionary(ZStream z, byte[] dictionary, int dictLength)
+    internal static int InflateSetDictionary(ZStream z, byte[] dictionary, int dictLength)
     {
         var index = 0;
         var length = dictLength;
@@ -409,12 +409,12 @@ internal sealed class Inflate
             return ZStreamError;
         }
 
-        if (z._adler.adler32(1L, dictionary, 0, dictLength) != z.Adler)
+        if (Adler32.adler32(1L, dictionary, 0, dictLength) != z.Adler)
         {
             return ZDataError;
         }
 
-        z.Adler = z._adler.adler32(0, null, 0, 0);
+        z.Adler = Adler32.adler32(0, null, 0, 0);
 
         if (length >= 1 << z.Istate.Wbits)
         {
@@ -427,7 +427,7 @@ internal sealed class Inflate
         return ZOk;
     }
 
-    internal int InflateSync(ZStream z)
+    internal static int InflateSync(ZStream z)
     {
         int n; // number of bytes to look at
         int p; // pointer to bytes
@@ -513,7 +513,7 @@ internal sealed class Inflate
     /// <summary>
     ///     waiting for these length bytes.
     /// </summary>
-    internal int InflateSyncPoint(ZStream z)
+    internal static int InflateSyncPoint(ZStream z)
     {
         if (z == null || z.Istate == null || z.Istate.blocks == null)
         {

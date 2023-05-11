@@ -10,8 +10,6 @@ namespace iTextSharp.text;
 ///     An Image is the representation of a graphic element (JPEG, PNG or GIF)
 ///     that has to be inserted into the document
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Rectangle" />
 public abstract class Image : Rectangle
 {
     /// <summary>
@@ -258,6 +256,11 @@ public abstract class Image : Rectangle
     /// <param name="image">another Image object.</param>
     protected Image(Image image) : base(image)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         type = image.type;
         url = image.url;
         alignment = image.alignment;
@@ -414,6 +417,11 @@ public abstract class Image : Rectangle
 
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (Mask)
             {
                 throw new DocumentException("An image mask cannot contain another image mask.");
@@ -702,6 +710,11 @@ public abstract class Image : Rectangle
     /// <returns>an object of type Gif, Jpeg or Png</returns>
     public static Image GetInstance(Uri url)
     {
+        if (url == null)
+        {
+            throw new ArgumentNullException(nameof(url));
+        }
+
         // Add support for base64 encoded images.
         if (url.Scheme == "data")
         {
@@ -870,6 +883,11 @@ public abstract class Image : Rectangle
     /// <returns>an object of type Gif, Jpeg or Png</returns>
     public static Image GetInstance(byte[] imgb)
     {
+        if (imgb == null)
+        {
+            throw new ArgumentNullException(nameof(imgb));
+        }
+
         int c1 = imgb[0];
         int c2 = imgb[1];
         int c3 = imgb[2];
@@ -948,6 +966,11 @@ public abstract class Image : Rectangle
     /// <returns></returns>
     public static Image GetInstance(SKBitmap image, SKEncodedImageFormat format, int quality = 100)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         using var data = image.Encode(format, quality);
         using var stream = new MemoryStream();
         data.SaveTo(stream);
@@ -967,6 +990,11 @@ public abstract class Image : Rectangle
     /// <returns>an object of type ImgRaw</returns>
     public static Image GetInstance(SKBitmap image, BaseColor color, bool forceBw)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         var bm = image;
         var w = bm.Width;
         var h = bm.Height;
@@ -1566,7 +1594,7 @@ public abstract class Image : Rectangle
         }
     }
 
-    private PdfObject simplifyColorspace(PdfArray obj)
+    private static PdfObject simplifyColorspace(PdfArray obj)
     {
         if (obj == null)
         {

@@ -245,7 +245,7 @@ internal class Type1Font : BaseFont
                 }
             }
         }
-        else if (afmFile.ToLower(CultureInfo.InvariantCulture).EndsWith(".afm"))
+        else if (afmFile.EndsWith(".afm", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -275,7 +275,7 @@ internal class Type1Font : BaseFont
                 }
             }
         }
-        else if (afmFile.ToLower(CultureInfo.InvariantCulture).EndsWith(".pfm"))
+        else if (afmFile.EndsWith(".pfm", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -315,12 +315,13 @@ internal class Type1Font : BaseFont
         }
 
         _encodingScheme = _encodingScheme.Trim();
-        if (_encodingScheme.Equals("AdobeStandardEncoding") || _encodingScheme.Equals("StandardEncoding"))
+        if (_encodingScheme.Equals("AdobeStandardEncoding", StringComparison.Ordinal) ||
+            _encodingScheme.Equals("StandardEncoding", StringComparison.Ordinal))
         {
             FontSpecific = false;
         }
 
-        if (!encoding.StartsWith("#"))
+        if (!encoding.StartsWith("#", StringComparison.Ordinal))
         {
             PdfEncodings.ConvertToBytes(" ", enc); // check if the encoding exists
         }
@@ -424,7 +425,7 @@ internal class Type1Font : BaseFont
             flags |= 131072;
         }
 
-        if (_weight.Equals("Bold"))
+        if (_weight.Equals("Bold", StringComparison.Ordinal))
         {
             flags |= 262144;
         }
@@ -621,78 +622,78 @@ internal class Type1Font : BaseFont
             }
 
             var ident = tok.NextToken();
-            if (ident.Equals("FontName"))
+            if (ident.Equals("FontName", StringComparison.Ordinal))
             {
                 _fontName = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("FullName"))
+            else if (ident.Equals("FullName", StringComparison.Ordinal))
             {
                 _fullName = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("FamilyName"))
+            else if (ident.Equals("FamilyName", StringComparison.Ordinal))
             {
                 _familyName = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("Weight"))
+            else if (ident.Equals("Weight", StringComparison.Ordinal))
             {
                 _weight = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("ItalicAngle"))
+            else if (ident.Equals("ItalicAngle", StringComparison.Ordinal))
             {
                 _italicAngle = float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("IsFixedPitch"))
+            else if (ident.Equals("IsFixedPitch", StringComparison.Ordinal))
             {
-                _isFixedPitch = tok.NextToken().Equals("true");
+                _isFixedPitch = tok.NextToken().Equals("true", StringComparison.Ordinal);
             }
-            else if (ident.Equals("CharacterSet"))
+            else if (ident.Equals("CharacterSet", StringComparison.Ordinal))
             {
                 _characterSet = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("FontBBox"))
+            else if (ident.Equals("FontBBox", StringComparison.Ordinal))
             {
                 _llx = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
                 _lly = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
                 _urx = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
                 _ury = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("UnderlinePosition"))
+            else if (ident.Equals("UnderlinePosition", StringComparison.Ordinal))
             {
                 _underlinePosition = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("UnderlineThickness"))
+            else if (ident.Equals("UnderlineThickness", StringComparison.Ordinal))
             {
                 _underlineThickness = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("EncodingScheme"))
+            else if (ident.Equals("EncodingScheme", StringComparison.Ordinal))
             {
                 _encodingScheme = tok.NextToken("\u00ff").Substring(1);
             }
-            else if (ident.Equals("CapHeight"))
+            else if (ident.Equals("CapHeight", StringComparison.Ordinal))
             {
                 _capHeight = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("XHeight"))
+            else if (ident.Equals("XHeight", StringComparison.Ordinal))
             {
                 _xHeight = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("Ascender"))
+            else if (ident.Equals("Ascender", StringComparison.Ordinal))
             {
                 _ascender = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("Descender"))
+            else if (ident.Equals("Descender", StringComparison.Ordinal))
             {
                 _descender = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("StdHW"))
+            else if (ident.Equals("StdHW", StringComparison.Ordinal))
             {
                 _stdHw = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("StdVW"))
+            else if (ident.Equals("StdVW", StringComparison.Ordinal))
             {
                 _stdVw = (int)float.Parse(tok.NextToken(), NumberFormatInfo.InvariantInfo);
             }
-            else if (ident.Equals("StartCharMetrics"))
+            else if (ident.Equals("StartCharMetrics", StringComparison.Ordinal))
             {
                 isMetrics = true;
                 break;
@@ -713,7 +714,7 @@ internal class Type1Font : BaseFont
             }
 
             var ident = tok.NextToken();
-            if (ident.Equals("EndCharMetrics"))
+            if (ident.Equals("EndCharMetrics", StringComparison.Ordinal))
             {
                 isMetrics = false;
                 break;
@@ -734,19 +735,19 @@ internal class Type1Font : BaseFont
                 }
 
                 ident = tokc.NextToken();
-                if (ident.Equals("C"))
+                if (ident.Equals("C", StringComparison.Ordinal))
                 {
                     c = int.Parse(tokc.NextToken(), CultureInfo.InvariantCulture);
                 }
-                else if (ident.Equals("WX"))
+                else if (ident.Equals("WX", StringComparison.Ordinal))
                 {
                     wx = (int)float.Parse(tokc.NextToken(), NumberFormatInfo.InvariantInfo);
                 }
-                else if (ident.Equals("N"))
+                else if (ident.Equals("N", StringComparison.Ordinal))
                 {
                     n = tokc.NextToken();
                 }
-                else if (ident.Equals("B"))
+                else if (ident.Equals("B", StringComparison.Ordinal))
                 {
                     b = new[]
                         {
@@ -790,12 +791,12 @@ internal class Type1Font : BaseFont
             }
 
             var ident = tok.NextToken();
-            if (ident.Equals("EndFontMetrics"))
+            if (ident.Equals("EndFontMetrics", StringComparison.Ordinal))
             {
                 return;
             }
 
-            if (ident.Equals("StartKernPairs"))
+            if (ident.Equals("StartKernPairs", StringComparison.Ordinal))
             {
                 isMetrics = true;
                 break;
@@ -816,7 +817,7 @@ internal class Type1Font : BaseFont
             }
 
             var ident = tok.NextToken();
-            if (ident.Equals("KPX"))
+            if (ident.Equals("KPX", StringComparison.Ordinal))
             {
                 var first = tok.NextToken();
                 var second = tok.NextToken();
@@ -836,7 +837,7 @@ internal class Type1Font : BaseFont
                     _kernPairs[first] = relates2;
                 }
             }
-            else if (ident.Equals("EndKernPairs"))
+            else if (ident.Equals("EndKernPairs", StringComparison.Ordinal))
             {
                 isMetrics = false;
                 break;
@@ -916,7 +917,7 @@ internal class Type1Font : BaseFont
         }
         else
         {
-            if (name.Equals(".notdef"))
+            if (name.Equals(".notdef", StringComparison.Ordinal))
             {
                 return 0;
             }
@@ -987,7 +988,7 @@ internal class Type1Font : BaseFont
         }
         else
         {
-            if (name.Equals(".notdef"))
+            if (name.Equals(".notdef", StringComparison.Ordinal))
             {
                 return null;
             }
@@ -1017,12 +1018,13 @@ internal class Type1Font : BaseFont
         var dic = new PdfDictionary(PdfName.Font);
         dic.Put(PdfName.Subtype, PdfName.Type1);
         dic.Put(PdfName.Basefont, new PdfName(_fontName));
-        var stdEncoding = encoding.Equals(CP1252) || encoding.Equals(MACROMAN);
+        var stdEncoding = encoding.Equals(CP1252, StringComparison.Ordinal) ||
+                          encoding.Equals(MACROMAN, StringComparison.Ordinal);
         if (!FontSpecific || SpecialMap != null)
         {
             for (var k = firstChar; k <= lastChar; ++k)
             {
-                if (!differences[k].Equals(notdef))
+                if (!differences[k].Equals(notdef, StringComparison.Ordinal))
                 {
                     firstChar = k;
                     break;
@@ -1031,7 +1033,10 @@ internal class Type1Font : BaseFont
 
             if (stdEncoding)
             {
-                dic.Put(PdfName.Encoding, encoding.Equals(CP1252) ? PdfName.WinAnsiEncoding : PdfName.MacRomanEncoding);
+                dic.Put(PdfName.Encoding,
+                        encoding.Equals(CP1252, StringComparison.Ordinal)
+                            ? PdfName.WinAnsiEncoding
+                            : PdfName.MacRomanEncoding);
             }
             else
             {

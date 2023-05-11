@@ -340,7 +340,7 @@ public class RtfListLevel : RtfElement, IRtfExtendedElement
         SetBulletFont(new Font(Font.SYMBOL, 10, Font.NORMAL, new BaseColor(0, 0, 0)));
     }
 
-    public RtfListLevel(RtfListLevel ll) : base(ll.Document)
+    public RtfListLevel(RtfListLevel ll) : base(ll?.Document ?? throw new ArgumentNullException(nameof(ll)))
     {
         _templateId = Document.GetRandomInt();
         _alignment = ll._alignment;
@@ -363,222 +363,227 @@ public class RtfListLevel : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     unused
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
     }
 
-    public void WriteDefinition(Stream result)
+    public void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_listLevel, 0, _listLevel.Length);
-        result.Write(_listLevelType, 0, _listLevelType.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_listLevel, 0, _listLevel.Length);
+        outp.Write(_listLevelType, 0, _listLevelType.Length);
         switch (_listType)
         {
             case LIST_TYPE_BULLET:
-                result.Write(t = IntToByteArray(23), 0, t.Length);
+                outp.Write(t = IntToByteArray(23), 0, t.Length);
                 break;
             case LIST_TYPE_NUMBERED:
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                outp.Write(t = IntToByteArray(0), 0, t.Length);
                 break;
             case LIST_TYPE_UPPER_LETTERS:
-                result.Write(t = IntToByteArray(3), 0, t.Length);
+                outp.Write(t = IntToByteArray(3), 0, t.Length);
                 break;
             case LIST_TYPE_LOWER_LETTERS:
-                result.Write(t = IntToByteArray(4), 0, t.Length);
+                outp.Write(t = IntToByteArray(4), 0, t.Length);
                 break;
             case LIST_TYPE_UPPER_ROMAN:
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(t = IntToByteArray(1), 0, t.Length);
                 break;
             case LIST_TYPE_LOWER_ROMAN:
-                result.Write(t = IntToByteArray(2), 0, t.Length);
+                outp.Write(t = IntToByteArray(2), 0, t.Length);
                 break;
             /* New types */
             case LIST_TYPE_ARABIC:
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                outp.Write(t = IntToByteArray(0), 0, t.Length);
                 break;
             case LIST_TYPE_UPPERCASE_ROMAN_NUMERAL:
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(t = IntToByteArray(1), 0, t.Length);
                 break;
             case LIST_TYPE_LOWERCASE_ROMAN_NUMERAL:
-                result.Write(t = IntToByteArray(2), 0, t.Length);
+                outp.Write(t = IntToByteArray(2), 0, t.Length);
                 break;
             case LIST_TYPE_UPPERCASE_LETTER:
-                result.Write(t = IntToByteArray(3), 0, t.Length);
+                outp.Write(t = IntToByteArray(3), 0, t.Length);
                 break;
             case LIST_TYPE_ORDINAL_NUMBER:
-                result.Write(t = IntToByteArray(4), 0, t.Length);
+                outp.Write(t = IntToByteArray(4), 0, t.Length);
                 break;
             case LIST_TYPE_CARDINAL_TEXT_NUMBER:
-                result.Write(t = IntToByteArray(5), 0, t.Length);
+                outp.Write(t = IntToByteArray(5), 0, t.Length);
                 break;
             case LIST_TYPE_ORDINAL_TEXT_NUMBER:
-                result.Write(t = IntToByteArray(6), 0, t.Length);
+                outp.Write(t = IntToByteArray(6), 0, t.Length);
                 break;
             case LIST_TYPE_LOWERCASE_LETTER:
-                result.Write(t = IntToByteArray(7), 0, t.Length);
+                outp.Write(t = IntToByteArray(7), 0, t.Length);
                 break;
             case LIST_TYPE_ARABIC_LEADING_ZERO:
-                result.Write(t = IntToByteArray(22), 0, t.Length);
+                outp.Write(t = IntToByteArray(22), 0, t.Length);
                 break;
             case LIST_TYPE_NO_NUMBER:
-                result.Write(t = IntToByteArray(255), 0, t.Length);
+                outp.Write(t = IntToByteArray(255), 0, t.Length);
                 break;
             default: // catch all for other unsupported types
                 if (_listType >= LIST_TYPE_BASE)
                 {
-                    result.Write(t = IntToByteArray(_listType - LIST_TYPE_BASE), 0, t.Length);
+                    outp.Write(t = IntToByteArray(_listType - LIST_TYPE_BASE), 0, t.Length);
                 }
 
                 break;
         }
 
-        result.Write(_listLevelTypeNew, 0, _listLevelTypeNew.Length);
+        outp.Write(_listLevelTypeNew, 0, _listLevelTypeNew.Length);
         switch (_listType)
         {
             case LIST_TYPE_BULLET:
-                result.Write(t = IntToByteArray(23), 0, t.Length);
+                outp.Write(t = IntToByteArray(23), 0, t.Length);
                 break;
             case LIST_TYPE_NUMBERED:
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                outp.Write(t = IntToByteArray(0), 0, t.Length);
                 break;
             case LIST_TYPE_UPPER_LETTERS:
-                result.Write(t = IntToByteArray(3), 0, t.Length);
+                outp.Write(t = IntToByteArray(3), 0, t.Length);
                 break;
             case LIST_TYPE_LOWER_LETTERS:
-                result.Write(t = IntToByteArray(4), 0, t.Length);
+                outp.Write(t = IntToByteArray(4), 0, t.Length);
                 break;
             case LIST_TYPE_UPPER_ROMAN:
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(t = IntToByteArray(1), 0, t.Length);
                 break;
             case LIST_TYPE_LOWER_ROMAN:
-                result.Write(t = IntToByteArray(2), 0, t.Length);
+                outp.Write(t = IntToByteArray(2), 0, t.Length);
                 break;
             /* New types */
             case LIST_TYPE_ARABIC:
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                outp.Write(t = IntToByteArray(0), 0, t.Length);
                 break;
             case LIST_TYPE_UPPERCASE_ROMAN_NUMERAL:
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(t = IntToByteArray(1), 0, t.Length);
                 break;
             case LIST_TYPE_LOWERCASE_ROMAN_NUMERAL:
-                result.Write(t = IntToByteArray(2), 0, t.Length);
+                outp.Write(t = IntToByteArray(2), 0, t.Length);
                 break;
             case LIST_TYPE_UPPERCASE_LETTER:
-                result.Write(t = IntToByteArray(3), 0, t.Length);
+                outp.Write(t = IntToByteArray(3), 0, t.Length);
                 break;
             case LIST_TYPE_ORDINAL_NUMBER:
-                result.Write(t = IntToByteArray(4), 0, t.Length);
+                outp.Write(t = IntToByteArray(4), 0, t.Length);
                 break;
             case LIST_TYPE_CARDINAL_TEXT_NUMBER:
-                result.Write(t = IntToByteArray(5), 0, t.Length);
+                outp.Write(t = IntToByteArray(5), 0, t.Length);
                 break;
             case LIST_TYPE_ORDINAL_TEXT_NUMBER:
-                result.Write(t = IntToByteArray(6), 0, t.Length);
+                outp.Write(t = IntToByteArray(6), 0, t.Length);
                 break;
             case LIST_TYPE_LOWERCASE_LETTER:
-                result.Write(t = IntToByteArray(7), 0, t.Length);
+                outp.Write(t = IntToByteArray(7), 0, t.Length);
                 break;
             case LIST_TYPE_ARABIC_LEADING_ZERO:
-                result.Write(t = IntToByteArray(22), 0, t.Length);
+                outp.Write(t = IntToByteArray(22), 0, t.Length);
                 break;
             case LIST_TYPE_NO_NUMBER:
-                result.Write(t = IntToByteArray(255), 0, t.Length);
+                outp.Write(t = IntToByteArray(255), 0, t.Length);
                 break;
             default: // catch all for other unsupported types
                 if (_listType >= LIST_TYPE_BASE)
                 {
-                    result.Write(t = IntToByteArray(_listType - LIST_TYPE_BASE), 0, t.Length);
+                    outp.Write(t = IntToByteArray(_listType - LIST_TYPE_BASE), 0, t.Length);
                 }
 
                 break;
         }
 
-        result.Write(_listLevelAlignment, 0, _listLevelAlignment.Length);
-        result.Write(t = IntToByteArray(0), 0, t.Length);
-        result.Write(_listLevelAlignmentNew, 0, _listLevelAlignmentNew.Length);
-        result.Write(t = IntToByteArray(0), 0, t.Length);
-        result.Write(_listLevelFolow, 0, _listLevelFolow.Length);
-        result.Write(t = IntToByteArray(_levelFollowValue), 0, t.Length);
-        result.Write(_listLevelStartAt, 0, _listLevelStartAt.Length);
-        result.Write(t = IntToByteArray(_listStartAt), 0, t.Length);
+        outp.Write(_listLevelAlignment, 0, _listLevelAlignment.Length);
+        outp.Write(t = IntToByteArray(0), 0, t.Length);
+        outp.Write(_listLevelAlignmentNew, 0, _listLevelAlignmentNew.Length);
+        outp.Write(t = IntToByteArray(0), 0, t.Length);
+        outp.Write(_listLevelFolow, 0, _listLevelFolow.Length);
+        outp.Write(t = IntToByteArray(_levelFollowValue), 0, t.Length);
+        outp.Write(_listLevelStartAt, 0, _listLevelStartAt.Length);
+        outp.Write(t = IntToByteArray(_listStartAt), 0, t.Length);
         if (_isTentative)
         {
-            result.Write(_listLevelTentative, 0, _listLevelTentative.Length);
+            outp.Write(_listLevelTentative, 0, _listLevelTentative.Length);
         }
 
         if (_isLegal)
         {
-            result.Write(_listLevelLegal, 0, _listLevelLegal.Length);
+            outp.Write(_listLevelLegal, 0, _listLevelLegal.Length);
         }
 
-        result.Write(_listLevelSpace, 0, _listLevelSpace.Length);
-        result.Write(t = IntToByteArray(0), 0, t.Length);
-        result.Write(_listLevelIndent, 0, _listLevelIndent.Length);
-        result.Write(t = IntToByteArray(0), 0, t.Length);
+        outp.Write(_listLevelSpace, 0, _listLevelSpace.Length);
+        outp.Write(t = IntToByteArray(0), 0, t.Length);
+        outp.Write(_listLevelIndent, 0, _listLevelIndent.Length);
+        outp.Write(t = IntToByteArray(0), 0, t.Length);
         if (_levelPicture != -1)
         {
-            result.Write(_listLevelPicture, 0, _listLevelPicture.Length);
-            result.Write(t = IntToByteArray(_levelPicture), 0, t.Length);
+            outp.Write(_listLevelPicture, 0, _listLevelPicture.Length);
+            outp.Write(t = IntToByteArray(_levelPicture), 0, t.Length);
         }
 
-        result.Write(OpenGroup, 0, OpenGroup.Length); // { leveltext
-        result.Write(_listLevelText, 0, _listLevelText.Length);
-        result.Write(_listLevelTemplateId, 0, _listLevelTemplateId.Length);
-        result.Write(t = IntToByteArray(_templateId), 0, t.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length); // { leveltext
+        outp.Write(_listLevelText, 0, _listLevelText.Length);
+        outp.Write(_listLevelTemplateId, 0, _listLevelTemplateId.Length);
+        outp.Write(t = IntToByteArray(_templateId), 0, t.Length);
         /* NEVER seperate the LEVELTEXT elements with a return in between
         * them or it will not fuction correctly!
         */
         // TODO Needs to be rewritten to support 1-9 levels, not just simple single level
         if (_listType != LIST_TYPE_BULLET)
         {
-            result.Write(_listLevelStyleNumberedBegin, 0, _listLevelStyleNumberedBegin.Length);
+            outp.Write(_listLevelStyleNumberedBegin, 0, _listLevelStyleNumberedBegin.Length);
             if (_levelTextNumber < 10)
             {
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                outp.Write(t = IntToByteArray(0), 0, t.Length);
             }
 
-            result.Write(t = IntToByteArray(_levelTextNumber), 0, t.Length);
-            result.Write(_listLevelStyleNumberedEnd, 0, _listLevelStyleNumberedEnd.Length);
+            outp.Write(t = IntToByteArray(_levelTextNumber), 0, t.Length);
+            outp.Write(_listLevelStyleNumberedEnd, 0, _listLevelStyleNumberedEnd.Length);
         }
         else
         {
-            result.Write(_listLevelStyleBulletedBegin, 0, _listLevelStyleBulletedBegin.Length);
-            Document.FilterSpecialChar(result, _bulletCharacter, false, false);
-            result.Write(_listLevelStyleBulletedEnd, 0, _listLevelStyleBulletedEnd.Length);
+            outp.Write(_listLevelStyleBulletedBegin, 0, _listLevelStyleBulletedBegin.Length);
+            Document.FilterSpecialChar(outp, _bulletCharacter, false, false);
+            outp.Write(_listLevelStyleBulletedEnd, 0, _listLevelStyleBulletedEnd.Length);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length); // } leveltext
+        outp.Write(CloseGroup, 0, CloseGroup.Length); // } leveltext
 
-        result.Write(OpenGroup, 0, OpenGroup.Length); // { levelnumbers
-        result.Write(_listLevelNumbersBegin, 0, _listLevelNumbersBegin.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length); // { levelnumbers
+        outp.Write(_listLevelNumbersBegin, 0, _listLevelNumbersBegin.Length);
         if (_listType != LIST_TYPE_BULLET)
         {
-            result.Write(_listLevelNumbersNumbered, 0, _listLevelNumbersNumbered.Length);
+            outp.Write(_listLevelNumbersNumbered, 0, _listLevelNumbersNumbered.Length);
         }
 
-        result.Write(_listLevelNumbersEnd, 0, _listLevelNumbersEnd.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length); // { levelnumbers
+        outp.Write(_listLevelNumbersEnd, 0, _listLevelNumbersEnd.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length); // { levelnumbers
 
         // write properties now
-        result.Write(RtfFontList.FontNumber, 0, RtfFontList.FontNumber.Length);
+        outp.Write(RtfFontList.FontNumber, 0, RtfFontList.FontNumber.Length);
         if (_listType != LIST_TYPE_BULLET)
         {
-            result.Write(t = IntToByteArray(_fontNumber.GetFontNumber()), 0, t.Length);
+            outp.Write(t = IntToByteArray(_fontNumber.GetFontNumber()), 0, t.Length);
         }
         else
         {
-            result.Write(t = IntToByteArray(_fontBullet.GetFontNumber()), 0, t.Length);
+            outp.Write(t = IntToByteArray(_fontBullet.GetFontNumber()), 0, t.Length);
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\cf"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\cf"), 0, t.Length);
         //        document.GetDocumentHeader().GetColorNumber(new RtfColor(this.document,this.GetFontNumber().GetColor()));
-        result.Write(t = IntToByteArray(Document.GetDocumentHeader().GetColorNumber(new RtfColor(Document, GetFontNumber().Color))),
-                     0, t.Length);
+        outp.Write(t = IntToByteArray(Document.GetDocumentHeader().GetColorNumber(new RtfColor(Document, GetFontNumber().Color))),
+                   0, t.Length);
 
-        WriteIndentation(result);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        WriteIndentation(outp);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>
@@ -839,6 +844,11 @@ public class RtfListLevel : RtfElement, IRtfExtendedElement
     /// <param name="result">The  Stream  to write to.</param>
     public void WriteIndentation(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         result.Write(_listLevelFirstIndent, 0, _listLevelFirstIndent.Length);
         result.Write(t = IntToByteArray(_firstIndent), 0, t.Length);
@@ -857,6 +867,11 @@ public class RtfListLevel : RtfElement, IRtfExtendedElement
     /// <param name="result">The  Stream  to write to</param>
     public void WriteListBeginning(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
         if (InTable)
@@ -909,6 +924,11 @@ public class RtfListLevel : RtfElement, IRtfExtendedElement
     /// <param name="result">The  Stream  to write to</param>
     protected void WriteListNumbers(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         if (listLevel > 0)
         {

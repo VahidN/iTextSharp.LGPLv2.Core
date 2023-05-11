@@ -49,6 +49,16 @@ public class PrIndirectReference : PdfIndirectReference
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         var n = writer.GetNewObjectNumber(reader, number, generation);
         var b = PdfEncodings.ConvertToBytes(new StringBuilder().Append(n).Append(" 0 R").ToString(), null);
         os.Write(b, 0, b.Length);

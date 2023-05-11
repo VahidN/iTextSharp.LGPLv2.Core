@@ -158,11 +158,16 @@ public class RtfBorderGroup : RtfElement
     /// <summary>
     ///     Writes the borders of this RtfBorderGroup
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         foreach (var rb in _borders.Values)
         {
-            rb.WriteContent(result);
+            rb.WriteContent(outp);
         }
     }
 

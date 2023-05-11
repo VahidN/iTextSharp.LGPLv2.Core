@@ -35,6 +35,11 @@ public abstract class XmpSchema : Properties
     /// <returns></returns>
     public static string Escape(string content)
     {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
+        }
+
         var buf = new StringBuilder();
         for (var i = 0; i < content.Length; i++)
         {
@@ -76,6 +81,11 @@ public abstract class XmpSchema : Properties
 
     public void SetProperty(string key, XmpArray value)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         base[key] = value.ToString();
     }
 
@@ -87,6 +97,11 @@ public abstract class XmpSchema : Properties
     /// <returns>the previous property (null if there wasn't one)</returns>
     public void SetProperty(string key, LangAlt value)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         base[key] = value.ToString();
     }
 
@@ -112,6 +127,16 @@ public abstract class XmpSchema : Properties
     /// <param name="p"></param>
     protected void Process(StringBuilder buf, object p)
     {
+        if (buf == null)
+        {
+            throw new ArgumentNullException(nameof(buf));
+        }
+
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
         buf.Append('<');
         buf.Append(p);
         buf.Append('>');

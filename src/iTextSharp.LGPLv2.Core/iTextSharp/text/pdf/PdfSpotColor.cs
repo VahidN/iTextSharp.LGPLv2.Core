@@ -63,7 +63,8 @@ public class PdfSpotColor
                                              new[] { cmyk.Cyan, cmyk.Magenta, cmyk.Yellow, cmyk.Black }, 1);
                     break;
                 default:
-                    throw new Exception("Only RGB, Gray and CMYK are supported as alternative color spaces.");
+                    throw new
+                        NotSupportedException("Only RGB, Gray and CMYK are supported as alternative color spaces.");
             }
         }
         else

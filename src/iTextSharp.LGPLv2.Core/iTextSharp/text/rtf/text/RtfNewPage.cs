@@ -25,9 +25,14 @@ public class RtfNewPage : RtfElement
     /// <summary>
     ///     Writes a new page
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(NewPage, 0, NewPage.Length);
-        result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(NewPage, 0, NewPage.Length);
+        outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
     }
 }

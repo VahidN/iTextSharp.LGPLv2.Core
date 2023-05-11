@@ -37,20 +37,25 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Writes the definition of the stylesheet list.
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
-        byte[] t;
-        result.Write(t = DocWriter.GetIsoBytes("{"), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\stylesheet"), 0, t.Length);
-        result.Write(t = Delimiter, 0, t.Length);
-        Document.OutputDebugLinebreak(result);
-        foreach (var rps in _styleMap.Values)
+        if (outp == null)
         {
-            rps.WriteDefinition(result);
+            throw new ArgumentNullException(nameof(outp));
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("}"), 0, t.Length);
-        Document.OutputDebugLinebreak(result);
+        byte[] t;
+        outp.Write(t = DocWriter.GetIsoBytes("{"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\stylesheet"), 0, t.Length);
+        outp.Write(t = Delimiter, 0, t.Length);
+        Document.OutputDebugLinebreak(outp);
+        foreach (var rps in _styleMap.Values)
+        {
+            rps.WriteDefinition(outp);
+        }
+
+        outp.Write(t = DocWriter.GetIsoBytes("}"), 0, t.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>
@@ -66,9 +71,9 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
             registerDefaultStyles();
         }
 
-        if (_styleMap.ContainsKey(styleName))
+        if (_styleMap.TryGetValue(styleName, out var style))
         {
-            return _styleMap[styleName];
+            return style;
         }
 
         return null;

@@ -64,10 +64,15 @@ public class XmlPeer
     ///     Sets an alias for an attribute.
     /// </summary>
     /// <param name="name">the iText tagname</param>
-    /// <param name="alias">the custom tagname</param>
-    public virtual void AddAlias(string name, string alias)
+    /// <param name="attributeAlias">the custom tagname</param>
+    public virtual void AddAlias(string name, string attributeAlias)
     {
-        AttributeAliases.Add(alias, name);
+        if (attributeAlias == null)
+        {
+            throw new ArgumentNullException(nameof(attributeAlias));
+        }
+
+        AttributeAliases.Add(attributeAlias, name);
     }
 
     /// <summary>

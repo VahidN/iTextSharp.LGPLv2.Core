@@ -241,72 +241,77 @@ public class RtfShapeProperty : RtfAddableElement
     /// <summary>
     ///     Write this RtfShapePosition.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\sp"), 0, t.Length);
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\sn"), 0, t.Length);
-        result.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
-        result.Write(t = DocWriter.GetIsoBytes(_name), 0, t.Length);
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\sv"), 0, t.Length);
-        result.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\sp"), 0, t.Length);
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\sn"), 0, t.Length);
+        outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(_name), 0, t.Length);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\sv"), 0, t.Length);
+        outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
         switch (_type)
         {
             case PropertyTypeLong:
             case PropertyTypeDouble:
-                result.Write(t = DocWriter.GetIsoBytes(_value.ToString()), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes(_value.ToString()), 0, t.Length);
                 break;
             case PropertyTypeBoolean:
                 if ((bool)_value)
                 {
-                    result.Write(t = DocWriter.GetIsoBytes("1"), 0, t.Length);
+                    outp.Write(t = DocWriter.GetIsoBytes("1"), 0, t.Length);
                 }
                 else
                 {
-                    result.Write(t = DocWriter.GetIsoBytes("0"), 0, t.Length);
+                    outp.Write(t = DocWriter.GetIsoBytes("0"), 0, t.Length);
                 }
 
                 break;
             case PropertyTypeColor:
                 var color = (BaseColor)_value;
-                result.Write(t = IntToByteArray(color.R | (color.G << 8) | (color.B << 16)), 0, t.Length);
+                outp.Write(t = IntToByteArray(color.R | (color.G << 8) | (color.B << 16)), 0, t.Length);
                 break;
             case PropertyTypeArray:
                 if (_value is int[])
                 {
                     var values = (int[])_value;
-                    result.Write(t = DocWriter.GetIsoBytes("4;"), 0, t.Length);
-                    result.Write(t = IntToByteArray(values.Length), 0, t.Length);
-                    result.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
+                    outp.Write(t = DocWriter.GetIsoBytes("4;"), 0, t.Length);
+                    outp.Write(t = IntToByteArray(values.Length), 0, t.Length);
+                    outp.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
                     for (var i = 0; i < values.Length; i++)
                     {
-                        result.Write(t = IntToByteArray(values[i]), 0, t.Length);
+                        outp.Write(t = IntToByteArray(values[i]), 0, t.Length);
                         if (i < values.Length - 1)
                         {
-                            result.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
+                            outp.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
                         }
                     }
                 }
                 else if (_value is Point[])
                 {
                     var values = (Point[])_value;
-                    result.Write(t = DocWriter.GetIsoBytes("8;"), 0, t.Length);
-                    result.Write(t = IntToByteArray(values.Length), 0, t.Length);
-                    result.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
+                    outp.Write(t = DocWriter.GetIsoBytes("8;"), 0, t.Length);
+                    outp.Write(t = IntToByteArray(values.Length), 0, t.Length);
+                    outp.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
                     for (var i = 0; i < values.Length; i++)
                     {
-                        result.Write(t = DocWriter.GetIsoBytes("("), 0, t.Length);
-                        result.Write(t = IntToByteArray(values[i].X), 0, t.Length);
-                        result.Write(t = DocWriter.GetIsoBytes(","), 0, t.Length);
-                        result.Write(t = IntToByteArray(values[i].Y), 0, t.Length);
-                        result.Write(t = DocWriter.GetIsoBytes(")"), 0, t.Length);
+                        outp.Write(t = DocWriter.GetIsoBytes("("), 0, t.Length);
+                        outp.Write(t = IntToByteArray(values[i].X), 0, t.Length);
+                        outp.Write(t = DocWriter.GetIsoBytes(","), 0, t.Length);
+                        outp.Write(t = IntToByteArray(values[i].Y), 0, t.Length);
+                        outp.Write(t = DocWriter.GetIsoBytes(")"), 0, t.Length);
                         if (i < values.Length - 1)
                         {
-                            result.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
+                            outp.Write(RtfElement.CommaDelimiter, 0, RtfElement.CommaDelimiter.Length);
                         }
                     }
                 }
@@ -316,13 +321,13 @@ public class RtfShapeProperty : RtfAddableElement
                 var image = (Image)_value;
                 var img = new RtfImage(Doc, image);
                 img.SetTopLevelElement(true);
-                result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-                img.WriteContent(result);
-                result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+                outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+                img.WriteContent(outp);
+                outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
                 break;
         }
 
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
     }
 }

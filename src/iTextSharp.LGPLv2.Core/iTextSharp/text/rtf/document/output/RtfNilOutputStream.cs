@@ -45,19 +45,19 @@ public class RtfNilOutputStream : Stream
         throw new NotSupportedException();
     }
 
-    public override void Write(byte[] src, int off, int len)
+    public override void Write(byte[] buffer, int offset, int count)
     {
-        if (src == null)
+        if (buffer == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(buffer));
         }
 
-        if (off < 0 || off > src.Length || len < 0 || off + len > src.Length || off + len < 0)
+        if (offset < 0 || offset > buffer.Length || count < 0 || offset + count > buffer.Length || offset + count < 0)
         {
-            throw new IndexOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(offset));
         }
 
-        _size += len;
+        _size += count;
     }
 
     public override void WriteByte(byte value)

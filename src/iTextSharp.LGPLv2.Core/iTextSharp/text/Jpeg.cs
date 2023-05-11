@@ -9,10 +9,6 @@ namespace iTextSharp.text;
 ///     An Jpeg is the representation of a graphic element (JPEG)
 ///     that has to be inserted into the document
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Image" />
-/// <seealso cref="T:iTextSharp.text.Gif" />
-/// <seealso cref="T:iTextSharp.text.Png" />
 public class Jpeg : Image
 {
     public const int M_APP0 = 0xE0;
@@ -272,7 +268,7 @@ public class Jpeg : Image
                         if (byteapp2.Length >= 14)
                         {
                             var app2 = Encoding.ASCII.GetString(byteapp2, 0, 11);
-                            if (app2.Equals("ICC_PROFILE"))
+                            if (app2.Equals("ICC_PROFILE", StringComparison.Ordinal))
                             {
                                 var order = byteapp2[12] & 0xff;
                                 var count = byteapp2[13] & 0xff;

@@ -30,6 +30,16 @@ public class RtfSection : RtfElement
     /// <param name="section">The Section this RtfSection is based on</param>
     public RtfSection(RtfDocument doc, Section section) : base(doc)
     {
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
+        }
+
+        if (section == null)
+        {
+            throw new ArgumentNullException(nameof(section));
+        }
+
         Items = new List<IRtfBasicElement>();
         try
         {
@@ -57,7 +67,7 @@ public class RtfSection : RtfElement
                 }
             }
 
-            foreach (IElement element in section)
+            foreach (var element in section)
             {
                 var rtfElements = doc.GetMapper().MapElement(element);
                 for (var i = 0; i < rtfElements.Length; i++)
@@ -107,17 +117,22 @@ public class RtfSection : RtfElement
     /// <summary>
     ///     Write this RtfSection and its contents
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
         if (Title != null)
         {
-            Title.WriteContent(result);
+            Title.WriteContent(outp);
         }
 
         foreach (var rbe in Items)
         {
-            rbe.WriteContent(result);
+            rbe.WriteContent(outp);
         }
     }
 

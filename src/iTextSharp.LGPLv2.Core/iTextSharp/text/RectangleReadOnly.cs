@@ -6,10 +6,6 @@ namespace iTextSharp.text;
 ///     A RectangleReadOnly is the representation of a geometric figure.
 ///     It's the same as a Rectangle but immutable.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Table" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
-/// <seealso cref="T:iTextSharp.text.HeaderFooter" />
 public class RectangleReadOnly : Rectangle
 {
     /// <summary>
@@ -39,7 +35,8 @@ public class RectangleReadOnly : Rectangle
     ///     Constructs a RectangleReadOnly-object.
     /// </summary>
     /// <param name="rect">another Rectangle</param>
-    public RectangleReadOnly(Rectangle rect) : base(rect.Left, rect.Bottom, rect.Right, rect.Top)
+    public RectangleReadOnly(Rectangle rect) : base(rect?.Left ?? throw new ArgumentNullException(nameof(rect)),
+                                                    rect.Bottom, rect.Right, rect.Top)
     {
         base.CloneNonPositionParameters(rect);
     }
@@ -249,7 +246,7 @@ public class RectangleReadOnly : Rectangle
         return buf.ToString();
     }
 
-    private void throwReadOnlyError()
+    private static void throwReadOnlyError()
     {
         throw new InvalidOperationException("RectangleReadOnly: this Rectangle is read only.");
     }

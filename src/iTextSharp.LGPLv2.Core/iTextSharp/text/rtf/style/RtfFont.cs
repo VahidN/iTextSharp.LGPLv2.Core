@@ -244,13 +244,14 @@ public class RtfFont : Font, IRtfExtendedElement
                 var fontNames = font.BaseFont.FullFontName;
                 for (var i = 0; i < fontNames.Length; i++)
                 {
-                    if (fontNames[i][2].Equals("0"))
+                    if (fontNames[i][2].Equals("0", StringComparison.Ordinal))
                     {
                         _fontName = fontNames[i][3];
                         break;
                     }
 
-                    if (fontNames[i][2].Equals("1033") || fontNames[i][2].Equals(""))
+                    if (fontNames[i][2].Equals("1033", StringComparison.Ordinal) ||
+                        string.IsNullOrEmpty(fontNames[i][2]))
                     {
                         _fontName = fontNames[i][3];
                     }
@@ -369,14 +370,19 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <summary>
     ///     Writes the font definition
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(_fontFamily, 0, _fontFamily.Length);
-        result.Write(_fontCharset, 0, _fontCharset.Length);
-        result.Write(t = IntToByteArray(_charset), 0, t.Length);
-        result.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
-        Document.FilterSpecialChar(result, _fontName, true, false);
+        outp.Write(_fontFamily, 0, _fontFamily.Length);
+        outp.Write(_fontCharset, 0, _fontCharset.Length);
+        outp.Write(t = IntToByteArray(_charset), 0, t.Length);
+        outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
+        Document.FilterSpecialChar(outp, _fontName, true, false);
     }
 
     /// <summary>
@@ -393,7 +399,7 @@ public class RtfFont : Font, IRtfExtendedElement
 
         if (obj is RtfFont)
         {
-            if (string.Compare(GetFontName(), ((RtfFont)obj).GetFontName(), StringComparison.Ordinal) != 0)
+            if (!string.Equals(GetFontName(), ((RtfFont)obj).GetFontName(), StringComparison.Ordinal))
             {
                 return 1;
             }
@@ -417,8 +423,13 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <returns>A RtfFont</returns>
     public override Font Difference(Font font)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         var dFamilyname = font.Familyname;
-        if (dFamilyname == null || dFamilyname.Trim().Equals("") ||
+        if (dFamilyname == null || string.IsNullOrEmpty(dFamilyname.Trim()) ||
             Util.EqualsIgnoreCase(dFamilyname.Trim(), "unknown"))
         {
             dFamilyname = _fontName;
@@ -474,7 +485,7 @@ public class RtfFont : Font, IRtfExtendedElement
 
         var font = (RtfFont)obj;
         var result = true;
-        result = result & _fontName.Equals(font.GetFontName());
+        result = result & _fontName.Equals(font.GetFontName(), StringComparison.Ordinal);
         return result;
     }
 
@@ -586,6 +597,11 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <returns>A byte array with the font start data</returns>
     public virtual void WriteBegin(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         if (_fontNumber != UNDEFINED)
         {
@@ -664,6 +680,11 @@ public class RtfFont : Font, IRtfExtendedElement
     /// </summary>
     public virtual void WriteEnd(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         if (_fontStyle != UNDEFINED)
         {
@@ -735,7 +756,7 @@ public class RtfFont : Font, IRtfExtendedElement
     /// </summary>
     /// <param name="i">The integer to convert</param>
     /// <returns>A byte array representing the integer</returns>
-    protected byte[] IntToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString());
+    protected static byte[] IntToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString(CultureInfo.InvariantCulture));
 
     /// <summary>
     ///     Sets the correct font name from the family name.

@@ -146,6 +146,11 @@ public class BarcodeInter25 : Barcode
     /// <returns>the checksum</returns>
     public static char GetChecksum(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var mul = 3;
         var total = 0;
         for (var k = text.Length - 1; k >= 0; --k)
@@ -165,6 +170,11 @@ public class BarcodeInter25 : Barcode
     /// <returns>a  string  with only numeric characters</returns>
     public static string KeepNumbers(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var sb = new StringBuilder();
         for (var k = 0; k < text.Length; ++k)
         {
@@ -243,6 +253,11 @@ public class BarcodeInter25 : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var fullCode = code;
         float fontX = 0;
         if (font != null)

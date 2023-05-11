@@ -36,6 +36,11 @@ public class PdfCopy : PdfWriter
     /// <param name="os">outputstream</param>
     public PdfCopy(Document document, Stream os) : base(new PdfDocument(), os)
     {
+        if (document == null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
+
         document.AddDocListener(Pdf);
         Pdf.AddWriter(this);
         IndirectMap = new NullValueDictionary<PdfReader, INullValueDictionary<RefKey, IndirectReferences>>();
@@ -141,6 +146,11 @@ public class PdfCopy : PdfWriter
     /// <param name="reader">The reader of the input file that is being copied</param>
     public void CopyAcroForm(PdfReader reader)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         SetFromReader(reader);
 
         var catalog = reader.Catalog;
@@ -201,6 +211,11 @@ public class PdfCopy : PdfWriter
     /// <returns>the  PageStamp </returns>
     public PageStamp CreatePageStamp(PdfImportedPage iPage)
     {
+        if (iPage == null)
+        {
+            throw new ArgumentNullException(nameof(iPage));
+        }
+
         var pageNum = iPage.PageNumber;
         var reader = iPage.PdfReaderInstance.Reader;
         var pageN = reader.GetPageN(pageNum);
@@ -237,6 +252,11 @@ public class PdfCopy : PdfWriter
     /// <returns>the page</returns>
     public override PdfImportedPage GetImportedPage(PdfReader reader, int pageNumber)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         if (CurrentPdfReaderInstance != null)
         {
             if (CurrentPdfReaderInstance.Reader != reader)
@@ -278,6 +298,11 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected PdfArray CopyArray(PdfArray inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         var outp = new PdfArray();
 
         foreach (var value in inp.ArrayList)
@@ -294,6 +319,11 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected PdfDictionary CopyDictionary(PdfDictionary inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         var outp = new PdfDictionary();
         var type = PdfReader.GetPdfObjectRelease(inp.Get(PdfName.TYPE));
 
@@ -327,6 +357,11 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected virtual PdfIndirectReference CopyIndirect(PrIndirectReference inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         PdfIndirectReference theRef;
         var key = new RefKey(inp);
         var iRef = Indirects[key];
@@ -394,7 +429,8 @@ public class PdfCopy : PdfWriter
                 if (inp.Type < 0)
                 {
                     var lit = ((PdfLiteral)inp).ToString();
-                    if (lit.Equals("true") || lit.Equals("false"))
+                    if (lit.Equals("true", StringComparison.Ordinal) ||
+                        lit.Equals("false", StringComparison.Ordinal))
                     {
                         return new PdfBoolean(lit);
                     }
@@ -411,6 +447,11 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected PdfStream CopyStream(PrStream inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         var outp = new PrStream(inp, null);
 
         foreach (var key in inp.Keys)
@@ -449,6 +490,11 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected int SetFromIPage(PdfImportedPage iPage)
     {
+        if (iPage == null)
+        {
+            throw new ArgumentNullException(nameof(iPage));
+        }
+
         var pageNum = iPage.PageNumber;
         var inst = CurrentPdfReaderInstance = iPage.PdfReaderInstance;
         Reader = inst.Reader;
@@ -461,7 +507,7 @@ public class PdfCopy : PdfWriter
     /// </summary>
     protected void SetFromReader(PdfReader reader)
     {
-        Reader = reader;
+        Reader = reader ?? throw new ArgumentNullException(nameof(reader));
         Indirects = IndirectMap[reader];
         if (Indirects == null)
         {
@@ -553,6 +599,11 @@ public class PdfCopy : PdfWriter
 
         public void AddAnnotation(PdfAnnotation annot)
         {
+            if (annot == null)
+            {
+                throw new ArgumentNullException(nameof(annot));
+            }
+
             var allAnnots = new List<PdfAnnotation>();
             if (annot.IsForm())
             {
@@ -618,8 +669,8 @@ public class PdfCopy : PdfWriter
                         if (rect != null && (rect.Left.ApproxNotEqual(0) || rect.Right.ApproxNotEqual(0) ||
                                              rect.Top.ApproxNotEqual(0) || rect.Bottom.ApproxNotEqual(0)))
                         {
-                            var rotation = _reader.GetPageRotation(_pageN);
-                            var pageSize = _reader.GetPageSizeWithRotation(_pageN);
+                            var rotation = PdfReader.GetPageRotation(_pageN);
+                            var pageSize = PdfReader.GetPageSizeWithRotation(_pageN);
                             switch (rotation)
                             {
                                 case 90:
@@ -772,7 +823,7 @@ public class PdfCopy : PdfWriter
                 return;
             }
 
-            var page = _reader.GetPageSizeWithRotation(pageN);
+            var page = PdfReader.GetPageSizeWithRotation(pageN);
             var rotation = page.Rotation;
             switch (rotation)
             {
@@ -879,14 +930,13 @@ public class PdfCopy : PdfWriter
             Gen = refi.Generation;
         }
 
-        public override bool Equals(object o)
+        public override bool Equals(object obj)
         {
-            if (!(o is RefKey))
+            if (obj is not RefKey other)
             {
                 return false;
             }
 
-            var other = (RefKey)o;
             return Gen == other.Gen && Num == other.Num;
         }
 

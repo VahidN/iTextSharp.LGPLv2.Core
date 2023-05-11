@@ -88,7 +88,8 @@ public class PdfString : PdfObject
     {
         if (Bytes == null)
         {
-            if (encoding != null && encoding.Equals(TEXT_UNICODE) && PdfEncodings.IsPdfDocEncoding(Value))
+            if (encoding != null && encoding.Equals(TEXT_UNICODE, StringComparison.Ordinal) &&
+                PdfEncodings.IsPdfDocEncoding(Value))
             {
                 Bytes = PdfEncodings.ConvertToBytes(Value, TEXT_PDFDOCENCODING);
             }
@@ -121,6 +122,11 @@ public class PdfString : PdfObject
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         var b = GetBytes();
         PdfEncryption crypto = null;
         if (writer != null)

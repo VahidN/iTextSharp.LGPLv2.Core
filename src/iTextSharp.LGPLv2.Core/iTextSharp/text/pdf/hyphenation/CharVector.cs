@@ -10,7 +10,7 @@ public class CharVector : ICloneable
     /// <summary>
     ///     Capacity increment size
     /// </summary>
-    private static readonly int _defaultBlockSize = 2048;
+    private const int DEFAULT_BLOCK_SIZE = 2048;
 
     private readonly int _blockSize;
 
@@ -19,7 +19,7 @@ public class CharVector : ICloneable
     /// </summary>
     private int _n;
 
-    public CharVector() : this(_defaultBlockSize)
+    public CharVector() : this(DEFAULT_BLOCK_SIZE)
     {
     }
 
@@ -31,7 +31,7 @@ public class CharVector : ICloneable
         }
         else
         {
-            _blockSize = _defaultBlockSize;
+            _blockSize = DEFAULT_BLOCK_SIZE;
         }
 
         Arr = new char[_blockSize];
@@ -40,20 +40,25 @@ public class CharVector : ICloneable
 
     public CharVector(char[] a)
     {
-        _blockSize = _defaultBlockSize;
-        Arr = a;
+        _blockSize = DEFAULT_BLOCK_SIZE;
+        Arr = a ?? throw new ArgumentNullException(nameof(a));
         _n = a.Length;
     }
 
     public CharVector(char[] a, int capacity)
     {
+        if (a == null)
+        {
+            throw new ArgumentNullException(nameof(a));
+        }
+
         if (capacity > 0)
         {
             _blockSize = capacity;
         }
         else
         {
-            _blockSize = _defaultBlockSize;
+            _blockSize = DEFAULT_BLOCK_SIZE;
         }
 
         Arr = a;

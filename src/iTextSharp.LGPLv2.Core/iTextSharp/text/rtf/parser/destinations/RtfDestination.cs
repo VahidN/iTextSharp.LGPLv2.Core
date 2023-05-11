@@ -46,7 +46,7 @@ public abstract class RtfDestination
     ///     the new RtfDestinationListener.
     /// </summary>
     /// <param name="listener"></param>
-    public bool AddListener(IRtfDestinationListener listener)
+    public static bool AddListener(IRtfDestinationListener listener)
     {
         _listeners.Add(listener);
         return true;
@@ -105,7 +105,7 @@ public abstract class RtfDestination
     ///     the RtfCtrlWordListener that has to be removed.
     /// </summary>
     /// <param name="listener"></param>
-    public bool RemoveListener(IRtfDestinationListener listener)
+    public static bool RemoveListener(IRtfDestinationListener listener)
     {
         var i = _listeners.IndexOf(listener);
         if (i >= 0)
@@ -138,7 +138,7 @@ public abstract class RtfDestination
 
     /// <summary>
     /// </summary>
-    protected int AfterCharacter(int ch)
+    protected static int AfterCharacter(int ch)
     {
         foreach (var listener in _listeners)
         {
@@ -150,7 +150,7 @@ public abstract class RtfDestination
 
     /// <summary>
     /// </summary>
-    protected RtfCtrlWordData AfterCtrlWord(RtfCtrlWordData ctrlWordData)
+    protected static RtfCtrlWordData AfterCtrlWord(RtfCtrlWordData ctrlWordData)
     {
         foreach (var listener in _listeners)
         {
@@ -162,7 +162,7 @@ public abstract class RtfDestination
 
     /// <summary>
     /// </summary>
-    protected int BeforeCharacter(int ch)
+    protected static int BeforeCharacter(int ch)
     {
         foreach (var listener in _listeners)
         {
@@ -172,7 +172,7 @@ public abstract class RtfDestination
         return 0;
     }
 
-    protected RtfCtrlWordData BeforeCtrlWord(RtfCtrlWordData ctrlWordData)
+    protected static RtfCtrlWordData BeforeCtrlWord(RtfCtrlWordData ctrlWordData)
     {
         foreach (var listener in _listeners)
         {
@@ -184,7 +184,7 @@ public abstract class RtfDestination
 
     /// <summary>
     /// </summary>
-    protected int OnCharacter(int ch)
+    protected static int OnCharacter(int ch)
     {
         foreach (var listener in _listeners)
         {
@@ -197,7 +197,7 @@ public abstract class RtfDestination
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    protected bool OnCloseGroup()
+    protected static bool OnCloseGroup()
     {
         foreach (var listener in _listeners)
         {
@@ -209,7 +209,7 @@ public abstract class RtfDestination
 
     /// <summary>
     /// </summary>
-    protected RtfCtrlWordData OnCtrlWord(RtfCtrlWordData ctrlWordData)
+    protected static RtfCtrlWordData OnCtrlWord(RtfCtrlWordData ctrlWordData)
     {
         foreach (var listener in _listeners)
         {
@@ -222,7 +222,7 @@ public abstract class RtfDestination
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    protected bool OnOpenGroup()
+    protected static bool OnOpenGroup()
     {
         foreach (var listener in _listeners)
         {

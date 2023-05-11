@@ -24,14 +24,19 @@ public class RtfGenerator : RtfElement
     /// <summary>
     ///     Writes the RTF generator group.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_generator, 0, _generator.Length);
-        result.Write(Delimiter, 0, Delimiter.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_generator, 0, _generator.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
         byte[] t;
-        result.Write(t = DocWriter.GetIsoBytes(iTextSharp.text.Document.Version), 0, t.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(t = DocWriter.GetIsoBytes(iTextSharp.text.Document.Version), 0, t.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 }

@@ -13,4 +13,8 @@ public class PdfException : DocumentException
     public PdfException(string message) : base(message)
     {
     }
+
+    public PdfException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

@@ -125,6 +125,11 @@ public class RtfDestinationStylesheetTable : RtfDestination
 
     public RtfDestinationStylesheetTable(RtfParser parser, string type) : base(parser)
     {
+        if (parser == null)
+        {
+            throw new ArgumentNullException(nameof(parser));
+        }
+
         _importHeader = parser.GetImportManager();
         _type = type;
     }
@@ -135,7 +140,7 @@ public class RtfDestinationStylesheetTable : RtfDestination
     /// </summary>
     public override bool CloseDestination() => true;
 
-    public void CreateNewStyle()
+    public static void CreateNewStyle()
     {
         //public RtfParagraphStyle(String styleName, String fontName, int fontSize, int fontStyle, Color fontColor)
         //this.rtfParagraphStyle = new RtfParagraphStyle();
@@ -256,258 +261,263 @@ public class RtfDestinationStylesheetTable : RtfDestination
 
     public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
     {
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
+
         var result = true;
         OnCtrlWord(ctrlWordData); // event handler
 
         if (RtfParser.IsImport())
         {
             // information
-            if (ctrlWordData.CtrlWord.Equals("s"))
+            if (ctrlWordData.CtrlWord.Equals("s", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("cs"))
+            if (ctrlWordData.CtrlWord.Equals("cs", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("ds"))
+            if (ctrlWordData.CtrlWord.Equals("ds", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("ts"))
+            if (ctrlWordData.CtrlWord.Equals("ts", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsrowd"))
+            if (ctrlWordData.CtrlWord.Equals("tsrowd", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("keycode"))
+            if (ctrlWordData.CtrlWord.Equals("keycode", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("shift"))
+            if (ctrlWordData.CtrlWord.Equals("shift", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("ctrl"))
+            if (ctrlWordData.CtrlWord.Equals("ctrl", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("alt"))
+            if (ctrlWordData.CtrlWord.Equals("alt", StringComparison.Ordinal))
             {
             }
 
             //cells
-            if (ctrlWordData.CtrlWord.Equals("fn"))
+            if (ctrlWordData.CtrlWord.Equals("fn", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("additive"))
+            if (ctrlWordData.CtrlWord.Equals("additive", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("sbasedon"))
+            if (ctrlWordData.CtrlWord.Equals("sbasedon", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("snext"))
+            if (ctrlWordData.CtrlWord.Equals("snext", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("sautoupd"))
+            if (ctrlWordData.CtrlWord.Equals("sautoupd", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("shidden"))
+            if (ctrlWordData.CtrlWord.Equals("shidden", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("slink"))
+            if (ctrlWordData.CtrlWord.Equals("slink", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("slocked"))
+            if (ctrlWordData.CtrlWord.Equals("slocked", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("spersonal"))
+            if (ctrlWordData.CtrlWord.Equals("spersonal", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("scompose"))
+            if (ctrlWordData.CtrlWord.Equals("scompose", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("sreply"))
+            if (ctrlWordData.CtrlWord.Equals("sreply", StringComparison.Ordinal))
             {
             }
             /* FORMATTING */
             // brdrdef/parfmt/apoctl/tabdef/shading/chrfmt
 
 
-            if (ctrlWordData.CtrlWord.Equals("styrsid"))
+            if (ctrlWordData.CtrlWord.Equals("styrsid", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("ssemihidden"))
+            if (ctrlWordData.CtrlWord.Equals("ssemihidden", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("sqformat"))
+            if (ctrlWordData.CtrlWord.Equals("sqformat", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("spriority"))
+            if (ctrlWordData.CtrlWord.Equals("spriority", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("sunhideused"))
+            if (ctrlWordData.CtrlWord.Equals("sunhideused", StringComparison.Ordinal))
             {
             }
 
             /* TABLE STYLES */
-            if (ctrlWordData.CtrlWord.Equals("tscellwidth"))
+            if (ctrlWordData.CtrlWord.Equals("tscellwidth", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellwidthfts"))
+            if (ctrlWordData.CtrlWord.Equals("tscellwidthfts", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddt"))
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddt", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddl"))
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddl", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddr"))
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddr", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddb"))
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddb", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddft")) /*0-auto, 3-twips*/
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddft", StringComparison.Ordinal)) /*0-auto, 3-twips*/
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddfl")) /*0-auto, 3-twips*/
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfl", StringComparison.Ordinal)) /*0-auto, 3-twips*/
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddfr")) /*0-auto, 3-twips*/
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfr", StringComparison.Ordinal)) /*0-auto, 3-twips*/
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellpaddfb")) /*0-auto, 3-twips*/
+            if (ctrlWordData.CtrlWord.Equals("tscellpaddfb", StringComparison.Ordinal)) /*0-auto, 3-twips*/
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsvertalt"))
+            if (ctrlWordData.CtrlWord.Equals("tsvertalt", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsvertalc"))
+            if (ctrlWordData.CtrlWord.Equals("tsvertalc", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsvertalb"))
+            if (ctrlWordData.CtrlWord.Equals("tsvertalb", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsnowrap"))
+            if (ctrlWordData.CtrlWord.Equals("tsnowrap", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellcfpat"))
+            if (ctrlWordData.CtrlWord.Equals("tscellcfpat", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscellcbpat"))
+            if (ctrlWordData.CtrlWord.Equals("tscellcbpat", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgbdiag"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgbdiag", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgfdiag"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgfdiag", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgcross"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgcross", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgdcross"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgdcross", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgdkcross "))
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkcross ", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgdkdcross"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkdcross", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbghoriz"))
+            if (ctrlWordData.CtrlWord.Equals("tsbghoriz", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgvert"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgvert", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgdkhor"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkhor", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbgdkvert"))
+            if (ctrlWordData.CtrlWord.Equals("tsbgdkvert", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrt"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrt", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrb"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrb", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrl"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrl", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrr"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrr", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrh"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrh", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrv"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrv", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgl"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgl", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgr"))
+            if (ctrlWordData.CtrlWord.Equals("tsbrdrdgr", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscbandsh"))
+            if (ctrlWordData.CtrlWord.Equals("tscbandsh", StringComparison.Ordinal))
             {
             }
 
-            if (ctrlWordData.CtrlWord.Equals("tscbandsv"))
+            if (ctrlWordData.CtrlWord.Equals("tscbandsv", StringComparison.Ordinal))
             {
             }
         }
@@ -680,7 +690,7 @@ public class RtfDestinationStylesheetTable : RtfDestination
 
     public override void SetParser(RtfParser parser)
     {
-        RtfParser = parser;
+        RtfParser = parser ?? throw new ArgumentNullException(nameof(parser));
         _importHeader = parser.GetImportManager();
     }
 

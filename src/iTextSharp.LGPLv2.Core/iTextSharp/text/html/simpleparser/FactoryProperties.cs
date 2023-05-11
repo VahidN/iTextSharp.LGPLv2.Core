@@ -34,6 +34,16 @@ public class FactoryProperties
 
     public static void CreateParagraph(Paragraph p, ChainedProperties props)
     {
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
         var value = props["align"];
         if (value != null)
         {
@@ -103,7 +113,15 @@ public class FactoryProperties
     /// </summary>
     /// <param name="props">ChainedProperties</param>
     /// <returns>a HyphenationEvent</returns>
-    public static IHyphenationEvent GetHyphenation(ChainedProperties props) => GetHyphenation(props["hyphenation"]);
+    public static IHyphenationEvent GetHyphenation(ChainedProperties props)
+    {
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
+        return GetHyphenation(props["hyphenation"]);
+    }
 
     /// <summary>
     ///     Gets a HyphenationEvent based on the hyphenation entry in a HashMap.
@@ -111,8 +129,15 @@ public class FactoryProperties
     /// </summary>
     /// <param name="props">a HashMap with properties</param>
     /// <returns>a HyphenationEvent</returns>
-    public static IHyphenationEvent GetHyphenation(INullValueDictionary<string, string> props) =>
-        GetHyphenation(props["hyphenation"]);
+    public static IHyphenationEvent GetHyphenation(INullValueDictionary<string, string> props)
+    {
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
+        return GetHyphenation(props["hyphenation"]);
+    }
 
     /// <summary>
     ///     Gets a HyphenationEvent based on a String.
@@ -173,6 +198,11 @@ public class FactoryProperties
     /// <param name="h">that should have at least a key named</param>
     public static void InsertStyle(INullValueDictionary<string, string> h)
     {
+        if (h == null)
+        {
+            throw new ArgumentNullException(nameof(h));
+        }
+
         var style = h["style"];
         if (style == null)
         {
@@ -180,41 +210,45 @@ public class FactoryProperties
         }
 
         var prop = Markup.ParseAttributes(style);
-        foreach (string key in prop.Keys)
+        foreach (var key in prop.Keys)
         {
-            if (key.Equals(Markup.CSS_KEY_FONTFAMILY))
+            if (key.Equals(Markup.CSS_KEY_FONTFAMILY, StringComparison.OrdinalIgnoreCase))
             {
                 h["face"] = prop[key];
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTSIZE))
+            else if (key.Equals(Markup.CSS_KEY_FONTSIZE, StringComparison.OrdinalIgnoreCase))
             {
                 h["size"] = Markup.ParseLength(prop[key]).ToString(NumberFormatInfo.InvariantInfo) + "pt";
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTSTYLE))
+            else if (key.Equals(Markup.CSS_KEY_FONTSTYLE, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals("italic") || ss.Equals("oblique"))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals("italic", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("oblique", StringComparison.OrdinalIgnoreCase))
                 {
                     h["i"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTWEIGHT))
+            else if (key.Equals(Markup.CSS_KEY_FONTWEIGHT, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals("bold") || ss.Equals("700") || ss.Equals("800") || ss.Equals("900"))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals("bold", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("700", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("800", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("900", StringComparison.OrdinalIgnoreCase))
                 {
                     h["b"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_TEXTDECORATION))
+            else if (key.Equals(Markup.CSS_KEY_TEXTDECORATION, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals(Markup.CSS_VALUE_UNDERLINE))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals(Markup.CSS_VALUE_UNDERLINE, StringComparison.OrdinalIgnoreCase))
                 {
                     h["u"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_COLOR))
+            else if (key.Equals(Markup.CSS_KEY_COLOR, StringComparison.OrdinalIgnoreCase))
             {
                 var c = Markup.DecodeColor(prop[key]);
                 if (c != null)
@@ -224,11 +258,11 @@ public class FactoryProperties
                     h["color"] = hs;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_LINEHEIGHT))
+            else if (key.Equals(Markup.CSS_KEY_LINEHEIGHT, StringComparison.OrdinalIgnoreCase))
             {
                 var ss = prop[key].Trim();
                 var v = Markup.ParseLength(prop[key]);
-                if (ss.EndsWith("%"))
+                if (ss.EndsWith("%", StringComparison.OrdinalIgnoreCase))
                 {
                     v /= 100;
                     h["leading"] = "0," + v.ToString(NumberFormatInfo.InvariantInfo);
@@ -242,7 +276,7 @@ public class FactoryProperties
                     h["leading"] = v.ToString(NumberFormatInfo.InvariantInfo) + ",0";
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_TEXTALIGN))
+            else if (key.Equals(Markup.CSS_KEY_TEXTALIGN, StringComparison.OrdinalIgnoreCase))
             {
                 var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
                 h["align"] = ss;
@@ -258,6 +292,16 @@ public class FactoryProperties
     /// <param name="cprops"></param>
     public static void InsertStyle(INullValueDictionary<string, string> h, ChainedProperties cprops)
     {
+        if (h == null)
+        {
+            throw new ArgumentNullException(nameof(h));
+        }
+
+        if (cprops == null)
+        {
+            throw new ArgumentNullException(nameof(cprops));
+        }
+
         var style = h["style"];
         if (style == null)
         {
@@ -265,13 +309,13 @@ public class FactoryProperties
         }
 
         var prop = Markup.ParseAttributes(style);
-        foreach (string key in prop.Keys)
+        foreach (var key in prop.Keys)
         {
-            if (key.Equals(Markup.CSS_KEY_FONTFAMILY))
+            if (key.Equals(Markup.CSS_KEY_FONTFAMILY, StringComparison.OrdinalIgnoreCase))
             {
                 h["face"] = prop[key];
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTSIZE))
+            else if (key.Equals(Markup.CSS_KEY_FONTSIZE, StringComparison.OrdinalIgnoreCase))
             {
                 var actualFontSize = Markup.ParseLength(cprops[ElementTags.SIZE], Markup.DEFAULT_FONT_SIZE);
                 if (actualFontSize <= 0f)
@@ -282,31 +326,35 @@ public class FactoryProperties
                 h[ElementTags.SIZE] =
                     Markup.ParseLength(prop[key], actualFontSize).ToString(NumberFormatInfo.InvariantInfo) + "pt";
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTSTYLE))
+            else if (key.Equals(Markup.CSS_KEY_FONTSTYLE, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals("italic") || ss.Equals("oblique"))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals("italic", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("oblique", StringComparison.OrdinalIgnoreCase))
                 {
                     h["i"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_FONTWEIGHT))
+            else if (key.Equals(Markup.CSS_KEY_FONTWEIGHT, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals("bold") || ss.Equals("700") || ss.Equals("800") || ss.Equals("900"))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals("bold", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("700", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("800", StringComparison.OrdinalIgnoreCase) ||
+                    ss.Equals("900", StringComparison.OrdinalIgnoreCase))
                 {
                     h["b"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_TEXTDECORATION))
+            else if (key.Equals(Markup.CSS_KEY_TEXTDECORATION, StringComparison.OrdinalIgnoreCase))
             {
-                var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
-                if (ss.Equals(Markup.CSS_VALUE_UNDERLINE))
+                var ss = prop[key].Trim().ToUpperInvariant();
+                if (ss.Equals(Markup.CSS_VALUE_UNDERLINE, StringComparison.OrdinalIgnoreCase))
                 {
                     h["u"] = null;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_COLOR))
+            else if (key.Equals(Markup.CSS_KEY_COLOR, StringComparison.OrdinalIgnoreCase))
             {
                 var c = Markup.DecodeColor(prop[key]);
                 if (c != null)
@@ -316,7 +364,7 @@ public class FactoryProperties
                     h["color"] = hs;
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_LINEHEIGHT))
+            else if (key.Equals(Markup.CSS_KEY_LINEHEIGHT, StringComparison.OrdinalIgnoreCase))
             {
                 var ss = prop[key].Trim();
                 var actualFontSize = Markup.ParseLength(cprops[ElementTags.SIZE], Markup.DEFAULT_FONT_SIZE);
@@ -326,7 +374,7 @@ public class FactoryProperties
                 }
 
                 var v = Markup.ParseLength(prop[key], actualFontSize);
-                if (ss.EndsWith("%"))
+                if (ss.EndsWith("%", StringComparison.OrdinalIgnoreCase))
                 {
                     v /= 100;
                     h["leading"] = "0," + v.ToString(NumberFormatInfo.InvariantInfo);
@@ -340,12 +388,12 @@ public class FactoryProperties
                     h["leading"] = v.ToString(NumberFormatInfo.InvariantInfo) + ",0";
                 }
             }
-            else if (key.Equals(Markup.CSS_KEY_TEXTALIGN))
+            else if (key.Equals(Markup.CSS_KEY_TEXTALIGN, StringComparison.OrdinalIgnoreCase))
             {
                 var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
                 h["align"] = ss;
             }
-            else if (key.Equals(Markup.CSS_KEY_PADDINGLEFT))
+            else if (key.Equals(Markup.CSS_KEY_PADDINGLEFT, StringComparison.OrdinalIgnoreCase))
             {
                 var ss = prop[key].Trim().ToLower(CultureInfo.InvariantCulture);
                 h["indent"] = ss;
@@ -353,8 +401,13 @@ public class FactoryProperties
         }
     }
 
-    public Chunk CreateChunk(string text, ChainedProperties props)
+    public static Chunk CreateChunk(string text, ChainedProperties props)
     {
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
         var font = GetFont(props);
         var size = font.Size;
         size /= 2;
@@ -372,8 +425,13 @@ public class FactoryProperties
         return ck;
     }
 
-    public Font GetFont(ChainedProperties props)
+    public static Font GetFont(ChainedProperties props)
     {
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
         var face = props[ElementTags.FACE];
         if (face != null)
         {
@@ -381,17 +439,17 @@ public class FactoryProperties
             while (tok.HasMoreTokens())
             {
                 face = tok.NextToken().Trim();
-                if (face.StartsWith("\""))
+                if (face.StartsWith("\"", StringComparison.Ordinal))
                 {
                     face = face.Substring(1);
                 }
 
-                if (face.EndsWith("\""))
+                if (face.EndsWith("\"", StringComparison.Ordinal))
                 {
                     face = face.Substring(0, face.Length - 1);
                 }
 
-                if (FontImp.IsRegistered(face))
+                if (FontFactoryImp.IsRegistered(face))
                 {
                     break;
                 }
@@ -433,7 +491,7 @@ public class FactoryProperties
             encoding = BaseFont.WINANSI;
         }
 
-        return FontImp.GetFont(face, encoding, true, size, style, color);
+        return FontFactoryImp.GetFont(face, encoding, true, size, style, color);
     }
 
     private static void setParagraphLeading(Paragraph p, string leading)

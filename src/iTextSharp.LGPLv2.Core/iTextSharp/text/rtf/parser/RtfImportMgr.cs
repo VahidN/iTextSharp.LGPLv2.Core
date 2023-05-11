@@ -79,7 +79,7 @@ public class RtfImportMgr
     public void ImportColor(string colorNr, BaseColor color)
     {
         var rtfColor = new RtfColor(_rtfDoc, color);
-        _importColorMapping[colorNr] = rtfColor.GetColorNumber().ToString();
+        _importColorMapping[colorNr] = rtfColor.GetColorNumber().ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -92,7 +92,8 @@ public class RtfImportMgr
     {
         var rtfFont = new RtfFont(fontName);
         rtfFont.SetRtfDocument(_rtfDoc);
-        _importFontMapping[fontNr] = _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString();
+        _importFontMapping[fontNr] =
+            _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
         return true;
     }
 
@@ -112,7 +113,8 @@ public class RtfImportMgr
         }
 
         rtfFont.SetRtfDocument(_rtfDoc);
-        _importFontMapping[fontNr] = _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString();
+        _importFontMapping[fontNr] =
+            _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
         return true;
     }
 
@@ -139,7 +141,8 @@ public class RtfImportMgr
         }
 
         rtfFont.SetRtfDocument(_rtfDoc);
-        _importFontMapping[fontNr] = _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString();
+        _importFontMapping[fontNr] =
+            _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
         return true;
     }
 
@@ -173,9 +176,9 @@ public class RtfImportMgr
     /// <returns>The mapped color number</returns>
     public string MapColorNr(string colorNr)
     {
-        if (_importColorMapping.ContainsKey(colorNr))
+        if (_importColorMapping.TryGetValue(colorNr, out var nr))
         {
-            return _importColorMapping[colorNr];
+            return nr;
         }
 
         return "0";
@@ -191,9 +194,9 @@ public class RtfImportMgr
     /// <returns>The mapped font number.</returns>
     public string MapFontNr(string fontNr)
     {
-        if (_importFontMapping.ContainsKey(fontNr))
+        if (_importFontMapping.TryGetValue(fontNr, out var nr))
         {
-            return _importFontMapping[fontNr];
+            return nr;
         }
 
         return "0";
@@ -207,9 +210,9 @@ public class RtfImportMgr
     /// </summary>
     public string MapListNr(string listNr)
     {
-        if (_importListMapping.ContainsKey(listNr))
+        if (_importListMapping.TryGetValue(listNr, out var nr))
         {
-            return _importListMapping[listNr];
+            return nr;
         }
 
         return null;
@@ -223,9 +226,9 @@ public class RtfImportMgr
     /// </summary>
     public string MapStylesheetListNr(string listNr)
     {
-        if (_importStylesheetListMapping.ContainsKey(listNr))
+        if (_importStylesheetListMapping.TryGetValue(listNr, out var nr))
         {
-            return _importStylesheetListMapping[listNr];
+            return nr;
         }
 
         return "0";

@@ -36,4 +36,8 @@ public class RtfParserException : Exception
     public RtfParserException(string message) : base(message)
     {
     }
+
+    public RtfParserException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

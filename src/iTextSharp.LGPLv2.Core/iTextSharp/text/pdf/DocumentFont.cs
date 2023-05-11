@@ -73,7 +73,7 @@ public class DocumentFont : BaseFont
     private float _ascender = 800;
     private float _capHeight = 700;
     private float _descender = -200;
-    private IntHashtable _diffmap;
+    private NullValueDictionary<int, int> _diffmap;
     private float _italicAngle;
     private float _llx = -50;
     private float _lly = -200;
@@ -100,7 +100,7 @@ public class DocumentFont : BaseFont
         {
             for (var k = 0; k < _cjkNames.Length; ++k)
             {
-                if (_fontName.StartsWith(_cjkNames[k]))
+                if (_fontName.StartsWith(_cjkNames[k], StringComparison.Ordinal))
                 {
                     _fontName = _cjkNames[k];
                     _cjkMirror = CreateFont(_fontName, _cjkEncs[k], false);
@@ -111,7 +111,7 @@ public class DocumentFont : BaseFont
             var enc = PdfName.DecodeName(_font.GetAsName(PdfName.Encoding).ToString());
             for (var k = 0; k < _cjkEncs2.Length; ++k)
             {
-                if (enc.StartsWith(_cjkEncs2[k]))
+                if (enc.StartsWith(_cjkEncs2[k], StringComparison.Ordinal))
                 {
                     if (k > 3)
                     {
@@ -123,7 +123,7 @@ public class DocumentFont : BaseFont
                 }
             }
 
-            if (PdfName.Type0.Equals(subType) && enc.Equals("Identity-H"))
+            if (PdfName.Type0.Equals(subType) && enc.Equals("Identity-H", StringComparison.Ordinal))
             {
                 processType0(_font);
                 _isType0 = true;
@@ -187,7 +187,7 @@ public class DocumentFont : BaseFont
     ///     @since 2.1.7
     /// </summary>
     /// <returns>the unicode to CID map</returns>
-    internal IntHashtable Uni2Byte { get; } = new();
+    internal NullValueDictionary<int, int> Uni2Byte { get; } = new();
 
     public override bool CharExists(int c)
     {
@@ -294,6 +294,11 @@ public class DocumentFont : BaseFont
 
     public override int GetWidth(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         if (_cjkMirror != null)
         {
             return _cjkMirror.GetWidth(text);
@@ -367,9 +372,9 @@ public class DocumentFont : BaseFont
             var ptr = 0;
             for (var k = 0; k < cc.Length; ++k)
             {
-                if (Uni2Byte.ContainsKey(cc[k]))
+                if (Uni2Byte.TryGetValue(cc[k], out var value))
                 {
-                    b[ptr++] = (byte)Uni2Byte[cc[k]];
+                    b[ptr++] = (byte)value;
                 }
             }
 
@@ -400,15 +405,15 @@ public class DocumentFont : BaseFont
                 return new[] { (byte)(g / 256), (byte)g };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
-        if (Uni2Byte.ContainsKey(char1))
+        if (Uni2Byte.TryGetValue(char1, out var value))
         {
-            return new[] { (byte)Uni2Byte[char1] };
+            return new[] { (byte)value };
         }
 
-        return new byte[0];
+        return Array.Empty<byte>();
     }
 
     /// <summary>
@@ -434,7 +439,7 @@ public class DocumentFont : BaseFont
 
     protected override int[] GetRawCharBBox(int c, string name) => null;
 
-    private string decodeString(PdfString ps)
+    private static string decodeString(PdfString ps)
     {
         if (ps.IsHexWriting())
         {
@@ -473,7 +478,7 @@ public class DocumentFont : BaseFont
                 var diffs = encDic.GetAsArray(PdfName.Differences);
                 if (diffs != null)
                 {
-                    _diffmap = new IntHashtable();
+                    _diffmap = new NullValueDictionary<int, int>();
                     var currentNumber = 0;
                     for (var k = 0; k < diffs.Size; ++k)
                     {
@@ -501,12 +506,13 @@ public class DocumentFont : BaseFont
         var newWidths = _font.GetAsArray(PdfName.Widths);
         var first = _font.GetAsNumber(PdfName.Firstchar);
         var last = _font.GetAsNumber(PdfName.Lastchar);
+#pragma warning disable CA1854
         if (BuiltinFonts14.ContainsKey(_fontName))
+#pragma warning restore CA1854
         {
-            BaseFont bf;
-            bf = CreateFont(_fontName, WINANSI, false);
+            var bf = CreateFont(_fontName, WINANSI, false);
             var e = Uni2Byte.ToOrderedKeys();
-            for (var k = 0; k < e.Length; ++k)
+            for (var k = 0; k < e.Count; ++k)
             {
                 var n = Uni2Byte[e[k]];
                 widths[n] = bf.GetRawWidth(n, GlyphList.UnicodeToName(e[k]));
@@ -516,7 +522,7 @@ public class DocumentFont : BaseFont
             {
                 //widths for differences must override existing ones
                 e = _diffmap.ToOrderedKeys();
-                for (var k = 0; k < e.Length; ++k)
+                for (var k = 0; k < e.Count; ++k)
                 {
                     var n = _diffmap[e[k]];
                     widths[n] = bf.GetRawWidth(n, GlyphList.UnicodeToName(e[k]));
@@ -633,7 +639,7 @@ public class DocumentFont : BaseFont
         }
     }
 
-    private void fillMetrics(byte[] touni, IntHashtable widths, int dw)
+    private void fillMetrics(byte[] touni, NullValueDictionary<int, int> widths, int dw)
     {
         var ps = new PdfContentParser(new PrTokeniser(touni));
         PdfObject ob = null;
@@ -642,7 +648,7 @@ public class DocumentFont : BaseFont
         {
             if (ob.Type == PdfContentParser.COMMAND_TYPE)
             {
-                if (ob.ToString().Equals("beginbfchar"))
+                if (ob.ToString().Equals("beginbfchar", StringComparison.Ordinal))
                 {
                     var n = ((PdfNumber)last).IntValue;
                     for (var k = 0; k < n; ++k)
@@ -663,7 +669,7 @@ public class DocumentFont : BaseFont
                         }
                     }
                 }
-                else if (ob.ToString().Equals("beginbfrange"))
+                else if (ob.ToString().Equals("beginbfrange", StringComparison.Ordinal))
                 {
                     var n = ((PdfNumber)last).IntValue;
                     for (var k = 0; k < n; ++k)
@@ -741,9 +747,9 @@ public class DocumentFont : BaseFont
         }
     }
 
-    private IntHashtable readWidths(PdfArray ws)
+    private static NullValueDictionary<int, int> readWidths(PdfArray ws)
     {
-        var hh = new IntHashtable();
+        var hh = new NullValueDictionary<int, int>();
         if (ws == null)
         {
             return hh;

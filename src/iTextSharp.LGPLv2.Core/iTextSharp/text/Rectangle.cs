@@ -7,10 +7,6 @@ namespace iTextSharp.text;
 /// <summary>
 ///     A Rectangle is the representation of a geometric figure.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Table" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
-/// <seealso cref="T:iTextSharp.text.HeaderFooter" />
 public class Rectangle : Element, IElement
 {
     /// <summary>
@@ -143,7 +139,8 @@ public class Rectangle : Element, IElement
     ///     Constructs a Rectangle-object.
     /// </summary>
     /// <param name="rect">another Rectangle</param>
-    public Rectangle(Rectangle rect) : this(rect.Llx, rect.Lly, rect.Urx, rect.Ury)
+    public Rectangle(Rectangle rect) : this(rect?.Llx ?? throw new ArgumentNullException(nameof(rect)),
+                                            rect.Lly, rect.Urx, rect.Ury)
     {
         CloneNonPositionParameters(rect);
     }
@@ -419,6 +416,11 @@ public class Rectangle : Element, IElement
     /// <returns>true if the element was processed successfully</returns>
     public virtual bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -449,6 +451,11 @@ public class Rectangle : Element, IElement
 
     public virtual void CloneNonPositionParameters(Rectangle rect)
     {
+        if (rect == null)
+        {
+            throw new ArgumentNullException(nameof(rect));
+        }
+
         rotation = rect.rotation;
         border = rect.border;
         borderWidth = rect.borderWidth;
@@ -623,6 +630,11 @@ public class Rectangle : Element, IElement
 
     public virtual void SoftCloneNonPositionParameters(Rectangle rect)
     {
+        if (rect == null)
+        {
+            throw new ArgumentNullException(nameof(rect));
+        }
+
         if (rect.rotation != 0)
         {
             rotation = rect.rotation;

@@ -83,6 +83,11 @@ public class RtfParserState
     /// <param name="orig">The object to copy</param>
     public RtfParserState(RtfParserState orig)
     {
+        if (orig == null)
+        {
+            throw new ArgumentNullException(nameof(orig));
+        }
+
         Properties = orig.Properties;
         ParserState = orig.ParserState;
         TokeniserState = orig.TokeniserState;

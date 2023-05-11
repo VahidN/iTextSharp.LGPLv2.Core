@@ -129,22 +129,27 @@ public class RtfPageSetting : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Writes the page size / page margin definition
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(_pageWidthBytes, 0, _pageWidthBytes.Length);
-        result.Write(t = IntToByteArray(_pageWidth), 0, t.Length);
-        result.Write(_pageHeightBytes, 0, _pageHeightBytes.Length);
-        result.Write(t = IntToByteArray(_pageHeight), 0, t.Length);
-        result.Write(_marginLeftBytes, 0, _marginLeftBytes.Length);
-        result.Write(t = IntToByteArray(_marginLeft), 0, t.Length);
-        result.Write(_marginRightBytes, 0, _marginRightBytes.Length);
-        result.Write(t = IntToByteArray(_marginRight), 0, t.Length);
-        result.Write(_marginTopBytes, 0, _marginTopBytes.Length);
-        result.Write(t = IntToByteArray(_marginTop), 0, t.Length);
-        result.Write(_marginBottomBytes, 0, _marginBottomBytes.Length);
-        result.Write(t = IntToByteArray(_marginBottom), 0, t.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(_pageWidthBytes, 0, _pageWidthBytes.Length);
+        outp.Write(t = IntToByteArray(_pageWidth), 0, t.Length);
+        outp.Write(_pageHeightBytes, 0, _pageHeightBytes.Length);
+        outp.Write(t = IntToByteArray(_pageHeight), 0, t.Length);
+        outp.Write(_marginLeftBytes, 0, _marginLeftBytes.Length);
+        outp.Write(t = IntToByteArray(_marginLeft), 0, t.Length);
+        outp.Write(_marginRightBytes, 0, _marginRightBytes.Length);
+        outp.Write(t = IntToByteArray(_marginRight), 0, t.Length);
+        outp.Write(_marginTopBytes, 0, _marginTopBytes.Length);
+        outp.Write(t = IntToByteArray(_marginTop), 0, t.Length);
+        outp.Write(_marginBottomBytes, 0, _marginBottomBytes.Length);
+        outp.Write(t = IntToByteArray(_marginBottom), 0, t.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>
@@ -236,6 +241,11 @@ public class RtfPageSetting : RtfElement, IRtfExtendedElement
     /// <param name="pageSize">The pageSize to use</param>
     public void SetPageSize(Rectangle pageSize)
     {
+        if (pageSize == null)
+        {
+            throw new ArgumentNullException(nameof(pageSize));
+        }
+
         if (!guessFormat(pageSize, false))
         {
             _pageWidth = (int)(pageSize.Width * TWIPS_FACTOR);
@@ -259,6 +269,11 @@ public class RtfPageSetting : RtfElement, IRtfExtendedElement
     /// <returns>A byte array containing the definition for a new section</returns>
     public void WriteSectionDefinition(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         if (_landscape)
         {

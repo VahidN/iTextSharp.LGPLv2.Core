@@ -142,14 +142,14 @@ public class TiffField : IComparable
     ///     @throws ClassCastException if the parameter is not a
     ///     TIFFField .
     /// </summary>
-    public int CompareTo(object o)
+    public int CompareTo(object obj)
     {
-        if (o == null)
+        if (obj == null)
         {
-            throw new ArgumentException();
+            throw new ArgumentNullException(nameof(obj));
         }
 
-        var oTag = ((TiffField)o).GetTag();
+        var oTag = ((TiffField)obj).GetTag();
 
         if (_tag < oTag)
         {

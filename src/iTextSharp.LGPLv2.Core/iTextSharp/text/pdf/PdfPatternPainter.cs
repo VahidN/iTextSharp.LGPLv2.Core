@@ -177,10 +177,10 @@ public sealed class PdfPatternPainter : PdfTemplate
     /// <summary>
     ///     @see com.lowagie.text.pdf.PdfContentByte#setColorFill(java.awt.Color)
     /// </summary>
-    public override void SetColorFill(BaseColor color)
+    public override void SetColorFill(BaseColor value)
     {
         CheckNoColor();
-        base.SetColorFill(color);
+        base.SetColorFill(value);
     }
 
     /// <summary>
@@ -195,10 +195,10 @@ public sealed class PdfPatternPainter : PdfTemplate
     /// <summary>
     ///     @see com.lowagie.text.pdf.PdfContentByte#setColorStroke(java.awt.Color)
     /// </summary>
-    public override void SetColorStroke(BaseColor color)
+    public override void SetColorStroke(BaseColor value)
     {
         CheckNoColor();
-        base.SetColorStroke(color);
+        base.SetColorStroke(value);
     }
 
     /// <summary>
@@ -218,19 +218,19 @@ public sealed class PdfPatternPainter : PdfTemplate
     /// <summary>
     ///     @see com.lowagie.text.pdf.PdfContentByte#setGrayFill(float)
     /// </summary>
-    public override void SetGrayFill(float gray)
+    public override void SetGrayFill(float value)
     {
         CheckNoColor();
-        base.SetGrayFill(gray);
+        base.SetGrayFill(value);
     }
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.PdfContentByte#setGrayStroke(float)
     /// </summary>
-    public override void SetGrayStroke(float gray)
+    public override void SetGrayStroke(float value)
     {
         CheckNoColor();
-        base.SetGrayStroke(gray);
+        base.SetGrayStroke(value);
     }
 
     /// <summary>
@@ -324,7 +324,7 @@ public sealed class PdfPatternPainter : PdfTemplate
     ///     Gets the stream representing this pattern
     /// </summary>
     /// <returns>the stream representing this pattern</returns>
-    internal PdfPattern GetPattern() => new PdfPattern(this);
+    internal PdfPattern GetPattern() => new(this);
 
     /// <summary>
     ///     Gets the stream representing this pattern
@@ -332,5 +332,5 @@ public sealed class PdfPatternPainter : PdfTemplate
     /// </summary>
     /// <param name="compressionLevel">the compression level of the stream</param>
     /// <returns>the stream representing this pattern</returns>
-    internal PdfPattern GetPattern(int compressionLevel) => new PdfPattern(this, compressionLevel);
+    internal PdfPattern GetPattern(int compressionLevel) => new(this, compressionLevel);
 }

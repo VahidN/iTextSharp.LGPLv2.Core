@@ -90,25 +90,30 @@ public class RtfListItem : RtfParagraph
     /// <summary>
     ///     Writes the content of this RtfListItem.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (ParagraphStyle.GetSpacingBefore() > 0)
         {
-            result.Write(RtfParagraphStyle.SpacingBefore, 0, RtfParagraphStyle.SpacingBefore.Length);
-            result.Write(t = IntToByteArray(ParagraphStyle.GetSpacingBefore()), 0, t.Length);
+            outp.Write(RtfParagraphStyle.SpacingBefore, 0, RtfParagraphStyle.SpacingBefore.Length);
+            outp.Write(t = IntToByteArray(ParagraphStyle.GetSpacingBefore()), 0, t.Length);
         }
 
         if (ParagraphStyle.GetSpacingAfter() > 0)
         {
-            result.Write(RtfParagraphStyle.SpacingAfter, 0, RtfParagraphStyle.SpacingAfter.Length);
-            result.Write(t = IntToByteArray(ParagraphStyle.GetSpacingAfter()), 0, t.Length);
+            outp.Write(RtfParagraphStyle.SpacingAfter, 0, RtfParagraphStyle.SpacingAfter.Length);
+            outp.Write(t = IntToByteArray(ParagraphStyle.GetSpacingAfter()), 0, t.Length);
         }
 
         if (ParagraphStyle.GetLineLeading() > 0)
         {
-            result.Write(LineSpacing, 0, LineSpacing.Length);
-            result.Write(t = IntToByteArray(ParagraphStyle.GetLineLeading()), 0, t.Length);
+            outp.Write(LineSpacing, 0, LineSpacing.Length);
+            outp.Write(t = IntToByteArray(ParagraphStyle.GetLineLeading()), 0, t.Length);
         }
 
         for (var i = 0; i < Chunks.Count; i++)
@@ -120,11 +125,11 @@ public class RtfListItem : RtfParagraph
             }
             else if (rtfElement is RtfList)
             {
-                result.Write(Paragraph, 0, Paragraph.Length);
+                outp.Write(Paragraph, 0, Paragraph.Length);
                 _containsInnerList = true;
             }
 
-            rtfElement.WriteContent(result);
+            rtfElement.WriteContent(outp);
             if (rtfElement is RtfList)
             {
                 switch (_parentList.GetLevelFollowValue())
@@ -132,12 +137,12 @@ public class RtfListItem : RtfParagraph
                     case RtfListLevel.LIST_LEVEL_FOLLOW_NOTHING:
                         break;
                     case RtfListLevel.LIST_LEVEL_FOLLOW_TAB:
-                        _parentList.WriteListBeginning(result);
-                        result.Write(RtfList.Tab, 0, RtfList.Tab.Length);
+                        _parentList.WriteListBeginning(outp);
+                        outp.Write(RtfList.Tab, 0, RtfList.Tab.Length);
                         break;
                     case RtfListLevel.LIST_LEVEL_FOLLOW_SPACE:
-                        _parentList.WriteListBeginning(result);
-                        result.Write(t = DocWriter.GetIsoBytes(" "), 0, t.Length);
+                        _parentList.WriteListBeginning(outp);
+                        outp.Write(t = DocWriter.GetIsoBytes(" "), 0, t.Length);
                         break;
                 }
             }

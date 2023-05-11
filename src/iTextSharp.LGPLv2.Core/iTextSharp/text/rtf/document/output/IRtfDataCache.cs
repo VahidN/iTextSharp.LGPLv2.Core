@@ -23,7 +23,7 @@ public interface IRtfDataCache
 
 /// <summary>
 /// </summary>
-public class RtfDataCache
+public static class RtfDataCache
 {
     /// <summary>
     ///     Constant for caching efficently into memory.

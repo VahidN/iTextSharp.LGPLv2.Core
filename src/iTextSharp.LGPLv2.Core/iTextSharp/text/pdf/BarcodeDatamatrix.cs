@@ -298,7 +298,7 @@ public class BarcodeDatamatrix
     /// <returns>the status of the generation. It can be one of this values:</returns>
     public int Generate(string text)
     {
-        var t = EncodingsRegistry.Instance.GetEncoding(1252).GetBytes(text);
+        var t = EncodingsRegistry.GetEncoding(1252).GetBytes(text);
         return Generate(t, 0, t.Length);
     }
 
@@ -315,6 +315,11 @@ public class BarcodeDatamatrix
     /// <returns>the status of the generation. It can be one of this values:</returns>
     public int Generate(byte[] text, int textOffset, int textSize)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         int extCount, e, k, full;
         DmParams dm, last;
         var data = new byte[2500];
@@ -1168,7 +1173,7 @@ public class BarcodeDatamatrix
                     }
 
                     data[ptrOut++] = 234;
-                    data[ptrOut++] = (byte)(c == '5' ? 236 : 237);
+                    data[ptrOut++] = 236;
                     break;
                 case 'f':
                     if (order != 1 && (order != 2 || (text[textOffset] != 's' && text[textOffset] != 'm')))

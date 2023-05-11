@@ -26,10 +26,9 @@ public class TextmyHandler : TextHandler
     /// <param name="attrs">the list of attributes</param>
     public override void StartElement(string uri, string lname, string name, INullValueDictionary<string, string> attrs)
     {
-        if (MyTags.ContainsKey(name))
+        if (MyTags.TryGetValue(name, out var tag))
         {
-            var peer = MyTags[name];
-            HandleStartingTags(peer.Tag, peer.GetAttributes(attrs));
+            HandleStartingTags(tag.Tag, tag.GetAttributes(attrs));
         }
         else
         {
@@ -54,10 +53,9 @@ public class TextmyHandler : TextHandler
     /// <param name="name">the name of the tag that ends</param>
     public override void EndElement(string uri, string lname, string name)
     {
-        if (MyTags.ContainsKey(name))
+        if (MyTags.TryGetValue(name, out var tag))
         {
-            var peer = MyTags[name];
-            HandleEndingTags(peer.Tag);
+            HandleEndingTags(tag.Tag);
         }
         else
         {

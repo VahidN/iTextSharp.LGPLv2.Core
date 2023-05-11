@@ -26,6 +26,11 @@ public class PdfImage : PdfStream
     /// </summary>
     public PdfImage(Image image, string name, PdfIndirectReference maskRef)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         this.name = new PdfName(name);
         Put(PdfName.TYPE, PdfName.Xobject);
         Put(PdfName.Subtype, PdfName.Image);
@@ -326,6 +331,11 @@ public class PdfImage : PdfStream
 
     protected void ImportAll(PdfImage dup)
     {
+        if (dup == null)
+        {
+            throw new ArgumentNullException(nameof(dup));
+        }
+
         name = dup.name;
         Compressed = dup.Compressed;
         CompressionLevel = dup.CompressionLevel;

@@ -13,6 +13,16 @@ public class IncCell : ITextElementArray
     /// </summary>
     public IncCell(string tag, ChainedProperties props)
     {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
         Cell = new PdfPCell();
 
         var value = props["colspan"];
@@ -28,7 +38,7 @@ public class IncCell : ITextElementArray
         }
 
         value = props["align"];
-        if (tag.Equals("th"))
+        if (tag.Equals("th", StringComparison.OrdinalIgnoreCase))
         {
             Cell.HorizontalAlignment = Element.ALIGN_CENTER;
         }

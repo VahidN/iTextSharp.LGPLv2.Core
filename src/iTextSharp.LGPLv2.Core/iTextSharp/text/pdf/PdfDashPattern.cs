@@ -72,6 +72,11 @@ public class PdfDashPattern : PdfArray
     /// <returns>an array of  byte s</returns>
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         os.WriteByte((byte)'[');
 
         if (_dash >= 0)

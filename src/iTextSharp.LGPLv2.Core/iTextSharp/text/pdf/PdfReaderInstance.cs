@@ -56,7 +56,7 @@ public class PdfReaderInstance
         }
         else
         {
-            bout = new byte[0];
+            bout = Array.Empty<byte>();
         }
 
         dic.Put(PdfName.Resources, PdfReader.GetPdfObjectRelease(page.Get(PdfName.Resources)));

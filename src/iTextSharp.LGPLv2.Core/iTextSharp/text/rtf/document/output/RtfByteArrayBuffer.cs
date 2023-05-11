@@ -53,7 +53,7 @@ public class RtfByteArrayBuffer : Stream
     {
         if (a == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(a));
         }
 
         if (a.Length == 0)
@@ -85,7 +85,7 @@ public class RtfByteArrayBuffer : Stream
     {
         if (a == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(a));
         }
 
         for (var k = 0; k < a.Length; k++)
@@ -162,19 +162,19 @@ public class RtfByteArrayBuffer : Stream
     public override string ToString() =>
         "RtfByteArrayBuffer: size=" + Size() + " #arrays=" + _arrays.Count + " pos=" + _pos;
 
-    public override void Write(byte[] src, int off, int len)
+    public override void Write(byte[] buffer, int offset, int count)
     {
-        if (src == null)
+        if (buffer == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(buffer));
         }
 
-        if (off < 0 || off > src.Length || len < 0 || off + len > src.Length || off + len < 0)
+        if (offset < 0 || offset > buffer.Length || count < 0 || offset + count > buffer.Length || offset + count < 0)
         {
-            throw new IndexOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(offset));
         }
 
-        writeLoop(src, off, len);
+        writeLoop(buffer, offset, count);
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class RtfByteArrayBuffer : Stream
     {
         if (inp == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(inp));
         }
 
         long sizeStart = _size;
@@ -229,7 +229,7 @@ public class RtfByteArrayBuffer : Stream
     {
         if (outp == null)
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(outp));
         }
 
         var n = _arrays.Count;
@@ -254,7 +254,7 @@ public class RtfByteArrayBuffer : Stream
     {
         if (reqSize < 0)
         {
-            throw new ArgumentException();
+            throw new ArgumentOutOfRangeException(nameof(reqSize));
         }
 
         if (_pos == 0)

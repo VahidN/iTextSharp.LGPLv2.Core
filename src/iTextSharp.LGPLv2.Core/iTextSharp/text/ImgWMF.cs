@@ -63,7 +63,7 @@ public class ImgWmf : Image
     /// <param name="template">the template to read to</param>
     public void ReadWmf(PdfTemplate template)
     {
-        TemplateData = template;
+        TemplateData = template ?? throw new ArgumentNullException(nameof(template));
         template.Width = Width;
         template.Height = Height;
         Stream istr = null;

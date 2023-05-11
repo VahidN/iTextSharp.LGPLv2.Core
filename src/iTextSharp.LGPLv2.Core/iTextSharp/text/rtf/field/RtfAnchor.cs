@@ -31,6 +31,11 @@ public class RtfAnchor : RtfField
     /// <param name="anchor">The Anchor this RtfAnchor is based on</param>
     public RtfAnchor(RtfDocument doc, Anchor anchor) : base(doc)
     {
+        if (anchor == null)
+        {
+            throw new ArgumentNullException(nameof(anchor));
+        }
+
         _url = anchor.Reference;
         _content = new RtfPhrase(doc, anchor);
     }
@@ -41,19 +46,29 @@ public class RtfAnchor : RtfField
     ///     @throws IOException
     /// </summary>
     /// <returns>The field instructions for this RtfAnchor</returns>
-    protected override void WriteFieldInstContent(Stream result)
+    protected override void WriteFieldInstContent(Stream oupt)
     {
-        result.Write(_hyperlink, 0, _hyperlink.Length);
-        result.Write(Delimiter, 0, Delimiter.Length);
-        Document.FilterSpecialChar(result, _url, true, true);
+        if (oupt == null)
+        {
+            throw new ArgumentNullException(nameof(oupt));
+        }
+
+        oupt.Write(_hyperlink, 0, _hyperlink.Length);
+        oupt.Write(Delimiter, 0, Delimiter.Length);
+        Document.FilterSpecialChar(oupt, _url, true, true);
     }
 
     /// <summary>
     ///     Write the field result for this RtfAnchor. Writes the content
     ///     of the RtfPhrase.
     /// </summary>
-    protected override void WriteFieldResultContent(Stream outp)
+    protected override void WriteFieldResultContent(Stream oupt)
     {
-        _content.WriteContent(outp);
+        if (oupt == null)
+        {
+            throw new ArgumentNullException(nameof(oupt));
+        }
+
+        _content.WriteContent(oupt);
     }
 }

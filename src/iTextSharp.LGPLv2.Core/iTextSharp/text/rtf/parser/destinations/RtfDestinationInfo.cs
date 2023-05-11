@@ -54,17 +54,17 @@ public class RtfDestinationInfo : RtfDestination
             var doc = RtfParser.GetDocument();
             if (doc != null)
             {
-                if (_elementName.Equals("author"))
+                if (_elementName.Equals("author", StringComparison.Ordinal))
                 {
                     doc.AddAuthor(_text);
                 }
 
-                if (_elementName.Equals("title"))
+                if (_elementName.Equals("title", StringComparison.Ordinal))
                 {
                     doc.AddTitle(_text);
                 }
 
-                if (_elementName.Equals("subject"))
+                if (_elementName.Equals("subject", StringComparison.Ordinal))
                 {
                     doc.AddSubject(_text);
                 }
@@ -74,21 +74,21 @@ public class RtfDestinationInfo : RtfDestination
                 var rtfDoc = RtfParser.GetRtfDocument();
                 if (rtfDoc != null)
                 {
-                    if (_elementName.Equals("author"))
+                    if (_elementName.Equals("author", StringComparison.Ordinal))
                     {
                         var meta = new Meta(_elementName, _text);
                         var elem = new RtfInfoElement(rtfDoc, meta);
                         rtfDoc.GetDocumentHeader().AddInfoElement(elem);
                     }
 
-                    if (_elementName.Equals("title"))
+                    if (_elementName.Equals("title", StringComparison.Ordinal))
                     {
                         var meta = new Meta(_elementName, _text);
                         var elem = new RtfInfoElement(rtfDoc, meta);
                         rtfDoc.GetDocumentHeader().AddInfoElement(elem);
                     }
 
-                    if (_elementName.Equals("subject"))
+                    if (_elementName.Equals("subject", StringComparison.Ordinal))
                     {
                         var meta = new Meta(_elementName, _text);
                         var elem = new RtfInfoElement(rtfDoc, meta);
@@ -110,6 +110,11 @@ public class RtfDestinationInfo : RtfDestination
     /// </summary>
     public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
     {
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
+
         _elementName = ctrlWordData.CtrlWord;
         return true;
     }

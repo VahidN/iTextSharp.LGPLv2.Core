@@ -360,7 +360,7 @@ public abstract class BaseFont
     ///     Custom encodings use this map to key the Unicode character
     ///     to the single byte code.
     /// </summary>
-    protected IntHashtable SpecialMap;
+    protected NullValueDictionary<int, int> SpecialMap;
 
     /// <summary>
     ///     Indicates if all the glyphs and widths for that particular
@@ -414,7 +414,7 @@ public abstract class BaseFont
     ///     with True Type fonts.
     /// </summary>
     /// <returns>the code pages supported by the font</returns>
-    public virtual string[] CodePagesSupported => new string[0];
+    public virtual string[] CodePagesSupported => Array.Empty<string>();
 
     /// <summary>
     ///     Sets the compression level to be used for the font streams.
@@ -811,6 +811,11 @@ public abstract class BaseFont
     public static BaseFont CreateFont(string name, string encoding, bool embedded, bool cached, byte[] ttfAfm,
                                       byte[] pfb, bool noThrow, bool forceRead)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var nameBase = GetBaseName(name);
         encoding = NormalizeEncoding(encoding);
         var isBuiltinFonts14 = BuiltinFonts14.ContainsKey(name);
@@ -819,7 +824,8 @@ public abstract class BaseFont
         {
             embedded = false;
         }
-        else if (encoding.Equals(IDENTITY_H) || encoding.Equals(IDENTITY_V))
+        else if (encoding.Equals(IDENTITY_H, StringComparison.Ordinal) ||
+                 encoding.Equals(IDENTITY_V, StringComparison.Ordinal))
         {
             embedded = true;
         }
@@ -844,20 +850,21 @@ public abstract class BaseFont
             name.EndsWith(".pfm", StringComparison.OrdinalIgnoreCase))
         {
             fontBuilt = new Type1Font(name, encoding, embedded, ttfAfm, pfb, forceRead);
-            fontBuilt.FastWinansi = encoding.Equals(CP1252);
+            fontBuilt.FastWinansi = encoding.Equals(CP1252, StringComparison.Ordinal);
         }
         else if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
                  nameBase.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) ||
                  nameBase.IndexOf(".ttc,", StringComparison.OrdinalIgnoreCase) > 0)
         {
-            if (encoding.Equals(IDENTITY_H) || encoding.Equals(IDENTITY_V))
+            if (encoding.Equals(IDENTITY_H, StringComparison.Ordinal) ||
+                encoding.Equals(IDENTITY_V, StringComparison.Ordinal))
             {
                 fontBuilt = new TrueTypeFontUnicode(name, encoding, embedded, ttfAfm, forceRead);
             }
             else
             {
                 fontBuilt = new TrueTypeFont(name, encoding, embedded, ttfAfm, false, forceRead);
-                fontBuilt.FastWinansi = encoding.Equals(CP1252);
+                fontBuilt.FastWinansi = encoding.Equals(CP1252, StringComparison.Ordinal);
             }
         }
         else if (isCjkFont)
@@ -890,7 +897,8 @@ public abstract class BaseFont
                 {
                     FontCache.Add(keyNormalized, fontBuilt);
 
-                    var keyNormalizedToLower = $"{fontBuilt.PostscriptFontName.ToLower()}\n{encoding}\n{embedded}";
+                    var keyNormalizedToLower =
+                        $"{fontBuilt.PostscriptFontName.ToLowerInvariant()}\n{encoding}\n{embedded}";
                     if (!FontCache.ContainsKey(keyNormalizedToLower))
                     {
                         FontCache.Add(keyNormalizedToLower, fontBuilt);
@@ -941,6 +949,11 @@ public abstract class BaseFont
     /// <returns>an array of Object[] built with {getPostscriptFontName(), GetFamilyFontName(), GetFullFontName()}</returns>
     public static object[] GetAllFontNames(string name, string encoding, byte[] ttfAfm)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var nameBase = GetBaseName(name);
         BaseFont fontBuilt = null;
         if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
@@ -968,6 +981,11 @@ public abstract class BaseFont
     /// <returns>an array of Object[] built with {getPostscriptFontName(), getFamilyFontName(), getFullFontName()}</returns>
     public static string[][] GetAllNameEntries(string name, string encoding, byte[] ttfAfm)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var nameBase = GetBaseName(name);
         BaseFont fontBuilt = null;
         if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
@@ -993,7 +1011,12 @@ public abstract class BaseFont
     /// <returns>the list of fonts and references</returns>
     public static List<object[]> GetDocumentFonts(PdfReader reader)
     {
-        var hits = new IntHashtable();
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var hits = new NullValueDictionary<int, int>();
         List<object[]> fonts = new();
         var npages = reader.NumberOfPages;
         for (var k = 1; k <= npages; ++k)
@@ -1014,7 +1037,12 @@ public abstract class BaseFont
     /// <returns>the list of fonts and references</returns>
     public static List<object[]> GetDocumentFonts(PdfReader reader, int page)
     {
-        var hits = new IntHashtable();
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var hits = new NullValueDictionary<int, int>();
         List<object[]> fonts = new();
         recourseFonts(reader.GetPageN(page), hits, fonts, 1);
         return fonts;
@@ -1036,6 +1064,11 @@ public abstract class BaseFont
     /// <returns>the full name of the font</returns>
     public static string[][] GetFullFontName(string name, string encoding, byte[] ttfAfm)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var nameBase = GetBaseName(name);
         BaseFont fontBuilt = null;
         if (nameBase.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
@@ -1060,6 +1093,11 @@ public abstract class BaseFont
     /// <returns>the  Stream  to get the resource or</returns>
     public static Stream GetResourceStream(string key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         Stream istr = null;
         // Try to use resource loader to load the properties file.
         try
@@ -1205,6 +1243,11 @@ public abstract class BaseFont
     /// <returns>the ascent in normalized 1000 units</returns>
     public int GetAscent(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var max = 0;
         var chars = text.ToCharArray();
         for (var k = 0; k < chars.Length; ++k)
@@ -1264,6 +1307,11 @@ public abstract class BaseFont
     /// <returns>the dexcent in normalized 1000 units</returns>
     public int GetDescent(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var min = 0;
         var chars = text.ToCharArray();
         for (var k = 0; k < chars.Length; ++k)
@@ -1358,6 +1406,11 @@ public abstract class BaseFont
     /// <returns>the width in normalized 1000 units</returns>
     public virtual int GetWidth(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var total = 0;
         if (FastWinansi)
         {
@@ -1412,6 +1465,11 @@ public abstract class BaseFont
     /// <returns>the width in points</returns>
     public float GetWidthPointKerned(string text, float fontSize)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var size = GetWidth(text) * 0.001f * fontSize;
         if (!HasKernPairs())
         {
@@ -1515,9 +1573,9 @@ public abstract class BaseFont
             for (var k = 0; k < length; ++k)
             {
                 var c = text[k];
-                if (SpecialMap.ContainsKey(c))
+                if (SpecialMap.TryGetValue(c, out var value))
                 {
-                    b[ptr++] = (byte)SpecialMap[c];
+                    b[ptr++] = (byte)value;
                 }
             }
 
@@ -1549,12 +1607,12 @@ public abstract class BaseFont
 
         if (SpecialMap != null)
         {
-            if (SpecialMap.ContainsKey(char1))
+            if (SpecialMap.TryGetValue(char1, out var value))
             {
-                return new[] { (byte)SpecialMap[char1] };
+                return new[] { (byte)value };
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         return PdfEncodings.ConvertToBytes((char)char1, encoding);
@@ -1593,6 +1651,11 @@ public abstract class BaseFont
     /// <returns>the name without the modifiers Bold, Italic or BoldItalic</returns>
     protected static string GetBaseName(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         if (name.EndsWith(",Bold", StringComparison.OrdinalIgnoreCase))
         {
             return name.Substring(0, name.Length - 5);
@@ -1619,12 +1682,12 @@ public abstract class BaseFont
     /// <returns>the normalized encoding</returns>
     protected static string NormalizeEncoding(string enc)
     {
-        if (enc.Equals("winansi") || enc.Equals(""))
+        if (string.IsNullOrEmpty(enc) || enc.Equals("winansi", StringComparison.Ordinal))
         {
             return CP1252;
         }
 
-        if (enc.Equals("macroman"))
+        if (enc.Equals("macroman", StringComparison.Ordinal))
         {
             return MACROMAN;
         }
@@ -1649,11 +1712,11 @@ public abstract class BaseFont
     /// </summary>
     protected void CreateEncoding()
     {
-        if (encoding.StartsWith("#"))
+        if (encoding.StartsWith("#", StringComparison.Ordinal))
         {
-            SpecialMap = new IntHashtable();
+            SpecialMap = new NullValueDictionary<int, int>();
             var tok = new StringTokenizer(encoding.Substring(1), " ,\t\n\r\f");
-            if (tok.NextToken().Equals("full"))
+            if (tok.NextToken().Equals("full", StringComparison.Ordinal))
             {
                 while (tok.HasMoreTokens())
                 {
@@ -1662,7 +1725,7 @@ public abstract class BaseFont
                     var uni = (char)int.Parse(tok.NextToken(), NumberStyles.HexNumber,
                                               CultureInfo.InvariantCulture);
                     int orderK;
-                    if (order.StartsWith("'"))
+                    if (order.StartsWith("'", StringComparison.Ordinal))
                     {
                         orderK = order[1];
                     }
@@ -1755,7 +1818,7 @@ public abstract class BaseFont
 
     protected abstract int[] GetRawCharBBox(int c, string name);
 
-    private static void addFont(PrIndirectReference fontRef, IntHashtable hits, List<object[]> fonts)
+    private static void addFont(PrIndirectReference fontRef, NullValueDictionary<int, int> hits, List<object[]> fonts)
     {
         var obj = PdfReader.GetPdfObject(fontRef);
         if (obj == null || !obj.IsDictionary())
@@ -1775,7 +1838,8 @@ public abstract class BaseFont
         hits[fontRef.Number] = 1;
     }
 
-    private static void recourseFonts(PdfDictionary page, IntHashtable hits, List<object[]> fonts, int level)
+    private static void recourseFonts(PdfDictionary page, NullValueDictionary<int, int> hits, List<object[]> fonts,
+                                      int level)
     {
         ++level;
         if (level > 50) // in case we have an endless loop

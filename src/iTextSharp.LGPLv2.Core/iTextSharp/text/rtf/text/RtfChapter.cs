@@ -22,27 +22,32 @@ public class RtfChapter : RtfSection
     /// <summary>
     ///     Writes the RtfChapter and its contents
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (Document.GetLastElementWritten() != null && !(Document.GetLastElementWritten() is RtfChapter))
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\page"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\page"), 0, t.Length);
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\sectd"), 0, t.Length);
-        Document.GetDocumentHeader().WriteSectionDefinition(result);
+        outp.Write(t = DocWriter.GetIsoBytes("\\sectd"), 0, t.Length);
+        Document.GetDocumentHeader().WriteSectionDefinition(outp);
         if (Title != null)
         {
-            Title.WriteContent(result);
+            Title.WriteContent(outp);
         }
 
         for (var i = 0; i < Items.Count; i++)
         {
             var rbe = Items[i];
-            rbe.WriteContent(result);
+            rbe.WriteContent(outp);
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\sect"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\sect"), 0, t.Length);
     }
 }

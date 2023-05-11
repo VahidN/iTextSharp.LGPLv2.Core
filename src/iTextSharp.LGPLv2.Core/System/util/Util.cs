@@ -66,6 +66,11 @@ public static class Util
 
     public static byte[] CopyOf(this byte[] src, int newLength)
     {
+        if (src == null)
+        {
+            throw new ArgumentNullException(nameof(src));
+        }
+
         var dest = new byte[newLength];
         var len = newLength > src.Length ? src.Length : newLength;
         Array.Copy(src, 0, dest, 0, len);

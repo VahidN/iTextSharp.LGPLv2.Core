@@ -17,4 +17,12 @@ public class UnsupportedPdfException : InvalidPdfException
     public UnsupportedPdfException(string message) : base(message)
     {
     }
+
+    public UnsupportedPdfException()
+    {
+    }
+
+    public UnsupportedPdfException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

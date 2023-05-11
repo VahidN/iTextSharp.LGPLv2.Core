@@ -82,6 +82,11 @@ public class BarcodeEansupp : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         if (Supp.Font != null)
         {
             Supp.BarHeight = Ean.BarHeight + Supp.Baseline - Supp.Font.GetFontDescriptor(BaseFont.CAPHEIGHT, Supp.Size);

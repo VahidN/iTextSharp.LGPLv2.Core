@@ -35,12 +35,17 @@ public class RtfCodePage : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Writes the selected codepage
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
-        result.Write(_ansi, 0, _ansi.Length);
-        result.Write(_ansiCodepage, 0, _ansiCodepage.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(_ansi, 0, _ansi.Length);
+        outp.Write(_ansiCodepage, 0, _ansiCodepage.Length);
         var t = IntToByteArray(1252);
-        result.Write(t, 0, t.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(t, 0, t.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 }

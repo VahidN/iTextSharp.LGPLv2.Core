@@ -30,6 +30,11 @@ public class PdfLayer : PdfDictionary, IPdfOcg
     /// <param name="writer">the writer</param>
     public PdfLayer(string name, PdfWriter writer) : base(PdfName.Ocg)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         Name = name;
         Refi = writer.PdfIndirectReference;
         writer.RegisterLayer(this);
@@ -155,7 +160,12 @@ public class PdfLayer : PdfDictionary, IPdfOcg
     {
         if (title == null)
         {
-            throw new ArgumentNullException("Title cannot be null.");
+            throw new ArgumentNullException(nameof(title));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
         }
 
         var layer = new PdfLayer(title);
@@ -169,6 +179,11 @@ public class PdfLayer : PdfDictionary, IPdfOcg
     /// <param name="child">the child layer</param>
     public void AddChild(PdfLayer child)
     {
+        if (child == null)
+        {
+            throw new ArgumentNullException(nameof(child));
+        }
+
         if (child.parent != null)
         {
             throw new ArgumentException("The layer '" + ((PdfString)child.Get(PdfName.Name)).ToUnicodeString() +

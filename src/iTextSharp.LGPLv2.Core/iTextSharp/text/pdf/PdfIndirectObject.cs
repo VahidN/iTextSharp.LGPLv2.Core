@@ -83,7 +83,7 @@ public class PdfIndirectObject
     /// </summary>
     /// <returns>a  PdfIndirectReference </returns>
 
-    public PdfIndirectReference IndirectReference => new PdfIndirectReference(Objecti.Type, Number, Generation);
+    public PdfIndirectReference IndirectReference => new(Objecti.Type, Number, Generation);
 
     /// <summary>
     ///     Writes eficiently to a stream
@@ -92,10 +92,10 @@ public class PdfIndirectObject
     /// <param name="os">the stream to write to</param>
     internal void WriteTo(Stream os)
     {
-        var tmp = DocWriter.GetIsoBytes(Number.ToString());
+        var tmp = DocWriter.GetIsoBytes(Number.ToString(CultureInfo.InvariantCulture));
         os.Write(tmp, 0, tmp.Length);
         os.WriteByte((byte)' ');
-        tmp = DocWriter.GetIsoBytes(Generation.ToString());
+        tmp = DocWriter.GetIsoBytes(Generation.ToString(CultureInfo.InvariantCulture));
         os.Write(tmp, 0, tmp.Length);
         os.Write(Startobj, 0, Startobj.Length);
         Objecti.ToPdf(Writer, os);

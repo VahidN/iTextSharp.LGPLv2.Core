@@ -155,8 +155,15 @@ public class PdfTemplate : PdfContentByte
     /// <param name="width">the bounding box width</param>
     /// <param name="height">the bounding box height</param>
     /// <returns>the templated created</returns>
-    public static PdfTemplate CreateTemplate(PdfWriter writer, float width, float height) =>
-        CreateTemplate(writer, width, height, null);
+    public static PdfTemplate CreateTemplate(PdfWriter writer, float width, float height)
+    {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        return CreateTemplate(writer, width, height, null);
+    }
 
     /// <summary>
     ///     Gets the indirect reference to this template.

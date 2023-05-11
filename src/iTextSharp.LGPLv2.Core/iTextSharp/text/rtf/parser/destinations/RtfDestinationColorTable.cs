@@ -90,6 +90,11 @@ public class RtfDestinationColorTable : RtfDestination
     /// </summary>
     public RtfDestinationColorTable(RtfParser parser) : base(parser)
     {
+        if (parser == null)
+        {
+            throw new ArgumentNullException(nameof(parser));
+        }
+
         _colorMap = new NullValueDictionary<string, BaseColor>();
         _colorNr = 0;
         _importHeader = parser.GetImportManager();
@@ -127,27 +132,32 @@ public class RtfDestinationColorTable : RtfDestination
 
     public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
     {
-        if (ctrlWordData.CtrlWord.Equals("blue"))
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
+
+        if (ctrlWordData.CtrlWord.Equals("blue", StringComparison.Ordinal))
         {
             setBlue(ctrlWordData.IntValue());
         }
 
-        if (ctrlWordData.CtrlWord.Equals("red"))
+        if (ctrlWordData.CtrlWord.Equals("red", StringComparison.Ordinal))
         {
             setRed(ctrlWordData.IntValue());
         }
 
-        if (ctrlWordData.CtrlWord.Equals("green"))
+        if (ctrlWordData.CtrlWord.Equals("green", StringComparison.Ordinal))
         {
             setGreen(ctrlWordData.IntValue());
         }
 
-        if (ctrlWordData.CtrlWord.Equals("cshade"))
+        if (ctrlWordData.CtrlWord.Equals("cshade", StringComparison.Ordinal))
         {
             setShade(ctrlWordData.IntValue());
         }
 
-        if (ctrlWordData.CtrlWord.Equals("ctint"))
+        if (ctrlWordData.CtrlWord.Equals("ctint", StringComparison.Ordinal))
         {
             setTint(ctrlWordData.IntValue());
         }
@@ -181,7 +191,7 @@ public class RtfDestinationColorTable : RtfDestination
 
     public override void SetParser(RtfParser parser)
     {
-        RtfParser = parser;
+        RtfParser = parser ?? throw new ArgumentNullException(nameof(parser));
         _colorMap = new NullValueDictionary<string, BaseColor>();
         _colorNr = 0;
         _importHeader = parser.GetImportManager();
@@ -213,12 +223,13 @@ public class RtfDestinationColorTable : RtfDestination
         {
             if (RtfParser.IsImport())
             {
-                _importHeader.ImportColor(_colorNr.ToString(), new BaseColor(_red, _green, _blue));
+                _importHeader.ImportColor(_colorNr.ToString(CultureInfo.InvariantCulture),
+                                          new BaseColor(_red, _green, _blue));
             }
 
             if (RtfParser.IsConvert())
             {
-                _colorMap[_colorNr.ToString()] = new BaseColor(_red, _green, _blue);
+                _colorMap[_colorNr.ToString(CultureInfo.InvariantCulture)] = new BaseColor(_red, _green, _blue);
             }
         }
 

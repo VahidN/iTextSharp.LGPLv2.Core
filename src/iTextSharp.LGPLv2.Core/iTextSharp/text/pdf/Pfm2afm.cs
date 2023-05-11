@@ -418,7 +418,7 @@ public sealed class Pfm2Afm
     private Pfm2Afm(RandomAccessFileOrArray inp, Stream outp)
     {
         _inp = inp;
-        _encoding = EncodingsRegistry.Instance.GetEncoding(1252);
+        _encoding = EncodingsRegistry.GetEncoding(1252);
         _outp = new StreamWriter(outp, _encoding);
     }
 

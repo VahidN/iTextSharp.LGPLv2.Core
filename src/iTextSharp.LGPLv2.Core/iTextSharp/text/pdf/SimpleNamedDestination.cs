@@ -22,7 +22,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public void EndElement(string tag)
     {
-        if (tag.Equals("Destination"))
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (tag.Equals("Destination", StringComparison.Ordinal))
         {
             if (_xmlLast == null && _xmlNames != null)
             {
@@ -32,7 +37,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentException("Destination end tag out of place.");
         }
 
-        if (!tag.Equals("Name"))
+        if (!tag.Equals("Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Invalid end tag - " + tag);
         }
@@ -69,9 +74,14 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public void StartElement(string tag, INullValueDictionary<string, string> h)
     {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
         if (_xmlNames == null)
         {
-            if (tag.Equals("Destination"))
+            if (tag.Equals("Destination", StringComparison.Ordinal))
             {
                 _xmlNames = new NullValueDictionary<string, string>();
                 return;
@@ -80,7 +90,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentException("Root element is not Destination.");
         }
 
-        if (!tag.Equals("Name"))
+        if (!tag.Equals("Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Tag " + tag + " not allowed.");
         }
@@ -96,6 +106,11 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static string EscapeBinaryString(string s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
@@ -156,6 +171,16 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     public static void ExportToXml(INullValueDictionary<string, string> names, TextWriter wrt, string encoding,
                                    bool onlyAscii)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (wrt == null)
+        {
+            throw new ArgumentNullException(nameof(wrt));
+        }
+
         wrt.Write("<?xml version=\"1.0\" encoding=\"");
         wrt.Write(SimpleXmlParser.EscapeXml(encoding, onlyAscii));
         wrt.Write("\"?>\n<Destination>\n");
@@ -175,7 +200,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static INullValueDictionary<string, string> GetNamedDestination(PdfReader reader, bool fromNames)
     {
-        var pages = new IntHashtable();
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var pages = new NullValueDictionary<int, int>();
         var numPages = reader.NumberOfPages;
         for (var k = 1; k <= numPages; ++k)
         {
@@ -238,6 +268,16 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     public static PdfDictionary OutputNamedDestinationAsNames(INullValueDictionary<string, string> names,
                                                               PdfWriter writer)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var dic = new PdfDictionary();
         foreach (var key in names.Keys)
         {
@@ -260,6 +300,16 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     public static PdfDictionary OutputNamedDestinationAsStrings(INullValueDictionary<string, string> names,
                                                                 PdfWriter writer)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var n2 = new NullValueDictionary<string, PdfObject>();
         foreach (var key in names.Keys)
         {
@@ -280,6 +330,11 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static string UnEscapeBinaryString(string s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
@@ -344,7 +399,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         else
         {
             var fn = tk.NextToken();
-            if (fn.StartsWith("/"))
+            if (fn.StartsWith("/", StringComparison.Ordinal))
             {
                 fn = fn.Substring(1);
             }
@@ -353,7 +408,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             for (var k = 0; k < 4 && tk.HasMoreTokens(); ++k)
             {
                 fn = tk.NextToken();
-                if (fn.Equals("null"))
+                if (fn.Equals("null", StringComparison.Ordinal))
                 {
                     ar.Add(PdfNull.Pdfnull);
                 }

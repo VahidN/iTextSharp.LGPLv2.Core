@@ -33,7 +33,7 @@ internal class EnumerateTtc : TrueTypeFont
         try
         {
             var mainTag = ReadStandardString(4);
-            if (!mainTag.Equals("ttcf"))
+            if (!mainTag.Equals("ttcf", StringComparison.Ordinal))
             {
                 throw new DocumentException(FileName + " is not a valid TTC file.");
             }

@@ -11,7 +11,7 @@ public class Type3Font : BaseFont
     private readonly bool _colorized;
     private readonly PageResources _pageResources = new();
     private readonly bool[] _usedSlot;
-    private readonly IntHashtable _widths3 = new();
+    private readonly NullValueDictionary<int, int> _widths3 = new();
     private readonly PdfWriter _writer;
     private float _llx = float.NaN, _lly, _urx, _ury;
 
@@ -162,6 +162,11 @@ public class Type3Font : BaseFont
 
     public override int GetWidth(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var c = text.ToCharArray();
         var total = 0;
         for (var k = 0; k < c.Length; ++k)
@@ -209,7 +214,7 @@ public class Type3Font : BaseFont
             return new[] { (byte)char1 };
         }
 
-        return new byte[0];
+        return Array.Empty<byte>();
     }
 
     internal override int GetRawWidth(int c, string name) => 0;

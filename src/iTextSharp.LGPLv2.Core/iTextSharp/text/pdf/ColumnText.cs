@@ -427,7 +427,7 @@ public class ColumnText
         {
             if (value < PdfWriter.RUN_DIRECTION_DEFAULT || value > PdfWriter.RUN_DIRECTION_RTL)
             {
-                throw new Exception("Invalid run direction: " + value);
+                throw new InvalidOperationException("Invalid run direction: " + value);
             }
 
             runDirection = value;
@@ -527,6 +527,11 @@ public class ColumnText
     public static void ShowTextAligned(PdfContentByte canvas, int alignment, Phrase phrase, float x, float y,
                                        float rotation, int runDirection, int arabicOptions)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         if (alignment != Element.ALIGN_LEFT && alignment != Element.ALIGN_CENTER
                                             && alignment != Element.ALIGN_RIGHT)
         {
@@ -801,7 +806,7 @@ public class ColumnText
         }
         else if (!simulate)
         {
-            throw new Exception("ColumnText.go with simulate==false and text==null.");
+            throw new InvalidOperationException("ColumnText.go with simulate==false and text==null.");
         }
 
         if (!simulate)
@@ -958,6 +963,11 @@ public class ColumnText
     /// <returns>itself</returns>
     public ColumnText SetACopy(ColumnText org)
     {
+        if (org == null)
+        {
+            throw new ArgumentNullException(nameof(org));
+        }
+
         SetSimpleVars(org);
         if (org.BidiLine != null)
         {
@@ -976,6 +986,11 @@ public class ColumnText
     /// <param name="rightLine">the right column bound</param>
     public void SetColumns(float[] leftLine, float[] rightLine)
     {
+        if (leftLine == null)
+        {
+            throw new ArgumentNullException(nameof(leftLine));
+        }
+
         MaxY = -10e20f;
         MinY = 10e20f;
         YLine = Math.Max(leftLine[1], leftLine[leftLine.Length - 1]);
@@ -1091,6 +1106,11 @@ public class ColumnText
 
     protected internal void SetSimpleVars(ColumnText org)
     {
+        if (org == null)
+        {
+            throw new ArgumentNullException(nameof(org));
+        }
+
         MaxY = org.MaxY;
         MinY = org.MinY;
         alignment = org.alignment;
@@ -1163,9 +1183,14 @@ public class ColumnText
     /// <returns>the converted array</returns>
     protected IList<float[]> ConvertColumn(float[] cLine)
     {
+        if (cLine == null)
+        {
+            throw new ArgumentNullException(nameof(cLine));
+        }
+
         if (cLine.Length < 4)
         {
-            throw new Exception("No valid column line found.");
+            throw new InvalidOperationException("No valid column line found.");
         }
 
         List<float[]> cc = new();
@@ -1195,7 +1220,7 @@ public class ColumnText
 
         if (cc.Count == 0)
         {
-            throw new Exception("No valid column line found.");
+            throw new InvalidOperationException("No valid column line found.");
         }
 
         return cc;
@@ -1231,6 +1256,11 @@ public class ColumnText
     /// <returns>the x coordinate of the intersection</returns>
     protected float FindLimitsPoint(IList<float[]> wall)
     {
+        if (wall == null)
+        {
+            throw new ArgumentNullException(nameof(wall));
+        }
+
         LineStatus = LINE_STATUS_OK;
         if (yLine < MinY || yLine > MaxY)
         {

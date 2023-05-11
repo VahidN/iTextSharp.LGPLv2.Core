@@ -47,7 +47,12 @@ public class PdfDate : PdfString
     /// <returns>the resulting  string </returns>
     public static DateTime Decode(string date)
     {
-        if (date.StartsWith("D:"))
+        if (date == null)
+        {
+            throw new ArgumentNullException(nameof(date));
+        }
+
+        if (date.StartsWith("D:", StringComparison.Ordinal))
         {
             date = date.Substring(2);
         }
@@ -118,7 +123,12 @@ public class PdfDate : PdfString
     /// <returns>a formatted date</returns>
     public static string GetW3CDate(string d)
     {
-        if (d.StartsWith("D:"))
+        if (d == null)
+        {
+            throw new ArgumentNullException(nameof(d));
+        }
+
+        if (d.StartsWith("D:", StringComparison.Ordinal))
         {
             d = d.Substring(2);
         }
@@ -168,7 +178,8 @@ public class PdfDate : PdfString
 
         sb.Append(':').Append(d.Substring(0, 2)); //second
         d = d.Substring(2);
-        if (d.StartsWith("-") || d.StartsWith("+"))
+        if (d.StartsWith("-", StringComparison.Ordinal) ||
+            d.StartsWith("+", StringComparison.Ordinal))
         {
             var sign = d.Substring(0, 1);
             d = d.Substring(1);
@@ -201,5 +212,6 @@ public class PdfDate : PdfString
     /// <returns>a formatted date</returns>
     public string GetW3CDate() => GetW3CDate(Value);
 
-    private static string setLength(int i, int length) => i.ToString().PadLeft(length, '0');
+    private static string setLength(int i, int length) => i.ToString(CultureInfo.InvariantCulture)
+                                                           .PadLeft(length, '0');
 }

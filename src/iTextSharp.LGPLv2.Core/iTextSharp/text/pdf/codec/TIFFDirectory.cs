@@ -81,6 +81,11 @@ public class TiffDirectory
     /// <param name="directory">the index of the directory to read.</param>
     public TiffDirectory(RandomAccessFileOrArray stream, int directory)
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
         long globalSaveOffset = stream.FilePointer;
         long ifdOffset;
 
@@ -136,6 +141,11 @@ public class TiffDirectory
     /// <param name="directory">the index of the directory to read beyond the</param>
     public TiffDirectory(RandomAccessFileOrArray stream, long ifdOffset, int directory)
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
         long globalSaveOffset = stream.FilePointer;
         stream.Seek(0L);
         var endian = stream.ReadUnsignedShort();
@@ -186,6 +196,11 @@ public class TiffDirectory
     /// </summary>
     public static int GetNumDirectories(RandomAccessFileOrArray stream)
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
         long pointer = stream.FilePointer; // Save stream pointer
 
         stream.Seek(0L);
@@ -236,11 +251,6 @@ public class TiffDirectory
     public TiffField GetField(int tag)
     {
         object i = _fieldIndex[tag];
-        if (i == null)
-        {
-            return null;
-        }
-
         return _fields[(int)i];
     }
 

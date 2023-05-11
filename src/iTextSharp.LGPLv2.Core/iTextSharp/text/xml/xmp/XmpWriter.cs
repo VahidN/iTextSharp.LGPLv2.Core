@@ -216,43 +216,43 @@ public class XmpWriter
                     continue;
                 }
 
-                if ("Title".Equals(key))
+                if ("Title".Equals(key, StringComparison.Ordinal))
                 {
                     dc.AddTitle(value);
                 }
 
-                if ("Author".Equals(key))
+                if ("Author".Equals(key, StringComparison.Ordinal))
                 {
                     dc.AddAuthor(value);
                 }
 
-                if ("Subject".Equals(key))
+                if ("Subject".Equals(key, StringComparison.Ordinal))
                 {
                     dc.AddSubject(value);
                     dc.AddDescription(value);
                 }
 
-                if ("Keywords".Equals(key))
+                if ("Keywords".Equals(key, StringComparison.Ordinal))
                 {
                     p.AddKeywords(value);
                 }
 
-                if ("Creator".Equals(key))
+                if ("Creator".Equals(key, StringComparison.Ordinal))
                 {
                     basic.AddCreatorTool(value);
                 }
 
-                if ("Producer".Equals(key))
+                if ("Producer".Equals(key, StringComparison.Ordinal))
                 {
                     p.AddProducer(value);
                 }
 
-                if ("CreationDate".Equals(key))
+                if ("CreationDate".Equals(key, StringComparison.Ordinal))
                 {
                     basic.AddCreateDate(PdfDate.GetW3CDate(value));
                 }
 
-                if ("ModDate".Equals(key))
+                if ("ModDate".Equals(key, StringComparison.Ordinal))
                 {
                     basic.AddModDate(PdfDate.GetW3CDate(value));
                 }
@@ -306,6 +306,11 @@ public class XmpWriter
     /// <param name="s"></param>
     public void AddRdfDescription(XmpSchema s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         Writer.Write("<rdf:Description rdf:about=\"");
         Writer.Write(about);
         Writer.Write("\" ");

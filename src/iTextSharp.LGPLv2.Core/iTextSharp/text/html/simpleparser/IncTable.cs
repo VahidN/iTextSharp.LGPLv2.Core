@@ -16,6 +16,11 @@ public class IncTable : IElement
     /// </summary>
     public IncTable(INullValueDictionary<string, string> props)
     {
+        if (props == null)
+        {
+            throw new ArgumentNullException(nameof(props));
+        }
+
         foreach (var dc in props)
         {
             _props[dc.Key] = dc.Value;
@@ -92,7 +97,7 @@ public class IncTable : IElement
         }
         else
         {
-            if (width.EndsWith("%"))
+            if (width.EndsWith("%", StringComparison.OrdinalIgnoreCase))
             {
                 table.WidthPercentage =
                     float.Parse(width.Substring(0, width.Length - 1), NumberFormatInfo.InvariantInfo);

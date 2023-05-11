@@ -68,14 +68,14 @@ public class PdfImportedPage : PdfTemplate
     /// <summary>
     ///     Always throws an error. This operation is not allowed.
     /// </summary>
-    /// <param name="template">dummy</param>
+    /// <param name="pdfTemplate">dummy</param>
     /// <param name="a">dummy</param>
     /// <param name="b">dummy</param>
     /// <param name="c">dummy</param>
     /// <param name="d">dummy</param>
     /// <param name="e">dummy</param>
     /// <param name="f">dummy</param>
-    public override void AddTemplate(PdfTemplate template, float a, float b, float c, float d, float e, float f)
+    public override void AddTemplate(PdfTemplate pdfTemplate, float a, float b, float c, float d, float e, float f)
     {
         ThrowError();
     }
@@ -109,8 +109,8 @@ public class PdfImportedPage : PdfTemplate
     internal override PdfStream GetFormXObject(int compressionLevel) =>
         ReaderInstance.GetFormXObject(pageNumber, compressionLevel);
 
-    internal void ThrowError()
+    internal static void ThrowError()
     {
-        throw new Exception("Content can not be added to a PdfImportedPage.");
+        throw new InvalidOperationException("Content can not be added to a PdfImportedPage.");
     }
 }

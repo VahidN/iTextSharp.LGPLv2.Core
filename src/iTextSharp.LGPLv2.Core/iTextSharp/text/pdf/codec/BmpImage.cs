@@ -192,7 +192,7 @@ public class BmpImage
             if (!(readUnsignedByte(_inputStream) == 'B' &&
                   readUnsignedByte(_inputStream) == 'M'))
             {
-                throw new Exception("Invalid magic value for BMP file.");
+                throw new InvalidOperationException("Invalid magic value for BMP file.");
             }
 
             // Read file size
@@ -423,8 +423,7 @@ public class BmpImage
                         break;
 
                     default:
-                        throw new
-                            Exception("Invalid compression specified in BMP file.");
+                        throw new InvalidOperationException("Invalid compression specified in BMP file.");
                 }
             }
             else if (size == 108)
@@ -540,8 +539,7 @@ public class BmpImage
                         Properties["gamma_blue"] = gammaBlue;
 
                         // break;
-                        throw new
-                            Exception("Not implemented yet.");
+                        throw new NotImplementedException("Not implemented yet.");
 
                     case Lcs_SRgb:
                         // Default Windows color space
@@ -551,15 +549,13 @@ public class BmpImage
                     case LcsCmyk:
                         Properties["color_space"] = "LCS_CMYK";
                         //		    break;
-                        throw new
-                            Exception("Not implemented yet.");
+                        throw new NotImplementedException("Not implemented yet.");
                 }
             }
             else
             {
                 Properties["bmp_version"] = "BMP v. 5.x";
-                throw new
-                    Exception("BMP version 5 not implemented yet.");
+                throw new NotImplementedException("BMP version 5 not implemented yet.");
             }
         }
 
@@ -752,7 +748,7 @@ public class BmpImage
         return val;
     }
 
-    private int findMask(int mask)
+    private static int findMask(int mask)
     {
         var k = 0;
         for (; k < 32; ++k)
@@ -768,7 +764,7 @@ public class BmpImage
         return mask;
     }
 
-    private int findShift(int mask)
+    private static int findShift(int mask)
     {
         var k = 0;
         for (; k < 32; ++k)
@@ -832,8 +828,7 @@ public class BmpImage
                         return readRle4();
 
                     default:
-                        throw new
-                            Exception("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
                 }
 
             case Version38Bit:
@@ -846,8 +841,7 @@ public class BmpImage
                         return readRle8();
 
                     default:
-                        throw new
-                            Exception("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
                 }
 
             case Version324Bit:
@@ -875,8 +869,7 @@ public class BmpImage
                         return readRle4();
 
                     default:
-                        throw new
-                            Exception("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
                 }
 
             case Version48Bit:
@@ -889,8 +882,7 @@ public class BmpImage
                         return readRle8();
 
                     default:
-                        throw new
-                            Exception("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
                 }
 
             case Version416Bit:
@@ -912,7 +904,7 @@ public class BmpImage
     {
         if (_palette == null)
         {
-            return new byte[0];
+            return Array.Empty<byte>();
         }
 
         var np = new byte[_palette.Length / group * 3];
@@ -1274,12 +1266,12 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 4 bytes
     /// </summary>
-    private long readDWord(Stream stream) => readUnsignedInt(stream);
+    private static long readDWord(Stream stream) => readUnsignedInt(stream);
 
     /// <summary>
     ///     Signed 4 bytes
     /// </summary>
-    private int readInt(Stream stream)
+    private static int readInt(Stream stream)
     {
         var b1 = readUnsignedByte(stream);
         var b2 = readUnsignedByte(stream);
@@ -1291,7 +1283,7 @@ public class BmpImage
     /// <summary>
     ///     32 bit signed value
     /// </summary>
-    private int readLong(Stream stream) => readInt(stream);
+    private static int readLong(Stream stream) => readInt(stream);
 
     private void readPalette(int sizeOfPalette)
     {
@@ -1430,7 +1422,7 @@ public class BmpImage
     /// <summary>
     ///     Signed 16 bits
     /// </summary>
-    private int readShort(Stream stream)
+    private static int readShort(Stream stream)
     {
         var b1 = readUnsignedByte(stream);
         var b2 = readUnsignedByte(stream);
@@ -1440,12 +1432,12 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 8 bits
     /// </summary>
-    private int readUnsignedByte(Stream stream) => stream.ReadByte() & 0xff;
+    private static int readUnsignedByte(Stream stream) => stream.ReadByte() & 0xff;
 
     /// <summary>
     ///     Unsigned 4 bytes
     /// </summary>
-    private long readUnsignedInt(Stream stream)
+    private static long readUnsignedInt(Stream stream)
     {
         var b1 = readUnsignedByte(stream);
         var b2 = readUnsignedByte(stream);
@@ -1458,7 +1450,7 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 2 bytes
     /// </summary>
-    private int readUnsignedShort(Stream stream)
+    private static int readUnsignedShort(Stream stream)
     {
         var b1 = readUnsignedByte(stream);
         var b2 = readUnsignedByte(stream);
@@ -1468,5 +1460,5 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 16 bits
     /// </summary>
-    private int readWord(Stream stream) => readUnsignedShort(stream);
+    private static int readWord(Stream stream) => readUnsignedShort(stream);
 }

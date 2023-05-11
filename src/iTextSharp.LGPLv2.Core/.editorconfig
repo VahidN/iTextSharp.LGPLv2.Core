@@ -7,8 +7,158 @@ charset = utf-8-bom
 # BannedApiAnalyzers
 dotnet_diagnostic.RS0030.severity = error
 
+# CA1304: Specify CultureInfo
+dotnet_diagnostic.CA1304.severity = error
 
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = error
 
+# CA1307: Specify StringComparison for clarity
+dotnet_diagnostic.CA1307.severity = error
+
+# CA1308: Normalize strings to uppercase
+dotnet_diagnostic.CA1308.severity = error
+
+# CA1309: Use ordinal string comparison
+dotnet_diagnostic.CA1309.severity = error
+
+# CA1310: Specify StringComparison for correctness
+dotnet_diagnostic.CA1310.severity = error
+
+# CA1311: Specify a culture or use an invariant version
+dotnet_diagnostic.CA1311.severity = error
+
+# CA1820: Test for empty strings using string length
+dotnet_diagnostic.CA1820.severity = error
+
+# CA1834: Consider using 'StringBuilder.Append(char)' when applicable
+dotnet_diagnostic.CA1834.severity = error
+
+# CA1858: Use 'StartsWith' instead of 'IndexOf'
+dotnet_diagnostic.CA1858.severity = error
+
+# CA2249: Consider using 'string.Contains' instead of 'string.IndexOf'
+dotnet_diagnostic.CA2249.severity = error
+
+# CA2251: Use 'string.Equals'
+dotnet_diagnostic.CA2251.severity = error
+
+# CA1031: Modify to catch a more specific allowed exception type, or rethrow the exception
+dotnet_diagnostic.CA1031.severity = suggestion
+
+# Do not declare visible instance fields
+dotnet_diagnostic.CA2211.severity = suggestion
+dotnet_diagnostic.CA1051.severity = suggestion
+
+# CA1034: Do not nest type. Alternatively, change its accessibility so that it is not externally visible.
+dotnet_diagnostic.CA1034.severity = suggestion
+
+# CA2227: Change it to be read-only by removing the property setter
+dotnet_diagnostic.CA2227.severity = suggestion
+
+# CA1308: In method X, replace the call to 'ToLower' with 'ToUpperInvariant'
+dotnet_diagnostic.CA1308.severity = suggestion
+
+# CA1002: Change 'List ' to use 'Collection ', 'ReadOnlyCollection ' or 'KeyedCollection '
+dotnet_diagnostic.CA1002.severity = suggestion
+
+# CA1816: Change it to call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.
+# CA1063: Modify it so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns
+dotnet_diagnostic.CA1816.severity = suggestion
+dotnet_diagnostic.CA1063.severity = suggestion
+
+# CA2234: Modify ir to call Uri
+dotnet_diagnostic.CA2234.severity = suggestion
+
+# CA1707: Remove the underscores from member name
+dotnet_diagnostic.CA1707.severity = suggestion
+
+# CA1044: Because property X is write-only, either add a property getter with an accessibility that is greater than or equal to its setter or convert this property into a method
+dotnet_diagnostic.CA1044.severity = suggestion
+
+# CA1805: Member X is explicitly initialized to its default value
+dotnet_diagnostic.CA1805.severity = suggestion
+
+# CA1708: Names of 'Members' should differ by more than case
+dotnet_diagnostic.CA1708.severity = suggestion
+
+# CA1001: Type X owns disposable field(s) but is not disposable
+dotnet_diagnostic.CA1001.severity = suggestion
+
+# CA1823: Unused field X
+dotnet_diagnostic.CA1823.severity = suggestion
+
+# CA1024: Use properties where appropriate
+dotnet_diagnostic.CA1024.severity = suggestion
+
+# CA1036: X should define operator(s) '==, !=, , =, >, >=' and Equals since it implements IComparable
+dotnet_diagnostic.CA1036.severity = suggestion
+
+# CA1814: initialize uses a multidimensional array of int[*,*]. Replace it with a jagged array if possible.
+dotnet_diagnostic.CA1814.severity = suggestion
+
+# CA2000: Use recommended dispose pattern to ensure that object created
+dotnet_diagnostic.CA2000.severity = suggestion
+
+# CA1711: Rename type name XCollection so that it does not end in 'Collection'
+dotnet_diagnostic.CA1711.severity = suggestion
+
+# CA1810: Initialize all static fields in X when those fields are declared and remove the explicit static constructor
+dotnet_diagnostic.CA1810.severity = suggestion
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = suggestion
+
+# CA5394: Random is an insecure random number generator
+dotnet_diagnostic.CA5394.severity = suggestion
+
+# CA1710: Rename X to end in 'Stream'
+dotnet_diagnostic.CA1710.severity = suggestion
+
+# CA1054: Change the type of parameter 'url' of method  from 'string' to 'System.Uri'
+dotnet_diagnostic.CA1054.severity = suggestion
+
+# CA2213: X contains field Y that is of IDisposable 
+dotnet_diagnostic.CA2213.severity = suggestion
+
+# CA2214: Do not call overridable methods in constructors
+dotnet_diagnostic.CA2214.severity = suggestion
+
+# CA1721: The property name 'Tokeniser' is confusing given the existence of method 'GetTokeniser'. Rename or remove one of these members.
+dotnet_diagnostic.CA1721.severity = suggestion
+
+# CA1720: Identifier 'STRING' contains type name
+dotnet_diagnostic.CA1720.severity = suggestion
+
+# CA5350: GetEncodedPkcs7 uses a weak cryptographic algorithm SHA1
+dotnet_diagnostic.CA5350.severity = suggestion
+
+# CA1508: 'Tokens.TokenType.Equals(PrTokeniser.TK_NUMBER)' is always 'true'. Remove or refactor the condition(s) to avoid dead code.
+dotnet_diagnostic.CA1508.severity = suggestion
+
+# CA1040: Avoid empty interfaces
+dotnet_diagnostic.CA1040.severity = suggestion
+
+# CA5351: Create uses a broken cryptographic algorithm MD5
+dotnet_diagnostic.CA5351.severity = suggestion
+
+# CA1043: Use Integral Or String Argument For Indexers
+dotnet_diagnostic.CA1043.severity = suggestion
+
+# CA1716: Rename virtual/interface member DocWriter.Resume() so that it no longer conflicts with the reserved language keyword 'Resume'. 
+dotnet_diagnostic.CA1716.severity = suggestion
+
+# CA1055: Change the return type of method 'Utilities.UnEscapeUrl(string)' from 'string' to 'System.Uri'
+dotnet_diagnostic.CA1055.severity = suggestion
+
+# CA2237: Add [Serializable] to NullValueDictionary as this type implements ISerializable
+dotnet_diagnostic.CA2237.severity = suggestion
+
+# CA1852 Type 'GifFrame' can be sealed because it has no subtypes in its containing assembly and is not externally visible
+dotnet_diagnostic.CA1852.severity = suggestion
+
+# CA1724 The type name Hyphenation conflicts in whole or in part with the namespace name 'iTextSharp.text.pdf.hyphenation'. Change either name to eliminate the conflict.
+dotnet_diagnostic.CA1724.severity = suggestion
 
 # force file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:error

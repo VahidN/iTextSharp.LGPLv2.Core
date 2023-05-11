@@ -97,6 +97,11 @@ public class XmpBasicSchema : XmpSchema
     /// <param name="id"></param>
     public void AddIdentifiers(string[] id)
     {
+        if (id == null)
+        {
+            throw new ArgumentNullException(nameof(id));
+        }
+
         var array = new XmpArray(XmpArray.UNORDERED);
         for (var i = 0; i < id.Length; i++)
         {

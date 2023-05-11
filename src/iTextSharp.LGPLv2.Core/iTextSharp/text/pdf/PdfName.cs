@@ -3376,6 +3376,11 @@ public class PdfName : PdfObject, IComparable
     /// <param name="lengthCheck">if  true  check the lenght validity, if  false  the name can</param>
     public PdfName(string name, bool lengthCheck) : base(NAME)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         // The minimum number of characters in a name is 0, the maximum is 127 (the '/' not included)
         var length = name.Length;
         if (lengthCheck && length > 127)
@@ -3405,6 +3410,11 @@ public class PdfName : PdfObject, IComparable
     /// <returns>a negative int, zero, or a positive int as this object</returns>
     public int CompareTo(object obj)
     {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
         var name = (PdfName)obj;
 
         var myBytes = Bytes;
@@ -3484,6 +3494,11 @@ public class PdfName : PdfObject, IComparable
     /// <returns>the encoded name</returns>
     public static byte[] EncodeName(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var length = name.Length;
         // every special character has to be substituted
         var pdfName = new ByteBuffer(length + 20);
@@ -3542,6 +3557,11 @@ public class PdfName : PdfObject, IComparable
     /// <returns>the decoded name</returns>
     public static string DecodeName(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var buf = new StringBuilder();
         var len = name.Length;
         for (var k = 1; k < len; ++k)

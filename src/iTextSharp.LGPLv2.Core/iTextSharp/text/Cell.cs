@@ -32,10 +32,6 @@ namespace iTextSharp.text;
 ///     table.AddCell("1.2");
 ///     table.AddCell("2.2");
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Rectangle" />
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Table" />
-/// <seealso cref="T:iTextSharp.text.Row" />
 public class Cell : Rectangle, ITextElementArray
 {
     ///<summary> This is the leading. </summary>
@@ -194,9 +190,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Bottom
     {
-        get => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -277,9 +273,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Left
     {
-        get => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -313,9 +309,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Right
     {
-        get => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -351,9 +347,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Top
     {
-        get => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -439,6 +435,11 @@ public class Cell : Rectangle, ITextElementArray
     /// <returns>true if the element was processed successfully</returns>
     public override bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -463,11 +464,11 @@ public class Cell : Rectangle, ITextElementArray
         }
         catch (BadElementException bee)
         {
-            throw new Exception(bee.Message);
+            throw new InvalidOperationException(bee.Message);
         }
         catch
         {
-            throw new Exception("You can only add objects that implement the Element interface.");
+            throw new InvalidOperationException("You can only add objects that implement the Element interface.");
         }
     }
 
@@ -476,7 +477,7 @@ public class Cell : Rectangle, ITextElementArray
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public static bool IsTag(string tag) => ElementTags.CELL.Equals(tag);
+    public static bool IsTag(string tag) => ElementTags.CELL.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Adds an element to this Cell.
@@ -488,6 +489,11 @@ public class Cell : Rectangle, ITextElementArray
     /// <param name="element">the Element to add</param>
     public void AddElement(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (IsTable())
         {
             var table = (Table)ArrayList[0];
@@ -658,28 +664,32 @@ public class Cell : Rectangle, ITextElementArray
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public float GetBottom(int margin) => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetBottom(int margin) =>
+        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public float GetLeft(int margin) => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetLeft(int margin) =>
+        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public float GetRight(int margin) => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetRight(int margin) =>
+        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public float GetTop(int margin) => throw new Exception("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetTop(int margin) =>
+        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     Gets the width as a String.
@@ -688,7 +698,7 @@ public class Cell : Rectangle, ITextElementArray
     public string GetWidthAsString()
     {
         var w = width.ToString(CultureInfo.InvariantCulture);
-        if (w.EndsWith(".0"))
+        if (w.EndsWith(".0", StringComparison.Ordinal))
         {
             w = w.Substring(0, w.Length - 2);
         }
@@ -810,7 +820,12 @@ public class Cell : Rectangle, ITextElementArray
     /// <param name="value">the new value</param>
     public void SetWidth(string value)
     {
-        if (value.EndsWith("%"))
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        if (value.EndsWith("%", StringComparison.Ordinal))
         {
             value = value.Substring(0, value.Length - 1);
             Percentage = true;

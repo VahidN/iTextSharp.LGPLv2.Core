@@ -26,6 +26,11 @@ public class PdfStructureElement : PdfDictionary
     /// <param name="structureType">the type of structure. It may be a standard type or a user type mapped by the role map</param>
     public PdfStructureElement(PdfStructureElement parent, PdfName structureType)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
         _top = parent._top;
         init(parent, structureType);
         _parent = parent;
@@ -39,7 +44,7 @@ public class PdfStructureElement : PdfDictionary
     /// <param name="structureType">the type of structure. It may be a standard type or a user type mapped by the role map</param>
     public PdfStructureElement(PdfStructureTreeRoot parent, PdfName structureType)
     {
-        _top = parent;
+        _top = parent ?? throw new ArgumentNullException(nameof(parent));
         init(parent, structureType);
         Put(PdfName.P, parent.Reference);
     }

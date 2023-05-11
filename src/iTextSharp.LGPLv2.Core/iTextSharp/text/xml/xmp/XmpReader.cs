@@ -20,6 +20,11 @@ public class XmpReader
     /// </summary>
     public XmpReader(byte[] bytes)
     {
+        if (bytes == null)
+        {
+            throw new ArgumentNullException(nameof(bytes));
+        }
+
         var bout = new MemoryStream();
         bout.Write(bytes, 0, bytes.Length);
         bout.Seek(0, SeekOrigin.Begin);
@@ -36,6 +41,11 @@ public class XmpReader
     /// <returns>if the content was successfully added</returns>
     public bool Add(string parent, string namespaceUri, string localName, string value)
     {
+        if (namespaceUri == null)
+        {
+            throw new ArgumentNullException(nameof(namespaceUri));
+        }
+
         var nodes = _domDocument.GetElementsByTagName(parent);
         if (nodes.Count == 0)
         {
@@ -51,7 +61,7 @@ public class XmpReader
             for (var j = 0; j < attrs.Count; j++)
             {
                 node = attrs[j];
-                if (namespaceUri.Equals(node.Value))
+                if (namespaceUri.Equals(node.Value, StringComparison.Ordinal))
                 {
                     node = _domDocument.CreateElement(localName);
                     node.AppendChild(_domDocument.CreateTextNode(value));
@@ -124,8 +134,13 @@ public class XmpReader
     /// <param name="domDocument">the  Document  that contains the node</param>
     /// <param name="n">the  Node  to add the text to</param>
     /// <param name="value">the text to add</param>
-    public bool SetNodeText(XmlDocument domDocument, XmlNode n, string value)
+    public static bool SetNodeText(XmlDocument domDocument, XmlNode n, string value)
     {
+        if (domDocument == null)
+        {
+            throw new ArgumentNullException(nameof(domDocument));
+        }
+
         if (n == null)
         {
             return false;

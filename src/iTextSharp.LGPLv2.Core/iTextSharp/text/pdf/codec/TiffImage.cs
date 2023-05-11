@@ -7,13 +7,23 @@ namespace iTextSharp.text.pdf.codec;
 ///     Reads TIFF images
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class TiffImage
+public static class TiffImage
 {
     /// <summary>
     ///     Uncompress packbits compressed image data.
     /// </summary>
     public static void DecodePackbits(byte[] data, byte[] dst)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
+        if (dst == null)
+        {
+            throw new ArgumentNullException(nameof(dst));
+        }
+
         int srcCount = 0, dstCount = 0;
         sbyte repeat, b;
 
@@ -313,11 +323,16 @@ public class TiffImage
 
     public static void Inflate(byte[] deflated, byte[] inflated)
     {
+        if (inflated == null)
+        {
+            throw new ArgumentNullException(nameof(inflated));
+        }
+
         var outp = PdfReader.FlateDecode(deflated);
         Array.Copy(outp, 0, inflated, 0, Math.Min(outp.Length, inflated.Length));
     }
 
-    protected static Image GetTiffImageColor(TiffDirectory dir, RandomAccessFileOrArray s)
+    private static Image GetTiffImageColor(TiffDirectory dir, RandomAccessFileOrArray s)
     {
         var predictor = 1;
         TifflzwDecoder lzwDecoder = null;

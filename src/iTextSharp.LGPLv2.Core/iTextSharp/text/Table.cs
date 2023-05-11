@@ -45,10 +45,6 @@ namespace iTextSharp.text;
 ///     table.AddCell(cell);
 ///     table.AddCell("cell test2");
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Rectangle" />
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Row" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
 public class Table : Rectangle, ILargeElement
 {
     ///<summary> This is the horizontal Element. </summary>
@@ -548,6 +544,11 @@ public class Table : Rectangle, ILargeElement
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (value.Length != _columns)
             {
                 throw new BadElementException("Wrong number of columns.");
@@ -650,6 +651,11 @@ public class Table : Rectangle, ILargeElement
     /// <returns>true if the element was processed successfully</returns>
     public override bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -681,16 +687,17 @@ public class Table : Rectangle, ILargeElement
     /// <param name="aLocation">The location where the Cell will be added</param>
     public void AddCell(Cell aCell, object aLocation)
     {
-        Point p;
         if (aCell == null)
         {
-            throw new Exception("addCell - cell has null-value");
+            throw new ArgumentNullException(nameof(aCell));
         }
 
         if (aLocation == null)
         {
-            throw new Exception("addCell - point has null-value");
+            throw new ArgumentNullException(nameof(aLocation));
         }
+
+        Point p;
 
         p = (Point)aLocation;
 
@@ -1115,7 +1122,7 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         InsertTable(aTable, _curPosition);
@@ -1132,7 +1139,7 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         InsertTable(aTable, new Point(row, column));
@@ -1148,7 +1155,7 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         _mTableInserted = true;
@@ -1232,6 +1239,11 @@ public class Table : Rectangle, ILargeElement
     /// <param name="widths">an array with values</param>
     public void SetWidths(int[] widths)
     {
+        if (widths == null)
+        {
+            throw new ArgumentNullException(nameof(widths));
+        }
+
         var tb = new float[widths.Length];
         for (var k = 0; k < widths.Length; ++k)
         {
@@ -1278,9 +1290,9 @@ public class Table : Rectangle, ILargeElement
         }
     }
 
-    private void errorDimensions()
+    private static void errorDimensions()
     {
-        throw new Exception("Dimensions of a Table can't be calculated. See the FAQ.");
+        throw new InvalidOperationException("Dimensions of a Table can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -1612,7 +1624,7 @@ public class Table : Rectangle, ILargeElement
             if (!someRows[i].Reserve(aPosition.Y, aCell.Colspan))
             {
                 // should be impossible to come here :-)
-                throw new Exception("addCell - error in reserve");
+                throw new InvalidOperationException("addCell - error in reserve");
             }
         }
 

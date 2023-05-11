@@ -10,7 +10,7 @@ public class ByteVector
     /// <summary>
     ///     Capacity increment size
     /// </summary>
-    private static readonly int _defaultBlockSize = 2048;
+    private const int DEFAULT_BLOCK_SIZE = 2048;
 
     private readonly int _blockSize;
 
@@ -19,7 +19,7 @@ public class ByteVector
     /// </summary>
     private int _n;
 
-    public ByteVector() : this(_defaultBlockSize)
+    public ByteVector() : this(DEFAULT_BLOCK_SIZE)
     {
     }
 
@@ -31,7 +31,7 @@ public class ByteVector
         }
         else
         {
-            _blockSize = _defaultBlockSize;
+            _blockSize = DEFAULT_BLOCK_SIZE;
         }
 
         Arr = new byte[_blockSize];
@@ -40,7 +40,7 @@ public class ByteVector
 
     public ByteVector(byte[] a)
     {
-        _blockSize = _defaultBlockSize;
+        _blockSize = DEFAULT_BLOCK_SIZE;
         Arr = a;
         _n = 0;
     }
@@ -53,7 +53,7 @@ public class ByteVector
         }
         else
         {
-            _blockSize = _defaultBlockSize;
+            _blockSize = DEFAULT_BLOCK_SIZE;
         }
 
         Arr = a;

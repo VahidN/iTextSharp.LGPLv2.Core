@@ -194,6 +194,11 @@ public class FdfWriter
     /// <param name="fdf">the  FdfReader </param>
     public void SetFields(FdfReader fdf)
     {
+        if (fdf == null)
+        {
+            throw new ArgumentNullException(nameof(fdf));
+        }
+
         var map = fdf.Fields;
         foreach (var entry in map)
         {
@@ -219,6 +224,11 @@ public class FdfWriter
     /// <param name="pdf">the  PdfReader </param>
     public void SetFields(PdfReader pdf)
     {
+        if (pdf == null)
+        {
+            throw new ArgumentNullException(nameof(pdf));
+        }
+
         SetFields(pdf.AcroFields);
     }
 
@@ -228,6 +238,11 @@ public class FdfWriter
     /// <param name="af">the  AcroFields </param>
     public void SetFields(AcroFields af)
     {
+        if (af == null)
+        {
+            throw new ArgumentNullException(nameof(af));
+        }
+
         foreach (var entry in af.Fields)
         {
             var fn = entry.Key;

@@ -3,7 +3,6 @@ namespace iTextSharp.text;
 /// <summary>
 ///     The PageSize-object contains a number of read only rectangles representing the most common paper sizes.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.RectangleReadOnly" />
 public static class PageSize
 {
     /// <summary>
@@ -276,6 +275,11 @@ public static class PageSize
     /// </summary>
     public static Rectangle GetRectangle(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         name = name.Trim().ToUpper(CultureInfo.InvariantCulture);
         var pos = name.IndexOf(" ", StringComparison.Ordinal);
         if (pos == -1)

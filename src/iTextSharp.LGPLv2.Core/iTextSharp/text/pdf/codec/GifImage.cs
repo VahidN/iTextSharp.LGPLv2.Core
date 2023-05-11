@@ -121,10 +121,7 @@ public class GifImage
         }
         finally
         {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
+            isp.Dispose();
         }
     }
 
@@ -518,7 +515,7 @@ public class GifImage
             id += (char)Inp.ReadByte();
         }
 
-        if (!id.StartsWith("GIF8"))
+        if (!id.StartsWith("GIF8", StringComparison.Ordinal))
         {
             throw new IOException("Gif signature nor found.");
         }
@@ -628,13 +625,6 @@ public class GifImage
     protected int ReadShort() =>
         // read 16-bit value, LSB first
         Inp.ReadByte() | (Inp.ReadByte() << 8);
-
-    /// <summary>
-    ///     Resets frame state for reading next image.
-    /// </summary>
-    protected void ResetFrame()
-    {
-    }
 
     protected void SetPixel(int x, int y, int v)
     {

@@ -6,7 +6,7 @@ namespace iTextSharp.text.pdf;
 ///     Creates a name tree.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class PdfNameTree
+public static class PdfNameTree
 {
     private const int LeafSize = 64;
 
@@ -35,6 +35,16 @@ public class PdfNameTree
     /// <returns>the dictionary with the name tree. This dictionary is the one</returns>
     public static PdfDictionary WriteTree(INullValueDictionary<string, PdfObject> items, PdfWriter writer)
     {
+        if (items == null)
+        {
+            throw new ArgumentNullException(nameof(items));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         if (items.Count == 0)
         {
             return null;

@@ -214,18 +214,23 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// <summary>
     ///     Write the content of this RtfCell
     /// </summary>
-    public virtual void WriteContent(Stream result)
+    public virtual void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (_content.Count == 0)
         {
-            result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+            outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
             if (_parentRow.GetParentTable().GetTableFitToPage())
             {
-                result.Write(RtfParagraphStyle.KeepTogetherWithNext, 0, RtfParagraphStyle.KeepTogetherWithNext.Length);
+                outp.Write(RtfParagraphStyle.KeepTogetherWithNext, 0, RtfParagraphStyle.KeepTogetherWithNext.Length);
             }
 
-            result.Write(RtfPhrase.InTable, 0, RtfPhrase.InTable.Length);
+            outp.Write(RtfPhrase.InTable, 0, RtfPhrase.InTable.Length);
         }
         else
         {
@@ -237,82 +242,87 @@ public class RtfCell : Cell, IRtfExtendedElement
                     ((RtfParagraph)rtfElement).SetKeepTogetherWithNext(_parentRow.GetParentTable().GetTableFitToPage());
                 }
 
-                rtfElement.WriteContent(result);
+                rtfElement.WriteContent(outp);
                 if (rtfElement is RtfParagraph && i < _content.Count - 1)
                 {
-                    result.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+                    outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
                 }
             }
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\cell"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\cell"), 0, t.Length);
     }
 
     /// <summary>
     ///     Write the cell definition part of this RtfCell
     /// </summary>
     /// <returns>A byte array with the cell definition</returns>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (_mergeType == MergeVertParent)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\clvmgf"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clvmgf"), 0, t.Length);
         }
         else if (_mergeType == MergeVertChild)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\clvmrg"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clvmrg"), 0, t.Length);
         }
 
         switch (verticalAlignment)
         {
             case ALIGN_BOTTOM:
-                result.Write(t = DocWriter.GetIsoBytes("\\clvertalb"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalb"), 0, t.Length);
                 break;
             case ALIGN_CENTER:
             case ALIGN_MIDDLE:
-                result.Write(t = DocWriter.GetIsoBytes("\\clvertalc"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalc"), 0, t.Length);
                 break;
             case ALIGN_TOP:
-                result.Write(t = DocWriter.GetIsoBytes("\\clvertalt"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalt"), 0, t.Length);
                 break;
         }
 
-        _borders.WriteContent(result);
+        _borders.WriteContent(outp);
 
         if (_backgroundColor != null)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\clcbpat"), 0, t.Length);
-            result.Write(t = intToByteArray(_backgroundColor.GetColorNumber()), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clcbpat"), 0, t.Length);
+            outp.Write(t = intToByteArray(_backgroundColor.GetColorNumber()), 0, t.Length);
         }
 
-        _document.OutputDebugLinebreak(result);
+        _document.OutputDebugLinebreak(outp);
 
-        result.Write(t = DocWriter.GetIsoBytes("\\clftsWidth3"), 0, t.Length);
-        _document.OutputDebugLinebreak(result);
+        outp.Write(t = DocWriter.GetIsoBytes("\\clftsWidth3"), 0, t.Length);
+        _document.OutputDebugLinebreak(outp);
 
-        result.Write(t = DocWriter.GetIsoBytes("\\clwWidth"), 0, t.Length);
-        result.Write(t = intToByteArray(_cellWidth), 0, t.Length);
-        _document.OutputDebugLinebreak(result);
+        outp.Write(t = DocWriter.GetIsoBytes("\\clwWidth"), 0, t.Length);
+        outp.Write(t = intToByteArray(_cellWidth), 0, t.Length);
+        _document.OutputDebugLinebreak(outp);
 
         if (_cellPadding > 0)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadl"), 0, t.Length);
-            result.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadt"), 0, t.Length);
-            result.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadr"), 0, t.Length);
-            result.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadb"), 0, t.Length);
-            result.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadfl3"), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadft3"), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadfr3"), 0, t.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\clpadfb3"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadl"), 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadt"), 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadr"), 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadb"), 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfl3"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadft3"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfr3"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfb3"), 0, t.Length);
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\cellx"), 0, t.Length);
-        result.Write(t = intToByteArray(_cellRight), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\cellx"), 0, t.Length);
+        outp.Write(t = intToByteArray(_cellRight), 0, t.Length);
     }
 
     /// <summary>
@@ -373,6 +383,11 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// <param name="mergeParent">The RtfCell to merge with</param>
     protected internal void SetCellMergeChild(RtfCell mergeParent)
     {
+        if (mergeParent == null)
+        {
+            throw new ArgumentNullException(nameof(mergeParent));
+        }
+
         _mergeType = MergeVertChild;
         _cellWidth = mergeParent.GetCellWidth();
         _cellRight = mergeParent.GetCellRight();
@@ -444,7 +459,7 @@ public class RtfCell : Cell, IRtfExtendedElement
         _cellPadding = (int)_parentRow.GetParentTable().GetCellPadding();
 
         Paragraph container = null;
-        foreach (IElement element in cell.Elements)
+        foreach (var element in cell.Elements)
         {
             try
             {
@@ -711,5 +726,5 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// </summary>
     /// <param name="i">The integer to convert</param>
     /// <returns>A byte array representing the integer</returns>
-    private byte[] intToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString());
+    private static byte[] intToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString(CultureInfo.InvariantCulture));
 }

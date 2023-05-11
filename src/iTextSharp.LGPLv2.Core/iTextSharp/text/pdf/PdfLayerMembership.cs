@@ -42,6 +42,11 @@ public class PdfLayerMembership : PdfDictionary, IPdfOcg
     /// <param name="writer">the writer</param>
     public PdfLayerMembership(PdfWriter writer) : base(PdfName.Ocmd)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         Put(PdfName.Ocgs, Members);
         Refi = writer.PdfIndirectReference;
     }
@@ -80,6 +85,11 @@ public class PdfLayerMembership : PdfDictionary, IPdfOcg
     /// <param name="layer">the new member to the layer</param>
     public void AddMember(PdfLayer layer)
     {
+        if (layer == null)
+        {
+            throw new ArgumentNullException(nameof(layer));
+        }
+
         if (!layers.ContainsKey(layer))
         {
             Members.Add(layer.Ref);

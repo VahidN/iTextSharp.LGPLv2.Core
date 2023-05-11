@@ -60,6 +60,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// </summary>
     public Phrase(Phrase phrase)
     {
+        if (phrase == null)
+        {
+            throw new ArgumentNullException(nameof(phrase));
+        }
+
         AddAll(phrase);
         leading = phrase.Leading;
         font = phrase.Font;
@@ -82,6 +87,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <param name="chunk">a Chunk</param>
     public Phrase(Chunk chunk)
     {
+        if (chunk == null)
+        {
+            throw new ArgumentNullException(nameof(chunk));
+        }
+
         base.Add(chunk);
         font = chunk.Font;
         hyphenation = chunk.GetHyphenation();
@@ -94,6 +104,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <param name="chunk">a Chunk</param>
     public Phrase(float leading, Chunk chunk)
     {
+        if (chunk == null)
+        {
+            throw new ArgumentNullException(nameof(chunk));
+        }
+
         this.leading = leading;
         base.Add(chunk);
         font = chunk.Font;
@@ -250,6 +265,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <returns>true if the element was processed successfully</returns>
     public virtual bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             foreach (var ele in this)
@@ -322,12 +342,12 @@ public class Phrase : List<IElement>, ITextElementArray
                     base.Add(o);
                     return true;
                 default:
-                    throw new Exception(element.Type.ToString());
+                    throw new InvalidOperationException(element.Type.ToString(CultureInfo.InvariantCulture));
             }
         }
         catch (Exception cce)
         {
-            throw new Exception("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
         }
     }
 
@@ -355,6 +375,16 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <returns>a newly constructed Phrase</returns>
     public static Phrase GetInstance(int leading, string str, Font font)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         var p = new Phrase(true);
         p.Leading = leading;
         p.font = font;
@@ -397,7 +427,7 @@ public class Phrase : List<IElement>, ITextElementArray
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public static bool IsTag(string tag) => ElementTags.PHRASE.Equals(tag);
+    public static bool IsTag(string tag) => ElementTags.PHRASE.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Adds a Chunk, an Anchor or another Phrase
@@ -441,12 +471,12 @@ public class Phrase : List<IElement>, ITextElementArray
             }
             else
             {
-                throw new Exception(element.Type.ToString());
+                throw new InvalidOperationException(element.Type.ToString(CultureInfo.InvariantCulture));
             }
         }
         catch (Exception cce)
         {
-            throw new Exception("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
         }
     }
 
@@ -458,6 +488,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <returns>true if the action succeeded, false if not.</returns>
     public bool AddAll<T>(ICollection<T> collection) where T : IElement
     {
+        if (collection == null)
+        {
+            throw new ArgumentNullException(nameof(collection));
+        }
+
         if (collection.Count == 0)
         {
             return false;
@@ -527,6 +562,11 @@ public class Phrase : List<IElement>, ITextElementArray
     /// <returns>a bool</returns>
     protected bool AddChunk(Chunk chunk)
     {
+        if (chunk == null)
+        {
+            throw new ArgumentNullException(nameof(chunk));
+        }
+
         var f = chunk.Font;
         var c = chunk.Content;
         if (font != null && !font.IsStandardFont())
@@ -543,8 +583,8 @@ public class Phrase : List<IElement>, ITextElementArray
                     && (f == null
                         || f.CompareTo(previous.Font) == 0)
                     && previous.Font.CompareTo(f) == 0
-                    && !"".Equals(previous.Content.Trim())
-                    && !"".Equals(c.Trim()))
+                    && !"".Equals(previous.Content.Trim(), StringComparison.Ordinal)
+                    && !"".Equals(c.Trim(), StringComparison.Ordinal))
                 {
                     previous.Append(c);
                     return true;

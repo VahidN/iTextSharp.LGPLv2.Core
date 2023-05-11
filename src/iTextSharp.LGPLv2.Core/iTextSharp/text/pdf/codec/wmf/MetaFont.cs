@@ -151,11 +151,23 @@ public class MetaFont : MetaObject
         }
     }
 
-    public float GetFontSize(MetaState state) =>
-        Math.Abs(state.TransformY(_height) - state.TransformY(0)) * Document.WmfFontCorrection;
+    public float GetFontSize(MetaState state)
+    {
+        if (state == null)
+        {
+            throw new ArgumentNullException(nameof(state));
+        }
+
+        return Math.Abs(state.TransformY(_height) - state.TransformY(0)) * Document.WmfFontCorrection;
+    }
 
     public void Init(InputMeta meta)
     {
+        if (meta == null)
+        {
+            throw new ArgumentNullException(nameof(meta));
+        }
+
         _height = Math.Abs(meta.ReadShort());
         meta.Skip(2);
         Angle = (float)(meta.ReadShort() / 1800.0 * Math.PI);
@@ -182,7 +194,7 @@ public class MetaFont : MetaObject
 
         try
         {
-            _faceName = EncodingsRegistry.Instance.GetEncoding(1252).GetString(name, 0, k);
+            _faceName = EncodingsRegistry.GetEncoding(1252).GetString(name, 0, k);
         }
         catch
         {

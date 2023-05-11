@@ -825,7 +825,7 @@ public sealed class Deflate
                 PutShortMsb((int)(strm.Adler & 0xffff));
             }
 
-            strm.Adler = strm._adler.adler32(0, null, 0, 0);
+            strm.Adler = Adler32.adler32(0, null, 0, 0);
         }
 
         // Flush as much pending output as possible
@@ -1503,7 +1503,7 @@ public sealed class Deflate
         }
 
         Status = Noheader != 0 ? BusyState : InitState;
-        strm.Adler = strm._adler.adler32(0, null, 0, 0);
+        strm.Adler = Adler32.adler32(0, null, 0, 0);
 
         LastFlush = ZNoFlush;
 
@@ -1522,7 +1522,7 @@ public sealed class Deflate
             return ZStreamError;
         }
 
-        strm.Adler = strm._adler.adler32(strm.Adler, dictionary, 0, dictLength);
+        strm.Adler = Adler32.adler32(strm.Adler, dictionary, 0, dictLength);
 
         if (length < MinMatch)
         {

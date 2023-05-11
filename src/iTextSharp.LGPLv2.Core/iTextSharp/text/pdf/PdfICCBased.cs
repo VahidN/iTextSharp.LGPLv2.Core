@@ -22,6 +22,11 @@ public class PdfIccBased : PdfStream
     /// <param name="profile">an ICC profile</param>
     public PdfIccBased(IccProfile profile, int compressionLevel)
     {
+        if (profile == null)
+        {
+            throw new ArgumentNullException(nameof(profile));
+        }
+
         var numberOfComponents = profile.NumComponents;
         switch (numberOfComponents)
         {

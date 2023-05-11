@@ -31,7 +31,15 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// </summary>
     /// <param name="reader">the original document. It cannot be reused</param>
     /// <param name="os">the output stream</param>
-    public PdfStamper(PdfReader reader, Stream os) => Stamper = new PdfStamperImp(reader, os, '\0', false);
+    public PdfStamper(PdfReader reader, Stream os)
+    {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        Stamper = new PdfStamperImp(reader, os, '\0', false);
+    }
 
     /// <summary>
     ///     Starts the process of adding extra content to an existing PDF
@@ -43,8 +51,15 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// <param name="reader">the original document. It cannot be reused</param>
     /// <param name="os">the output stream</param>
     /// <param name="pdfVersion">the new pdf version or '\0' to keep the same version as the original</param>
-    public PdfStamper(PdfReader reader, Stream os, char pdfVersion) =>
+    public PdfStamper(PdfReader reader, Stream os, char pdfVersion)
+    {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         Stamper = new PdfStamperImp(reader, os, pdfVersion, false);
+    }
 
     /// <summary>
     ///     Starts the process of adding extra content to an existing PDF
@@ -58,8 +73,15 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// <param name="os">the output stream</param>
     /// <param name="pdfVersion">the new pdf version or '\0' to keep the same version as the original</param>
     /// <param name="append">if  true  appends the document changes as a new revision. This is</param>
-    public PdfStamper(PdfReader reader, Stream os, char pdfVersion, bool append) =>
+    public PdfStamper(PdfReader reader, Stream os, char pdfVersion, bool append)
+    {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         Stamper = new PdfStamperImp(reader, os, pdfVersion, append);
+    }
 
     /// <summary>
     ///     Gets the  AcroFields  object that allows to get and set field values
@@ -446,7 +468,7 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     {
         var acroForm = Stamper.AcroForm;
         var signature = PdfFormField.CreateSignature(Stamper);
-        acroForm.SetSignatureParams(signature, name, llx, lly, urx, ury);
+        PdfAcroForm.SetSignatureParams(signature, name, llx, lly, urx, ury);
         acroForm.DrawSignatureAppearences(signature, llx, lly, urx, ury);
         AddAnnotation(signature, page);
         return signature;
@@ -587,6 +609,11 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// <param name="pageReplaced">the page to replace in this document</param>
     public void ReplacePage(PdfReader r, int pageImported, int pageReplaced)
     {
+        if (r == null)
+        {
+            throw new ArgumentNullException(nameof(r));
+        }
+
         Stamper.ReplacePage(r, pageImported, pageReplaced);
     }
 
@@ -694,6 +721,11 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// <param name="page">the page where the action will be applied. The first page is 1</param>
     public void SetPageAction(PdfName actionType, PdfAction action, int page)
     {
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
         Stamper.SetPageAction(actionType, action, page);
     }
 

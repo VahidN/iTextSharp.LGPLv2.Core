@@ -60,6 +60,11 @@ public class PdfArray : PdfObject
     /// <param name="l">an ArrayList with PdfObjects</param>
     public PdfArray(IList<PdfObject> l) : this()
     {
+        if (l == null)
+        {
+            throw new ArgumentNullException(nameof(l));
+        }
+
         foreach (var o in l)
         {
             Add(o);
@@ -70,7 +75,15 @@ public class PdfArray : PdfObject
     ///     Constructs an  PdfArray -object, containing all the  PdfObject s in a given  PdfArray .
     /// </summary>
     /// <param name="array">a  PdfArray  that has to be added to the array</param>
-    public PdfArray(PdfArray array) : base(ARRAY) => arrayList = new List<PdfObject>(array.arrayList);
+    public PdfArray(PdfArray array) : base(ARRAY)
+    {
+        if (array == null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        arrayList = new List<PdfObject>(array.arrayList);
+    }
 
     /// <summary>
     ///     methods overriding some methods in PdfObject
@@ -108,6 +121,11 @@ public class PdfArray : PdfObject
     /// <returns> true </returns>
     public virtual bool Add(float[] values)
     {
+        if (values == null)
+        {
+            throw new ArgumentNullException(nameof(values));
+        }
+
         for (var k = 0; k < values.Length; ++k)
         {
             arrayList.Add(new PdfNumber(values[k]));
@@ -118,6 +136,11 @@ public class PdfArray : PdfObject
 
     public virtual bool Add(int[] values)
     {
+        if (values == null)
+        {
+            throw new ArgumentNullException(nameof(values));
+        }
+
         for (var k = 0; k < values.Length; ++k)
         {
             arrayList.Add(new PdfNumber(values[k]));
@@ -297,6 +320,11 @@ public class PdfArray : PdfObject
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         os.WriteByte((byte)'[');
         var first = true;
         PdfObject obj = null;

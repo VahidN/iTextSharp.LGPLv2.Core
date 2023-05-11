@@ -1,3 +1,5 @@
+using System.util;
+
 namespace iTextSharp.text.pdf;
 
 /// <summary>
@@ -44,7 +46,7 @@ internal class PdfCopyFormsImp : PdfCopyFieldsImp
         }
 
         reader.ShuffleSubsetNames();
-        Readers2Intrefs[reader] = new IntHashtable();
+        Readers2Intrefs[reader] = new NullValueDictionary<int, int>();
         Fields.Add(reader.AcroFields);
         UpdateCalculationOrder(reader);
     }

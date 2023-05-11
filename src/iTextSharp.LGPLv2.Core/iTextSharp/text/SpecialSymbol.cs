@@ -12,6 +12,11 @@ public static class SpecialSymbol
     /// <returns>a SYMBOL version of a character</returns>
     public static Chunk Get(char c, Font font)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         var greek = GetCorrespondingSymbol(c);
         if (greek == ' ')
         {
@@ -141,6 +146,11 @@ public static class SpecialSymbol
     /// <returns>an index of -1 if no special symbol was found</returns>
     public static int Index(string str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         var length = str.Length;
         for (var i = 0; i < length; i++)
         {

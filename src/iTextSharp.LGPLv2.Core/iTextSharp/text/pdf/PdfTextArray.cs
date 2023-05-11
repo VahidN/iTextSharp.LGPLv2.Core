@@ -51,6 +51,11 @@ public class PdfTextArray
     /// <param name="number">displacement of the string</param>
     public void Add(PdfNumber number)
     {
+        if (number == null)
+        {
+            throw new ArgumentNullException(nameof(number));
+        }
+
         Add((float)number.DoubleValue);
     }
 
@@ -83,6 +88,11 @@ public class PdfTextArray
 
     public void Add(string str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         if (str.Length > 0)
         {
             if (_lastStr != null)

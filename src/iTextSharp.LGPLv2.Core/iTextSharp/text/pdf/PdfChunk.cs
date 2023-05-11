@@ -121,6 +121,11 @@ public class PdfChunk
     /// </summary>
     public PdfChunk(string str, PdfChunk other)
     {
+        if (other == null)
+        {
+            throw new ArgumentNullException(nameof(other));
+        }
+
         _thisChunk[0] = this;
         value = str;
         font = other.font;
@@ -155,6 +160,11 @@ public class PdfChunk
     /// <param name="action">the  PdfAction  if the  Chunk  comes from an  Anchor </param>
     public PdfChunk(Chunk chunk, PdfAction action)
     {
+        if (chunk == null)
+        {
+            throw new ArgumentNullException(nameof(chunk));
+        }
+
         _thisChunk[0] = this;
         value = chunk.Content;
 
@@ -325,7 +335,7 @@ public class PdfChunk
     {
         get
         {
-            if (!BaseFont.IDENTITY_H.Equals(encoding))
+            if (!BaseFont.IDENTITY_H.Equals(encoding, StringComparison.Ordinal))
             {
                 return value.Length;
             }
@@ -405,7 +415,7 @@ public class PdfChunk
         var ft = font.Font;
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
         {
-            if (value.Length > 1 && value.StartsWith("\u0001"))
+            if (value.Length > 1 && value.StartsWith("\u0001", StringComparison.Ordinal))
             {
                 value = value.Substring(1);
                 return font.Width('\u0001');
@@ -413,7 +423,7 @@ public class PdfChunk
         }
         else
         {
-            if (value.Length > 1 && value.StartsWith(" "))
+            if (value.Length > 1 && value.StartsWith(" ", StringComparison.Ordinal))
             {
                 value = value.Substring(1);
                 return font.Width(' ');
@@ -428,7 +438,7 @@ public class PdfChunk
         var ft = font.Font;
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
         {
-            if (value.Length > 1 && value.EndsWith("\u0001"))
+            if (value.Length > 1 && value.EndsWith("\u0001", StringComparison.Ordinal))
             {
                 value = value.Substring(0, value.Length - 1);
                 return font.Width('\u0001');
@@ -436,7 +446,7 @@ public class PdfChunk
         }
         else
         {
-            if (value.Length > 1 && value.EndsWith(" "))
+            if (value.Length > 1 && value.EndsWith(" ", StringComparison.Ordinal))
             {
                 value = value.Substring(0, value.Length - 1);
                 return font.Width(' ');
@@ -462,9 +472,9 @@ public class PdfChunk
 
     public object GetAttribute(string name)
     {
-        if (Attributes.ContainsKey(name))
+        if (Attributes.TryGetValue(name, out var attribute))
         {
-            return Attributes[name];
+            return attribute;
         }
 
         return NoStroke[name];
@@ -518,7 +528,8 @@ public class PdfChunk
     /// <returns>true if this chunk is a separator.</returns>
     public bool IsSeparator() => IsAttribute(Chunk.SEPARATOR);
 
-    public bool IsSpecialEncoding() => encoding.Equals(CjkFont.CJK_ENCODING) || encoding.Equals(BaseFont.IDENTITY_H);
+    public bool IsSpecialEncoding() => encoding.Equals(CjkFont.CJK_ENCODING, StringComparison.Ordinal) ||
+                                       encoding.Equals(BaseFont.IDENTITY_H, StringComparison.Ordinal);
 
     public bool IsStroked() => Attributes.Count > 0;
 
@@ -715,17 +726,23 @@ public class PdfChunk
 
     public string Trim(string str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         var ft = font.Font;
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
         {
-            while (str.EndsWith("\u0001"))
+            while (str.EndsWith("\u0001", StringComparison.Ordinal))
             {
                 str = str.Substring(0, str.Length - 1);
             }
         }
         else
         {
-            while (str.EndsWith(" ") || str.EndsWith("\t"))
+            while (str.EndsWith(" ", StringComparison.Ordinal) ||
+                   str.EndsWith("\t", StringComparison.Ordinal))
             {
                 str = str.Substring(0, str.Length - 1);
             }
@@ -817,8 +834,13 @@ public class PdfChunk
         return tmp;
     }
 
-    protected int GetWord(string text, int start)
+    protected static int GetWord(string text, int start)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var len = text.Length;
         while (start < len)
         {

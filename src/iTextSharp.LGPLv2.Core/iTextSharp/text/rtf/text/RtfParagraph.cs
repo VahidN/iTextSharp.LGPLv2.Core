@@ -29,6 +29,16 @@ public class RtfParagraph : RtfPhrase
     /// <param name="paragraph">The Paragraph that this RtfParagraph is based on</param>
     public RtfParagraph(RtfDocument doc, Paragraph paragraph) : base(doc)
     {
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
+        }
+
+        if (paragraph == null)
+        {
+            throw new ArgumentNullException(nameof(paragraph));
+        }
+
         ST.RtfFont baseFont = null;
         if (paragraph.Font is ST.RtfParagraphStyle)
         {
@@ -124,37 +134,42 @@ public class RtfParagraph : RtfPhrase
     ///     Writes the content of this RtfParagraph. First paragraph specific data is written
     ///     and then the RtfChunks of this RtfParagraph are added.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
-        result.Write(Plain, 0, Plain.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
+        outp.Write(Plain, 0, Plain.Length);
         if (((RtfElement)this).InTable)
         {
-            result.Write(InTable, 0, InTable.Length);
+            outp.Write(InTable, 0, InTable.Length);
         }
 
         if (ParagraphStyle != null)
         {
-            ParagraphStyle.WriteBegin(result);
+            ParagraphStyle.WriteBegin(outp);
         }
 
-        result.Write(Plain, 0, Plain.Length);
+        outp.Write(Plain, 0, Plain.Length);
         for (var i = 0; i < Chunks.Count; i++)
         {
             var rbe = Chunks[i];
-            rbe.WriteContent(result);
+            rbe.WriteContent(outp);
         }
 
         if (ParagraphStyle != null)
         {
-            ParagraphStyle.WriteEnd(result);
+            ParagraphStyle.WriteEnd(outp);
         }
 
         if (!((RtfElement)this).InTable)
         {
-            result.Write(Paragraph, 0, Paragraph.Length);
+            outp.Write(Paragraph, 0, Paragraph.Length);
         }
 
-        Document.OutputDebugLinebreak(result);
+        Document.OutputDebugLinebreak(outp);
     }
 }

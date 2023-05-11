@@ -178,7 +178,7 @@ internal class TrueTypeFont : BaseFont
     ///     glyph number for the second character. The value is the amount of kerning in
     ///     normalized 1000 units as an  Integer . This value is usually negative.
     /// </summary>
-    protected IntHashtable Kerning = new();
+    protected NullValueDictionary<int, int> Kerning = new();
 
     /// <summary>
     ///     The content of table 'OS/2'.
@@ -245,9 +245,9 @@ internal class TrueTypeFont : BaseFont
             TtcIndex = nameBase.Substring(ttcName.Length + 1);
         }
 
-        if (FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") ||
-            FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") ||
-            FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttc"))
+        if (FileName.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
+            FileName.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) ||
+            FileName.EndsWith(".ttc", StringComparison.OrdinalIgnoreCase))
         {
             Process(ttfAfm, forceRead);
             if (!justNames && Embedded && Os2.FsType == 2)
@@ -260,7 +260,7 @@ internal class TrueTypeFont : BaseFont
             throw new DocumentException(FileName + Style + " is not a TTF, OTF or TTC font file.");
         }
 
-        if (!encoding.StartsWith("#"))
+        if (!encoding.StartsWith("#", StringComparison.Ordinal))
         {
             PdfEncodings.ConvertToBytes(" ", enc); // check if the encoding exists
         }
@@ -736,8 +736,11 @@ internal class TrueTypeFont : BaseFont
 
             names.Add(new[]
                       {
-                          nameId.ToString(), platformId.ToString(),
-                          platformEncodingId.ToString(), languageId.ToString(), name,
+                          nameId.ToString(CultureInfo.InvariantCulture),
+                          platformId.ToString(CultureInfo.InvariantCulture),
+                          platformEncodingId.ToString(CultureInfo.InvariantCulture),
+                          languageId.ToString(CultureInfo.InvariantCulture),
+                          name,
                       });
             Rf.Seek(pos);
         }
@@ -794,8 +797,10 @@ internal class TrueTypeFont : BaseFont
 
                 names.Add(new[]
                           {
-                              platformId.ToString(),
-                              platformEncodingId.ToString(), languageId.ToString(), name,
+                              platformId.ToString(CultureInfo.InvariantCulture),
+                              platformEncodingId.ToString(CultureInfo.InvariantCulture),
+                              languageId.ToString(CultureInfo.InvariantCulture),
+                              name,
                           });
                 Rf.Seek(pos);
             }
@@ -859,7 +864,7 @@ internal class TrueTypeFont : BaseFont
                 }
 
                 var mainTag = ReadStandardString(4);
-                if (!mainTag.Equals("ttcf"))
+                if (!mainTag.Equals("ttcf", StringComparison.Ordinal))
                 {
                     throw new DocumentException(FileName + " is not a valid TTC file.");
                 }
@@ -1493,16 +1498,20 @@ internal class TrueTypeFont : BaseFont
         {
             for (var k = firstChar; k <= lastChar; ++k)
             {
-                if (!differences[k].Equals(notdef))
+                if (!differences[k].Equals(notdef, StringComparison.Ordinal))
                 {
                     firstChar = k;
                     break;
                 }
             }
 
-            if (encoding.Equals(CP1252) || encoding.Equals(MACROMAN))
+            if (encoding.Equals(CP1252, StringComparison.Ordinal) ||
+                encoding.Equals(MACROMAN, StringComparison.Ordinal))
             {
-                dic.Put(PdfName.Encoding, encoding.Equals(CP1252) ? PdfName.WinAnsiEncoding : PdfName.MacRomanEncoding);
+                dic.Put(PdfName.Encoding,
+                        encoding.Equals(CP1252, StringComparison.Ordinal)
+                            ? PdfName.WinAnsiEncoding
+                            : PdfName.MacRomanEncoding);
             }
             else
             {
@@ -1583,7 +1592,7 @@ internal class TrueTypeFont : BaseFont
 
         if (Cff)
         {
-            if (encoding.StartsWith("Identity-"))
+            if (encoding.StartsWith("Identity-", StringComparison.Ordinal))
             {
                 dic.Put(PdfName.Fontname, new PdfName(subsetPrefix + FontName + "-" + encoding));
             }
@@ -1735,7 +1744,7 @@ internal class TrueTypeFont : BaseFont
     {
         var buf = new byte[length];
         Rf.ReadFully(buf);
-        return EncodingsRegistry.Instance.GetEncoding(1252).GetString(buf);
+        return EncodingsRegistry.GetEncoding(1252).GetString(buf);
     }
 
     /// <summary>

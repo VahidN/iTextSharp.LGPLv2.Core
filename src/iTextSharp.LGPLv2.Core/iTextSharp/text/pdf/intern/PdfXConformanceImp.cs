@@ -117,6 +117,11 @@ public class PdfXConformanceImp : IPdfXConformance
 
                 break;
             case PDFXKEY_FONT:
+                if (obj1 == null)
+                {
+                    throw new ArgumentNullException(nameof(obj1));
+                }
+
                 if (!((BaseFont)obj1).IsEmbedded())
                 {
                     throw new PdfXConformanceException("All the fonts must be embedded. This one isn't: " +
@@ -125,6 +130,11 @@ public class PdfXConformanceImp : IPdfXConformance
 
                 break;
             case PDFXKEY_IMAGE:
+                if (obj1 == null)
+                {
+                    throw new ArgumentNullException(nameof(obj1));
+                }
+
                 var image = (PdfImage)obj1;
                 if (image.Get(PdfName.Smask) != null)
                 {
@@ -160,6 +170,11 @@ public class PdfXConformanceImp : IPdfXConformance
 
                 break;
             case PDFXKEY_GSTATE:
+                if (obj1 == null)
+                {
+                    throw new ArgumentNullException(nameof(obj1));
+                }
+
                 var gs = (PdfDictionary)obj1;
                 var obj = gs.Get(PdfName.Bm);
                 if (obj != null && !PdfGState.BmNormal.Equals(obj) && !PdfGState.BmCompatible.Equals(obj))
@@ -189,6 +204,11 @@ public class PdfXConformanceImp : IPdfXConformance
 
     public void CompleteExtraCatalog(PdfDictionary extraCatalog)
     {
+        if (extraCatalog == null)
+        {
+            throw new ArgumentNullException(nameof(extraCatalog));
+        }
+
         if (IsPdfX() && !IsPdfA1())
         {
             if (extraCatalog.Get(PdfName.Outputintents) == null)
@@ -206,6 +226,11 @@ public class PdfXConformanceImp : IPdfXConformance
 
     public void CompleteInfoDictionary(PdfDictionary info)
     {
+        if (info == null)
+        {
+            throw new ArgumentNullException(nameof(info));
+        }
+
         if (IsPdfX() && !IsPdfA1())
         {
             if (info.Get(PdfName.GtsPdfxversion) == null)

@@ -36,6 +36,11 @@ public class RtfDirectContent : RtfAddableElement
     /// </summary>
     public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         var contentBytes = DocWriter.GetIsoBytes(_directContent);
         outp.Write(contentBytes, 0, contentBytes.Length);
     }

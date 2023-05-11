@@ -8,6 +8,16 @@ public class ArcfourEncryption
 
     public void EncryptArcfour(byte[] dataIn, int off, int len, byte[] dataOut, int offOut)
     {
+        if (dataIn == null)
+        {
+            throw new ArgumentNullException(nameof(dataIn));
+        }
+
+        if (dataOut == null)
+        {
+            throw new ArgumentNullException(nameof(dataOut));
+        }
+
         var length = len + off;
         byte tmp;
         for (var k = off; k < length; ++k)
@@ -28,21 +38,41 @@ public class ArcfourEncryption
 
     public void EncryptArcfour(byte[] dataIn, byte[] dataOut)
     {
+        if (dataIn == null)
+        {
+            throw new ArgumentNullException(nameof(dataIn));
+        }
+
         EncryptArcfour(dataIn, 0, dataIn.Length, dataOut, 0);
     }
 
     public void EncryptArcfour(byte[] data)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
         EncryptArcfour(data, 0, data.Length, data, 0);
     }
 
     public void PrepareArcfourKey(byte[] key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         PrepareArcfourKey(key, 0, key.Length);
     }
 
     public void PrepareArcfourKey(byte[] key, int off, int len)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         var index1 = 0;
         var index2 = 0;
         for (var k = 0; k < 256; ++k)

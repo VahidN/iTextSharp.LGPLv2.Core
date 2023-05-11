@@ -93,6 +93,11 @@ public class PdfCopyFields : IPdfViewerPreferences, IPdfEncryptionSettings
     /// <param name="reader">the PDF document</param>
     public void AddDocument(PdfReader reader)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         _fc.AddDocument(reader);
     }
 
@@ -119,6 +124,11 @@ public class PdfCopyFields : IPdfViewerPreferences, IPdfEncryptionSettings
     /// <param name="ranges">the comma separated ranges as described in {@link SequenceList}</param>
     public void AddDocument(PdfReader reader, string ranges)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         _fc.AddDocument(reader, SequenceList.Expand(ranges, reader.NumberOfPages));
     }
 

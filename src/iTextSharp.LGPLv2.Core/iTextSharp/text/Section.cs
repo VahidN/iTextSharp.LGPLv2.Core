@@ -331,6 +331,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <returns>a bool</returns>
     public new bool Add(IElement o)
     {
+        if (o == null)
+        {
+            throw new ArgumentNullException(nameof(o));
+        }
+
         try
         {
             var element = o;
@@ -357,11 +362,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
                 return true;
             }
 
-            throw new Exception(element.Type.ToString());
+            throw new InvalidOperationException(element.Type.ToString(CultureInfo.InvariantCulture));
         }
         catch (Exception cce)
         {
-            throw new Exception("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
         }
     }
 
@@ -385,6 +390,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <returns>true if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             foreach (var ele in this)
@@ -411,6 +421,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <returns>a Paragraph object</returns>
     public static Paragraph ConstructTitle(Paragraph title, IList<int> numbers, int numberDepth, int numberStyle)
     {
+        if (numbers == null)
+        {
+            throw new ArgumentNullException(nameof(numbers));
+        }
+
         if (title == null)
         {
             return null;
@@ -444,14 +459,14 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public static bool IsTag(string tag) => ElementTags.SECTION.Equals(tag);
+    public static bool IsTag(string tag) => ElementTags.SECTION.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Checks if a given tag corresponds with a title tag for this object.
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public static bool IsTitle(string tag) => ElementTags.TITLE.Equals(tag);
+    public static bool IsTitle(string tag) => ElementTags.TITLE.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Adds a Paragraph, List or Table
@@ -461,6 +476,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <param name="o">an object of type Paragraph, List or Table</param>
     public void Add(int index, object o)
     {
+        if (o == null)
+        {
+            throw new ArgumentNullException(nameof(o));
+        }
+
         if (AddedCompletely)
         {
             throw new InvalidOperationException("This LargeElement has already been added to the Document.");
@@ -475,12 +495,12 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
             }
             else
             {
-                throw new Exception(element.Type.ToString());
+                throw new InvalidOperationException(element.Type.ToString(CultureInfo.InvariantCulture));
             }
         }
         catch (Exception cce)
         {
-            throw new Exception("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
         }
     }
 
@@ -492,6 +512,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <returns>true if the action succeeded, false if not.</returns>
     public bool AddAll<T>(ICollection<T> collection) where T : IElement
     {
+        if (collection == null)
+        {
+            throw new ArgumentNullException(nameof(collection));
+        }
+
         foreach (var itm in collection)
         {
             Add(itm);
@@ -640,6 +665,11 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <param name="attributes">the attributes</param>
     public void Set(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         string value;
         if ((value = attributes.Remove(ElementTags.NUMBERDEPTH)) != null)
         {

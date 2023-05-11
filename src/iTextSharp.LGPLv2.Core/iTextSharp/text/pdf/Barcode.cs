@@ -351,6 +351,11 @@ public abstract class Barcode
     /// <returns>the template</returns>
     public PdfTemplate CreateTemplateWithBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var tp = cb.CreateTemplate(0, 0);
         var rect = PlaceBarcode(tp, barColor, textColor);
         tp.BoundingBox = rect;

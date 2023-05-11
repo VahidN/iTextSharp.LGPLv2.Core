@@ -51,6 +51,11 @@ public class IccProfile
 
     public static IccProfile GetInstance(byte[] data)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
         if ((data.Length < 128) | (data[36] != 0x61) || data[37] != 0x63
                                                      || data[38] != 0x73 || data[39] != 0x70)
         {
@@ -60,12 +65,17 @@ public class IccProfile
         var icc = new IccProfile();
         icc.data = data;
         object cs = _cstags[Encoding.ASCII.GetString(data, 16, 4)];
-        icc.numComponents = cs == null ? 0 : (int)cs;
+        icc.numComponents = (int)cs;
         return icc;
     }
 
     public static IccProfile GetInstance(Stream file)
     {
+        if (file == null)
+        {
+            throw new ArgumentNullException(nameof(file));
+        }
+
         var head = new byte[128];
         var remain = head.Length;
         var ptr = 0;

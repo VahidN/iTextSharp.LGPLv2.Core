@@ -96,7 +96,12 @@ public class XfdfReader : ISimpleXmlDocHandler
     /// <param name="tag">the tag name</param>
     public void EndElement(string tag)
     {
-        if (tag.Equals("value"))
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (tag.Equals("value", StringComparison.Ordinal))
         {
             var fName = "";
             for (var k = 0; k < _fieldNames.Count; ++k)
@@ -104,7 +109,7 @@ public class XfdfReader : ISimpleXmlDocHandler
                 fName += "." + _fieldNames[k];
             }
 
-            if (fName.StartsWith("."))
+            if (fName.StartsWith(".", StringComparison.Ordinal))
             {
                 fName = fName.Substring(1);
             }
@@ -125,7 +130,7 @@ public class XfdfReader : ISimpleXmlDocHandler
                 ListFields[fName] = l;
             }
         }
-        else if (tag.Equals("field"))
+        else if (tag.Equals("field", StringComparison.Ordinal))
         {
             if (_fieldNames.Count != 0)
             {
@@ -149,34 +154,44 @@ public class XfdfReader : ISimpleXmlDocHandler
     /// <param name="h">the tag's attributes</param>
     public void StartElement(string tag, INullValueDictionary<string, string> h)
     {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (h == null)
+        {
+            throw new ArgumentNullException(nameof(h));
+        }
+
         if (!_foundRoot)
         {
-            if (!tag.Equals("xfdf"))
+            if (!tag.Equals("xfdf", StringComparison.Ordinal))
             {
-                throw new Exception("Root element is not Bookmark.");
+                throw new InvalidOperationException("Root element is not Bookmark.");
             }
 
             _foundRoot = true;
         }
 
-        if (tag.Equals("xfdf"))
+        if (tag.Equals("xfdf", StringComparison.Ordinal))
         {
         }
-        else if (tag.Equals("f"))
+        else if (tag.Equals("f", StringComparison.Ordinal))
         {
             fileSpec = h["href"];
         }
-        else if (tag.Equals("fields"))
+        else if (tag.Equals("fields", StringComparison.Ordinal))
         {
             fields = new NullValueDictionary<string, string>(); // init it!
             ListFields = new NullValueDictionary<string, List<string>>();
         }
-        else if (tag.Equals("field"))
+        else if (tag.Equals("field", StringComparison.Ordinal))
         {
             var fName = h["name"];
             _fieldNames.Push(fName);
         }
-        else if (tag.Equals("value"))
+        else if (tag.Equals("value", StringComparison.Ordinal))
         {
             _fieldValues.Push("");
         }

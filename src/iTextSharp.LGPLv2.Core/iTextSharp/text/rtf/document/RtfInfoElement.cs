@@ -55,6 +55,11 @@ public class RtfInfoElement : RtfElement
     /// <param name="meta">The Meta object this RtfInfoElement is based on</param>
     public RtfInfoElement(RtfDocument doc, Meta meta) : base(doc)
     {
+        if (meta == null)
+        {
+            throw new ArgumentNullException(nameof(meta));
+        }
+
         _infoType = meta.Type;
         _content = meta.Content;
     }
@@ -62,47 +67,52 @@ public class RtfInfoElement : RtfElement
     /// <summary>
     ///     Writes the content of one RTF information element.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(OpenGroup, 0, OpenGroup.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
         switch (_infoType)
         {
             case Element.AUTHOR:
-                result.Write(_infoAuthor, 0, _infoAuthor.Length);
+                outp.Write(_infoAuthor, 0, _infoAuthor.Length);
                 break;
             case Element.SUBJECT:
-                result.Write(_infoSubject, 0, _infoSubject.Length);
+                outp.Write(_infoSubject, 0, _infoSubject.Length);
                 break;
             case Element.KEYWORDS:
-                result.Write(_infoKeywords, 0, _infoKeywords.Length);
+                outp.Write(_infoKeywords, 0, _infoKeywords.Length);
                 break;
             case Element.TITLE:
-                result.Write(_infoTitle, 0, _infoTitle.Length);
+                outp.Write(_infoTitle, 0, _infoTitle.Length);
                 break;
             case Element.PRODUCER:
-                result.Write(_infoProducer, 0, _infoProducer.Length);
+                outp.Write(_infoProducer, 0, _infoProducer.Length);
                 break;
             case Element.CREATIONDATE:
-                result.Write(_infoCreationDate, 0, _infoCreationDate.Length);
+                outp.Write(_infoCreationDate, 0, _infoCreationDate.Length);
                 break;
             default:
-                result.Write(_infoAuthor, 0, _infoAuthor.Length);
+                outp.Write(_infoAuthor, 0, _infoAuthor.Length);
                 break;
         }
 
-        result.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
         byte[] t;
         if (_infoType == Element.CREATIONDATE)
         {
             t = DocWriter.GetIsoBytes(convertDate(_content));
-            result.Write(t, 0, t.Length);
+            outp.Write(t, 0, t.Length);
         }
         else
         {
-            Document.FilterSpecialChar(result, _content, false, false);
+            Document.FilterSpecialChar(outp, _content, false, false);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
     }
 
     /// <summary>
@@ -111,7 +121,7 @@ public class RtfInfoElement : RtfElement
     /// </summary>
     /// <param name="date">The date formated by iText</param>
     /// <returns>The date formated for rtf</returns>
-    private string convertDate(string date)
+    private static string convertDate(string date)
     {
         DateTime d;
         try
@@ -123,6 +133,7 @@ public class RtfInfoElement : RtfElement
             d = DateTime.Now;
         }
 
-        return d.ToString("'\\\\yr'yyyy'\\\\mo'MM'\\\\dy'dd'\\\\hr'HH'\\\\min'mm'\\\\sec'ss");
+        return d.ToString("'\\\\yr'yyyy'\\\\mo'MM'\\\\dy'dd'\\\\hr'HH'\\\\min'mm'\\\\sec'ss",
+                          CultureInfo.InvariantCulture);
     }
 }

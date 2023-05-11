@@ -31,17 +31,27 @@ public class RtfTableOfContents : RtfField
     /// <summary>
     ///     Writes the field instruction content
     /// </summary>
-    protected override void WriteFieldInstContent(Stream outp)
+    protected override void WriteFieldInstContent(Stream oupt)
     {
+        if (oupt == null)
+        {
+            throw new ArgumentNullException(nameof(oupt));
+        }
+
         var t = DocWriter.GetIsoBytes(FieldInst);
-        outp.Write(t, 0, t.Length);
+        oupt.Write(t, 0, t.Length);
     }
 
     /// <summary>
     ///     Writes the field result content
     /// </summary>
-    protected override void WriteFieldResultContent(Stream outp)
+    protected override void WriteFieldResultContent(Stream oupt)
     {
-        Document.FilterSpecialChar(outp, _defaultText, true, true);
+        if (oupt == null)
+        {
+            throw new ArgumentNullException(nameof(oupt));
+        }
+
+        Document.FilterSpecialChar(oupt, _defaultText, true, true);
     }
 }

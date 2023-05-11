@@ -260,6 +260,16 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
     /// </summary>
     public void CellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases)
     {
+        if (position == null)
+        {
+            throw new ArgumentNullException(nameof(position));
+        }
+
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var spLeft = SpacingLeft;
         if (float.IsNaN(spLeft))
         {
@@ -317,6 +327,11 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
     /// <param name="element"></param>
     public void AddElement(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (_cellgroup)
         {
             if (element is SimpleCell)
@@ -386,6 +401,11 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
     /// <returns>a PdfPCell based on these attributes.</returns>
     public PdfPCell CreatePdfPCell(SimpleCell rowAttributes)
     {
+        if (rowAttributes == null)
+        {
+            throw new ArgumentNullException(nameof(rowAttributes));
+        }
+
         var cell = new PdfPCell();
         cell.Border = NO_BORDER;
         var tmp = new SimpleCell(CELL);

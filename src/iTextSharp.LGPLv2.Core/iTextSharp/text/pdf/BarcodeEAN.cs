@@ -84,7 +84,7 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     The bar positions that are guard bars.
     /// </summary>
-    private static readonly int[] _guardEmpty = { };
+    private static readonly int[] _guardEmpty = Array.Empty<int>();
 
     /// <summary>
     ///     The bar positions that are guard bars.
@@ -243,7 +243,7 @@ public class BarcodeEan : Barcode
                     width = x * (4 + 5 * 7 + 4 * 2);
                     break;
                 default:
-                    throw new ArgumentException("Invalid code type.");
+                    throw new InvalidOperationException("Invalid code type.");
             }
 
             return new Rectangle(width, height);
@@ -257,6 +257,11 @@ public class BarcodeEan : Barcode
     /// <returns>the parity character</returns>
     public static int CalculateEanParity(string code)
     {
+        if (code == null)
+        {
+            throw new ArgumentNullException(nameof(code));
+        }
+
         var mul = 3;
         var total = 0;
         for (var k = code.Length - 1; k >= 0; --k)
@@ -278,37 +283,44 @@ public class BarcodeEan : Barcode
     /// <returns>the 8 converted digits or  null  if the</returns>
     public static string ConvertUpcAtoUpce(string text)
     {
-        if (text.Length != 12 || !(text.StartsWith("0") || text.StartsWith("1")))
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        if (text.Length != 12 || !(text.StartsWith("0", StringComparison.Ordinal) ||
+                                   text.StartsWith("1", StringComparison.Ordinal)))
         {
             return null;
         }
 
-        if (text.Substring(3, 3).Equals("000") || text.Substring(3, 3).Equals("100")
-                                               || text.Substring(3, 3).Equals("200"))
+        if (text.Substring(3, 3).Equals("000", StringComparison.Ordinal) ||
+            text.Substring(3, 3).Equals("100", StringComparison.Ordinal) ||
+            text.Substring(3, 3).Equals("200", StringComparison.Ordinal))
         {
-            if (text.Substring(6, 2).Equals("00"))
+            if (text.Substring(6, 2).Equals("00", StringComparison.Ordinal))
             {
                 return text.Substring(0, 1) + text.Substring(1, 2) + text.Substring(8, 3) + text.Substring(3, 1) +
                        text.Substring(11);
             }
         }
-        else if (text.Substring(4, 2).Equals("00"))
+        else if (text.Substring(4, 2).Equals("00", StringComparison.Ordinal))
         {
-            if (text.Substring(6, 3).Equals("000"))
+            if (text.Substring(6, 3).Equals("000", StringComparison.Ordinal))
             {
                 return text.Substring(0, 1) + text.Substring(1, 3) + text.Substring(9, 2) + "3" + text.Substring(11);
             }
         }
-        else if (text.Substring(5, 1).Equals("0"))
+        else if (text.Substring(5, 1).Equals("0", StringComparison.Ordinal))
         {
-            if (text.Substring(6, 4).Equals("0000"))
+            if (text.Substring(6, 4).Equals("0000", StringComparison.Ordinal))
             {
                 return text.Substring(0, 1) + text.Substring(1, 4) + text.Substring(10, 1) + "4" + text.Substring(11);
             }
         }
         else if (text[10] >= '5')
         {
-            if (text.Substring(6, 4).Equals("0000"))
+            if (text.Substring(6, 4).Equals("0000", StringComparison.Ordinal))
             {
                 return text.Substring(0, 1) + text.Substring(1, 5) + text.Substring(10, 1) + text.Substring(11);
             }
@@ -320,14 +332,19 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     Creates the bars for the barcode EAN13 and UPCA.
     /// </summary>
-    /// <param name="_code">the text with 13 digits</param>
+    /// <param name="barCode">the text with 13 digits</param>
     /// <returns>the barcode</returns>
-    public static byte[] GetBarsEan13(string _code)
+    public static byte[] GetBarsEan13(string barCode)
     {
-        var code = new int[_code.Length];
+        if (barCode == null)
+        {
+            throw new ArgumentNullException(nameof(barCode));
+        }
+
+        var code = new int[barCode.Length];
         for (var k = 0; k < code.Length; ++k)
         {
-            code[k] = _code[k] - '0';
+            code[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsEan13];
@@ -380,14 +397,19 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     Creates the bars for the barcode EAN8.
     /// </summary>
-    /// <param name="_code">the text with 8 digits</param>
+    /// <param name="barCode">the text with 8 digits</param>
     /// <returns>the barcode</returns>
-    public static byte[] GetBarsEan8(string _code)
+    public static byte[] GetBarsEan8(string barCode)
     {
-        var code = new int[_code.Length];
+        if (barCode == null)
+        {
+            throw new ArgumentNullException(nameof(barCode));
+        }
+
+        var code = new int[barCode.Length];
         for (var k = 0; k < code.Length; ++k)
         {
-            code[k] = _code[k] - '0';
+            code[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsEan8];
@@ -429,14 +451,19 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     Creates the bars for the barcode supplemental 2.
     /// </summary>
-    /// <param name="_code">the text with 2 digits</param>
+    /// <param name="barCode">the text with 2 digits</param>
     /// <returns>the barcode</returns>
-    public static byte[] GetBarsSupplemental2(string _code)
+    public static byte[] GetBarsSupplemental2(string barCode)
     {
+        if (barCode == null)
+        {
+            throw new ArgumentNullException(nameof(barCode));
+        }
+
         var code = new int[2];
         for (var k = 0; k < code.Length; ++k)
         {
-            code[k] = _code[k] - '0';
+            code[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsSupp2];
@@ -478,14 +505,19 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     Creates the bars for the barcode supplemental 5.
     /// </summary>
-    /// <param name="_code">the text with 5 digits</param>
+    /// <param name="barCode">the text with 5 digits</param>
     /// <returns>the barcode</returns>
-    public static byte[] GetBarsSupplemental5(string _code)
+    public static byte[] GetBarsSupplemental5(string barCode)
     {
+        if (barCode == null)
+        {
+            throw new ArgumentNullException(nameof(barCode));
+        }
+
         var code = new int[5];
         for (var k = 0; k < code.Length; ++k)
         {
-            code[k] = _code[k] - '0';
+            code[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsSupp5];
@@ -527,14 +559,19 @@ public class BarcodeEan : Barcode
     /// <summary>
     ///     Creates the bars for the barcode UPCE.
     /// </summary>
-    /// <param name="_code">the text with 8 digits</param>
+    /// <param name="barCode">the text with 8 digits</param>
     /// <returns>the barcode</returns>
-    public static byte[] GetBarsUpce(string _code)
+    public static byte[] GetBarsUpce(string barCode)
     {
-        var code = new int[_code.Length];
+        if (barCode == null)
+        {
+            throw new ArgumentNullException(nameof(barCode));
+        }
+
+        var code = new int[barCode.Length];
         for (var k = 0; k < code.Length; ++k)
         {
-            code[k] = _code[k] - '0';
+            code[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsUpce];
@@ -660,6 +697,11 @@ public class BarcodeEan : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var rect = BarcodeSize;
         float barStartX = 0;
         float barStartY = 0;

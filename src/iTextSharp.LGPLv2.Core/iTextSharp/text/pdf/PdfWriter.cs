@@ -852,7 +852,7 @@ public class PdfWriter : DocWriter,
         {
             if (!open)
             {
-                throw new Exception("The document is not open.");
+                throw new InvalidOperationException("The document is not open.");
             }
 
             return directContent;
@@ -871,7 +871,7 @@ public class PdfWriter : DocWriter,
         {
             if (!open)
             {
-                throw new Exception("The document is not open.");
+                throw new InvalidOperationException("The document is not open.");
             }
 
             return directContentUnder;
@@ -1244,6 +1244,11 @@ public class PdfWriter : DocWriter,
     /// <param name="action">the action to execute in response to the trigger</param>
     public virtual void SetAdditionalAction(PdfName actionType, PdfAction action)
     {
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
         if (!(actionType.Equals(DocumentClose) ||
               actionType.Equals(WillSave) ||
               actionType.Equals(DidSave) ||
@@ -1323,6 +1328,11 @@ public class PdfWriter : DocWriter,
     /// </param>
     public void SetEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
     {
+        if (permissions == null)
+        {
+            throw new ArgumentNullException(nameof(permissions));
+        }
+
         if (Pdf.IsOpen())
         {
             throw new DocumentException("Encryption can only be added before opening the document.");
@@ -1375,6 +1385,11 @@ public class PdfWriter : DocWriter,
     /// <param name="action">the action to perform</param>
     public virtual void SetPageAction(PdfName actionType, PdfAction action)
     {
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
         if (!actionType.Equals(PageOpen) && !actionType.Equals(PageClose))
         {
             throw new PdfException("Invalid page additional action type: " + actionType);
@@ -1393,7 +1408,7 @@ public class PdfWriter : DocWriter,
         {
             if (value < RUN_DIRECTION_NO_BIDI || value > RUN_DIRECTION_RTL)
             {
-                throw new Exception("Invalid run direction: " + value);
+                throw new InvalidOperationException("Invalid run direction: " + value);
             }
 
             runDirection = value;
@@ -1496,6 +1511,11 @@ public class PdfWriter : DocWriter,
 
     public static PdfWriter GetInstance(Document document, Stream os)
     {
+        if (document == null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
+
         var pdf = new PdfDocument();
         document.AddDocListener(pdf);
         var writer = new PdfWriter(pdf, os);
@@ -1505,6 +1525,11 @@ public class PdfWriter : DocWriter,
 
     public static PdfWriter GetInstance(Document document, Stream os, IDocListener listener)
     {
+        if (document == null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
+
         var pdf = new PdfDocument();
         pdf.AddDocListener(listener);
         document.AddDocListener(pdf);
@@ -1535,11 +1560,16 @@ public class PdfWriter : DocWriter,
     /// <returns>the name of the image added</returns>
     public PdfName AddDirectImageSimple(Image image, PdfIndirectReference fixedRef)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         PdfName name;
         // if the images is already added, just retrieve the name
-        if (_images.ContainsKey(image.MySerialId))
+        if (_images.TryGetValue(image.MySerialId, out var image1))
         {
-            name = _images[image.MySerialId];
+            name = image1;
         }
         // if it's a new image, add it to the document
         else
@@ -1547,9 +1577,8 @@ public class PdfWriter : DocWriter,
             if (image.IsImgTemplate())
             {
                 name = new PdfName("img" + _images.Count);
-                if (image is ImgWmf)
+                if (image is ImgWmf wmf)
                 {
-                    var wmf = (ImgWmf)image;
                     wmf.ReadWmf(PdfTemplate.CreateTemplate(this, 0, 0));
                 }
             }
@@ -1641,6 +1670,11 @@ public class PdfWriter : DocWriter,
     /// <param name="fs">the file specification</param>
     public virtual void AddFileAttachment(string description, PdfFileSpecification fs)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         Pdf.AddFileAttachment(description, fs);
     }
 
@@ -1650,6 +1684,11 @@ public class PdfWriter : DocWriter,
     /// <param name="fs">the file specification</param>
     public void AddFileAttachment(PdfFileSpecification fs)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         Pdf.AddFileAttachment(null, fs);
     }
 
@@ -1660,6 +1699,11 @@ public class PdfWriter : DocWriter,
     /// <param name="js">The JavaScript action</param>
     public virtual void AddJavaScript(PdfAction js)
     {
+        if (js == null)
+        {
+            throw new ArgumentNullException(nameof(js));
+        }
+
         Pdf.AddJavaScript(js);
     }
 
@@ -1700,6 +1744,11 @@ public class PdfWriter : DocWriter,
     /// <param name="js">The JavaScript action</param>
     public void AddJavaScript(string name, PdfAction js)
     {
+        if (js == null)
+        {
+            throw new ArgumentNullException(nameof(js));
+        }
+
         Pdf.AddJavaScript(name, js);
     }
 
@@ -1737,6 +1786,11 @@ public class PdfWriter : DocWriter,
     /// <param name="group">the radio group</param>
     public void AddOcgRadioGroup(IList<PdfLayer> group)
     {
+        if (group == null)
+        {
+            throw new ArgumentNullException(nameof(group));
+        }
+
         var ar = new PdfArray();
         for (var k = 0; k < group.Count; ++k)
         {
@@ -1789,6 +1843,11 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, PdfIndirectReference refa)
     {
+        if (refa == null)
+        {
+            throw new ArgumentNullException(nameof(refa));
+        }
+
         var iobj = Body.Add(objecta, refa);
         return iobj;
     }
@@ -1803,6 +1862,11 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, PdfIndirectReference refa, bool inObjStm)
     {
+        if (refa == null)
+        {
+            throw new ArgumentNullException(nameof(refa));
+        }
+
         var iobj = Body.Add(objecta, refa, inObjStm);
         return iobj;
     }
@@ -1830,6 +1894,11 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, int refNumber, bool inObjStm)
     {
+        if (objecta == null)
+        {
+            throw new ArgumentNullException(nameof(objecta));
+        }
+
         var iobj = Body.Add(objecta, refNumber, inObjStm);
         return iobj;
     }
@@ -1861,8 +1930,9 @@ public class PdfWriter : DocWriter,
         {
             if (currentPageNumber - 1 != PageReferences.Count)
             {
-                throw new Exception("The page " + PageReferences.Count +
-                                    " was requested but the document has only " + (currentPageNumber - 1) + " pages.");
+                throw new InvalidOperationException("The page " + PageReferences.Count +
+                                                    " was requested but the document has only " +
+                                                    (currentPageNumber - 1) + " pages.");
             }
 
             Pdf.Close();
@@ -1932,7 +2002,7 @@ public class PdfWriter : DocWriter,
             {
                 var tmp = GetIsoBytes("startxref\n");
                 base.Os.Write(tmp, 0, tmp.Length);
-                tmp = GetIsoBytes(Body.Offset.ToString());
+                tmp = GetIsoBytes(Body.Offset.ToString(CultureInfo.InvariantCulture));
                 base.Os.Write(tmp, 0, tmp.Length);
                 tmp = GetIsoBytes("\n%%EOF\n");
                 base.Os.Write(tmp, 0, tmp.Length);
@@ -2017,6 +2087,11 @@ public class PdfWriter : DocWriter,
     /// <returns>the template representing the imported page</returns>
     public virtual PdfImportedPage GetImportedPage(PdfReader reader, int pageNumber)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var inst = ImportedPages[reader];
         if (inst == null)
         {
@@ -2041,7 +2116,7 @@ public class PdfWriter : DocWriter,
         --page;
         if (page < 0)
         {
-            throw new ArgumentOutOfRangeException("The page numbers start at 1.");
+            throw new ArgumentOutOfRangeException(nameof(page), "The page numbers start at 1.");
         }
 
         PdfIndirectReference refa;
@@ -2094,6 +2169,11 @@ public class PdfWriter : DocWriter,
     /// <param name="layer">the layer that needs to be added to the array of locked OCGs</param>
     public void LockLayer(PdfLayer layer)
     {
+        if (layer == null)
+        {
+            throw new ArgumentNullException(nameof(layer));
+        }
+
         OcgLocked.Add(layer.Ref);
     }
 
@@ -2140,6 +2220,11 @@ public class PdfWriter : DocWriter,
     /// <param name="tp">the template to release</param>
     public void ReleaseTemplate(PdfTemplate tp)
     {
+        if (tp == null)
+        {
+            throw new ArgumentNullException(nameof(tp));
+        }
+
         var refi = tp.IndirectReference;
         var objs = FormXObjects[refi];
         if (objs == null || objs[1] == null)
@@ -2328,7 +2413,7 @@ public class PdfWriter : DocWriter,
         }
 
         PdfName intentSubtype;
-        if (_pdfxConformance.IsPdfA1() || "PDFA/1".Equals(outputCondition))
+        if (_pdfxConformance.IsPdfA1() || "PDFA/1".Equals(outputCondition, StringComparison.Ordinal))
         {
             intentSubtype = PdfName.GtsPdfa1;
         }
@@ -2375,6 +2460,11 @@ public class PdfWriter : DocWriter,
     /// <returns> true  if the output intent dictionary exists,  false </returns>
     public bool SetOutputIntents(PdfReader reader, bool checkExistence)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var catalog = reader.Catalog;
         var outs = catalog.GetAsArray(PdfName.Outputintents);
         if (outs == null)
@@ -2572,7 +2662,7 @@ public class PdfWriter : DocWriter,
             var destination = (PdfDestination)obj[2];
             if (destination == null)
             {
-                throw new Exception("The name '" + name + "' has no local destination.");
+                throw new InvalidOperationException("The name '" + name + "' has no local destination.");
             }
 
             if (obj[1] == null)
@@ -2660,7 +2750,8 @@ public class PdfWriter : DocWriter,
         var type = ExtendedColor.GetType(color);
         if (type == ExtendedColor.TYPE_PATTERN || type == ExtendedColor.TYPE_SHADING)
         {
-            throw new Exception("An uncolored tile pattern can not have another pattern or shading as color.");
+            throw new
+                InvalidOperationException("An uncolored tile pattern can not have another pattern or shading as color.");
         }
 
         switch (type)
@@ -2711,7 +2802,7 @@ public class PdfWriter : DocWriter,
                 return patternDetails;
             }
             default:
-                throw new Exception("Invalid color type in PdfWriter.AddSimplePatternColorspace().");
+                throw new InvalidOperationException("Invalid color type in PdfWriter.AddSimplePatternColorspace().");
         }
     }
 
@@ -2828,6 +2919,11 @@ public class PdfWriter : DocWriter,
 
     protected internal virtual int GetNewObjectNumber(PdfReader reader, int number, int generation)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         if (CurrentPdfReaderInstance == null)
         {
             CurrentPdfReaderInstance = reader.GetPdfReaderInstance(this);
@@ -2877,6 +2973,11 @@ public class PdfWriter : DocWriter,
     /// </summary>
     protected internal void WriteOutlines(PdfDictionary catalog, bool namedAsNames)
     {
+        if (catalog == null)
+        {
+            throw new ArgumentNullException(nameof(catalog));
+        }
+
         if (NewBookmarks == null || NewBookmarks.Count == 0)
         {
             return;
@@ -3454,10 +3555,10 @@ public class PdfWriter : DocWriter,
                 {
                     first = sections[k];
                     len = sections[k + 1];
-                    tmp = GetIsoBytes(first.ToString());
+                    tmp = GetIsoBytes(first.ToString(CultureInfo.InvariantCulture));
                     os.Write(tmp, 0, tmp.Length);
                     os.WriteByte((byte)' ');
-                    tmp = GetIsoBytes(len.ToString());
+                    tmp = GetIsoBytes(len.ToString(CultureInfo.InvariantCulture));
                     os.Write(tmp, 0, tmp.Length);
                     os.WriteByte((byte)'\n');
                     while (len-- > 0)
@@ -3582,8 +3683,8 @@ public class PdfWriter : DocWriter,
 
             public void ToPdf(Stream os)
             {
-                var s1 = _offset.ToString().PadLeft(10, '0');
-                var s2 = _generation.ToString().PadLeft(5, '0');
+                var s1 = _offset.ToString(CultureInfo.InvariantCulture).PadLeft(10, '0');
+                var s2 = _generation.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
                 var buf = new ByteBuffer(40);
                 if (_generation == GENERATION_MAX)
                 {
@@ -3682,7 +3783,7 @@ public class PdfWriter : DocWriter,
             base.ToPdf(null, os);
             tmp = GetIsoBytes("\nstartxref\n");
             os.Write(tmp, 0, tmp.Length);
-            tmp = GetIsoBytes(Offset.ToString());
+            tmp = GetIsoBytes(Offset.ToString(CultureInfo.InvariantCulture));
             os.Write(tmp, 0, tmp.Length);
             tmp = GetIsoBytes("\n%%EOF\n");
             os.Write(tmp, 0, tmp.Length);

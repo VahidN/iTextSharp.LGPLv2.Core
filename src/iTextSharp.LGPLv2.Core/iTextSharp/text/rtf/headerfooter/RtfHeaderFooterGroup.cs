@@ -87,6 +87,11 @@ public class RtfHeaderFooterGroup : HeaderFooter, IRtfBasicElement
     public RtfHeaderFooterGroup(RtfDocument doc, RtfHeaderFooterGroup headerFooter, int type) :
         base(new Phrase(""), false)
     {
+        if (headerFooter == null)
+        {
+            throw new ArgumentNullException(nameof(headerFooter));
+        }
+
         _document = doc;
         _mode = headerFooter.GetMode();
         _type = type;
@@ -193,32 +198,32 @@ public class RtfHeaderFooterGroup : HeaderFooter, IRtfBasicElement
     /// <summary>
     ///     Write the content of this RtfHeaderFooterGroup.
     /// </summary>
-    public virtual void WriteContent(Stream result)
+    public virtual void WriteContent(Stream outp)
     {
         if (_mode == ModeSingle)
         {
-            _headerAll.WriteContent(result);
+            _headerAll.WriteContent(outp);
         }
         else if (_mode == ModeMultiple)
         {
             if (_headerFirst != null)
             {
-                _headerFirst.WriteContent(result);
+                _headerFirst.WriteContent(outp);
             }
 
             if (_headerLeft != null)
             {
-                _headerLeft.WriteContent(result);
+                _headerLeft.WriteContent(outp);
             }
 
             if (_headerRight != null)
             {
-                _headerRight.WriteContent(result);
+                _headerRight.WriteContent(outp);
             }
 
             if (_headerAll != null)
             {
-                _headerAll.WriteContent(result);
+                _headerAll.WriteContent(outp);
             }
         }
     }
@@ -291,6 +296,11 @@ public class RtfHeaderFooterGroup : HeaderFooter, IRtfBasicElement
     /// <param name="displayAt">The display location to use</param>
     public void SetHeaderFooter(RtfHeaderFooter headerFooter, int displayAt)
     {
+        if (headerFooter == null)
+        {
+            throw new ArgumentNullException(nameof(headerFooter));
+        }
+
         _mode = ModeMultiple;
         headerFooter.SetRtfDocument(_document);
         headerFooter.SetType(_type);

@@ -191,6 +191,11 @@ public class PdfFormField : PdfAnnotation
 
     public void AddKid(PdfFormField field)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         field.parent = this;
         if (kids == null)
         {
@@ -243,7 +248,7 @@ public class PdfFormField : PdfAnnotation
         }
 
         var dic = new PdfDictionary();
-        foreach (PdfTemplate template in templates.Keys)
+        foreach (var template in templates.Keys)
         {
             MergeResources(dic, (PdfDictionary)template.Resources);
         }
@@ -317,6 +322,11 @@ public class PdfFormField : PdfAnnotation
 
     protected static PdfArray ProcessOptions(string[] options)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var array = new PdfArray();
         for (var k = 0; k < options.Length; ++k)
         {
@@ -328,6 +338,11 @@ public class PdfFormField : PdfAnnotation
 
     protected static PdfArray ProcessOptions(string[,] options)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var array = new PdfArray();
         for (var k = 0; k < options.GetLength(0); ++k)
         {

@@ -9,7 +9,7 @@ namespace iTextSharp.text.pdf;
 ///     it under the MPL.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class ArabicLigaturizer
+public static class ArabicLigaturizer
 {
     public const int ar_composedtashkeel = 0x4;
 

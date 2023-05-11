@@ -65,6 +65,11 @@ public class BarcodePostnet : Barcode
     /// <returns>the bars</returns>
     public static byte[] GetBarsPostnet(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var total = 0;
         for (var k = text.Length - 1; k >= 0; --k)
         {
@@ -178,6 +183,11 @@ public class BarcodePostnet : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         if (barColor != null)
         {
             cb.SetColorFill(barColor);

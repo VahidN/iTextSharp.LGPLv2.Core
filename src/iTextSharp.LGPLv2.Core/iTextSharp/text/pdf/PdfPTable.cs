@@ -106,7 +106,7 @@ public class PdfPTable : ILargeElement
     {
         if (relativeWidths == null)
         {
-            throw new ArgumentNullException("The widths array in PdfPTable constructor can not be null.");
+            throw new ArgumentNullException(nameof(relativeWidths));
         }
 
         if (relativeWidths.Length == 0)
@@ -151,6 +151,11 @@ public class PdfPTable : ILargeElement
     /// <param name="table">the  PdfPTable  to be copied</param>
     public PdfPTable(PdfPTable table)
     {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
         CopyFormat(table);
         for (var k = 0; k < CurrentRow.Length; ++k)
         {
@@ -492,6 +497,11 @@ public class PdfPTable : ILargeElement
     /// <returns> true  if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -519,6 +529,11 @@ public class PdfPTable : ILargeElement
     /// <returns>an array of 4  PdfContentByte </returns>
     public static PdfContentByte[] BeginWritingRows(PdfContentByte canvas)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         return new[]
                {
                    canvas,
@@ -534,6 +549,11 @@ public class PdfPTable : ILargeElement
     /// <param name="canvases">the array returned by  beginWritingRows() </param>
     public static void EndWritingRows(PdfContentByte[] canvases)
     {
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var canvas = canvases[BASECANVAS];
         canvas.SaveState();
         canvas.Add(canvases[BACKGROUNDCANVAS]);
@@ -969,6 +989,11 @@ public class PdfPTable : ILargeElement
     /// <param name="columnWidth">the absolute width of each column</param>
     public void SetTotalWidth(float[] columnWidth)
     {
+        if (columnWidth == null)
+        {
+            throw new ArgumentNullException(nameof(columnWidth));
+        }
+
         if (columnWidth.Length != NumberOfColumns)
         {
             throw new DocumentException("Wrong number of columns.");
@@ -991,6 +1016,16 @@ public class PdfPTable : ILargeElement
     /// <param name="pageSize">the page size</param>
     public void SetWidthPercentage(float[] columnWidth, Rectangle pageSize)
     {
+        if (columnWidth == null)
+        {
+            throw new ArgumentNullException(nameof(columnWidth));
+        }
+
+        if (pageSize == null)
+        {
+            throw new ArgumentNullException(nameof(pageSize));
+        }
+
         if (columnWidth.Length != NumberOfColumns)
         {
             throw new ArgumentException("Wrong number of columns.");
@@ -1014,6 +1049,11 @@ public class PdfPTable : ILargeElement
     /// <param name="relativeWidths">the relative widths of the table.</param>
     public void SetWidths(float[] relativeWidths)
     {
+        if (relativeWidths == null)
+        {
+            throw new ArgumentNullException(nameof(relativeWidths));
+        }
+
         if (relativeWidths.Length != NumberOfColumns)
         {
             throw new DocumentException("Wrong number of columns.");
@@ -1035,6 +1075,11 @@ public class PdfPTable : ILargeElement
     /// <param name="relativeWidths">the relative widths of the table.</param>
     public void SetWidths(int[] relativeWidths)
     {
+        if (relativeWidths == null)
+        {
+            throw new ArgumentNullException(nameof(relativeWidths));
+        }
+
         var tb = new float[relativeWidths.Length];
         for (var k = 0; k < relativeWidths.Length; ++k)
         {
@@ -1193,6 +1238,11 @@ public class PdfPTable : ILargeElement
     public float WriteSelectedRows(int colStart, int colEnd, int rowStart, int rowEnd, float xPos, float yPos,
                                    PdfContentByte canvas)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         var totalCols = NumberOfColumns;
         if (colStart < 0)
         {
@@ -1392,6 +1442,11 @@ public class PdfPTable : ILargeElement
     /// <param name="sourceTable"></param>
     protected internal void CopyFormat(PdfPTable sourceTable)
     {
+        if (sourceTable == null)
+        {
+            throw new ArgumentNullException(nameof(sourceTable));
+        }
+
         RelativeWidths = new float[sourceTable.NumberOfColumns];
         absoluteWidths = new float[sourceTable.NumberOfColumns];
         Array.Copy(sourceTable.RelativeWidths, 0, RelativeWidths, 0, NumberOfColumns);

@@ -7,7 +7,7 @@ namespace iTextSharp.text.xml.xmp;
 /// </summary>
 public class EncodingNoPreamble : Encoding
 {
-    private static readonly byte[] _emptyPreamble = new byte[0];
+    private static readonly byte[] _emptyPreamble = Array.Empty<byte>();
     private readonly Encoding _encoding;
 
     public EncodingNoPreamble(Encoding encoding) => _encoding = encoding;

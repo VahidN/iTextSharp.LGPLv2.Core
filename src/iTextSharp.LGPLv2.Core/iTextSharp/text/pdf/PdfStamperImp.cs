@@ -23,8 +23,8 @@ public class PdfStamperImp : PdfWriter
 
     protected int InitialXrefSize;
 
-    protected IntHashtable Marked;
-    internal IntHashtable MyXref = new();
+    protected NullValueDictionary<int, int> Marked;
+    internal NullValueDictionary<int, int> MyXref = new();
 
     protected int[] NamePtr = { 0 };
 
@@ -43,8 +43,8 @@ public class PdfStamperImp : PdfWriter
     internal INullValueDictionary<PdfReader, RandomAccessFileOrArray> Readers2File =
         new NullValueDictionary<PdfReader, RandomAccessFileOrArray>();
 
-    internal INullValueDictionary<PdfReader, IntHashtable> Readers2Intrefs =
-        new NullValueDictionary<PdfReader, IntHashtable>();
+    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
+        new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     protected int sigFlags;
 
@@ -121,7 +121,7 @@ public class PdfStamperImp : PdfWriter
         if (append)
         {
             Body.Refnum = reader.XrefSize;
-            Marked = new IntHashtable();
+            Marked = new NullValueDictionary<int, int>();
             if (reader.IsNewXrefType())
             {
                 fullCompression = true;
@@ -222,7 +222,7 @@ public class PdfStamperImp : PdfWriter
     /// </summary>
     public override void AddAnnotation(PdfAnnotation annot)
     {
-        throw new Exception("Unsupported in this context. Use PdfStamper.AddAnnotation()");
+        throw new NotSupportedException("Unsupported in this context. Use PdfStamper.AddAnnotation()");
     }
 
     /// <summary>
@@ -231,6 +231,11 @@ public class PdfStamperImp : PdfWriter
     /// <param name="fdf"></param>
     public void AddComments(FdfReader fdf)
     {
+        if (fdf == null)
+        {
+            throw new ArgumentNullException(nameof(fdf));
+        }
+
         if (Readers2Intrefs.ContainsKey(fdf))
         {
             return;
@@ -250,7 +255,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         RegisterReader(fdf, false);
-        var hits = new IntHashtable();
+        var hits = new NullValueDictionary<int, int>();
         var irt = new NullValueDictionary<string, PdfObject>();
         List<PdfObject> an = new();
         for (var k = 0; k < annots.Size; ++k)
@@ -276,7 +281,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var arhits = hits.GetKeys();
-        for (var k = 0; k < arhits.Length; ++k)
+        for (var k = 0; k < arhits.Count; ++k)
         {
             var n = arhits[k];
             var obj = fdf.GetPdfObject(n);
@@ -394,12 +399,17 @@ public class PdfStamperImp : PdfWriter
     /// <param name="openFile"></param>
     public void RegisterReader(PdfReader reader, bool openFile)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         if (Readers2Intrefs.ContainsKey(reader))
         {
             return;
         }
 
-        Readers2Intrefs[reader] = new IntHashtable();
+        Readers2Intrefs[reader] = new NullValueDictionary<int, int>();
         if (openFile)
         {
             var raf = reader.SafeFile;
@@ -420,6 +430,11 @@ public class PdfStamperImp : PdfWriter
     /// <param name="action">the action to execute in response to the trigger</param>
     public override void SetAdditionalAction(PdfName actionType, PdfAction action)
     {
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
         if (!(actionType.Equals(DocumentClose) ||
               actionType.Equals(WillSave) ||
               actionType.Equals(DidSave) ||
@@ -507,7 +522,7 @@ public class PdfStamperImp : PdfWriter
         }
     }
 
-    internal static void FindAllObjects(PdfReader reader, PdfObject obj, IntHashtable hits)
+    internal static void FindAllObjects(PdfReader reader, PdfObject obj, NullValueDictionary<int, int> hits)
     {
         if (obj == null)
         {
@@ -623,8 +638,8 @@ public class PdfStamperImp : PdfWriter
                     if (rect != null && (rect.Left.ApproxNotEqual(0) || rect.Right.ApproxNotEqual(0) ||
                                          rect.Top.ApproxNotEqual(0) || rect.Bottom.ApproxNotEqual(0)))
                     {
-                        var rotation = Reader.GetPageRotation(pageN);
-                        var pageSize = Reader.GetPageSizeWithRotation(pageN);
+                        var rotation = PdfReader.GetPageRotation(pageN);
+                        var pageSize = PdfReader.GetPageSizeWithRotation(pageN);
                         switch (rotation)
                         {
                             case 90:
@@ -828,7 +843,7 @@ public class PdfStamperImp : PdfWriter
         }
     }
 
-    internal void AlterResources(PageStamp ps)
+    internal static void AlterResources(PageStamp ps)
     {
         ps.PageN.Put(PdfName.Resources, ps.PageResources.Resources);
     }
@@ -840,7 +855,7 @@ public class PdfStamperImp : PdfWriter
             return;
         }
 
-        var page = Reader.GetPageSizeWithRotation(pageN);
+        var page = PdfReader.GetPageSizeWithRotation(pageN);
         var rotation = page.Rotation;
         switch (rotation)
         {
@@ -1069,7 +1084,7 @@ public class PdfStamperImp : PdfWriter
             if (Append)
             {
                 var keys = Marked.GetKeys();
-                for (var k = 0; k < keys.Length; ++k)
+                for (var k = 0; k < keys.Count; ++k)
                 {
                     var j = keys[k];
                     var obj = Reader.GetPdfObjectRelease(j);
@@ -1187,7 +1202,7 @@ public class PdfStamperImp : PdfWriter
         {
             var tmp = GetIsoBytes("startxref\n");
             ((DocWriter)this).Os.Write(tmp, 0, tmp.Length);
-            tmp = GetIsoBytes(Body.Offset.ToString());
+            tmp = GetIsoBytes(Body.Offset.ToString(CultureInfo.InvariantCulture));
             ((DocWriter)this).Os.Write(tmp, 0, tmp.Length);
             tmp = GetIsoBytes("\n%%EOF\n");
             ((DocWriter)this).Os.Write(tmp, 0, tmp.Length);
@@ -1533,7 +1548,9 @@ public class PdfStamperImp : PdfWriter
 
     internal override RandomAccessFileOrArray GetReaderFile(PdfReader reader)
     {
+#pragma warning disable CA1854
         if (Readers2Intrefs.ContainsKey(reader))
+#pragma warning restore CA1854
         {
             var raf = Readers2File[reader];
             if (raf != null)
@@ -1626,7 +1643,7 @@ public class PdfStamperImp : PdfWriter
 
             if (len == kids.Size)
             {
-                throw new Exception("Internal inconsistence.");
+                throw new InvalidOperationException("Internal inconsistence.");
             }
 
             MarkUsed(kids);

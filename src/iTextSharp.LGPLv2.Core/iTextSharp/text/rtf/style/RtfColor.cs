@@ -151,16 +151,21 @@ public class RtfColor : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Write the definition part of this RtfColor.
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(_colorRedBytes, 0, _colorRedBytes.Length);
-        result.Write(t = IntToByteArray(_red), 0, t.Length);
-        result.Write(_colorGreenBytes, 0, _colorGreenBytes.Length);
-        result.Write(t = IntToByteArray(_green), 0, t.Length);
-        result.Write(_colorBlueBytes, 0, _colorBlueBytes.Length);
-        result.Write(t = IntToByteArray(_blue), 0, t.Length);
-        result.WriteByte(Colon);
+        outp.Write(_colorRedBytes, 0, _colorRedBytes.Length);
+        outp.Write(t = IntToByteArray(_red), 0, t.Length);
+        outp.Write(_colorGreenBytes, 0, _colorGreenBytes.Length);
+        outp.Write(t = IntToByteArray(_green), 0, t.Length);
+        outp.Write(_colorBlueBytes, 0, _colorBlueBytes.Length);
+        outp.Write(t = IntToByteArray(_blue), 0, t.Length);
+        outp.WriteByte(Colon);
     }
 
     /// <summary>
@@ -217,6 +222,11 @@ public class RtfColor : RtfElement, IRtfExtendedElement
     /// </summary>
     public void WriteBegin(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         try
         {
@@ -231,7 +241,7 @@ public class RtfColor : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Unused
     /// </summary>
-    public void WriteEnd(Stream result)
+    public static void WriteEnd(Stream result)
     {
     }
 }

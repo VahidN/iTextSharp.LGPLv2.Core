@@ -335,10 +335,15 @@ public class CffFont
 
     public bool Exists(string fontName)
     {
+        if (fontName == null)
+        {
+            throw new ArgumentNullException(nameof(fontName));
+        }
+
         int j;
         for (j = 0; j < Fonts.Length; j++)
         {
-            if (fontName.Equals(Fonts[j].Name))
+            if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -350,10 +355,15 @@ public class CffFont
     public byte[] GetCid(string fontName)
         //throws java.io.FileNotFoundException
     {
+        if (fontName == null)
+        {
+            throw new ArgumentNullException(nameof(fontName));
+        }
+
         int j;
         for (j = 0; j < Fonts.Length; j++)
         {
-            if (fontName.Equals(Fonts[j].Name))
+            if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
             {
                 break;
             }
@@ -694,10 +704,15 @@ public class CffFont
     /// </summary>
     public bool IsCid(string fontName)
     {
+        if (fontName == null)
+        {
+            throw new ArgumentNullException(nameof(fontName));
+        }
+
         int j;
         for (j = 0; j < Fonts.Length; j++)
         {
-            if (fontName.Equals(Fonts[j].Name))
+            if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
             {
                 return Fonts[j].IsCid;
             }
@@ -900,7 +915,7 @@ public class CffFont
                         default:
                             if (nibble >= 0 && nibble <= 9)
                             {
-                                item += nibble.ToString();
+                                item += nibble.ToString(CultureInfo.InvariantCulture);
                             }
                             else
                             {
@@ -967,6 +982,11 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             if (Size == 5)
             {
                 buffer[MyOffset] = 29;
@@ -979,6 +999,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += Size;
         }
@@ -998,6 +1023,11 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             if (Size == 5)
             {
                 buffer[MyOffset] = 29;
@@ -1010,6 +1040,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += Size;
         }
@@ -1105,6 +1140,11 @@ public class CffFont
 
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             var i = 0;
             switch (Size)
             {
@@ -1136,6 +1176,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += Size;
         }
@@ -1157,6 +1202,11 @@ public class CffFont
         /// </summary>
         public virtual void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             MyOffset = currentOffset[0];
         }
 
@@ -1211,6 +1261,11 @@ public class CffFont
 
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             //System.err.Println("range emit offset "+offset+" size="+length);
             _buf.Seek(Offset);
             for (var i = MyOffset; i < MyOffset + Length; i++)
@@ -1222,6 +1277,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += Length;
         }
@@ -1234,6 +1294,11 @@ public class CffFont
 
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             for (var i = 0; i < S.Length; i++)
             {
                 buffer[MyOffset + i] = (byte)(S[i] & 0xff);
@@ -1242,6 +1307,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += S.Length;
         }
@@ -1283,12 +1353,22 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             buffer[MyOffset + 0] = (byte)((Value >> 8) & 0xff);
             buffer[MyOffset + 1] = (byte)((Value >> 0) & 0xff);
         }
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += 2;
         }
@@ -1304,6 +1384,11 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             buffer[MyOffset + 0] = (byte)((Value >> 16) & 0xff);
             buffer[MyOffset + 1] = (byte)((Value >> 8) & 0xff);
             buffer[MyOffset + 2] = (byte)((Value >> 0) & 0xff);
@@ -1311,6 +1396,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += 3;
         }
@@ -1329,6 +1419,11 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             buffer[MyOffset + 0] = (byte)((Value >> 24) & 0xff);
             buffer[MyOffset + 1] = (byte)((Value >> 16) & 0xff);
             buffer[MyOffset + 2] = (byte)((Value >> 8) & 0xff);
@@ -1337,6 +1432,11 @@ public class CffFont
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += 4;
         }
@@ -1358,11 +1458,21 @@ public class CffFont
         /// </summary>
         public override void Emit(byte[] buffer)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             buffer[MyOffset + 0] = (byte)((Value >> 0) & 0xff);
         }
 
         public override void Increment(int[] currentOffset)
         {
+            if (currentOffset == null)
+            {
+                throw new ArgumentNullException(nameof(currentOffset));
+            }
+
             base.Increment(currentOffset);
             currentOffset[0] += 1;
         }

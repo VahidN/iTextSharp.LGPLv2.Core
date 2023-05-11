@@ -72,6 +72,11 @@ public static class HtmlEncoder
     /// <returns>a  String </returns>
     public static string Encode(string str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         var n = str.Length;
         char character;
         var buffer = new StringBuilder();
@@ -101,6 +106,11 @@ public static class HtmlEncoder
     /// <returns>the HTML representation of this <COLOR>Color</COLOR></returns>
     public static string Encode(BaseColor color)
     {
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         var buffer = new StringBuilder("#");
         if (color.R < 16)
         {

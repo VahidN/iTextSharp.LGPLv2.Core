@@ -58,17 +58,17 @@ public class ZInflaterInputStream : Stream
         Inp.Flush();
     }
 
-    public override int Read(byte[] b, int off, int len)
+    public override int Read(byte[] buffer, int offset, int count)
     {
-        if (len == 0)
+        if (count == 0)
         {
             return 0;
         }
 
         int err;
-        Z.NextOut = b;
-        Z.NextOutIndex = off;
-        Z.AvailOut = len;
+        Z.NextOut = buffer;
+        Z.NextOutIndex = offset;
+        Z.AvailOut = count;
         do
         {
             if (Z.AvailIn == 0 && !_nomoreinput)
@@ -94,14 +94,14 @@ public class ZInflaterInputStream : Stream
                 throw new IOException("inflating: " + Z.Msg);
             }
 
-            if ((_nomoreinput || err == JZlib.Z_STREAM_END) && Z.AvailOut == len)
+            if ((_nomoreinput || err == JZlib.Z_STREAM_END) && Z.AvailOut == count)
             {
                 return 0;
             }
-        } while (Z.AvailOut == len && err == JZlib.Z_OK);
+        } while (Z.AvailOut == count && err == JZlib.Z_OK);
 
         //System.err.print("("+(len-z.avail_out)+")");
-        return len - Z.AvailOut;
+        return count - Z.AvailOut;
     }
 
     public override int ReadByte()
@@ -123,11 +123,11 @@ public class ZInflaterInputStream : Stream
         // TODO:  Add DeflaterOutputStream.SetLength implementation
     }
 
-    public override void Write(byte[] b, int off, int len)
+    public override void Write(byte[] buffer, int offset, int count)
     {
     }
 
-    public override void WriteByte(byte b)
+    public override void WriteByte(byte value)
     {
     }
 }

@@ -95,6 +95,11 @@ public class MetaDo
 
     public static byte[] WrapBmp(Image image)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (image.OriginalType != Image.ORIGINAL_BMP)
         {
             throw new IOException("Only BMP can be wrapped in WMF.");
@@ -190,6 +195,11 @@ public class MetaDo
 
     public static void WriteWord(Stream os, int v)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         os.WriteByte((byte)(v & 0xff));
         os.WriteByte((byte)((v >> 8) & 0xff));
     }
@@ -686,7 +696,7 @@ public class MetaDo
                     string s;
                     try
                     {
-                        s = EncodingsRegistry.Instance.GetEncoding(1252).GetString(text, 0, k);
+                        s = EncodingsRegistry.GetEncoding(1252).GetString(text, 0, k);
                     }
                     catch
                     {
@@ -715,7 +725,7 @@ public class MetaDo
                     string s;
                     try
                     {
-                        s = EncodingsRegistry.Instance.GetEncoding(1252).GetString(text, 0, k);
+                        s = EncodingsRegistry.GetEncoding(1252).GetString(text, 0, k);
                     }
                     catch
                     {

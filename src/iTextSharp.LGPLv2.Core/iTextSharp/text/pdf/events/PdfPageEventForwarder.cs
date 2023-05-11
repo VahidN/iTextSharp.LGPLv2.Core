@@ -44,12 +44,12 @@ public class PdfPageEventForwarder : IPdfPageEvent
     /// </summary>
     /// <param name="writer"></param>
     /// <param name="document"></param>
-    /// <param name="position"></param>
-    public virtual void OnChapterEnd(PdfWriter writer, Document document, float position)
+    /// <param name="paragraphPosition"></param>
+    public virtual void OnChapterEnd(PdfWriter writer, Document document, float paragraphPosition)
     {
         foreach (var eventa in Events)
         {
-            eventa.OnChapterEnd(writer, document, position);
+            eventa.OnChapterEnd(writer, document, paragraphPosition);
         }
     }
 
@@ -197,12 +197,12 @@ public class PdfPageEventForwarder : IPdfPageEvent
     /// </summary>
     /// <param name="writer"></param>
     /// <param name="document"></param>
-    /// <param name="position"></param>
-    public virtual void OnSectionEnd(PdfWriter writer, Document document, float position)
+    /// <param name="paragraphPosition"></param>
+    public virtual void OnSectionEnd(PdfWriter writer, Document document, float paragraphPosition)
     {
         foreach (var eventa in Events)
         {
-            eventa.OnSectionEnd(writer, document, position);
+            eventa.OnSectionEnd(writer, document, paragraphPosition);
         }
     }
 

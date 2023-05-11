@@ -4,7 +4,7 @@ namespace iTextSharp.text.pdf;
 
 /// <summary>
 /// </summary>
-public class GlyphList
+public static class GlyphList
 {
     private static readonly INullValueDictionary<string, int[]> _names2Unicode =
         new NullValueDictionary<string, int[]>();
@@ -19,8 +19,8 @@ public class GlyphList
             istr = BaseFont.GetResourceStream($"{BaseFont.RESOURCE_PATH}glyphlist.txt");
             if (istr == null)
             {
-                var msg = "glyphlist.txt not found as resource.";
-                throw new Exception(msg);
+                Console.Error.WriteLine("glyphlist.txt not found as resource.");
+                return;
             }
 
             var buf = new byte[1024];
@@ -43,7 +43,7 @@ public class GlyphList
             while (tk.HasMoreTokens())
             {
                 var line = tk.NextToken();
-                if (line.StartsWith("#"))
+                if (line.StartsWith("#", StringComparison.Ordinal))
                 {
                     continue;
                 }
@@ -74,16 +74,13 @@ public class GlyphList
         }
         finally
         {
-            if (istr != null)
+            try
             {
-                try
-                {
-                    istr.Dispose();
-                }
-                catch
-                {
-                    // empty on purpose
-                }
+                istr.Dispose();
+            }
+            catch
+            {
+                // empty on purpose
             }
         }
     }

@@ -87,6 +87,11 @@ public class Jbig2SegmentReader
 
     public static byte[] CopyByteArray(byte[] b)
     {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         var bc = new byte[b.Length];
         Array.Copy(b, 0, bc, 0, b.Length);
         return bc;
@@ -392,6 +397,11 @@ public class Jbig2SegmentReader
 
         public void AddSegment(Jbig2Segment s)
         {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
             _segs[s.SegmentNumber] = s;
         }
 
@@ -472,8 +482,16 @@ public class Jbig2SegmentReader
         /// <summary>
         ///     for the globals treeset
         /// </summary>
-        public int CompareTo(object o) => CompareTo((Jbig2Segment)o);
+        public int CompareTo(object obj) => CompareTo((Jbig2Segment)obj);
 
-        public int CompareTo(Jbig2Segment s) => SegmentNumber - s.SegmentNumber;
+        public int CompareTo(Jbig2Segment s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            return SegmentNumber - s.SegmentNumber;
+        }
     }
 }

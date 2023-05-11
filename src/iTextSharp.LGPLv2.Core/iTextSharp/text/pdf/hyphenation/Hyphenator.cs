@@ -42,20 +42,20 @@ public class Hyphenator
     {
         var key = lang;
         // check whether the country code has been used
-        if (country != null && !country.Equals("none"))
+        if (country != null && !country.Equals("none", StringComparison.Ordinal))
         {
             key += "_" + country;
         }
 
         // first try to find it in the cache
-        if (_hyphenTrees.ContainsKey(key))
+        if (_hyphenTrees.TryGetValue(key, out var tree))
         {
-            return _hyphenTrees[key];
+            return tree;
         }
 
-        if (_hyphenTrees.ContainsKey(lang))
+        if (_hyphenTrees.TryGetValue(lang, out var hyphenationTree))
         {
-            return _hyphenTrees[lang];
+            return hyphenationTree;
         }
 
         var hTree = GetResourceHyphenationTree(key);
@@ -76,6 +76,11 @@ public class Hyphenator
     /// <returns>a hyphenation tree</returns>
     public static HyphenationTree GetResourceHyphenationTree(string key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         try
         {
             var stream = BaseFont.GetResourceStream(DefaultHyphLocation + key + ".xml");

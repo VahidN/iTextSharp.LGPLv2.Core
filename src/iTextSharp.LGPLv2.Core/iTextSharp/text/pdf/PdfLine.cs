@@ -194,6 +194,11 @@ public class PdfLine
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             listSymbol = value.ListSymbol;
             SymbolIndent = value.IndentationLeft;
         }
@@ -316,7 +321,7 @@ public class PdfLine
     internal PdfChunk Add(PdfChunk chunk)
     {
         // nothing happens if the chunk is null.
-        if (chunk == null || chunk.ToString().Equals(""))
+        if (chunk == null || string.IsNullOrEmpty(chunk.ToString()))
         {
             return null;
         }

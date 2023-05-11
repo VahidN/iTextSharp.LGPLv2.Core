@@ -48,26 +48,31 @@ public class RtfFontList : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Writes the definition of the font list
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
-        byte[] t;
-        result.Write(_defaultFont, 0, _defaultFont.Length);
-        result.Write(t = IntToByteArray(0), 0, t.Length);
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_fontTable, 0, _fontTable.Length);
-        for (var i = 0; i < _fontList.Count; i++)
+        if (outp == null)
         {
-            result.Write(OpenGroup, 0, OpenGroup.Length);
-            result.Write(FontNumber, 0, FontNumber.Length);
-            result.Write(t = IntToByteArray(i), 0, t.Length);
-            var rf = _fontList[i];
-            rf.WriteDefinition(result);
-            result.Write(CommaDelimiter, 0, CommaDelimiter.Length);
-            result.Write(CloseGroup, 0, CloseGroup.Length);
+            throw new ArgumentNullException(nameof(outp));
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        byte[] t;
+        outp.Write(_defaultFont, 0, _defaultFont.Length);
+        outp.Write(t = IntToByteArray(0), 0, t.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_fontTable, 0, _fontTable.Length);
+        for (var i = 0; i < _fontList.Count; i++)
+        {
+            outp.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(FontNumber, 0, FontNumber.Length);
+            outp.Write(t = IntToByteArray(i), 0, t.Length);
+            var rf = _fontList[i];
+            rf.WriteDefinition(outp);
+            outp.Write(CommaDelimiter, 0, CommaDelimiter.Length);
+            outp.Write(CloseGroup, 0, CloseGroup.Length);
+        }
+
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>

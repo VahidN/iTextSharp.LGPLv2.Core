@@ -580,6 +580,11 @@ public class TiffFaxDecoder
 
     public static void ReverseBits(byte[] b)
     {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         for (var k = 0; k < b.Length; ++k)
         {
             b[k] = FlipTable[b[k] & 0xff];
@@ -614,6 +619,11 @@ public class TiffFaxDecoder
                          int height,
                          long tiffT4Options)
     {
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
         _data = compData;
         _compression = 3;
 
@@ -783,6 +793,11 @@ public class TiffFaxDecoder
     public void DecodeNextScanline(byte[] buffer,
                                    int lineOffset, int bitOffset)
     {
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
         int bits = 0, code = 0, isT = 0;
         int current, entry, twoBits;
         var isWhite = true;
@@ -958,6 +973,11 @@ public class TiffFaxDecoder
                          int height,
                          long tiffT6Options)
     {
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
         _data = compData;
         _compression = 4;
 
@@ -1630,9 +1650,9 @@ public class TiffFaxDecoder
         return nextLesserThan8Bits(1);
     }
 
-    private void setToBlack(byte[] buffer,
-                            int lineOffset, int bitOffset,
-                            int numBits)
+    private static void setToBlack(byte[] buffer,
+                                   int lineOffset, int bitOffset,
+                                   int numBits)
     {
         var bitNum = 8 * lineOffset + bitOffset;
         var lastBit = bitNum + numBits;

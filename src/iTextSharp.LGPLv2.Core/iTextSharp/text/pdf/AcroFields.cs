@@ -221,7 +221,7 @@ public class AcroFields
             if (tk.TokenType == PrTokeniser.TK_OTHER)
             {
                 var oper = tk.StringValue;
-                if (oper.Equals("Tf"))
+                if (oper.Equals("Tf", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 2)
                     {
@@ -229,7 +229,7 @@ public class AcroFields
                         ret[DA_SIZE] = float.Parse(stack[stack.Count - 1], NumberFormatInfo.InvariantInfo);
                     }
                 }
-                else if (oper.Equals("g"))
+                else if (oper.Equals("g", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 1)
                     {
@@ -240,7 +240,7 @@ public class AcroFields
                         }
                     }
                 }
-                else if (oper.Equals("rg"))
+                else if (oper.Equals("rg", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 3)
                     {
@@ -250,7 +250,7 @@ public class AcroFields
                         ret[DA_COLOR] = new BaseColor(red, green, blue);
                     }
                 }
-                else if (oper.Equals("k"))
+                else if (oper.Equals("k", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 4)
                     {
@@ -290,6 +290,16 @@ public class AcroFields
 
     public void DecodeGenericDictionary(PdfDictionary merged, BaseField tx)
     {
+        if (merged == null)
+        {
+            throw new ArgumentNullException(nameof(merged));
+        }
+
+        if (tx == null)
+        {
+            throw new ArgumentNullException(nameof(tx));
+        }
+
         var flags = 0;
         // the text size and color
         var da = merged.GetAsString(PdfName.Da);
@@ -526,6 +536,11 @@ public class AcroFields
     /// <param name="writer">the FDF writer</param>
     public void ExportAsFdf(FdfWriter writer)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         foreach (var entry in fields)
         {
             var item = entry.Value;
@@ -966,16 +981,8 @@ public class AcroFields
     /// <returns>the field value</returns>
     public string[] GetListSelection(string name)
     {
-        string[] ret;
         var s = GetField(name);
-        if (s == null)
-        {
-            ret = new string[] { };
-        }
-        else
-        {
-            ret = new[] { s };
-        }
+        var ret = s == null ? Array.Empty<string>() : new[] { s };
 
         var item = fields[name];
         if (item == null)
@@ -1359,6 +1366,16 @@ public class AcroFields
     /// <returns> true  if the renaming was successful,  false </returns>
     public bool RenameField(string oldName, string newName)
     {
+        if (oldName == null)
+        {
+            throw new ArgumentNullException(nameof(oldName));
+        }
+
+        if (newName == null)
+        {
+            throw new ArgumentNullException(nameof(newName));
+        }
+
         var idx1 = oldName.LastIndexOf(".", StringComparison.Ordinal) + 1;
         var idx2 = newName.LastIndexOf(".", StringComparison.Ordinal) + 1;
         if (idx1 != idx2)
@@ -1366,7 +1383,7 @@ public class AcroFields
             return false;
         }
 
-        if (!oldName.Substring(0, idx1).Equals(newName.Substring(0, idx2)))
+        if (!oldName.Substring(0, idx1).Equals(newName.Substring(0, idx2), StringComparison.Ordinal))
         {
             return false;
         }
@@ -1414,6 +1431,11 @@ public class AcroFields
     /// <returns> true  if the field was replaced,  false  if the field</returns>
     public bool ReplacePushbuttonField(string field, PdfFormField button, int order)
     {
+        if (button == null)
+        {
+            throw new ArgumentNullException(nameof(button));
+        }
+
         if (GetFieldType(field) != FIELD_TYPE_PUSHBUTTON)
         {
             return false;
@@ -1495,6 +1517,11 @@ public class AcroFields
     /// <returns> true  if the field was found and changed,</returns>
     public bool SetField(string name, string value, string display)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         if (Writer == null)
         {
             throw new DocumentException("This AcroFields instance is read-only.");
@@ -1644,7 +1671,7 @@ public class AcroFields
             PdfName vt;
             if (vidx >= 0)
             {
-                vt = valt = new PdfName(vidx.ToString());
+                vt = valt = new PdfName(vidx.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -1708,7 +1735,7 @@ public class AcroFields
     {
         if (Writer == null)
         {
-            throw new Exception("This AcroFields instance is read-only.");
+            throw new InvalidOperationException("This AcroFields instance is read-only.");
         }
 
         var item = fields[field];
@@ -1735,6 +1762,11 @@ public class AcroFields
                         var cb = new PdfAppearance();
                         if (dao[DA_FONT] != null)
                         {
+                            if (value == null)
+                            {
+                                throw new ArgumentNullException(nameof(value));
+                            }
+
                             var bf = (BaseFont)value;
                             var psn = PdfAppearance.StdFieldFontNames[bf.PostscriptFontName];
                             if (psn == null)
@@ -1940,7 +1972,7 @@ public class AcroFields
     {
         if (Writer == null)
         {
-            throw new Exception("This AcroFields instance is read-only.");
+            throw new InvalidOperationException("This AcroFields instance is read-only.");
         }
 
         var item = fields[field];
@@ -2075,6 +2107,11 @@ public class AcroFields
     /// <param name="fdf">the FDF form</param>
     public void SetFields(FdfReader fdf)
     {
+        if (fdf == null)
+        {
+            throw new ArgumentNullException(nameof(fdf));
+        }
+
         var fd = fdf.Fields;
         foreach (var f in fd.Keys)
         {
@@ -2088,6 +2125,11 @@ public class AcroFields
 
     public void SetFields(XfdfReader xfdf)
     {
+        if (xfdf == null)
+        {
+            throw new ArgumentNullException(nameof(xfdf));
+        }
+
         var fd = xfdf.Fields;
         foreach (var f in fd.Keys)
         {
@@ -2162,12 +2204,15 @@ public class AcroFields
         }
         else
         {
-            for (var k = 0; k < exportValues.Length; ++k)
+            if (exportValues != null && displayValues != null)
             {
-                var a = new PdfArray();
-                a.Add(new PdfString(exportValues[k], PdfObject.TEXT_UNICODE));
-                a.Add(new PdfString(displayValues[k], PdfObject.TEXT_UNICODE));
-                opt.Add(a);
+                for (var k = 0; k < exportValues.Length; ++k)
+                {
+                    var a = new PdfArray();
+                    a.Add(new PdfString(exportValues[k], PdfObject.TEXT_UNICODE));
+                    a.Add(new PdfString(displayValues[k], PdfObject.TEXT_UNICODE));
+                    opt.Add(a);
+                }
             }
         }
 
@@ -2185,6 +2230,11 @@ public class AcroFields
     /// <returns>true only if the field value was changed</returns>
     public bool SetListSelection(string name, string[] value)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         var item = GetFieldItem(name);
         if (item == null)
         {
@@ -2203,7 +2253,7 @@ public class AcroFields
         {
             for (var j = 0; j < options.Length; j++)
             {
-                if (options[j].Equals(value[i]))
+                if (options[j].Equals(value[i], StringComparison.Ordinal))
                 {
                     array.Add(new PdfNumber(j));
                 }
@@ -2409,11 +2459,7 @@ public class AcroFields
 
                 item.AddWidget(widget);
                 item.AddWidgetRef(annots.GetAsIndirectObject(j)); // must be a reference
-                if (top != null)
-                {
-                    dic.MergeDifferent(top);
-                }
-
+                dic.MergeDifferent(top);
                 item.AddMerged(dic);
                 item.AddPage(k);
                 item.AddTabOrder(j);
@@ -2476,6 +2522,11 @@ public class AcroFields
 
     internal PdfAppearance GetAppearance(PdfDictionary merged, string text, string fieldName)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         _topFirst = 0;
         TextField tx = null;
         if (_fieldCache == null || !_fieldCache.ContainsKey(fieldName))
@@ -2554,7 +2605,7 @@ public class AcroFields
             {
                 for (var k = 0; k < choices.Length; ++k)
                 {
-                    if (text.Equals(choicesExp[k]))
+                    if (text.Equals(choicesExp[k], StringComparison.Ordinal))
                     {
                         text = choices[k];
                         break;
@@ -2568,7 +2619,7 @@ public class AcroFields
             var idx = 0;
             for (var k = 0; k < choicesExp.Length; ++k)
             {
-                if (text.Equals(choicesExp[k]))
+                if (text.Equals(choicesExp[k], StringComparison.Ordinal))
                 {
                     idx = k;
                     break;
@@ -2585,7 +2636,7 @@ public class AcroFields
         return app;
     }
 
-    internal BaseColor GetMkColor(PdfArray ar)
+    internal static BaseColor GetMkColor(PdfArray ar)
     {
         if (ar == null)
         {
@@ -2608,7 +2659,7 @@ public class AcroFields
         }
     }
 
-    internal bool IsInAp(PdfDictionary dic, PdfName check)
+    internal static bool IsInAp(PdfDictionary dic, PdfName check)
     {
         var appDic = dic.GetAsDict(PdfName.Ap);
         if (appDic == null)
@@ -2742,7 +2793,7 @@ public class AcroFields
         ((PdfStamperImp)Writer).MarkUsed(obj);
     }
 
-    private int removeRefFromArray(PdfArray array, PdfObject refo)
+    private static int removeRefFromArray(PdfArray array, PdfObject refo)
     {
         if (refo == null || !refo.IsIndirect())
         {
@@ -2934,6 +2985,11 @@ public class AcroFields
         /// <param name="writeFlags">WRITE_MERGED is ignored</param>
         public void MarkUsed(AcroFields parentFields, int writeFlags)
         {
+            if (parentFields == null)
+            {
+                throw new ArgumentNullException(nameof(parentFields));
+            }
+
             if ((writeFlags & WRITE_VALUE) != 0)
             {
                 for (var i = 0; i < Size; ++i)
@@ -3122,20 +3178,20 @@ public class AcroFields
         {
         }
 
-        public override int Read(byte[] b, int off, int len)
+        public override int Read(byte[] buffer, int offset, int count)
         {
-            if (b == null)
+            if (buffer == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(buffer));
             }
 
-            if (off < 0 || off > b.Length || len < 0 ||
-                off + len > b.Length || off + len < 0)
+            if (offset < 0 || offset > buffer.Length || count < 0 ||
+                offset + count > buffer.Length || offset + count < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
-            if (len == 0)
+            if (count == 0)
             {
                 return 0;
             }
@@ -3146,8 +3202,8 @@ public class AcroFields
                 return -1;
             }
 
-            var elen = Math.Min(len, _length - _rangePosition);
-            _raf.ReadFully(b, off, elen);
+            var elen = Math.Min(count, _length - _rangePosition);
+            _raf.ReadFully(buffer, offset, elen);
             _rangePosition += elen;
             return elen;
         }
@@ -3176,7 +3232,7 @@ public class AcroFields
 
     private class InstHit
     {
-        private readonly IntHashtable _hits;
+        private readonly NullValueDictionary<int, int> _hits;
 
         public InstHit(int[] inst)
         {
@@ -3185,7 +3241,7 @@ public class AcroFields
                 return;
             }
 
-            _hits = new IntHashtable();
+            _hits = new NullValueDictionary<int, int>();
             for (var k = 0; k < inst.Length; ++k)
             {
                 _hits[inst[k]] = 1;

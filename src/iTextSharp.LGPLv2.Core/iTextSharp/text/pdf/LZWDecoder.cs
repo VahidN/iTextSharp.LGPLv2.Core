@@ -62,6 +62,11 @@ public class LzwDecoder
     /// </summary>
     public void AddStringToTable(byte[] oldstring, byte newstring)
     {
+        if (oldstring == null)
+        {
+            throw new ArgumentNullException(nameof(oldstring));
+        }
+
         var length = oldstring.Length;
         var str = new byte[length + 1];
         Array.Copy(oldstring, 0, str, 0, length);
@@ -109,8 +114,13 @@ public class LzwDecoder
     /// <summary>
     ///     Append  newstring  to the end of  oldstring .
     /// </summary>
-    public byte[] ComposeString(byte[] oldstring, byte newstring)
+    public static byte[] ComposeString(byte[] oldstring, byte newstring)
     {
+        if (oldstring == null)
+        {
+            throw new ArgumentNullException(nameof(oldstring));
+        }
+
         var length = oldstring.Length;
         var str = new byte[length + 1];
         Array.Copy(oldstring, 0, str, 0, length);
@@ -126,9 +136,14 @@ public class LzwDecoder
     /// <param name="uncompData">Array to return the uncompressed data in.</param>
     public void Decode(byte[] data, Stream uncompData)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
         if (data[0] == 0x00 && data[1] == 0x01)
         {
-            throw new Exception("LZW flavour not supported.");
+            throw new NotSupportedException("LZW flavour not supported.");
         }
 
         InitializeStringTable();
@@ -207,7 +222,7 @@ public class LzwDecoder
     {
         if (str == null)
         {
-            throw new Exception("Tried to write from null location in LZWdecoder, method WriteString.");
+            throw new InvalidOperationException("Tried to write from null location in LZWdecoder, method WriteString.");
         }
 
         _uncompData.Write(str, 0, str.Length);

@@ -31,12 +31,17 @@ public class RtfPictureList : RtfElement, IRtfExtendedElement
     ///     (non-Javadoc)
     ///     @see com.lowagie.text.rtf.RtfExtendedElement#writeDefinition(java.io.OutputStream)
     /// </summary>
-    public void WriteDefinition(Stream result)
+    public void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         // TODO Auto-generated method stub
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_listLevelPicture, 0, _listLevelPicture.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_listLevelPicture, 0, _listLevelPicture.Length);
         // if there are elements, write the \shppictlist here
-        result.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
     }
 }

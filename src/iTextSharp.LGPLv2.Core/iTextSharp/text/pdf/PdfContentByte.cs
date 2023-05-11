@@ -355,6 +355,16 @@ public class PdfContentByte
     /// <returns>a PdfTextArray</returns>
     public static PdfTextArray GetKernArray(string text, BaseFont font)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         var pa = new PdfTextArray();
         var acc = new StringBuilder();
         var len = text.Length - 1;
@@ -387,9 +397,14 @@ public class PdfContentByte
 
     public void Add(PdfContentByte other)
     {
+        if (other == null)
+        {
+            throw new ArgumentNullException(nameof(other));
+        }
+
         if (other.Writer != null && Writer != other.Writer)
         {
-            throw new Exception("Inconsistent writers. Are you mixing two documents?");
+            throw new InvalidOperationException("Inconsistent writers. Are you mixing two documents?");
         }
 
         Content.Append(other.Content);
@@ -415,6 +430,11 @@ public class PdfContentByte
     /// <param name="inlineImage"> true  to place this image inline,  false  otherwise</param>
     public virtual void AddImage(Image image, bool inlineImage)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (!image.HasAbsolutePosition())
         {
             throw new DocumentException("The image must have absolute positioning.");
@@ -460,6 +480,11 @@ public class PdfContentByte
     /// <param name="inlineImage"> true  to place this image inline,  false  otherwise</param>
     public virtual void AddImage(Image image, float a, float b, float c, float d, float e, float f, bool inlineImage)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (image.Layer != null)
         {
             BeginLayer(image.Layer);
@@ -497,7 +522,7 @@ public class PdfContentByte
                     }
                 }
 
-                foreach (PdfName key in pimage.Keys)
+                foreach (var key in pimage.Keys)
                 {
                     var value = pimage.Get(key);
                     var s = _abrev[key];
@@ -613,6 +638,11 @@ public class PdfContentByte
     /// <param name="name">the name for the local destination</param>
     public void AddOutline(PdfOutline outline, string name)
     {
+        if (outline == null)
+        {
+            throw new ArgumentNullException(nameof(outline));
+        }
+
         CheckWriter();
         Pdf.AddOutline(outline, name);
     }
@@ -623,6 +653,11 @@ public class PdfContentByte
     /// <param name="psobject">the object</param>
     public void AddPsxObject(PdfPsxObject psobject)
     {
+        if (psobject == null)
+        {
+            throw new ArgumentNullException(nameof(psobject));
+        }
+
         CheckWriter();
         var name = Writer.AddDirectTemplateSimple(psobject, null);
         var prs = PageResources;
@@ -633,20 +668,25 @@ public class PdfContentByte
     /// <summary>
     ///     Adds a template to this content.
     /// </summary>
-    /// <param name="template">the template</param>
+    /// <param name="pdfTemplate">the template</param>
     /// <param name="a">an element of the transformation matrix</param>
     /// <param name="b">an element of the transformation matrix</param>
     /// <param name="c">an element of the transformation matrix</param>
     /// <param name="d">an element of the transformation matrix</param>
     /// <param name="e">an element of the transformation matrix</param>
     /// <param name="f">an element of the transformation matrix</param>
-    public virtual void AddTemplate(PdfTemplate template, float a, float b, float c, float d, float e, float f)
+    public virtual void AddTemplate(PdfTemplate pdfTemplate, float a, float b, float c, float d, float e, float f)
     {
+        if (pdfTemplate == null)
+        {
+            throw new ArgumentNullException(nameof(pdfTemplate));
+        }
+
         CheckWriter();
-        CheckNoPattern(template);
-        var name = Writer.AddDirectTemplateSimple(template, null);
+        CheckNoPattern(pdfTemplate);
+        var name = Writer.AddDirectTemplateSimple(pdfTemplate, null);
         var prs = PageResources;
-        name = prs.AddXObject(name, template.IndirectReference);
+        name = prs.AddXObject(name, pdfTemplate.IndirectReference);
         Content.Append("q ");
         Content.Append(a).Append(' ');
         Content.Append(b).Append(' ');
@@ -660,12 +700,12 @@ public class PdfContentByte
     /// <summary>
     ///     Adds a template to this content.
     /// </summary>
-    /// <param name="template">the template</param>
+    /// <param name="pdfTemplate">the template</param>
     /// <param name="x">the x location of this template</param>
     /// <param name="y">the y location of this template</param>
-    public void AddTemplate(PdfTemplate template, float x, float y)
+    public void AddTemplate(PdfTemplate pdfTemplate, float x, float y)
     {
-        AddTemplate(template, 1, 0, 0, 1, x, y);
+        AddTemplate(pdfTemplate, 1, 0, 0, 1, x, y);
     }
 
     /// <summary>
@@ -747,6 +787,11 @@ public class PdfContentByte
     /// <param name="struc">the tagging structure</param>
     public void BeginMarkedContentSequence(PdfStructureElement struc)
     {
+        if (struc == null)
+        {
+            throw new ArgumentNullException(nameof(struc));
+        }
+
         var obj = struc.Get(PdfName.K);
         var mark = Pdf.GetMarkPoint();
         if (obj != null)
@@ -799,6 +844,11 @@ public class PdfContentByte
     /// <param name="inline"> true  to include the property in the content or  false </param>
     public void BeginMarkedContentSequence(PdfName tag, PdfDictionary property, bool inline)
     {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
         if (property == null)
         {
             Content.Append(tag.GetBytes()).Append(" BMC").Append_i(Separator);
@@ -936,7 +986,7 @@ public class PdfContentByte
         CheckWriter();
         if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
         {
-            throw new Exception("XStep or YStep can not be ZERO.");
+            throw new InvalidOperationException("XStep or YStep can not be ZERO.");
         }
 
         var painter = new PdfPatternPainter(Writer);
@@ -973,7 +1023,7 @@ public class PdfContentByte
         CheckWriter();
         if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
         {
-            throw new Exception("XStep or YStep can not be ZERO.");
+            throw new InvalidOperationException("XStep or YStep can not be ZERO.");
         }
 
         var painter = new PdfPatternPainter(Writer, color);
@@ -1272,6 +1322,11 @@ public class PdfContentByte
 
     public float GetEffectiveStringWidth(string text, bool kerned)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var bf = State.FontDetails.BaseFont;
 
         float w;
@@ -1330,7 +1385,15 @@ public class PdfContentByte
     /// <param name="name">the name of this local destination</param>
     /// <param name="destination">the  PdfDestination  with the jump coordinates</param>
     /// <returns> true  if the local destination was added,</returns>
-    public bool LocalDestination(string name, PdfDestination destination) => Pdf.LocalDestination(name, destination);
+    public bool LocalDestination(string name, PdfDestination destination)
+    {
+        if (destination == null)
+        {
+            throw new ArgumentNullException(nameof(destination));
+        }
+
+        return Pdf.LocalDestination(name, destination);
+    }
 
     /// <summary>
     ///     Implements a link to other part of the document. The jump will
@@ -1427,6 +1490,11 @@ public class PdfContentByte
     /// <param name="shading">the shading object</param>
     public virtual void PaintShading(PdfShading shading)
     {
+        if (shading == null)
+        {
+            throw new ArgumentNullException(nameof(shading));
+        }
+
         Writer.AddSimpleShading(shading);
         var prs = PageResources;
         var name = prs.AddShading(shading.ShadingName, shading.ShadingReference);
@@ -1444,6 +1512,11 @@ public class PdfContentByte
     /// <param name="shading">the shading pattern</param>
     public virtual void PaintShading(PdfShadingPattern shading)
     {
+        if (shading == null)
+        {
+            throw new ArgumentNullException(nameof(shading));
+        }
+
         PaintShading(shading.Shading);
     }
 
@@ -1455,6 +1528,11 @@ public class PdfContentByte
 
     public void Rectangle(Rectangle rectangle)
     {
+        if (rectangle == null)
+        {
+            throw new ArgumentNullException(nameof(rectangle));
+        }
+
         // the coordinates of the border are retrieved
         var x1 = rectangle.Left;
         var y1 = rectangle.Bottom;
@@ -1811,6 +1889,11 @@ public class PdfContentByte
     /// <param name="value">the color</param>
     public virtual void SetColorFill(BaseColor value)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_COLOR, value);
         var type = ExtendedColor.GetType(value);
         switch (type)
@@ -1873,6 +1956,11 @@ public class PdfContentByte
     /// <param name="value">the color</param>
     public virtual void SetColorStroke(BaseColor value)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_COLOR, value);
         var type = ExtendedColor.GetType(value);
         switch (type)
@@ -1955,6 +2043,11 @@ public class PdfContentByte
     /// <param name="size">the font size in points</param>
     public virtual void SetFontAndSize(BaseFont bf, float size)
     {
+        if (bf == null)
+        {
+            throw new ArgumentNullException(nameof(bf));
+        }
+
         CheckWriter();
         if (size < 0.0001f && size > -0.0001f)
         {
@@ -2046,6 +2139,11 @@ public class PdfContentByte
 
     public void SetLineDash(float[] array, float phase)
     {
+        if (array == null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
         Content.Append('[');
         for (var i = 0; i < array.Length; i++)
         {
@@ -2114,6 +2212,11 @@ public class PdfContentByte
     /// <param name="p">the pattern</param>
     public virtual void SetPatternFill(PdfPatternPainter p)
     {
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
         if (p.IsStencil())
         {
             SetPatternFill(p, p.DefaultColor);
@@ -2135,6 +2238,11 @@ public class PdfContentByte
     /// <param name="color">the color of the pattern</param>
     public virtual void SetPatternFill(PdfPatternPainter p, BaseColor color)
     {
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         if (ExtendedColor.GetType(color) == ExtendedColor.TYPE_SEPARATION)
         {
             SetPatternFill(p, color, ((SpotColor)color).Tint);
@@ -2153,10 +2261,20 @@ public class PdfContentByte
     /// <param name="tint">the tint if the color is a spot color, ignored otherwise</param>
     public virtual void SetPatternFill(PdfPatternPainter p, BaseColor color, float tint)
     {
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         CheckWriter();
         if (!p.IsStencil())
         {
-            throw new Exception("An uncolored pattern was expected.");
+            throw new InvalidOperationException("An uncolored pattern was expected.");
         }
 
         var prs = PageResources;
@@ -2176,6 +2294,11 @@ public class PdfContentByte
     /// <param name="color">the color of the pattern</param>
     public virtual void SetPatternStroke(PdfPatternPainter p, BaseColor color)
     {
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         if (ExtendedColor.GetType(color) == ExtendedColor.TYPE_SEPARATION)
         {
             SetPatternStroke(p, color, ((SpotColor)color).Tint);
@@ -2194,10 +2317,20 @@ public class PdfContentByte
     /// <param name="tint">the tint if the color is a spot color, ignored otherwise</param>
     public virtual void SetPatternStroke(PdfPatternPainter p, BaseColor color, float tint)
     {
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         CheckWriter();
         if (!p.IsStencil())
         {
-            throw new Exception("An uncolored pattern was expected.");
+            throw new InvalidOperationException("An uncolored pattern was expected.");
         }
 
         var prs = PageResources;
@@ -2217,6 +2350,11 @@ public class PdfContentByte
     /// <param name="p">the pattern</param>
     public virtual void SetPatternStroke(PdfPatternPainter p)
     {
+        if (p == null)
+        {
+            throw new ArgumentNullException(nameof(p));
+        }
+
         if (p.IsStencil())
         {
             SetPatternStroke(p, p.DefaultColor);
@@ -2261,6 +2399,11 @@ public class PdfContentByte
     /// <param name="shading">the shading pattern</param>
     public virtual void SetShadingFill(PdfShadingPattern shading)
     {
+        if (shading == null)
+        {
+            throw new ArgumentNullException(nameof(shading));
+        }
+
         Writer.AddSimpleShadingPattern(shading);
         var prs = PageResources;
         var name = prs.AddPattern(shading.PatternName, shading.PatternReference);
@@ -2279,6 +2422,11 @@ public class PdfContentByte
     /// <param name="shading">the shading pattern</param>
     public virtual void SetShadingStroke(PdfShadingPattern shading)
     {
+        if (shading == null)
+        {
+            throw new ArgumentNullException(nameof(shading));
+        }
+
         Writer.AddSimpleShadingPattern(shading);
         var prs = PageResources;
         var name = prs.AddPattern(shading.PatternName, shading.PatternReference);
@@ -2365,9 +2513,14 @@ public class PdfContentByte
     /// <param name="text">array of text</param>
     public void ShowText(PdfTextArray text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         if (State.FontDetails == null)
         {
-            throw new ArgumentNullException("Font and size must be set before writing any text");
+            throw new InvalidOperationException("Font and size must be set before writing any text");
         }
 
         Content.Append('[');
@@ -2433,7 +2586,7 @@ public class PdfContentByte
     {
         if (State.FontDetails == null)
         {
-            throw new ArgumentNullException("Font and size must be set before writing any text");
+            throw new InvalidOperationException("Font and size must be set before writing any text");
         }
 
         var bf = State.FontDetails.BaseFont;
@@ -2468,6 +2621,11 @@ public class PdfContentByte
     /// <param name="rect">a  Rectangle </param>
     public void VariableRectangle(Rectangle rect)
     {
+        if (rect == null)
+        {
+            throw new ArgumentNullException(nameof(rect));
+        }
+
         var t = rect.Top;
         var b = rect.Bottom;
         var r = rect.Right;
@@ -2734,7 +2892,7 @@ public class PdfContentByte
     ///     Throws an error if it is a pattern.
     /// </summary>
     /// <param name="t">the object to check</param>
-    internal void CheckNoPattern(PdfTemplate t)
+    internal static void CheckNoPattern(PdfTemplate t)
     {
         if (t.Type == PdfTemplate.TYPE_PATTERN)
         {
@@ -2794,7 +2952,7 @@ public class PdfContentByte
                 Content.Append(tint);
                 break;
             default:
-                throw new Exception("Invalid color type.");
+                throw new InvalidOperationException("Invalid color type.");
         }
     }
 
@@ -2817,7 +2975,7 @@ public class PdfContentByte
         Content.Append("/OC ").Append(name.GetBytes()).Append(" BDC").Append_i(Separator);
     }
 
-    private bool compareColors(BaseColor c1, BaseColor c2)
+    private static bool compareColors(BaseColor c1, BaseColor c2)
     {
         if (c1 == null && c2 == null)
         {
@@ -2933,7 +3091,7 @@ public class PdfContentByte
     {
         if (State.FontDetails == null)
         {
-            throw new Exception("Font and size must be set before writing any text");
+            throw new InvalidOperationException("Font and size must be set before writing any text");
         }
 
         var b = State.FontDetails.ConvertToBytes(text);
@@ -2947,7 +3105,7 @@ public class PdfContentByte
     {
         if (State.FontDetails == null)
         {
-            throw new Exception("Font and size must be set before writing any text");
+            throw new InvalidOperationException("Font and size must be set before writing any text");
         }
 
         if (rotation.ApproxEquals(0))

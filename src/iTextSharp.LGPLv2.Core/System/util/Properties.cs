@@ -33,6 +33,11 @@ public class Properties
 
     public void AddAll(Properties col)
     {
+        if (col == null)
+        {
+            throw new ArgumentNullException(nameof(col));
+        }
+
         foreach (var itm in col.Keys)
         {
             _col[itm] = col[itm];
@@ -50,7 +55,7 @@ public class Properties
 
     public void Load(Stream inStream)
     {
-        var inp = new StreamReader(inStream, EncodingsRegistry.Instance.GetEncoding(1252));
+        var inp = new StreamReader(inStream, EncodingsRegistry.GetEncoding(1252));
         while (true)
         {
             // Get next line
@@ -173,7 +178,7 @@ public class Properties
         return retval;
     }
 
-    private bool continueLine(string line)
+    private static bool continueLine(string line)
     {
         var slashCount = 0;
         var index = line.Length - 1;
@@ -189,7 +194,7 @@ public class Properties
     ///     Converts encoded &#92;uxxxx to unicode chars
     ///     and changes special saved chars to their original forms
     /// </summary>
-    private string loadConvert(string theString)
+    private static string loadConvert(string theString)
     {
         char aChar;
         var len = theString.Length;

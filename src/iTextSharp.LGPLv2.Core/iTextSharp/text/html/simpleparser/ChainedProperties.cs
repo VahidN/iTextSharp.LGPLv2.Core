@@ -15,9 +15,9 @@ public class ChainedProperties
             {
                 var p = Chain[k];
                 var attrs = p.Attrs;
-                if (attrs.ContainsKey(key))
+                if (attrs.TryGetValue(key, out var item))
                 {
-                    return attrs[key];
+                    return item;
                 }
             }
 
@@ -27,6 +27,11 @@ public class ChainedProperties
 
     public void AddToChain(string key, INullValueDictionary<string, string> prop)
     {
+        if (prop == null)
+        {
+            throw new ArgumentNullException(nameof(prop));
+        }
+
         // adjust the font size
         prop.TryGetValue(HtmlTags.SIZE, out var value);
         if (value == null)
@@ -34,14 +39,15 @@ public class ChainedProperties
             return;
         }
 
-        if (value.EndsWith("pt"))
+        if (value.EndsWith("pt", StringComparison.OrdinalIgnoreCase))
         {
             prop[ElementTags.SIZE] = value.Substring(0, value.Length - 2);
         }
         else
         {
             var s = 0;
-            if (value.StartsWith("+") || value.StartsWith("-"))
+            if (value.StartsWith("+", StringComparison.OrdinalIgnoreCase) ||
+                value.StartsWith("-", StringComparison.OrdinalIgnoreCase))
             {
                 var old = this["basefontsize"];
                 if (old == null)
@@ -60,8 +66,9 @@ public class ChainedProperties
                     }
                 }
 
-                var inc = int.Parse(value.StartsWith("+") ? value.Substring(1) : value,
-                                    CultureInfo.InvariantCulture);
+                var inc =
+                    int.Parse(value.StartsWith("+", StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value,
+                              CultureInfo.InvariantCulture);
                 s += inc;
             }
             else
@@ -85,7 +92,7 @@ public class ChainedProperties
                 s = FontSizes.Length - 1;
             }
 
-            prop[ElementTags.SIZE] = FontSizes[s].ToString();
+            prop[ElementTags.SIZE] = FontSizes[s].ToString(CultureInfo.InvariantCulture);
         }
 
         Chain.Add(new TagAttributes(key, prop));
@@ -108,9 +115,14 @@ public class ChainedProperties
 
     public void RemoveChain(string key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         for (var k = Chain.Count - 1; k >= 0; --k)
         {
-            if (key.Equals(Chain[k].Tag))
+            if (key.Equals(Chain[k].Tag, StringComparison.OrdinalIgnoreCase))
             {
                 Chain.RemoveAt(k);
                 return;

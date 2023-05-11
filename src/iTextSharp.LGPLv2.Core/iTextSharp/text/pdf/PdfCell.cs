@@ -71,6 +71,11 @@ public class PdfCell : Rectangle
     public PdfCell(Cell cell, int rownumber, float left, float right, float top, float cellspacing, float cellpadding) :
         base(left, top, right, top)
     {
+        if (cell == null)
+        {
+            throw new ArgumentNullException(nameof(cell));
+        }
+
         // copying the other Rectangle attributes from class Cell
         CloneNonPositionParameters(cell);
         Cellpadding = cellpadding;
@@ -525,6 +530,16 @@ public class PdfCell : Rectangle
 
     protected void ProcessActions(IElement element, PdfAction action, IList<PdfAction> allActions)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
+        if (allActions == null)
+        {
+            throw new ArgumentNullException(nameof(allActions));
+        }
+
         if (element.Type == ANCHOR)
         {
             var url = ((Anchor)element).Reference;

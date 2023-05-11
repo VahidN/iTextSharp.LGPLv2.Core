@@ -15,9 +15,6 @@ namespace iTextSharp.text;
 ///     Paragraph p = new Paragraph("This is a paragraph",
 ///     FontFactory.GetFont(FontFactory.HELVETICA, 18, Font.BOLDITALIC, new Color(0, 0, 255)));
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Phrase" />
-/// <seealso cref="T:iTextSharp.text.ListItem" />
 public class Paragraph : Phrase
 {
     /// <summary>
@@ -271,7 +268,7 @@ public class Paragraph : Phrase
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public new static bool IsTag(string tag) => ElementTags.PARAGRAPH.Equals(tag);
+    public new static bool IsTag(string tag) => ElementTags.PARAGRAPH.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Adds an Object to the Paragraph.

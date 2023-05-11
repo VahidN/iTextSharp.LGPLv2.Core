@@ -468,6 +468,11 @@ public class PdfDocument : Document
     /// <returns> true  if the element was added,  false  if not.</returns>
     public override bool Add(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (Writer != null && Writer.IsPaused())
         {
             return false;
@@ -958,7 +963,7 @@ public class PdfDocument : Document
         if (AnnotationsImp.HasUnusedAnnotations())
         {
             throw new
-                Exception("Not all annotations could be added to the document (the document doesn't have enough pages).");
+                InvalidOperationException("Not all annotations could be added to the document (the document doesn't have enough pages).");
         }
 
         var pageEvent = Writer.PageEvent;
@@ -1014,7 +1019,7 @@ public class PdfDocument : Document
 
         if (!IsDocumentOpen || IsDocumentClose)
         {
-            throw new Exception("The document isn't open.");
+            throw new InvalidOperationException("The document isn't open.");
         }
 
         var pageEvent = Writer.PageEvent;
@@ -1217,14 +1222,14 @@ public class PdfDocument : Document
     /// <summary>
     ///     @see com.lowagie.text.DocListener#setMarginMirroring(bool)
     /// </summary>
-    public override bool SetMarginMirroring(bool MarginMirroring)
+    public override bool SetMarginMirroring(bool marginMirroring)
     {
         if (Writer != null && Writer.IsPaused())
         {
             return false;
         }
 
-        return base.SetMarginMirroring(MarginMirroring);
+        return base.SetMarginMirroring(marginMirroring);
     }
 
     /// <summary>
@@ -1234,14 +1239,14 @@ public class PdfDocument : Document
     ///     @see com.lowagie.text.DocListener#setMarginMirroring(boolean)
     ///     @since    2.1.6
     /// </summary>
-    public override bool SetMarginMirroringTopBottom(bool MarginMirroringTopBottom)
+    public override bool SetMarginMirroringTopBottom(bool marginMirroringTopBottom)
     {
         if (Writer != null && Writer.IsPaused())
         {
             return false;
         }
 
-        return base.SetMarginMirroringTopBottom(MarginMirroringTopBottom);
+        return base.SetMarginMirroringTopBottom(marginMirroringTopBottom);
     }
 
     /// <summary>
@@ -1355,7 +1360,8 @@ public class PdfDocument : Document
             throw new ArgumentException("Only JavaScript actions are allowed.");
         }
 
-        DocumentLevelJs[_jsCounter.ToString().PadLeft(16, '0')] = Writer.AddToBody(js).IndirectReference;
+        DocumentLevelJs[_jsCounter.ToString(CultureInfo.InvariantCulture).PadLeft(16, '0')] =
+            Writer.AddToBody(js).IndirectReference;
         _jsCounter++;
     }
 
@@ -2398,6 +2404,11 @@ public class PdfDocument : Document
     /// <param name="image">the  Image  to add</param>
     protected internal void Add(Image image)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (image.HasAbsolutePosition())
         {
             Graphics.AddImage(image);
@@ -2522,6 +2533,11 @@ public class PdfDocument : Document
     /// </summary>
     protected internal void AddSpacing(float extraspace, float oldleading, Font f)
     {
+        if (f == null)
+        {
+            throw new ArgumentNullException(nameof(f));
+        }
+
         if (extraspace.ApproxEquals(0))
         {
             return;
@@ -2556,6 +2572,16 @@ public class PdfDocument : Document
 
     protected internal void AnalyzeRow(IList<IList<PdfCell>> rows, RenderingContext ctx)
     {
+        if (rows == null)
+        {
+            throw new ArgumentNullException(nameof(rows));
+        }
+
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
         ctx.MaxCellBottom = IndentBottom;
 
         // determine whether Row(index) is in a rowspan
@@ -2640,8 +2666,18 @@ public class PdfDocument : Document
         Line = new PdfLine(IndentLeft, IndentRight, Alignment, leading);
     }
 
-    protected internal void ConsumeRowspan(IList<PdfCell> row, RenderingContext ctx)
+    protected internal static void ConsumeRowspan(IList<PdfCell> row, RenderingContext ctx)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
         foreach (var c in row)
         {
             ctx.ConsumeRowspan(c);
@@ -2768,7 +2804,7 @@ public class PdfDocument : Document
         }
     }
 
-    protected internal IList<IList<PdfCell>> ExtractRows(IList<PdfCell> cells, RenderingContext ctx)
+    protected internal static IList<IList<PdfCell>> ExtractRows(IList<PdfCell> cells, RenderingContext ctx)
     {
         PdfCell cell;
         PdfCell previousCell = null;
@@ -2979,8 +3015,13 @@ public class PdfDocument : Document
         FirstPageEvent = false;
     }
 
-    protected internal bool MayBeRemoved(IList<PdfCell> row)
+    protected internal static bool MayBeRemoved(IList<PdfCell> row)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
         var mayBeRemoved = true;
         foreach (var cell in row)
         {
@@ -3005,6 +3046,16 @@ public class PdfDocument : Document
 
     protected internal void RenderCells(RenderingContext ctx, IList<PdfCell> cells, bool hasToFit)
     {
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
+        if (cells == null)
+        {
+            throw new ArgumentNullException(nameof(cells));
+        }
+
         if (hasToFit)
         {
             foreach (var cell in cells)
@@ -3455,7 +3506,8 @@ public class PdfDocument : Document
         /// </summary>
         internal void Addkey(string key, string value)
         {
-            if (key.Equals("Producer") || key.Equals("CreationDate"))
+            if (key.Equals("Producer", StringComparison.Ordinal) ||
+                key.Equals("CreationDate", StringComparison.Ordinal))
             {
                 return;
             }
@@ -3640,6 +3692,11 @@ public class PdfDocument : Document
         /// <returns>a rowspan.</returns>
         public int ConsumeRowspan(PdfCell c)
         {
+            if (c == null)
+            {
+                throw new ArgumentNullException(nameof(c));
+            }
+
             if (c.Rowspan == 1)
             {
                 return 1;
@@ -3669,6 +3726,11 @@ public class PdfDocument : Document
         /// <returns>the current rowspan</returns>
         public int CurrentRowspan(PdfCell c)
         {
+            if (c == null)
+            {
+                throw new ArgumentNullException(nameof(c));
+            }
+
             var i = RowspanMap[c];
             if (i == null)
             {

@@ -153,6 +153,11 @@ public class RtfImage : RtfElement
     /// <param name="image">The Image that this RtfImage wraps</param>
     public RtfImage(RtfDocument doc, Image image) : base(doc)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         _imageType = image.OriginalType;
         if (!(_imageType == Image.ORIGINAL_JPEG || _imageType == Image.ORIGINAL_BMP
                                                 || _imageType == Image.ORIGINAL_PNG ||
@@ -191,117 +196,122 @@ public class RtfImage : RtfElement
     /// <summary>
     ///     Writes the RtfImage content
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (_topLevelElement)
         {
-            result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+            outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
             switch (_alignment)
             {
                 case Element.ALIGN_LEFT:
-                    result.Write(RtfParagraphStyle.AlignLeft, 0, RtfParagraphStyle.AlignLeft.Length);
+                    outp.Write(RtfParagraphStyle.AlignLeft, 0, RtfParagraphStyle.AlignLeft.Length);
                     break;
                 case Element.ALIGN_RIGHT:
-                    result.Write(RtfParagraphStyle.AlignRight, 0, RtfParagraphStyle.AlignRight.Length);
+                    outp.Write(RtfParagraphStyle.AlignRight, 0, RtfParagraphStyle.AlignRight.Length);
                     break;
                 case Element.ALIGN_CENTER:
-                    result.Write(RtfParagraphStyle.AlignCenter, 0, RtfParagraphStyle.AlignCenter.Length);
+                    outp.Write(RtfParagraphStyle.AlignCenter, 0, RtfParagraphStyle.AlignCenter.Length);
                     break;
                 case Element.ALIGN_JUSTIFIED:
-                    result.Write(RtfParagraphStyle.AlignJustify, 0, RtfParagraphStyle.AlignJustify.Length);
+                    outp.Write(RtfParagraphStyle.AlignJustify, 0, RtfParagraphStyle.AlignJustify.Length);
                     break;
             }
         }
 
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_pictureGroup, 0, _pictureGroup.Length);
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_picture, 0, _picture.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_pictureGroup, 0, _pictureGroup.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_picture, 0, _picture.Length);
         switch (_imageType)
         {
             case Image.ORIGINAL_JPEG:
-                result.Write(_pictureJpeg, 0, _pictureJpeg.Length);
+                outp.Write(_pictureJpeg, 0, _pictureJpeg.Length);
                 break;
             case Image.ORIGINAL_PNG:
             case Image.ORIGINAL_GIF:
-                result.Write(_picturePng, 0, _picturePng.Length);
+                outp.Write(_picturePng, 0, _picturePng.Length);
                 break;
             case Image.ORIGINAL_WMF:
             case Image.ORIGINAL_BMP:
-                result.Write(_pictureWmf, 0, _pictureWmf.Length);
+                outp.Write(_pictureWmf, 0, _pictureWmf.Length);
                 break;
         }
 
-        result.Write(_pictureWidth, 0, _pictureWidth.Length);
-        result.Write(t = IntToByteArray((int)_width), 0, t.Length);
-        result.Write(_pictureHeight, 0, _pictureHeight.Length);
-        result.Write(t = IntToByteArray((int)_height), 0, t.Length);
+        outp.Write(_pictureWidth, 0, _pictureWidth.Length);
+        outp.Write(t = IntToByteArray((int)_width), 0, t.Length);
+        outp.Write(_pictureHeight, 0, _pictureHeight.Length);
+        outp.Write(t = IntToByteArray((int)_height), 0, t.Length);
         if (Document.GetDocumentSettings().IsWriteImageScalingInformation())
         {
-            result.Write(_pictureScaleX, 0, _pictureScaleX.Length);
-            result.Write(t = IntToByteArray((int)(100 * _plainWidth / _width)), 0, t.Length);
-            result.Write(_pictureScaleY, 0, _pictureScaleY.Length);
-            result.Write(t = IntToByteArray((int)(100 * _plainHeight / _height)), 0, t.Length);
+            outp.Write(_pictureScaleX, 0, _pictureScaleX.Length);
+            outp.Write(t = IntToByteArray((int)(100 * _plainWidth / _width)), 0, t.Length);
+            outp.Write(_pictureScaleY, 0, _pictureScaleY.Length);
+            outp.Write(t = IntToByteArray((int)(100 * _plainHeight / _height)), 0, t.Length);
         }
 
         if (Document.GetDocumentSettings().IsImagePdfConformance())
         {
-            result.Write(_pictureScaledWidth, 0, _pictureScaledWidth.Length);
-            result.Write(t = IntToByteArray((int)(_plainWidth * TWIPS_FACTOR)), 0, t.Length);
-            result.Write(_pictureScaledHeight, 0, _pictureScaledHeight.Length);
-            result.Write(t = IntToByteArray((int)(_plainHeight * TWIPS_FACTOR)), 0, t.Length);
+            outp.Write(_pictureScaledWidth, 0, _pictureScaledWidth.Length);
+            outp.Write(t = IntToByteArray((int)(_plainWidth * TWIPS_FACTOR)), 0, t.Length);
+            outp.Write(_pictureScaledHeight, 0, _pictureScaledHeight.Length);
+            outp.Write(t = IntToByteArray((int)(_plainHeight * TWIPS_FACTOR)), 0, t.Length);
         }
         else
         {
             if (_width.ApproxNotEqual(_plainWidth) || _imageType == Image.ORIGINAL_BMP)
             {
-                result.Write(_pictureScaledWidth, 0, _pictureScaledWidth.Length);
-                result.Write(t = IntToByteArray((int)(_plainWidth * PixelTwipsFactor)), 0, t.Length);
+                outp.Write(_pictureScaledWidth, 0, _pictureScaledWidth.Length);
+                outp.Write(t = IntToByteArray((int)(_plainWidth * PixelTwipsFactor)), 0, t.Length);
             }
 
             if (_height.ApproxNotEqual(_plainHeight) || _imageType == Image.ORIGINAL_BMP)
             {
-                result.Write(_pictureScaledHeight, 0, _pictureScaledHeight.Length);
-                result.Write(t = IntToByteArray((int)(_plainHeight * PixelTwipsFactor)), 0, t.Length);
+                outp.Write(_pictureScaledHeight, 0, _pictureScaledHeight.Length);
+                outp.Write(t = IntToByteArray((int)(_plainHeight * PixelTwipsFactor)), 0, t.Length);
             }
         }
 
         if (Document.GetDocumentSettings().IsImageWrittenAsBinary())
         {
             //binary
-            result.WriteByte((byte)'\n');
-            result.Write(_pictureBinaryData, 0, _pictureBinaryData.Length);
-            result.Write(t = IntToByteArray(imageDataSize()), 0, t.Length);
-            result.Write(Delimiter, 0, Delimiter.Length);
-            if (result is RtfByteArrayBuffer)
+            outp.WriteByte((byte)'\n');
+            outp.Write(_pictureBinaryData, 0, _pictureBinaryData.Length);
+            outp.Write(t = IntToByteArray(imageDataSize()), 0, t.Length);
+            outp.Write(Delimiter, 0, Delimiter.Length);
+            if (outp is RtfByteArrayBuffer)
             {
-                ((RtfByteArrayBuffer)result).Append(_imageData);
+                ((RtfByteArrayBuffer)outp).Append(_imageData);
             }
             else
             {
                 for (var k = 0; k < _imageData.Length; k++)
                 {
-                    result.Write(_imageData[k], 0, _imageData[k].Length);
+                    outp.Write(_imageData[k], 0, _imageData[k].Length);
                 }
             }
         }
         else
         {
             //hex encoded
-            result.Write(Delimiter, 0, Delimiter.Length);
-            result.WriteByte((byte)'\n');
-            writeImageDataHexEncoded(result);
+            outp.Write(Delimiter, 0, Delimiter.Length);
+            outp.WriteByte((byte)'\n');
+            writeImageDataHexEncoded(outp);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
         if (_topLevelElement)
         {
-            result.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+            outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
         }
 
-        result.WriteByte((byte)'\n');
+        outp.WriteByte((byte)'\n');
     }
 
     /// <summary>

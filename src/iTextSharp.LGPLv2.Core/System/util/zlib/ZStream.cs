@@ -120,7 +120,7 @@ public sealed class ZStream
             return ZStreamError;
         }
 
-        return Istate.inflate(this, f);
+        return zlib.Inflate.inflate(this, f);
     }
 
     public int InflateEnd()
@@ -155,7 +155,7 @@ public sealed class ZStream
             return ZStreamError;
         }
 
-        return Istate.InflateSetDictionary(this, dictionary, dictLength);
+        return zlib.Inflate.InflateSetDictionary(this, dictionary, dictLength);
     }
 
     public int InflateSync()
@@ -165,7 +165,7 @@ public sealed class ZStream
             return ZStreamError;
         }
 
-        return Istate.InflateSync(this);
+        return zlib.Inflate.InflateSync(this);
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public sealed class ZStream
 
         if (Dstate.Noheader == 0)
         {
-            Adler = _adler.adler32(Adler, NextIn, NextInIndex, len);
+            Adler = Adler32.adler32(Adler, NextIn, NextInIndex, len);
         }
 
         Array.Copy(NextIn, NextInIndex, buf, start, len);

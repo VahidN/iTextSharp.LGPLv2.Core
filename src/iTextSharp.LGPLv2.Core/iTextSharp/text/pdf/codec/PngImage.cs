@@ -180,11 +180,23 @@ public class PngImage
         return img;
     }
 
-    public static int GetInt(Stream isp) =>
-        (isp.ReadByte() << 24) + (isp.ReadByte() << 16) + (isp.ReadByte() << 8) + isp.ReadByte();
+    public static int GetInt(Stream isp)
+    {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
+        return (isp.ReadByte() << 24) + (isp.ReadByte() << 16) + (isp.ReadByte() << 8) + isp.ReadByte();
+    }
 
     public static string GetString(Stream isp)
     {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
         var buf = new StringBuilder();
         for (var i = 0; i < 4; i++)
         {
@@ -194,7 +206,15 @@ public class PngImage
         return buf.ToString();
     }
 
-    public static int GetWord(Stream isp) => (isp.ReadByte() << 8) + isp.ReadByte();
+    public static int GetWord(Stream isp)
+    {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
+        return (isp.ReadByte() << 8) + isp.ReadByte();
+    }
 
     private static bool checkMarker(string s)
     {
@@ -488,7 +508,7 @@ public class PngImage
                     break;
                 default:
                     // Error -- uknown filter type
-                    throw new Exception("PNG filter unknown.");
+                    throw new InvalidOperationException("PNG filter unknown.");
             }
 
             processPixels(curr, xOffset, xStep, dstY, passWidth);
@@ -920,7 +940,7 @@ public class PngImage
                 throw new IOException("Corrupted PNG file.");
             }
 
-            if (IDAT.Equals(marker))
+            if (IDAT.Equals(marker, StringComparison.Ordinal))
             {
                 int size;
                 while (len != 0)
@@ -935,7 +955,7 @@ public class PngImage
                     len -= size;
                 }
             }
-            else if (tRNS.Equals(marker))
+            else if (tRNS.Equals(marker, StringComparison.Ordinal))
             {
                 switch (_colorType)
                 {
@@ -994,7 +1014,7 @@ public class PngImage
 
                 Utilities.Skip(_isp, len);
             }
-            else if (IHDR.Equals(marker))
+            else if (IHDR.Equals(marker, StringComparison.Ordinal))
             {
                 _width = GetInt(_isp);
                 _height = GetInt(_isp);
@@ -1005,7 +1025,7 @@ public class PngImage
                 _filterMethod = _isp.ReadByte();
                 _interlaceMethod = _isp.ReadByte();
             }
-            else if (PLTE.Equals(marker))
+            else if (PLTE.Equals(marker, StringComparison.Ordinal))
             {
                 if (_colorType == 3)
                 {
@@ -1013,7 +1033,7 @@ public class PngImage
                     colorspace.Add(PdfName.Indexed);
                     colorspace.Add(getColorspace());
                     colorspace.Add(new PdfNumber(len / 3 - 1));
-                    var colortable = new ByteBuffer();
+                    using var colortable = new ByteBuffer();
                     while (len-- > 0)
                     {
                         colortable.Append_i(_isp.ReadByte());
@@ -1027,7 +1047,7 @@ public class PngImage
                     Utilities.Skip(_isp, len);
                 }
             }
-            else if (pHYs.Equals(marker))
+            else if (pHYs.Equals(marker, StringComparison.Ordinal))
             {
                 var dx = GetInt(_isp);
                 var dy = GetInt(_isp);
@@ -1045,7 +1065,7 @@ public class PngImage
                     }
                 }
             }
-            else if (cHRM.Equals(marker))
+            else if (cHRM.Equals(marker, StringComparison.Ordinal))
             {
                 _xW = GetInt(_isp) / 100000f;
                 _yW = GetInt(_isp) / 100000f;
@@ -1059,7 +1079,7 @@ public class PngImage
                              Math.Abs(_yR) < 0.0001f || Math.Abs(_xG) < 0.0001f || Math.Abs(_yG) < 0.0001f ||
                              Math.Abs(_xB) < 0.0001f || Math.Abs(_yB) < 0.0001f);
             }
-            else if (sRGB.Equals(marker))
+            else if (sRGB.Equals(marker, StringComparison.Ordinal))
             {
                 var ri = _isp.ReadByte();
                 _intent = _intents[ri];
@@ -1074,7 +1094,7 @@ public class PngImage
                 _yB = 0.06f;
                 _hasChrm = true;
             }
-            else if (gAMA.Equals(marker))
+            else if (gAMA.Equals(marker, StringComparison.Ordinal))
             {
                 var gm = GetInt(_isp);
                 if (gm != 0)
@@ -1094,7 +1114,7 @@ public class PngImage
                     }
                 }
             }
-            else if (iCCP.Equals(marker))
+            else if (iCCP.Equals(marker, StringComparison.Ordinal))
             {
                 do
                 {
@@ -1128,7 +1148,7 @@ public class PngImage
                     _iccProfile = null;
                 }
             }
-            else if (IEND.Equals(marker))
+            else if (IEND.Equals(marker, StringComparison.Ordinal))
             {
                 break;
             }

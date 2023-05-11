@@ -175,7 +175,7 @@ internal sealed class InfBlocks
         // update check information
         if (Checkfn != null)
         {
-            z.Adler = Check = z._adler.adler32(Check, Window, q, n);
+            z.Adler = Check = Adler32.adler32(Check, Window, q, n);
         }
 
         // copy as far as end of window
@@ -212,7 +212,7 @@ internal sealed class InfBlocks
             // update check information
             if (Checkfn != null)
             {
-                z.Adler = Check = z._adler.adler32(Check, Window, q, n);
+                z.Adler = Check = Adler32.adler32(Check, Window, q, n);
             }
 
             // copy
@@ -751,7 +751,7 @@ internal sealed class InfBlocks
                     }
 
                     r = ZOk;
-                    codes.Free(z);
+                    InfCodes.Free(z);
 
                     p = z.NextInIndex;
                     n = z.AvailIn;
@@ -834,7 +834,7 @@ internal sealed class InfBlocks
 
         if (Mode == Codes)
         {
-            codes.Free(z);
+            InfCodes.Free(z);
         }
 
         Mode = Type;
@@ -844,7 +844,7 @@ internal sealed class InfBlocks
 
         if (Checkfn != null)
         {
-            z.Adler = Check = z._adler.adler32(0L, null, 0, 0);
+            z.Adler = Check = Adler32.adler32(0L, null, 0, 0);
         }
     }
 

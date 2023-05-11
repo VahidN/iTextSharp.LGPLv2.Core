@@ -38,6 +38,11 @@ public class SequenceList
 
     protected SequenceList(string range)
     {
+        if (range == null)
+        {
+            throw new ArgumentNullException(nameof(range));
+        }
+
         Ptr = 0;
         Text = range.ToCharArray();
     }
@@ -352,12 +357,12 @@ public class SequenceList
 
     private void otherProc()
     {
-        if (other.Equals("odd") || other.Equals("o"))
+        if (other.Equals("odd", StringComparison.Ordinal) || other.Equals("o", StringComparison.Ordinal))
         {
             Odd = true;
             Even = false;
         }
-        else if (other.Equals("even") || other.Equals("e"))
+        else if (other.Equals("even", StringComparison.Ordinal) || other.Equals("e", StringComparison.Ordinal))
         {
             Odd = false;
             Even = true;

@@ -177,7 +177,7 @@ public class RtfDocumentHeader : RtfElement
     /// <summary>
     ///     Write the contents of the document header area.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
         try
         {
@@ -185,17 +185,17 @@ public class RtfDocumentHeader : RtfElement
             // the header section is written.
             WriteSectionDefinition(new RtfNilOutputStream());
 
-            _codePage.WriteDefinition(result);
-            _fontList.WriteDefinition(result);
-            _colorList.WriteDefinition(result);
-            _stylesheetList.WriteDefinition(result);
-            _listTable.WriteDefinition(result);
-            _generator.WriteContent(result);
-            _infoGroup.WriteContent(result);
-            _protectionSetting.WriteDefinition(result);
-            _pageSetting.WriteDefinition(result);
+            _codePage.WriteDefinition(outp);
+            _fontList.WriteDefinition(outp);
+            _colorList.WriteDefinition(outp);
+            _stylesheetList.WriteDefinition(outp);
+            _listTable.WriteDefinition(outp);
+            _generator.WriteContent(outp);
+            _infoGroup.WriteContent(outp);
+            _protectionSetting.WriteDefinition(outp);
+            _pageSetting.WriteDefinition(outp);
 
-            WriteSectionDefinition(result);
+            WriteSectionDefinition(outp);
         }
         catch (IOException)
         {
@@ -208,6 +208,11 @@ public class RtfDocumentHeader : RtfElement
     /// <param name="result"></param>
     public void WriteSectionDefinition(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         try
         {
             var header = convertHeaderFooter(_header, RtfHeaderFooter.TYPE_HEADER);

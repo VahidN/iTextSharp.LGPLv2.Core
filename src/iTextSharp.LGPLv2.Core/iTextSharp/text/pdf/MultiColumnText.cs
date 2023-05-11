@@ -166,6 +166,11 @@ public class MultiColumnText : IElement
     /// <returns> true  if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -306,6 +311,11 @@ public class MultiColumnText : IElement
     /// <param name="element">element to add</param>
     public void AddElement(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (_simple)
         {
             _columnText.AddElement(element);
@@ -336,7 +346,7 @@ public class MultiColumnText : IElement
     /// <returns>the current height (y position) after writing the columns</returns>
     public float Write(PdfContentByte canvas, PdfDocument document, float documentY)
     {
-        _document = document;
+        _document = document ?? throw new ArgumentNullException(nameof(document));
         _columnText.Canvas = canvas;
         if (_columnDefs.Count == 0)
         {
@@ -450,7 +460,7 @@ public class MultiColumnText : IElement
     /// <param name="left">left border</param>
     /// <param name="right">right border</param>
     /// <returns>height</returns>
-    private float getHeight(float[] left, float[] right)
+    private static float getHeight(float[] left, float[] right)
     {
         var max = float.MinValue;
         var min = float.MaxValue;
@@ -605,8 +615,8 @@ public class MultiColumnText : IElement
             if (_mc._top.ApproxEquals(AUTOMATIC))
             {
                 // this is bad - must be programmer error
-                throw new Exception("resolvePositions called with top=AUTOMATIC (-1).  " +
-                                    "Top position must be set befure lines can be resolved");
+                throw new InvalidOperationException("resolvePositions called with top=AUTOMATIC (-1).  " +
+                                                    "Top position must be set befure lines can be resolved");
             }
 
             positions[1] = _mc._top;

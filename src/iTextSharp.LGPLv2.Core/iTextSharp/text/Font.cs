@@ -85,6 +85,11 @@ public class Font : IComparable
     /// <param name="other">the font that has to be copied</param>
     public Font(Font other)
     {
+        if (other == null)
+        {
+            throw new ArgumentNullException(nameof(other));
+        }
+
         _color = other._color;
         _family = other._family;
         _size = other._size;
@@ -287,17 +292,17 @@ public class Font : IComparable
                         var names = _baseFont.FamilyFontName;
                         for (var i = 0; i < names.Length; i++)
                         {
-                            if ("0".Equals(names[i][2]))
+                            if ("0".Equals(names[i][2], StringComparison.Ordinal))
                             {
                                 return names[i][3];
                             }
 
-                            if ("1033".Equals(names[i][2]))
+                            if ("1033".Equals(names[i][2], StringComparison.Ordinal))
                             {
                                 tmp = names[i][3];
                             }
 
-                            if ("".Equals(names[i][2]))
+                            if ("".Equals(names[i][2], StringComparison.Ordinal))
                             {
                                 tmp = names[i][3];
                             }
@@ -435,6 +440,11 @@ public class Font : IComparable
     /// <returns>the corresponding value</returns>
     public static int GetStyleValue(string style)
     {
+        if (style == null)
+        {
+            throw new ArgumentNullException(nameof(style));
+        }
+
         var s = 0;
         if (style.IndexOf(Markup.CSS_VALUE_NORMAL, StringComparison.OrdinalIgnoreCase) != -1)
         {

@@ -54,6 +54,11 @@ public class RtfPageNumber : RtfField
     /// </summary>
     protected override void WriteFieldInstContent(Stream oupt)
     {
+        if (oupt == null)
+        {
+            throw new ArgumentNullException(nameof(oupt));
+        }
+
         oupt.Write(_pageNumber, 0, _pageNumber.Length);
     }
 

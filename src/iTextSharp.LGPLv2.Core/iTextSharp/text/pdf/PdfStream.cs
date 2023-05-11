@@ -85,7 +85,7 @@ public class PdfStream : PdfDictionary
     public PdfStream(byte[] bytes)
     {
         type = STREAM;
-        Bytes = bytes;
+        Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
         rawLength = bytes.Length;
         Put(PdfName.LENGTH, new PdfNumber(bytes.Length));
     }
@@ -106,7 +106,7 @@ public class PdfStream : PdfDictionary
     {
         type = STREAM;
         InputStream = inputStream;
-        Writer = writer;
+        Writer = writer ?? throw new ArgumentNullException(nameof(writer));
         Iref = writer.PdfIndirectReference;
         Put(PdfName.LENGTH, Iref);
     }
@@ -216,6 +216,11 @@ public class PdfStream : PdfDictionary
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (InputStream != null && Compressed)
         {
             Put(PdfName.Filter, PdfName.Flatedecode);
@@ -355,6 +360,11 @@ public class PdfStream : PdfDictionary
     /// <param name="os">the destination to write to</param>
     public void WriteContent(Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (StreamBytes != null)
         {
             StreamBytes.WriteTo(os);

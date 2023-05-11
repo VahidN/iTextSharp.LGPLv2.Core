@@ -36,6 +36,11 @@ public class PdfSmartCopy : PdfCopy
     /// </summary>
     protected override PdfIndirectReference CopyIndirect(PrIndirectReference inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         var srcObj = PdfReader.GetPdfObjectRelease(inp);
         if (srcObj == null)
         {

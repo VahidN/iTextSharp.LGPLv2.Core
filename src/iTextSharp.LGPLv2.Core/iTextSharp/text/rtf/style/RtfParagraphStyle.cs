@@ -269,6 +269,11 @@ public class RtfParagraphStyle : RtfFont
     /// <param name="style">The RtfParagraphStyle to copy settings from.</param>
     public RtfParagraphStyle(RtfDocument doc, RtfParagraphStyle style) : base(doc, style)
     {
+        if (style == null)
+        {
+            throw new ArgumentNullException(nameof(style));
+        }
+
         Document = doc;
         _styleName = style.GetStyleName();
         _alignment = style.GetAlignment();
@@ -306,15 +311,15 @@ public class RtfParagraphStyle : RtfFont
     ///     Tests whether two RtfParagraphStyles are equal. Equality
     ///     is determined via the name.
     /// </summary>
-    public override bool Equals(object o)
+    public override bool Equals(object obj)
     {
-        if (!(o is RtfParagraphStyle))
+        if (!(obj is RtfParagraphStyle))
         {
             return false;
         }
 
-        var paragraphStyle = (RtfParagraphStyle)o;
-        var result = GetStyleName().Equals(paragraphStyle.GetStyleName());
+        var paragraphStyle = (RtfParagraphStyle)obj;
+        var result = GetStyleName().Equals(paragraphStyle.GetStyleName(), StringComparison.Ordinal);
         return result;
     }
 
@@ -579,11 +584,11 @@ public class RtfParagraphStyle : RtfFont
     /// <summary>
     ///     Sets the font style of this RtfParagraphStyle.
     /// </summary>
-    /// <param name="fontStyle">The font style to use.</param>
-    public override void SetStyle(int fontStyle)
+    /// <param name="style">The font style to use.</param>
+    public override void SetStyle(int style)
     {
         _modified = _modified | ModifiedFontStyle;
-        base.SetStyle(fontStyle);
+        base.SetStyle(style);
     }
 
     /// <summary>
@@ -593,6 +598,11 @@ public class RtfParagraphStyle : RtfFont
     /// <param name="result">The  OutputStream  to write to.</param>
     public override void WriteBegin(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         byte[] t;
         result.Write(t = DocWriter.GetIsoBytes("\\s"), 0, t.Length);
         result.Write(t = IntToByteArray(_styleNumber), 0, t.Length);
@@ -609,21 +619,26 @@ public class RtfParagraphStyle : RtfFont
     /// <summary>
     ///     Writes the definition of this RtfParagraphStyle for the stylesheet list.
     /// </summary>
-    public override void WriteDefinition(Stream result)
+    public override void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(t = DocWriter.GetIsoBytes("{"), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\style"), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\s"), 0, t.Length);
-        result.Write(t = IntToByteArray(_styleNumber), 0, t.Length);
-        result.Write(t = RtfElement.Delimiter, 0, t.Length);
-        writeParagraphSettings(result);
-        base.WriteBegin(result);
-        result.Write(t = RtfElement.Delimiter, 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes(_styleName), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes(";"), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("}"), 0, t.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(t = DocWriter.GetIsoBytes("{"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\style"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\s"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_styleNumber), 0, t.Length);
+        outp.Write(t = RtfElement.Delimiter, 0, t.Length);
+        writeParagraphSettings(outp);
+        base.WriteBegin(outp);
+        outp.Write(t = RtfElement.Delimiter, 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(_styleName), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(";"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("}"), 0, t.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>

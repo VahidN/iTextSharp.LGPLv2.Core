@@ -16,8 +16,6 @@ namespace iTextSharp.text;
 ///     will be written to the stream of the listening
 ///     DocWriter.
 /// </remarks>
-/// <seealso cref="T:iTextSharp.text.Document" />
-/// <seealso cref="T:iTextSharp.text.IDocListener" />
 public abstract class DocWriter : IDocListener
 {
     /// <summary> This is some byte that is often used. </summary>
@@ -228,7 +226,7 @@ public abstract class DocWriter : IDocListener
     ///     @see com.lowagie.text.DocListener#setMarginMirroring(boolean)
     ///     @since	2.1.6
     /// </summary>
-    public virtual bool SetMarginMirroringTopBottom(bool marginMirroring) => false;
+    public virtual bool SetMarginMirroringTopBottom(bool marginMirroringTopBottom) => false;
 
     /// <summary>
     ///     Sets the margins.

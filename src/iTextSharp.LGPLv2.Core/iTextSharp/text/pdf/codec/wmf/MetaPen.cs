@@ -20,6 +20,11 @@ public class MetaPen : MetaObject
 
     public void Init(InputMeta meta)
     {
+        if (meta == null)
+        {
+            throw new ArgumentNullException(nameof(meta));
+        }
+
         Style = meta.ReadWord();
         PenWidth = meta.ReadShort();
         meta.ReadWord();

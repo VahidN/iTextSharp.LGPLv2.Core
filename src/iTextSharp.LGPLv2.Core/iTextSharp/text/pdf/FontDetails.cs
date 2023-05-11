@@ -16,7 +16,7 @@ public class FontDetails
 
     private readonly CjkFont _cjkFont;
 
-    private readonly IntHashtable _cjkTag;
+    private readonly NullValueDictionary<int, int> _cjkTag;
 
     /// <summary>
     ///     The font name that appears in the document body stream
@@ -72,7 +72,7 @@ public class FontDetails
     {
         _fontName = fontName;
         _indirectReference = indirectReference;
-        _baseFont = baseFont;
+        _baseFont = baseFont ?? throw new ArgumentNullException(nameof(baseFont));
         _fontType = baseFont.FontType;
         switch (_fontType)
         {
@@ -81,7 +81,7 @@ public class FontDetails
                 _shortTag = new byte[256];
                 break;
             case BaseFont.FONT_TYPE_CJK:
-                _cjkTag = new IntHashtable();
+                _cjkTag = new NullValueDictionary<int, int>();
                 _cjkFont = (CjkFont)baseFont;
                 break;
             case BaseFont.FONT_TYPE_TTUNI:
@@ -130,6 +130,11 @@ public class FontDetails
     /// <returns>the conversion</returns>
     public byte[] ConvertToBytes(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         byte[] b = null;
         switch (_fontType)
         {

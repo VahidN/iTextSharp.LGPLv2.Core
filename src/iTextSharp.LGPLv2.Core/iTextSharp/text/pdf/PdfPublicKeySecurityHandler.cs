@@ -44,9 +44,8 @@ public class PdfPublicKeySecurityHandler
         var certificate = recipient.Certificate;
         var permission =
             recipient.Permission; //PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders | PdfWriter.AllowAssembly;
-        var revision = 3;
 
-        permission |= (int)(revision == 3 ? 0xfffff0c0 : 0xffffffc0);
+        permission |= unchecked((int)0xfffff0c0);
         permission &= unchecked((int)0xfffffffc);
         permission += 1;
 
@@ -103,7 +102,7 @@ public class PdfPublicKeySecurityHandler
 
     protected internal byte[] GetSeed() => (byte[])_seed.Clone();
 
-    private KeyTransRecipientInfo computeRecipientInfo(X509Certificate x509Certificate, byte[] abyte0)
+    private static KeyTransRecipientInfo computeRecipientInfo(X509Certificate x509Certificate, byte[] abyte0)
     {
         var asn1Inputstream =
             new Asn1InputStream(new MemoryStream(x509Certificate.GetTbsCertificate()));
@@ -125,7 +124,7 @@ public class PdfPublicKeySecurityHandler
         return new KeyTransRecipientInfo(recipId, algorithmidentifier, deroctetstring);
     }
 
-    private Asn1Object createDerForRecipient(byte[] inp, X509Certificate cert)
+    private static Asn1Object createDerForRecipient(byte[] inp, X509Certificate cert)
     {
         var s = "1.2.840.113549.3.2";
 

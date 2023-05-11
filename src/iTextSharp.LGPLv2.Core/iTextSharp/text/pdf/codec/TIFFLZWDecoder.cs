@@ -42,6 +42,16 @@ public class TifflzwDecoder
     /// <param name="h">The number of rows the compressed data contains.</param>
     public byte[] Decode(byte[] data, byte[] uncompData, int h)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
+        if (uncompData == null)
+        {
+            throw new ArgumentNullException(nameof(uncompData));
+        }
+
         if (data[0] == 0x00 && data[1] == 0x01)
         {
             throw new InvalidOperationException("TIFF 5.0-style LZW codes are not supported.");
@@ -143,6 +153,11 @@ public class TifflzwDecoder
     /// </summary>
     public void WriteString(byte[] strn)
     {
+        if (strn == null)
+        {
+            throw new ArgumentNullException(nameof(strn));
+        }
+
         // Fix for broken tiff files
         var max = _uncompData.Length - _dstIndex;
         if (strn.Length < max)
@@ -159,6 +174,11 @@ public class TifflzwDecoder
     /// </summary>
     public void AddStringToTable(byte[] oldString, byte newString)
     {
+        if (oldString == null)
+        {
+            throw new ArgumentNullException(nameof(oldString));
+        }
+
         var length = oldString.Length;
         var strn = new byte[length + 1];
         Array.Copy(oldString, 0, strn, 0, length);
@@ -206,8 +226,13 @@ public class TifflzwDecoder
     /// <summary>
     ///     Append  newString  to the end of  oldString .
     /// </summary>
-    public byte[] ComposeString(byte[] oldString, byte newString)
+    public static byte[] ComposeString(byte[] oldString, byte newString)
     {
+        if (oldString == null)
+        {
+            throw new ArgumentNullException(nameof(oldString));
+        }
+
         var length = oldString.Length;
         var strn = new byte[length + 1];
         Array.Copy(oldString, 0, strn, 0, length);

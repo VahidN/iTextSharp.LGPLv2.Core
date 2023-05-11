@@ -3514,10 +3514,10 @@ internal sealed class RtfCtrlWordMap
     {
         try
         {
-            if (_ctrlWords.ContainsKey(ctrlWord))
+            if (_ctrlWords.TryGetValue(ctrlWord, out var handler))
             {
                 // add 1 to known control words
-                return _ctrlWords[ctrlWord];
+                return handler;
             }
 
             // add 1 to unknown control words

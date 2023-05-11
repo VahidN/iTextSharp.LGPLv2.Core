@@ -40,7 +40,7 @@ public class LangAlt : Properties
     {
         var sb = new StringBuilder();
         sb.Append("<rdf:Alt>");
-        foreach (string s in Keys)
+        foreach (var s in Keys)
         {
             Process(sb, s);
         }
@@ -54,6 +54,11 @@ public class LangAlt : Properties
     /// </summary>
     protected internal void Process(StringBuilder buf, string lang)
     {
+        if (buf == null)
+        {
+            throw new ArgumentNullException(nameof(buf));
+        }
+
         buf.Append("<rdf:li xml:lang=\"");
         buf.Append(lang);
         buf.Append("\" >");

@@ -28,15 +28,22 @@ public class NullValueDictionary<TKey, TValue> : Dictionary<TKey, TValue>, INull
     {
     }
 
-    TValue INullValueDictionary<TKey, TValue>.this[TKey key]
+    public int Size => Count;
+
+    public new TValue this[TKey key]
     {
-        get
-        {
-            TryGetValue(key, out var val);
-            return val;
-        }
+        get => TryGetValue(key, out var val) ? val : default;
         set => base[key] = value;
     }
 
     public INullValueDictionary<TKey, TValue> Clone() => new NullValueDictionary<TKey, TValue>(this);
+
+    public IList<TKey> ToOrderedKeys()
+    {
+        return Keys.OrderBy(key => key).ToList();
+    }
+
+    public IList<TKey> GetKeys() => Keys.ToList();
+
+    public bool IsEmpty() => Count == 0;
 }
