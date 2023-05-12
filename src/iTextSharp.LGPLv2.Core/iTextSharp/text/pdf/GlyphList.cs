@@ -76,7 +76,10 @@ public static class GlyphList
         {
             try
             {
-                istr.Dispose();
+                if (istr != null)
+                {
+                    istr.Dispose();
+                }
             }
             catch
             {
