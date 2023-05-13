@@ -13,32 +13,29 @@ public static class GlyphList
 
     static GlyphList()
     {
-        Stream istr = null;
         try
         {
-            istr = BaseFont.GetResourceStream($"{BaseFont.RESOURCE_PATH}glyphlist.txt");
-            if (istr == null)
+            using var resourceStream = BaseFont.GetResourceStream($"{BaseFont.RESOURCE_PATH}glyphlist.txt");
+            if (resourceStream == null)
             {
                 Console.Error.WriteLine("glyphlist.txt not found as resource.");
                 return;
             }
 
             var buf = new byte[1024];
-            var outp = new MemoryStream();
+            var outputStream = new MemoryStream();
             while (true)
             {
-                var size = istr.Read(buf, 0, buf.Length);
+                var size = resourceStream.Read(buf, 0, buf.Length);
                 if (size == 0)
                 {
                     break;
                 }
 
-                outp.Write(buf, 0, size);
+                outputStream.Write(buf, 0, size);
             }
 
-            istr.Dispose();
-            istr = null;
-            var s = PdfEncodings.ConvertToString(outp.ToArray(), null);
+            var s = PdfEncodings.ConvertToString(outputStream.ToArray(), null);
             var tk = new StringTokenizer(s, "\r\n");
             while (tk.HasMoreTokens())
             {
@@ -71,20 +68,6 @@ public static class GlyphList
         catch (Exception e)
         {
             Console.Error.WriteLine($"glyphlist.txt loading error: {e.Message}");
-        }
-        finally
-        {
-            try
-            {
-                if (istr != null)
-                {
-                    istr.Dispose();
-                }
-            }
-            catch
-            {
-                // empty on purpose
-            }
         }
     }
 

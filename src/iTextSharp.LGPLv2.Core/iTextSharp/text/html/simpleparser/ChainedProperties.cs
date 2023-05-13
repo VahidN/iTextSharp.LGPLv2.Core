@@ -36,6 +36,7 @@ public class ChainedProperties
         prop.TryGetValue(HtmlTags.SIZE, out var value);
         if (value == null)
         {
+            Chain.Add(new TagAttributes(key, prop));
             return;
         }
 
@@ -143,5 +144,7 @@ public class ChainedProperties
 
         public INullValueDictionary<string, string> Attrs { set; get; }
         public string Tag { set; get; }
+
+        public override string ToString() => $"{Tag}:{string.Join(", ", Attrs)}";
     }
 }

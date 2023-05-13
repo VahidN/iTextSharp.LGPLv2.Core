@@ -481,6 +481,11 @@ public class FactoryProperties
         float size = 12;
         if (value != null)
         {
+            if (value.EndsWith("pt", StringComparison.OrdinalIgnoreCase))
+            {
+                value = value.Substring(0, value.Length - 2);
+            }
+
             size = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
