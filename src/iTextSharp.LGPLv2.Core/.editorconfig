@@ -160,5 +160,20 @@ dotnet_diagnostic.CA1852.severity = suggestion
 # CA1724 The type name Hyphenation conflicts in whole or in part with the namespace name 'iTextSharp.text.pdf.hyphenation'. Change either name to eliminate the conflict.
 dotnet_diagnostic.CA1724.severity = suggestion
 
+# Inline Variable Declaration
+dotnet_diagnostic.IDE0018.severity = warning
+
+# Use Pattern Matching to Avoid `As` Followed by A `Null` Check
+dotnet_diagnostic.IDE0019.severity = warning
+
+# Remove Unnecessary Using Directives
+dotnet_diagnostic.IDE0005.severity = warning
+
+# Remove Unnecessary Casts
+dotnet_diagnostic.IDE0004.severity = warning
+
+# Use readonly Modifier
+dotnet_diagnostic.IDE0044.severity = warning
+
 # force file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:error

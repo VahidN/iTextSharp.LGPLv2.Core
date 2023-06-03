@@ -50,7 +50,7 @@ public class PdfSmartCopy : PdfCopy
         ByteStore streamKey = null;
         var validStream = false;
 
-        if (srcObj.IsStream() || srcObj.IsDictionary())
+        if (srcObj.IsStream())
         {
             streamKey = new ByteStore(srcObj);
             validStream = true;
