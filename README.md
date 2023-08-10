@@ -14,7 +14,7 @@ Install via NuGet
 -----------------
 To install iTextSharp.LGPLv2.Core, run the following command in the Package Manager Console:
 
-[![Nuget](https://img.shields.io/nuget/v/iTextSharp.LGPLv2.Core)](https://github.com/VahidN/iTextSharp.LGPLv2.Core)
+[![Nuget](https://img.shields.io/nuget/v/iTextSharp.LGPLv2.Core)](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/)
 ```
 PM> Install-Package iTextSharp.LGPLv2.Core
 ```
