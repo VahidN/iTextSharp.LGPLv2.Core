@@ -208,7 +208,9 @@ public class PdfPCell : Rectangle
     /// </summary>
     /// <param name="cell">the  PdfPCell  to duplicate</param>
     public PdfPCell(PdfPCell cell) : base(cell?.Llx ?? throw new ArgumentNullException(nameof(cell)),
-                                          cell.Lly, cell.Urx, cell.Ury)
+                                          cell.Lly,
+                                          cell.Urx,
+                                          cell.Ury)
     {
         CloneNonPositionParameters(cell);
         _verticalAlignment = cell._verticalAlignment;
@@ -718,7 +720,7 @@ public class PdfPCell : Rectangle
         }
         else
         {
-            if (pivoted && HasFixedHeight())
+            if ((pivoted && HasFixedHeight()) || Column == null)
             {
                 Bottom = Top - FixedHeight;
             }
@@ -761,7 +763,7 @@ public class PdfPCell : Rectangle
         }
 
         var height = Height;
-        if (height < FixedHeight)
+        if (HasFixedHeight())
         {
             height = FixedHeight;
         }

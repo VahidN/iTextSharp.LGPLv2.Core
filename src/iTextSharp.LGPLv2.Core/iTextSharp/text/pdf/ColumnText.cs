@@ -524,8 +524,14 @@ public class ColumnText
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
     /// <param name="runDirection">the run direction</param>
     /// <param name="arabicOptions">the options for the arabic shaping</param>
-    public static void ShowTextAligned(PdfContentByte canvas, int alignment, Phrase phrase, float x, float y,
-                                       float rotation, int runDirection, int arabicOptions)
+    public static void ShowTextAligned(PdfContentByte canvas,
+                                       int alignment,
+                                       Phrase phrase,
+                                       float x,
+                                       float y,
+                                       float rotation,
+                                       int runDirection,
+                                       int arabicOptions)
     {
         if (canvas == null)
         {
@@ -604,7 +610,11 @@ public class ColumnText
     /// <param name="x">the x reference position</param>
     /// <param name="y">the y reference position</param>
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
-    public static void ShowTextAligned(PdfContentByte canvas, int alignment, Phrase phrase, float x, float y,
+    public static void ShowTextAligned(PdfContentByte canvas,
+                                       int alignment,
+                                       Phrase phrase,
+                                       float x,
+                                       float y,
                                        float rotation)
     {
         ShowTextAligned(canvas, alignment, phrase, x, y, rotation, PdfWriter.RUN_DIRECTION_NO_BIDI, 0);
@@ -847,8 +857,11 @@ public class ColumnText
                     break;
                 }
 
-                line = BidiLine.ProcessLine(LeftX, RectangularWidth - firstIndent - rightIndent, alignment,
-                                            localRunDirection, _arabicOptions);
+                line = BidiLine.ProcessLine(LeftX,
+                                            RectangularWidth - firstIndent - rightIndent,
+                                            alignment,
+                                            localRunDirection,
+                                            _arabicOptions);
                 if (line == null)
                 {
                     status = NO_MORE_TEXT;
@@ -923,7 +936,10 @@ public class ColumnText
                     dirty = true;
                 }
 
-                line = BidiLine.ProcessLine(x1, x2 - x1 - firstIndent - rightIndent, alignment, localRunDirection,
+                line = BidiLine.ProcessLine(x1,
+                                            x2 - x1 - firstIndent - rightIndent,
+                                            alignment,
+                                            localRunDirection,
                                             _arabicOptions);
                 if (line == null)
                 {
@@ -1363,7 +1379,7 @@ public class ColumnText
                     if (CompositeColumn == null)
                     {
                         CompositeColumn = new ColumnText(canvas);
-                        CompositeColumn.UseAscender = firstPass ? _useAscender : false;
+                        CompositeColumn.UseAscender = firstPass && _useAscender;
                         CompositeColumn.Alignment = para.Alignment;
                         CompositeColumn.Indent = para.IndentationLeft + para.FirstLineIndent;
                         CompositeColumn.ExtraParagraphSpace = para.ExtraParagraphSpace;
@@ -1487,7 +1503,7 @@ public class ColumnText
 
                         CompositeColumn = new ColumnText(canvas);
 
-                        CompositeColumn.UseAscender = firstPass ? _useAscender : false;
+                        CompositeColumn.UseAscender = firstPass && _useAscender;
                         CompositeColumn.Alignment = item.Alignment;
                         CompositeColumn.Indent = item.IndentationLeft + listIndentation + item.FirstLineIndent;
                         CompositeColumn.ExtraParagraphSpace = item.ExtraParagraphSpace;
@@ -1543,8 +1559,12 @@ public class ColumnText
                 {
                     if (!simulate)
                     {
-                        ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase(item.ListSymbol),
-                                        CompositeColumn.LeftX + listIndentation, CompositeColumn._firstLineY, 0);
+                        ShowTextAligned(canvas,
+                                        Element.ALIGN_LEFT,
+                                        new Phrase(item.ListSymbol),
+                                        CompositeColumn.LeftX + listIndentation,
+                                        CompositeColumn._firstLineY,
+                                        0);
                     }
 
                     CompositeColumn._firstLineYDone = true;
@@ -1736,13 +1756,9 @@ public class ColumnText
                     var sub = nt.Rows;
 
                     // first we add the real header rows (if necessary)
-                    if (!skipHeader)
+                    if (!skipHeader && realHeaderRows > 0)
                     {
-                        for (var j = 0; j < realHeaderRows; ++j)
-                        {
-                            var headerRow = table.GetRow(j);
-                            sub.Add(headerRow);
-                        }
+                        sub.AddRange(table.GetRows(0, realHeaderRows));
                     }
                     else
                     {
@@ -1768,7 +1784,13 @@ public class ColumnText
 
                     // we need a correction if the last row needs to be extended
                     float rowHeight = 0;
-                    var last = sub[sub.Count - 1 - footerRows];
+                    var index = sub.Count - 1;
+                    if (showFooter)
+                    {
+                        index -= footerRows;
+                    }
+
+                    var last = sub[index];
                     if (table.ExtendLastRow)
                     {
                         rowHeight = last.MaxHeights;
