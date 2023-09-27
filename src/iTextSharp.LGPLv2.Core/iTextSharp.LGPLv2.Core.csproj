@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.4.7</VersionPrefix>
+        <VersionPrefix>3.4.8</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
         <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
@@ -45,7 +45,7 @@
     <ItemGroup>
         <Using Include="System.Globalization"/>
         <Using Include="System.IO"/>
-        <Using Remove="System.Net.Http" /> <!-- for .NET Framework 4.x -->
+        <Using Remove="System.Net.Http"/> <!-- for .NET Framework 4.x -->
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="2.88.6"/>

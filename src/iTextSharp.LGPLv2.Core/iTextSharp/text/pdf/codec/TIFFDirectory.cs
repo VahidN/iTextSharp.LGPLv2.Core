@@ -43,7 +43,7 @@ public class TiffDirectory
     /// <summary>
     ///     A Hashtable indexing the fields by tag number.
     /// </summary>
-    private readonly INullValueDictionary<int, int> _fieldIndex = new NullValueDictionary<int, int>();
+    private readonly INullValueDictionary<int, int?> _fieldIndex = new NullValueDictionary<int, int?>();
 
     /// <summary>
     ///     A bool storing the endianness of the stream.
@@ -250,8 +250,8 @@ public class TiffDirectory
     /// </summary>
     public TiffField GetField(int tag)
     {
-        object i = _fieldIndex[tag];
-        return _fields[(int)i];
+        var i = _fieldIndex[tag];
+        return i.HasValue ? _fields[i.Value] : null;
     }
 
     /// <summary>
@@ -260,10 +260,15 @@ public class TiffDirectory
     ///     present and has type TIFFField.TIFF_SBYTE, TIFF_BYTE, or
     ///     TIFF_UNDEFINED.
     /// </summary>
-    public byte GetFieldAsByte(int tag, int index)
+    public byte? GetFieldAsByte(int tag, int index)
     {
         var i = _fieldIndex[tag];
-        var b = _fields[i].GetAsBytes();
+        if (!i.HasValue)
+        {
+            return null;
+        }
+
+        var b = _fields[i.Value].GetAsBytes();
         return b[index];
     }
 
@@ -273,7 +278,7 @@ public class TiffDirectory
     ///     present and has  type TIFFField.TIFF_SBYTE, TIFF_BYTE, or
     ///     TIFF_UNDEFINED.
     /// </summary>
-    public byte GetFieldAsByte(int tag) => GetFieldAsByte(tag, 0);
+    public byte? GetFieldAsByte(int tag) => GetFieldAsByte(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -281,10 +286,15 @@ public class TiffDirectory
     ///     present and has numeric type (all but TIFF_UNDEFINED and
     ///     TIFF_ASCII).
     /// </summary>
-    public double GetFieldAsDouble(int tag, int index)
+    public double? GetFieldAsDouble(int tag, int index)
     {
         var i = _fieldIndex[tag];
-        return _fields[i].GetAsDouble(index);
+        if (!i.HasValue)
+        {
+            return null;
+        }
+
+        return _fields[i.Value].GetAsDouble(index);
     }
 
     /// <summary>
@@ -292,7 +302,7 @@ public class TiffDirectory
     ///     caller is responsible for ensuring that the tag is present and
     ///     has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
     /// </summary>
-    public double GetFieldAsDouble(int tag) => GetFieldAsDouble(tag, 0);
+    public double? GetFieldAsDouble(int tag) => GetFieldAsDouble(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -300,10 +310,15 @@ public class TiffDirectory
     ///     present and has numeric type (all but TIFF_UNDEFINED and
     ///     TIFF_ASCII).
     /// </summary>
-    public float GetFieldAsFloat(int tag, int index)
+    public float? GetFieldAsFloat(int tag, int index)
     {
         var i = _fieldIndex[tag];
-        return _fields[i].GetAsFloat(index);
+        if (!i.HasValue)
+        {
+            return null;
+        }
+
+        return _fields[i.Value].GetAsFloat(index);
     }
 
     /// <summary>
@@ -311,7 +326,7 @@ public class TiffDirectory
     ///     caller is responsible for ensuring that the tag is present and
     ///     has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
     /// </summary>
-    public float GetFieldAsFloat(int tag) => GetFieldAsFloat(tag, 0);
+    public float? GetFieldAsFloat(int tag) => GetFieldAsFloat(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -319,10 +334,15 @@ public class TiffDirectory
     ///     present and has type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED,
     ///     TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG or TIFF_LONG.
     /// </summary>
-    public long GetFieldAsLong(int tag, int index)
+    public long? GetFieldAsLong(int tag, int index)
     {
         var i = _fieldIndex[tag];
-        return _fields[i].GetAsLong(index);
+        if (!i.HasValue)
+        {
+            return null;
+        }
+
+        return _fields[i.Value].GetAsLong(index);
     }
 
     /// <summary>
@@ -331,7 +351,7 @@ public class TiffDirectory
     ///     present and has type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED,
     ///     TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG or TIFF_LONG.
     /// </summary>
-    public long GetFieldAsLong(int tag) => GetFieldAsLong(tag, 0);
+    public long? GetFieldAsLong(int tag) => GetFieldAsLong(tag, 0);
 
     /// <summary>
     ///     Returns an array of TIFFFields containing all the fields
