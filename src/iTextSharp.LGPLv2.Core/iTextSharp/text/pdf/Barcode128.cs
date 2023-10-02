@@ -355,7 +355,7 @@ public class Barcode128 : Barcode
             }
 
             var len = fullCode.Length;
-            var fullWidth = (len + 2) * 11 * x + 2 * x;
+            var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
             fullWidth = Math.Max(fullWidth, fontX);
             var fullHeight = barHeight + fontY;
             return new Rectangle(fullWidth, fullHeight);
@@ -895,7 +895,7 @@ public class Barcode128 : Barcode
         }
 
         var len = bCode.Length;
-        var fullWidth = (len + 2) * 11 * x + 2 * x;
+        var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
         float barStartX = 0;
         float textStartX = 0;
         switch (textAlignment)

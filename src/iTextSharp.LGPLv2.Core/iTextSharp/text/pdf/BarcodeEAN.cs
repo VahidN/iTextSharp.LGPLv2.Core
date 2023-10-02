@@ -864,7 +864,7 @@ public class BarcodeEan : Barcode
                     {
                         var c = code.Substring(k, 1);
                         var len = font.GetWidthPoint(c, size);
-                        var pX = (7.5f + 9 * k) * x - len / 2;
+                        var pX = (7.5f + 9f * k) * x - len / 2;
                         cb.SetTextMatrix(pX, textStartY);
                         cb.ShowText(c);
                     }

@@ -53,7 +53,7 @@ public class BarcodePostnet : Barcode
     {
         get
         {
-            var width = ((code.Length + 1) * 5 + 1) * n + x;
+            var width = ((float)(code.Length + 1) * 5 + 1) * n + x;
             return new Rectangle(width, barHeight);
         }
     }
