@@ -56,8 +56,8 @@ public class IccProfile
             throw new ArgumentNullException(nameof(data));
         }
 
-        if ((data.Length < 128) | (data[36] != 0x61) || data[37] != 0x63
-                                                     || data[38] != 0x73 || data[39] != 0x70)
+        if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63
+            || data[38] != 0x73 || data[39] != 0x70)
         {
             throw new ArgumentException("Invalid ICC profile");
         }

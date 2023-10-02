@@ -484,9 +484,7 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         var font = (RtfFont)obj;
-        var result = true;
-        result = result & _fontName.Equals(font.GetFontName(), StringComparison.Ordinal);
-        return result;
+        return _fontName.Equals(font.GetFontName(), StringComparison.Ordinal);
     }
 
     /// <summary>
