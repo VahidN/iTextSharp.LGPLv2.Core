@@ -180,7 +180,7 @@ public class TsaClientBouncyCastle : ITsaClient
         var inp = response.GetResponseStream();
         var encoding = response.Headers["Content-Encoding"];
 
-        var baos = new MemoryStream();
+        using var baos = new MemoryStream();
         var buffer = new byte[1024];
         var bytesRead = 0;
         while ((bytesRead = inp.Read(buffer, 0, buffer.Length)) > 0)

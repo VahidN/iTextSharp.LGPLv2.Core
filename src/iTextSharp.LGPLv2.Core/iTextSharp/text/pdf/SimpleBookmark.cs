@@ -302,10 +302,12 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     /// <param name="outp">the export destination. The stream is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(IList<INullValueDictionary<string, object>> list, Stream outp, string encoding,
+    public static void ExportToXml(IList<INullValueDictionary<string, object>> list,
+                                   Stream outp,
+                                   string encoding,
                                    bool onlyAscii)
     {
-        var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
+        using var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
         ExportToXml(list, wrt, encoding, onlyAscii);
     }
 
@@ -318,7 +320,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     /// <param name="wrt">the export destination. The writer is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(IList<INullValueDictionary<string, object>> list, TextWriter wrt, string encoding,
+    public static void ExportToXml(IList<INullValueDictionary<string, object>> list,
+                                   TextWriter wrt,
+                                   string encoding,
                                    bool onlyAscii)
     {
         if (wrt == null)
@@ -344,7 +348,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     /// <param name="outp">the export destination. The writer is not closed</param>
     /// <param name="indent">the indentation level. Pretty printing significant only</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXmlNode(IList<INullValueDictionary<string, object>> list, TextWriter outp, int indent,
+    public static void ExportToXmlNode(IList<INullValueDictionary<string, object>> list,
+                                       TextWriter outp,
+                                       int indent,
                                        bool onlyAscii)
     {
         if (list == null)
@@ -474,8 +480,10 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         return book._topList;
     }
 
-    public static object[] IterateOutlines(PdfWriter writer, PdfIndirectReference parent,
-                                           IList<INullValueDictionary<string, object>> kids, bool namedAsNames)
+    public static object[] IterateOutlines(PdfWriter writer,
+                                           PdfIndirectReference parent,
+                                           IList<INullValueDictionary<string, object>> kids,
+                                           bool namedAsNames)
     {
         if (writer == null)
         {
@@ -602,7 +610,8 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     /// <param name="list">the bookmarks</param>
     /// <param name="pageShift">the number to add to the pages in range</param>
     /// <param name="pageRange">the page ranges, always in pairs. It can be  null </param>
-    public static void ShiftPageNumbers(IList<INullValueDictionary<string, object>> list, int pageShift,
+    public static void ShiftPageNumbers(IList<INullValueDictionary<string, object>> list,
+                                        int pageShift,
                                         int[] pageRange)
     {
         if (list == null)
@@ -730,7 +739,8 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
     internal static void CreateOutlineAction(PdfDictionary outline,
                                              INullValueDictionary<string, object> map,
-                                             PdfWriter writer, bool namedAsNames)
+                                             PdfWriter writer,
+                                             bool namedAsNames)
     {
         try
         {
@@ -885,7 +895,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     }
 
     private static IList<INullValueDictionary<string, object>> bookmarkDepth(
-        PdfReader reader, PdfDictionary outline, NullValueDictionary<int, int> pages)
+        PdfReader reader,
+        PdfDictionary outline,
+        NullValueDictionary<int, int> pages)
     {
         var list = new List<INullValueDictionary<string, object>>();
         while (outline != null)
@@ -1096,7 +1108,8 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         return s.ToString();
     }
 
-    private static void mapGotoBookmark(INullValueDictionary<string, object> map, PdfObject dest,
+    private static void mapGotoBookmark(INullValueDictionary<string, object> map,
+                                        PdfObject dest,
                                         NullValueDictionary<int, int> pages)
     {
         if (dest.IsString())

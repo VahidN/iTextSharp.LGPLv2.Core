@@ -66,7 +66,8 @@ public class XfdfReader : ISimpleXmlDocHandler
     /// <param name="xfdfIn">the byte array with the form</param>
     public XfdfReader(byte[] xfdfIn)
     {
-        SimpleXmlParser.Parse(this, new MemoryStream(xfdfIn));
+        using var memoryStream = new MemoryStream(xfdfIn);
+        SimpleXmlParser.Parse(this, memoryStream);
     }
 
     /// <summary>

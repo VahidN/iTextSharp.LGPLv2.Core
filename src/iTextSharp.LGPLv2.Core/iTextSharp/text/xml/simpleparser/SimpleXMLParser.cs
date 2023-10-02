@@ -278,7 +278,7 @@ public sealed class SimpleXmlParser
         }
         else if (encoding.Equals("CP037", StringComparison.Ordinal))
         {
-            var bi = new MemoryStream();
+            using var bi = new MemoryStream();
             int c;
             while ((c = inp.ReadByte()) != -1)
             {
@@ -302,7 +302,8 @@ public sealed class SimpleXmlParser
             }
         }
 
-        Parse(doc, new StreamReader(inp, IanaEncodings.GetEncodingEncoding(encoding)));
+        using var streamReader = new StreamReader(inp, IanaEncodings.GetEncodingEncoding(encoding));
+        Parse(doc, streamReader);
     }
 
     public static void Parse(ISimpleXmlDocHandler doc, TextReader r)

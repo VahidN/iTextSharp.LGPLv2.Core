@@ -631,7 +631,7 @@ public static class PdfEncodings
 
     internal static void EncodeStream(Stream inp, IList<char[]> planes)
     {
-        var rd = new StreamReader(inp, Encoding.ASCII);
+        using var rd = new StreamReader(inp, Encoding.ASCII);
         string line = null;
         var state = CIDNONE;
         var seqs = new byte[7];
@@ -674,10 +674,12 @@ public static class PdfEncodings
                     var tk = new StringTokenizer(line);
                     var t = tk.NextToken();
                     var size = t.Length / 2 - 1;
-                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var start = long.Parse(t.Substring(1, t.Length - 2),
+                                           NumberStyles.HexNumber,
                                            CultureInfo.InvariantCulture);
                     t = tk.NextToken();
-                    var end = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var end = long.Parse(t.Substring(1, t.Length - 2),
+                                         NumberStyles.HexNumber,
                                          CultureInfo.InvariantCulture);
                     t = tk.NextToken();
                     var cid = int.Parse(t, CultureInfo.InvariantCulture);
@@ -701,7 +703,8 @@ public static class PdfEncodings
                     var tk = new StringTokenizer(line);
                     var t = tk.NextToken();
                     var size = t.Length / 2 - 1;
-                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var start = long.Parse(t.Substring(1, t.Length - 2),
+                                           NumberStyles.HexNumber,
                                            CultureInfo.InvariantCulture);
                     t = tk.NextToken();
                     var cid = int.Parse(t, CultureInfo.InvariantCulture);

@@ -236,7 +236,7 @@ public class PdfEncryption
             throw new ArgumentNullException(nameof(b));
         }
 
-        var ba = new MemoryStream();
+        using var ba = new MemoryStream();
         var dec = GetDecryptor();
         var b2 = dec.Update(b, 0, b.Length);
         if (b2 != null)
@@ -327,7 +327,7 @@ public class PdfEncryption
             }
 
 #if NET40
-                SHA1 sh = new SHA1CryptoServiceProvider();
+                using var sh = new SHA1CryptoServiceProvider();
                 byte[] encodedRecipient = null;
                 byte[] seed = PublicKeyHandler.GetSeed();
                 sh.TransformBlock(seed, 0, seed.Length, seed, 0);
@@ -571,7 +571,10 @@ public class PdfEncryption
 
     /// <summary>
     /// </summary>
-    public void SetupByOwnerPassword(byte[] documentId, byte[] ownerPassword, byte[] userKey, byte[] ownerKey,
+    public void SetupByOwnerPassword(byte[] documentId,
+                                     byte[] ownerPassword,
+                                     byte[] userKey,
+                                     byte[] ownerKey,
                                      int permissions)
     {
         SetupByOwnerPad(documentId, PadPassword(ownerPassword), userKey, ownerKey, permissions);
@@ -758,8 +761,13 @@ public class PdfEncryption
     ///     implements step d of Algorithm 2.A: Retrieving the file encryption key from an encrypted document in order to
     ///     decrypt it (revision 6 and later) - ISO 32000-2 section 7.6.4.3.3
     /// </summary>
-    public void SetupByOwnerPassword(byte[] documentId, byte[] ownerPassword,
-                                     byte[] uValue, byte[] ueValue, byte[] oValue, byte[] oeValue, int permissions)
+    public void SetupByOwnerPassword(byte[] documentId,
+                                     byte[] ownerPassword,
+                                     byte[] uValue,
+                                     byte[] ueValue,
+                                     byte[] oValue,
+                                     byte[] oeValue,
+                                     int permissions)
     {
         if (oeValue == null)
         {
@@ -778,8 +786,13 @@ public class PdfEncryption
     ///     implements step e of Algorithm 2.A: Retrieving the file encryption key from an encrypted document in order to
     ///     decrypt it (revision 6 and later) - ISO 32000-2 section 7.6.4.3.3
     /// </summary>
-    public void SetupByUserPassword(byte[] documentId, byte[] userPassword,
-                                    byte[] uValue, byte[] ueValue, byte[] oValue, byte[] oeValue, int permissions)
+    public void SetupByUserPassword(byte[] documentId,
+                                    byte[] userPassword,
+                                    byte[] uValue,
+                                    byte[] ueValue,
+                                    byte[] oValue,
+                                    byte[] oeValue,
+                                    int permissions)
     {
         if (ueValue == null)
         {
@@ -851,8 +864,12 @@ public class PdfEncryption
                 Array.Copy(k1, 0, k1, singleSequenceSize * i, singleSequenceSize);
             }
 
-            var e = AesCbcNoPadding.ProcessBlock(true, k.CopyOf(16),
-                                                 k1, 0, k1.Length, k.CopyOfRange(16, 32));
+            var e = AesCbcNoPadding.ProcessBlock(true,
+                                                 k.CopyOf(16),
+                                                 k1,
+                                                 0,
+                                                 k1.Length,
+                                                 k.CopyOfRange(16, 32));
 
             lastEByte = e[e.Length - 1] & 0xFF;
 

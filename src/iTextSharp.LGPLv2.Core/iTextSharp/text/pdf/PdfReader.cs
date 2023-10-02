@@ -633,7 +633,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             throw new ArgumentNullException(nameof(inp));
         }
 
-        var outp = new MemoryStream();
+        using var outp = new MemoryStream();
         var state = 0;
         var chn = new int[5];
         for (var k = 0; k < inp.Length; ++k)
@@ -719,7 +719,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             throw new ArgumentNullException(nameof(inp));
         }
 
-        var outp = new MemoryStream();
+        using var outp = new MemoryStream();
         var first = true;
         var n1 = 0;
         for (var k = 0; k < inp.Length; ++k)
@@ -812,8 +812,8 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             bpc = ((PdfNumber)obj).IntValue;
         }
 
-        var dataStream = new MemoryStream(inp);
-        var fout = new MemoryStream(inp.Length);
+        using var dataStream = new MemoryStream(inp);
+        using var fout = new MemoryStream(inp.Length);
         var bytesPerPixel = colors * bpc / 8;
         var bytesPerRow = (colors * width * bpc + 7) / 8;
         var curr = new byte[bytesPerRow];
@@ -956,7 +956,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
     {
         var stream = new MemoryStream(inp);
         var zip = new ZInflaterInputStream(stream);
-        var outp = new MemoryStream();
+        using var outp = new MemoryStream();
         var b = new byte[strict ? 4092 : 1];
         try
         {
@@ -995,8 +995,10 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         var lly = ((PdfNumber)GetPdfObjectRelease(box[1])).FloatValue;
         var urx = ((PdfNumber)GetPdfObjectRelease(box[2])).FloatValue;
         var ury = ((PdfNumber)GetPdfObjectRelease(box[3])).FloatValue;
-        return new Rectangle(Math.Min(llx, urx), Math.Min(lly, ury),
-                             Math.Max(llx, urx), Math.Max(lly, ury));
+        return new Rectangle(Math.Min(llx, urx),
+                             Math.Min(lly, ury),
+                             Math.Max(llx, urx),
+                             Math.Max(lly, ury));
     }
 
     /// <summary>
@@ -2013,7 +2015,6 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             return Array.Empty<byte>();
         }
 
-        MemoryStream bout = null;
         if (contents.IsStream())
         {
             return GetStreamBytes((PrStream)contents, file);
@@ -2022,7 +2023,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         if (contents.IsArray())
         {
             var array = (PdfArray)contents;
-            bout = new MemoryStream();
+            using var bout = new MemoryStream();
             for (var k = 0; k < array.Size; ++k)
             {
                 var item = GetPdfObjectRelease(array[k]);
@@ -2666,7 +2667,8 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         vp.AddToCatalog(catalog);
     }
 
-    protected internal static PdfDictionary DuplicatePdfDictionary(PdfDictionary original, PdfDictionary copy,
+    protected internal static PdfDictionary DuplicatePdfDictionary(PdfDictionary original,
+                                                                   PdfDictionary copy,
                                                                    PdfReader newReader)
     {
         if (original == null)

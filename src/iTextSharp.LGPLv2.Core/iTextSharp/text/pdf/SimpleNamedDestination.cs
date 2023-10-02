@@ -152,10 +152,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="outp">the export destination. The stream is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(INullValueDictionary<string, string> names, Stream outp, string encoding,
+    public static void ExportToXml(INullValueDictionary<string, string> names,
+                                   Stream outp,
+                                   string encoding,
                                    bool onlyAscii)
     {
-        var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
+        using var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
         ExportToXml(names, wrt, encoding, onlyAscii);
     }
 
@@ -168,7 +170,9 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="wrt">the export destination. The writer is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(INullValueDictionary<string, string> names, TextWriter wrt, string encoding,
+    public static void ExportToXml(INullValueDictionary<string, string> names,
+                                   TextWriter wrt,
+                                   string encoding,
                                    bool onlyAscii)
     {
         if (names == null)

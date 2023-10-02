@@ -8,3 +8,5 @@ query-filters:
       id: cs/useless-if-statement
   - exclude:
       id: cs/empty-block
+  - exclude:
+      id: cs/useless-assignment-to-local

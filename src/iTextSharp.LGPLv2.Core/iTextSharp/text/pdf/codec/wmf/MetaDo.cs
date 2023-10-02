@@ -110,7 +110,7 @@ public class MetaDo
         if (image.OriginalData == null)
         {
             imgIn = image.Url.GetResponseStream();
-            var outp = new MemoryStream();
+            using var outp = new MemoryStream();
             var b = 0;
             while ((b = imgIn.ReadByte()) != -1)
             {
@@ -126,7 +126,7 @@ public class MetaDo
         }
 
         var sizeBmpWords = (data.Length - 14 + 1) >> 1;
-        var os = new MemoryStream();
+        using var os = new MemoryStream();
         // write metafile header
         WriteWord(os, 1);
         WriteWord(os, 9);
@@ -496,7 +496,11 @@ public class MetaDo
                     var r = Meta.ReadShort();
                     var t = Meta.ReadShort();
                     var l = Meta.ReadShort();
-                    Cb.Arc(_state.TransformX(l), _state.TransformY(b), _state.TransformX(r), _state.TransformY(t), 0,
+                    Cb.Arc(_state.TransformX(l),
+                           _state.TransformY(b),
+                           _state.TransformX(r),
+                           _state.TransformY(t),
+                           0,
                            360);
                     StrokeAndFill();
                     break;

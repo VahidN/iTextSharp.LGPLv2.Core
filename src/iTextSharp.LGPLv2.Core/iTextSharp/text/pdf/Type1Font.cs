@@ -196,7 +196,7 @@ internal class Type1Font : BaseFont
                     throw new DocumentException(afmFile + " not found as resource.");
                 }
 
-                var ostr = new MemoryStream();
+                using var ostr = new MemoryStream();
                 while (true)
                 {
                     var size = istr.Read(buf, 0, buf.Length);
@@ -1012,7 +1012,9 @@ internal class Type1Font : BaseFont
     /// <param name="shortTag">a 256 bytes long  byte  array where each unused byte is represented by 0</param>
     /// <param name="fontDescriptor">the indirect reference to a PdfDictionary containing the font descriptor or  null </param>
     /// <returns>the PdfDictionary containing the font dictionary</returns>
-    private PdfDictionary getFontBaseType(PdfIndirectReference fontDescriptor, int firstChar, int lastChar,
+    private PdfDictionary getFontBaseType(PdfIndirectReference fontDescriptor,
+                                          int firstChar,
+                                          int lastChar,
                                           byte[] shortTag)
     {
         var dic = new PdfDictionary(PdfName.Font);

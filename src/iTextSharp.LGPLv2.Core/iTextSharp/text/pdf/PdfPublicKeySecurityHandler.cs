@@ -64,17 +64,11 @@ public class PdfPublicKeySecurityHandler
         pkcs7Input[23] = one;
 
         var obj = createDerForRecipient(pkcs7Input, certificate);
-
-        var baos = new MemoryStream();
-
-        var k = Asn1OutputStream.Create(baos, Asn1Encodable.Der);
-
+        using var baos = new MemoryStream();
+        using var k = Asn1OutputStream.Create(baos, Asn1Encodable.Der);
         k.WriteObject(obj);
-
         cms = baos.ToArray();
-
         recipient.Cms = cms;
-
         return cms;
     }
 
@@ -104,8 +98,8 @@ public class PdfPublicKeySecurityHandler
 
     private static KeyTransRecipientInfo computeRecipientInfo(X509Certificate x509Certificate, byte[] abyte0)
     {
-        var asn1Inputstream =
-            new Asn1InputStream(new MemoryStream(x509Certificate.GetTbsCertificate()));
+        using var memoryStream = new MemoryStream(x509Certificate.GetTbsCertificate());
+        using var asn1Inputstream = new Asn1InputStream(memoryStream);
         var tbscertificatestructure =
             TbsCertificateStructure.GetInstance(asn1Inputstream.ReadObject());
         var algorithmidentifier = tbscertificatestructure.SubjectPublicKeyInfo.AlgorithmID;

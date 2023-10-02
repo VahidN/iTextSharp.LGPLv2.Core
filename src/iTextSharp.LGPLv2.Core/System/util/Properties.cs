@@ -55,7 +55,7 @@ public class Properties
 
     public void Load(Stream inStream)
     {
-        var inp = new StreamReader(inStream, EncodingsRegistry.GetEncoding(1252));
+        using var inp = new StreamReader(inStream, EncodingsRegistry.GetEncoding(1252));
         while (true)
         {
             // Get next line

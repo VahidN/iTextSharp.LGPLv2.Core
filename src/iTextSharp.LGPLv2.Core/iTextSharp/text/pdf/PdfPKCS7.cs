@@ -148,7 +148,8 @@ public class PdfPkcs7
         _signCerts = _certs;
         SigningCertificate = _certs[0];
         CrLs = new List<object>();
-        var inp = new Asn1InputStream(new MemoryStream(contentsKey));
+        using var memoryStream = new MemoryStream(contentsKey);
+        using var inp = new Asn1InputStream(memoryStream);
         _digest = ((DerOctetString)inp.ReadObject()).GetOctets();
         _sig = SignerUtilities.GetSigner("SHA1withRSA");
         _sig.Init(false, SigningCertificate.GetPublicKey());
@@ -167,7 +168,8 @@ public class PdfPkcs7
     /// <param name="contentsKey">the /Contents key</param>
     public PdfPkcs7(byte[] contentsKey)
     {
-        var din = new Asn1InputStream(new MemoryStream(contentsKey));
+        using var memoryStream = new MemoryStream(contentsKey);
+        using var din = new Asn1InputStream(memoryStream);
 
         //
         // Basic checks to make sure it's a PKCS#7 SignedData Object
@@ -353,8 +355,11 @@ public class PdfPkcs7
     /// <param name="crlList">the certificate revocation list</param>
     /// <param name="hashAlgorithm">the hash algorithm</param>
     /// <param name="hasRsAdata"> true  if the sub-filter is adbe.pkcs7.sha1</param>
-    public PdfPkcs7(ICipherParameters privKey, X509Certificate[] certChain, object[] crlList,
-                    string hashAlgorithm, bool hasRsAdata)
+    public PdfPkcs7(ICipherParameters privKey,
+                    X509Certificate[] certChain,
+                    object[] crlList,
+                    string hashAlgorithm,
+                    bool hasRsAdata)
     {
         if (certChain == null)
         {
@@ -691,7 +696,9 @@ public class PdfPkcs7
     /// <param name="crls">the certificate revocation list or  null </param>
     /// <param name="calendar">the date or  null  for the current date</param>
     /// <returns> null  if the certificate chain could be validade or a</returns>
-    public static object[] VerifyCertificates(X509Certificate[] certs, IList<X509Certificate> keystore, object[] crls,
+    public static object[] VerifyCertificates(X509Certificate[] certs,
+                                              IList<X509Certificate> keystore,
+                                              object[] crls,
                                               DateTime calendar)
     {
         if (certs == null)
@@ -917,12 +924,10 @@ public class PdfPkcs7
             _digest = _sig.GenerateSignature();
         }
 
-        var bOut = new MemoryStream();
-
-        var dout = Asn1OutputStream.Create(bOut);
+        using var bOut = new MemoryStream();
+        using var dout = Asn1OutputStream.Create(bOut);
         dout.WriteObject(new DerOctetString(_digest));
         dout.Dispose();
-
         return bOut.ToArray();
     }
 
@@ -1006,7 +1011,8 @@ public class PdfPkcs7
         v = new Asn1EncodableVector();
         foreach (var xcert in _certs)
         {
-            var tempstream = new Asn1InputStream(new MemoryStream(xcert.GetEncoded()));
+            using var memoryStream = new MemoryStream(xcert.GetEncoded());
+            using var tempstream = new Asn1InputStream(memoryStream);
             v.Add(tempstream.ReadObject());
         }
 
@@ -1034,7 +1040,8 @@ public class PdfPkcs7
         // add the authenticated attribute if present
         if (secondDigest != null /*&& signingTime != null*/)
         {
-            signerinfo.Add(new DerTaggedObject(false, 0,
+            signerinfo.Add(new DerTaggedObject(false,
+                                               0,
                                                getAuthenticatedAttributeSet(secondDigest, signingTime, ocsp)));
         }
 
@@ -1052,7 +1059,8 @@ public class PdfPkcs7
         // Sam found Adobe expects time-stamped SHA1-1 of the encrypted digest
         if (tsaClient != null)
         {
-            var tsImprint = SHA1.Create().ComputeHash(_digest);
+            using var sha1 = SHA1.Create();
+            var tsImprint = sha1.ComputeHash(_digest);
             var tsToken = tsaClient.GetTimeStampToken(this, tsImprint);
             if (tsToken != null)
             {
@@ -1091,11 +1099,9 @@ public class PdfPkcs7
         whole.Add(new DerObjectIdentifier(IdPkcs7SignedData));
         whole.Add(new DerTaggedObject(0, new DerSequence(body)));
 
-        var bOut = new MemoryStream();
-
-        var dout = Asn1OutputStream.Create(bOut);
+        using var bOut = new MemoryStream();
+        using var dout = Asn1OutputStream.Create(bOut);
         dout.WriteObject(new DerSequence(whole));
-
         return bOut.ToArray();
     }
 
@@ -1258,10 +1264,11 @@ public class PdfPkcs7
             return null;
         }
 
-        var aIn = new Asn1InputStream(new MemoryStream(bytes));
+        using var memoryStream = new MemoryStream(bytes);
+        using var aIn = new Asn1InputStream(memoryStream);
         var octs = (Asn1OctetString)aIn.ReadObject();
-        aIn = new Asn1InputStream(new MemoryStream(octs.GetOctets()));
-        return aIn.ReadObject();
+        using var ain = new Asn1InputStream(new MemoryStream(octs.GetOctets()));
+        return ain.ReadObject();
     }
 
     /// <summary>
@@ -1271,7 +1278,8 @@ public class PdfPkcs7
     /// <returns>a DERObject</returns>
     private static Asn1Object getIssuer(byte[] enc)
     {
-        var inp = new Asn1InputStream(new MemoryStream(enc));
+        using var memoryStream = new MemoryStream(enc);
+        using var inp = new Asn1InputStream(memoryStream);
         var seq = (Asn1Sequence)inp.ReadObject();
         return (Asn1Object)seq[seq[0] is DerTaggedObject ? 3 : 2];
     }
@@ -1290,7 +1298,8 @@ public class PdfPkcs7
     /// <returns>a DERObject</returns>
     private static Asn1Object getSubject(byte[] enc)
     {
-        var inp = new Asn1InputStream(new MemoryStream(enc));
+        using var memoryStream = new MemoryStream(enc);
+        using var inp = new Asn1InputStream(memoryStream);
         var seq = (Asn1Sequence)inp.ReadObject();
         return (Asn1Object)seq[seq[0] is DerTaggedObject ? 5 : 4];
     }
@@ -1314,7 +1323,8 @@ public class PdfPkcs7
         // @todo: move this together with the rest of the defintions
         var idTimeStampToken = "1.2.840.113549.1.9.16.2.14"; // RFC 3161 id-aa-timeStampToken
 
-        var tempstream = new Asn1InputStream(new MemoryStream(timeStampToken));
+        using var memoryStream = new MemoryStream(timeStampToken);
+        using var tempstream = new Asn1InputStream(memoryStream);
         var unauthAttributes = new Asn1EncodableVector();
 
         var v = new Asn1EncodableVector();
@@ -1408,7 +1418,7 @@ public class PdfPkcs7
         }
 
         var os = (DerOctetString)seq[1];
-        var inp = new Asn1InputStream(os.GetOctets());
+        using var inp = new Asn1InputStream(os.GetOctets());
         var resp = BasicOcspResponse.GetInstance(inp.ReadObject());
         Ocsp = new BasicOcspResp(resp);
     }

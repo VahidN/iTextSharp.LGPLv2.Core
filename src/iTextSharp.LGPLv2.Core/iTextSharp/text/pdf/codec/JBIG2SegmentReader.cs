@@ -99,7 +99,7 @@ public class Jbig2SegmentReader
 
     public byte[] GetGlobal(bool forEmbedding)
     {
-        var os = new MemoryStream();
+        using var os = new MemoryStream();
         try
         {
             foreach (Jbig2Segment s in _globals.Keys)
@@ -415,7 +415,7 @@ public class Jbig2SegmentReader
         /// <returns>a byte array</returns>
         public byte[] GetData(bool forEmbedding)
         {
-            var os = new MemoryStream();
+            using var os = new MemoryStream();
             foreach (int sn in _segs.Keys)
             {
                 var s = (Jbig2Segment)_segs[sn];

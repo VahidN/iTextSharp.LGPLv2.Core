@@ -23,7 +23,7 @@ public static class GlyphList
             }
 
             var buf = new byte[1024];
-            var outputStream = new MemoryStream();
+            using var outputStream = new MemoryStream();
             while (true)
             {
                 var size = resourceStream.Read(buf, 0, buf.Length);

@@ -211,7 +211,7 @@ public class RandomAccessFileOrArray
         }
 
         var b = new byte[8192];
-        var outp = new MemoryStream();
+        using var outp = new MemoryStream();
         while (true)
         {
             var read = isp.Read(b, 0, b.Length);

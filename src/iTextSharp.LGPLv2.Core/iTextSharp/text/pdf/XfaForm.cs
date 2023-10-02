@@ -41,7 +41,7 @@ public class XfaForm
         }
 
         XfaPresent = true;
-        var bout = new MemoryStream();
+        using var bout = new MemoryStream();
         if (xfa.IsArray())
         {
             var ar = (PdfArray)xfa;
@@ -62,7 +62,7 @@ public class XfaForm
         }
 
         bout.Seek(0, SeekOrigin.Begin);
-        var xtr = XmlReader.Create(bout);
+        using var xtr = XmlReader.Create(bout);
         _domDocument = new XmlDocument();
         _domDocument.PreserveWhitespace = true;
         _domDocument.Load(xtr);
@@ -171,15 +171,16 @@ public class XfaForm
     public static byte[] SerializeDoc(XmlNode n)
     {
         var fout = new MemoryStream();
-        using (var sw = XmlWriter.Create(fout, new XmlWriterSettings
-                                               {
-                                                   // Specify the encoding manually, so we can ask for the UTF
-                                                   // identifier to not be included in the output
-                                                   Encoding = new UTF8Encoding(false),
-                                                   // We have to omit the XML delcaration, otherwise we'll confuse
-                                                   // the PDF readers when they try to process the XFA data
-                                                   OmitXmlDeclaration = true,
-                                               }))
+        using (var sw = XmlWriter.Create(fout,
+                                         new XmlWriterSettings
+                                         {
+                                             // Specify the encoding manually, so we can ask for the UTF
+                                             // identifier to not be included in the output
+                                             Encoding = new UTF8Encoding(false),
+                                             // We have to omit the XML delcaration, otherwise we'll confuse
+                                             // the PDF readers when they try to process the XFA data
+                                             OmitXmlDeclaration = true,
+                                         }))
         {
             // We use an XmlSerializer here so that we include the node itself
             // in the output text ; if we would've used n.WriteContentTo, as
@@ -718,7 +719,8 @@ public class XfaForm
         /// <param name="stack">the stack with the separeted SOM parts</param>
         /// <param name="unstack">the full name</param>
         public static void InverseSearchAdd(INullValueDictionary<string, InverseStore> inverseSearch,
-                                            Stack2<string> stack, string unstack)
+                                            Stack2<string> stack,
+                                            string unstack)
         {
             if (inverseSearch == null)
             {

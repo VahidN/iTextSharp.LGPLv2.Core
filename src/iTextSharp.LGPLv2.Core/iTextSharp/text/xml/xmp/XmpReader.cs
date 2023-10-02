@@ -25,10 +25,10 @@ public class XmpReader
             throw new ArgumentNullException(nameof(bytes));
         }
 
-        var bout = new MemoryStream();
+        using var bout = new MemoryStream();
         bout.Write(bytes, 0, bytes.Length);
         bout.Seek(0, SeekOrigin.Begin);
-        var xtr = XmlReader.Create(bout);
+        using var xtr = XmlReader.Create(bout);
         _domDocument = new XmlDocument();
         _domDocument.PreserveWhitespace = true;
         _domDocument.Load(xtr);
@@ -117,7 +117,7 @@ public class XmpReader
                                  NewLineChars = "\n",
                                  OmitXmlDeclaration = true,
                              };
-            var xw = XmlWriter.Create(fout, xwSettings);
+            using var xw = XmlWriter.Create(fout, xwSettings);
             var xmlNode = xmpmeta[0];
             xmlNode.WriteTo(xw);
             xw.Flush();
