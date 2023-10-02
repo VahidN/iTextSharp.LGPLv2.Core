@@ -108,6 +108,8 @@ public abstract class Image : Rectangle
     /// </summary>
     private static object _serialId = 0L;
 
+    private static readonly object _mutex = new();
+
     /// <summary>
     ///     Holds value of property initialRotation.
     /// </summary>
@@ -1296,7 +1298,12 @@ public abstract class Image : Rectangle
     /// <param name="data"></param>
     /// <param name="transparency"></param>
     /// <returns></returns>
-    public static Image GetInstance(int width, int height, bool reverseBits, int typeCcitt, int parameters, byte[] data,
+    public static Image GetInstance(int width,
+                                    int height,
+                                    bool reverseBits,
+                                    int typeCcitt,
+                                    int parameters,
+                                    byte[] data,
                                     int[] transparency)
     {
         if (transparency != null && transparency.Length != 2)
@@ -1587,7 +1594,7 @@ public abstract class Image : Rectangle
     /// </summary>
     protected static long GetSerialId()
     {
-        lock (_serialId)
+        lock (_mutex)
         {
             _serialId = (long)_serialId + 1L;
             return (long)_serialId;
