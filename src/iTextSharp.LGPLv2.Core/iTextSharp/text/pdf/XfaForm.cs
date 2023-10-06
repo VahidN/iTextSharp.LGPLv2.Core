@@ -1064,13 +1064,13 @@ public class XfaForm
                 {
                     var s = EscapeSom(n2.LocalName);
                     int i;
-                    if (!ss.ContainsKey(s))
+                    if (!ss.TryGetValue(s, out var ssValue))
                     {
                         i = 0;
                     }
                     else
                     {
-                        i = ss[s] + 1;
+                        i = ssValue + 1;
                     }
 
                     ss[s] = i;
@@ -1214,13 +1214,13 @@ public class XfaForm
                         }
                         else
                         {
-                            if (!ss.ContainsKey(nn))
+                            if (!ss.TryGetValue(nn, out var ssValue))
                             {
                                 i = 0;
                             }
                             else
                             {
-                                i = ss[nn] + 1;
+                                i = ssValue + 1;
                             }
 
                             ss[nn] = i;
@@ -1248,13 +1248,13 @@ public class XfaForm
                         {
                             var nn = EscapeSom(name.Value);
                             int i;
-                            if (!ff.ContainsKey(nn))
+                            if (!ff.TryGetValue(nn, out var ffValue))
                             {
                                 i = 0;
                             }
                             else
                             {
-                                i = ff[nn] + 1;
+                                i = ffValue + 1;
                             }
 
                             ff[nn] = i;

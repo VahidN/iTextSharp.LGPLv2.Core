@@ -78,14 +78,15 @@ public sealed class Encoder
         Encode(content, ecLevel, null, qrCode);
     }
 
-    public static void Encode(string content, ErrorCorrectionLevel ecLevel,
+    public static void Encode(string content,
+                              ErrorCorrectionLevel ecLevel,
                               INullValueDictionary<EncodeHintType, object> hints,
                               QRCode qrCode)
     {
         string encoding = null;
-        if (hints != null && hints.ContainsKey(EncodeHintType.CHARACTER_SET))
+        if (hints != null && hints.TryGetValue(EncodeHintType.CHARACTER_SET, out var hint))
         {
-            encoding = (string)hints[EncodeHintType.CHARACTER_SET];
+            encoding = (string)hint;
         }
 
         if (encoding == null)
@@ -127,17 +128,25 @@ public sealed class Encoder
 
         // Step 6: Interleave data bits with error correction code.
         var finalBits = new BitVector();
-        InterleaveWithECBytes(headerAndDataBits, qrCode.GetNumTotalBytes(), qrCode.GetNumDataBytes(),
-                              qrCode.GetNumRSBlocks(), finalBits);
+        InterleaveWithECBytes(headerAndDataBits,
+                              qrCode.GetNumTotalBytes(),
+                              qrCode.GetNumDataBytes(),
+                              qrCode.GetNumRSBlocks(),
+                              finalBits);
 
         // Step 7: Choose the mask pattern and set to "qrCode".
         var matrix = new ByteMatrix(qrCode.GetMatrixWidth(), qrCode.GetMatrixWidth());
-        qrCode.SetMaskPattern(ChooseMaskPattern(finalBits, qrCode.GetECLevel(), qrCode.GetVersion(),
+        qrCode.SetMaskPattern(ChooseMaskPattern(finalBits,
+                                                qrCode.GetECLevel(),
+                                                qrCode.GetVersion(),
                                                 matrix));
 
         // Step 8.  Build the matrix and set it to "qrCode".
-        MatrixUtil.BuildMatrix(finalBits, qrCode.GetECLevel(), qrCode.GetVersion(),
-                               qrCode.GetMaskPattern(), matrix);
+        MatrixUtil.BuildMatrix(finalBits,
+                               qrCode.GetECLevel(),
+                               qrCode.GetVersion(),
+                               qrCode.GetMaskPattern(),
+                               matrix);
         qrCode.SetMatrix(matrix);
         // Step 9.  Make sure we have a valid QR Code.
         if (!qrCode.IsValid())
@@ -236,7 +245,9 @@ public sealed class Encoder
         return true;
     }
 
-    private static int ChooseMaskPattern(BitVector bits, ErrorCorrectionLevel ecLevel, int version,
+    private static int ChooseMaskPattern(BitVector bits,
+                                         ErrorCorrectionLevel ecLevel,
+                                         int version,
                                          ByteMatrix matrix)
     {
         var minPenalty = int.MaxValue; // Lower penalty is better.
@@ -260,7 +271,9 @@ public sealed class Encoder
      * Initialize "qrCode" according to "numInputBytes", "ecLevel", and "mode". On success,
      * modify "qrCode".
      */
-    private static void InitQRCode(int numInputBytes, ErrorCorrectionLevel ecLevel, Mode mode,
+    private static void InitQRCode(int numInputBytes,
+                                   ErrorCorrectionLevel ecLevel,
+                                   Mode mode,
                                    QRCode qrCode)
     {
         qrCode.SetECLevel(ecLevel);
@@ -363,8 +376,11 @@ public sealed class Encoder
      * the result in "numDataBytesInBlock", and "numECBytesInBlock". See table 12 in 8.5.1 of
      * JISX0510:2004 (p.30)
      */
-    private static void GetNumDataBytesAndNumECBytesForBlockID(int numTotalBytes, int numDataBytes,
-                                                               int numRSBlocks, int blockID, int[] numDataBytesInBlock,
+    private static void GetNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
+                                                               int numDataBytes,
+                                                               int numRSBlocks,
+                                                               int blockID,
+                                                               int[] numDataBytesInBlock,
                                                                int[] numECBytesInBlock)
     {
         if (blockID >= numRSBlocks)
@@ -427,8 +443,11 @@ public sealed class Encoder
      * Interleave "bits" with corresponding error correction bytes. On success, store the result in
      * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
      */
-    private static void InterleaveWithECBytes(BitVector bits, int numTotalBytes,
-                                              int numDataBytes, int numRSBlocks, BitVector result)
+    private static void InterleaveWithECBytes(BitVector bits,
+                                              int numTotalBytes,
+                                              int numDataBytes,
+                                              int numRSBlocks,
+                                              BitVector result)
     {
         // "bits" must have "getNumDataBytes" bytes of data.
         if (bits.SizeInBytes() != numDataBytes)
@@ -450,8 +469,12 @@ public sealed class Encoder
             var numDataBytesInBlock = new int[1];
             var numEcBytesInBlock = new int[1];
             GetNumDataBytesAndNumECBytesForBlockID(
-                                                   numTotalBytes, numDataBytes, numRSBlocks, i,
-                                                   numDataBytesInBlock, numEcBytesInBlock);
+                                                   numTotalBytes,
+                                                   numDataBytes,
+                                                   numRSBlocks,
+                                                   i,
+                                                   numDataBytesInBlock,
+                                                   numEcBytesInBlock);
 
             var dataBytes = new ByteArray();
             dataBytes.Set(bits.GetArray(), dataBytesOffset, numDataBytesInBlock[0]);

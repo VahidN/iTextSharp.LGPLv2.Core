@@ -354,8 +354,12 @@ public class AcroFields
                                         {
                                             try
                                             {
-                                                porf = BaseFont.CreateFont("font.ttf", BaseFont.IDENTITY_H, true, false,
-                                                                           PdfReader.GetStreamBytes(prs), null);
+                                                porf = BaseFont.CreateFont("font.ttf",
+                                                                           BaseFont.IDENTITY_H,
+                                                                           true,
+                                                                           false,
+                                                                           PdfReader.GetStreamBytes(prs),
+                                                                           null);
                                             }
                                             catch
                                             {
@@ -574,12 +578,12 @@ public class AcroFields
     {
         findSignatureNames();
         field = GetTranslatedFieldName(field);
-        if (!_sigNames.ContainsKey(field))
+        if (!_sigNames.TryGetValue(field, out var value))
         {
             return null;
         }
 
-        var length = _sigNames[field][0];
+        var length = value[0];
         var raf = Reader.SafeFile;
         raf.ReOpen();
         raf.Seek(0);
@@ -1128,12 +1132,12 @@ public class AcroFields
     {
         findSignatureNames();
         field = GetTranslatedFieldName(field);
-        if (!_sigNames.ContainsKey(field))
+        if (!_sigNames.TryGetValue(field, out var value))
         {
             return 0;
         }
 
-        return _sigNames[field][1];
+        return value[1];
     }
 
     /// <summary>
@@ -2529,7 +2533,7 @@ public class AcroFields
 
         _topFirst = 0;
         TextField tx = null;
-        if (_fieldCache == null || !_fieldCache.ContainsKey(fieldName))
+        if (_fieldCache == null || !_fieldCache.TryGetValue(fieldName, out var fcValue))
         {
             tx = new TextField(Writer, null, null);
             tx.SetExtraMargin(_extraMarginLeft, _extraMarginTop);
@@ -2552,7 +2556,7 @@ public class AcroFields
         }
         else
         {
-            tx = _fieldCache[fieldName];
+            tx = fcValue;
             tx.Writer = Writer;
         }
 
@@ -2652,8 +2656,10 @@ public class AcroFields
                                      ExtendedColor.Normalize(ar.GetAsNumber(1).FloatValue),
                                      ExtendedColor.Normalize(ar.GetAsNumber(2).FloatValue));
             case 4:
-                return new CmykColor(ar.GetAsNumber(0).FloatValue, ar.GetAsNumber(1).FloatValue,
-                                     ar.GetAsNumber(2).FloatValue, ar.GetAsNumber(3).FloatValue);
+                return new CmykColor(ar.GetAsNumber(0).FloatValue,
+                                     ar.GetAsNumber(1).FloatValue,
+                                     ar.GetAsNumber(2).FloatValue,
+                                     ar.GetAsNumber(3).FloatValue);
             default:
                 return null;
         }

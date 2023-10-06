@@ -660,9 +660,9 @@ public class DocumentFont : BaseFont
                             int cidc = cid[0];
                             int unic = uni[uni.Length - 1];
                             var w = dw;
-                            if (widths.ContainsKey(cidc))
+                            if (widths.TryGetValue(cidc, out var width))
                             {
-                                w = widths[cidc];
+                                w = width;
                             }
 
                             _metrics[unic] = new[] { cidc, w };
@@ -688,9 +688,9 @@ public class DocumentFont : BaseFont
                                 for (; cid1C <= cid2C; cid1C++, unic++)
                                 {
                                     var w = dw;
-                                    if (widths.ContainsKey(cid1C))
+                                    if (widths.TryGetValue(cid1C, out var width))
                                     {
-                                        w = widths[cid1C];
+                                        w = width;
                                     }
 
                                     _metrics[unic] = new[] { cid1C, w };
@@ -707,9 +707,9 @@ public class DocumentFont : BaseFont
                                 {
                                     int unic = uni[uni.Length - 1];
                                     var w = dw;
-                                    if (widths.ContainsKey(cid1C))
+                                    if (widths.TryGetValue(cid1C, out var width))
                                     {
-                                        w = widths[cid1C];
+                                        w = width;
                                     }
 
                                     _metrics[unic] = new[] { cid1C, w };

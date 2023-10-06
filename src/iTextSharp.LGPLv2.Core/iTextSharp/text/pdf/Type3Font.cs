@@ -152,12 +152,12 @@ public class Type3Font : BaseFont
 
     public override int GetWidth(int char1)
     {
-        if (!_widths3.ContainsKey(char1))
+        if (!_widths3.TryGetValue(char1, out var value))
         {
             throw new ArgumentException("The char " + char1 + " is not defined in a Type3 font");
         }
 
-        return _widths3[char1];
+        return value;
     }
 
     public override int GetWidth(string text)

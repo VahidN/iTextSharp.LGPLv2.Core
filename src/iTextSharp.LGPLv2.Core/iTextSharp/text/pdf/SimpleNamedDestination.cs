@@ -47,12 +47,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentException("Name end tag out of place.");
         }
 
-        if (!_xmlLast.ContainsKey("Page"))
+        if (!_xmlLast.TryGetValue("Page", out var pageValue))
         {
             throw new ArgumentException("Page attribute missing.");
         }
 
-        _xmlNames[UnEscapeBinaryString(_xmlLast["Name"])] = _xmlLast["Page"];
+        _xmlNames[UnEscapeBinaryString(_xmlLast["Name"])] = pageValue;
         _xmlLast = null;
     }
 

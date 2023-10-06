@@ -30,7 +30,9 @@ public sealed class QRCodeWriter
 
     public ByteMatrix Encode(string contents, int width, int height) => Encode(contents, width, height, null);
 
-    public ByteMatrix Encode(string contents, int width, int height,
+    public ByteMatrix Encode(string contents,
+                             int width,
+                             int height,
                              INullValueDictionary<EncodeHintType, object> hints)
     {
         if (string.IsNullOrEmpty(contents))
@@ -45,9 +47,9 @@ public sealed class QRCodeWriter
         }
 
         var errorCorrectionLevel = ErrorCorrectionLevel.L;
-        if (hints != null && hints.ContainsKey(EncodeHintType.ERROR_CORRECTION))
+        if (hints != null && hints.TryGetValue(EncodeHintType.ERROR_CORRECTION, out var hint))
         {
-            errorCorrectionLevel = (ErrorCorrectionLevel)hints[EncodeHintType.ERROR_CORRECTION];
+            errorCorrectionLevel = (ErrorCorrectionLevel)hint;
         }
 
         var code = new QRCode();

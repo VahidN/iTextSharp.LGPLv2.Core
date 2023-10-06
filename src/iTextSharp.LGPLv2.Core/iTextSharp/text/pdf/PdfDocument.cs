@@ -684,7 +684,9 @@ public class PdfDocument : Document
                         CurrentOutline = CurrentOutline.Parent;
                     }
 
-                    var outline = new PdfOutline(CurrentOutline, destination, section.GetBookmarkTitle(),
+                    var outline = new PdfOutline(CurrentOutline,
+                                                 destination,
+                                                 section.GetBookmarkTitle(),
                                                  section.BookmarkOpen);
                     CurrentOutline = outline;
                 }
@@ -893,7 +895,11 @@ public class PdfDocument : Document
             case Element.YMARK:
             {
                 var zh = (IDrawInterface)element;
-                zh.Draw(Graphics, IndentLeft, IndentBottom, IndentRight, IndentTop,
+                zh.Draw(Graphics,
+                        IndentLeft,
+                        IndentBottom,
+                        IndentRight,
+                        IndentTop,
                         IndentTop - CurrentHeight - (LeadingCount > 0 ? leading : 0));
                 pageEmpty = false;
                 break;
@@ -1045,16 +1051,18 @@ public class PdfDocument : Document
         // [C10]
         if (Writer.IsPdfX())
         {
-            if (ThisBoxSize.ContainsKey("art") && ThisBoxSize.ContainsKey("trim"))
+            var containsArtKey = ThisBoxSize.ContainsKey("art");
+            var containsTrimKey = ThisBoxSize.ContainsKey("trim");
+            if (containsArtKey && containsTrimKey)
             {
                 throw new PdfXConformanceException("Only one of ArtBox or TrimBox can exist in the page.");
             }
 
-            if (!ThisBoxSize.ContainsKey("art") && !ThisBoxSize.ContainsKey("trim"))
+            if (!containsArtKey && !containsTrimKey)
             {
-                if (ThisBoxSize.ContainsKey("crop"))
+                if (ThisBoxSize.TryGetValue("crop", out var crop))
                 {
-                    ThisBoxSize["trim"] = ThisBoxSize["crop"];
+                    ThisBoxSize["trim"] = crop;
                 }
                 else
                 {
@@ -1845,7 +1853,10 @@ public class PdfDocument : Document
     /// <param name="graphics">the  PdfContentByte  where the graphics will be written to</param>
     /// <param name="currentValues">the current font and extra spacing values</param>
     /// <param name="ratio"></param>
-    internal void WriteLineToContent(PdfLine line, PdfContentByte text, PdfContentByte graphics, object[] currentValues,
+    internal void WriteLineToContent(PdfLine line,
+                                     PdfContentByte text,
+                                     PdfContentByte graphics,
+                                     object[] currentValues,
                                      float ratio)
     {
         var currentFont = (PdfFont)currentValues[0];
@@ -1946,12 +1957,20 @@ public class PdfDocument : Document
                         var descender = chunk.Font.Font.GetFontDescriptor(BaseFont.DESCENT, fontSize);
                         if (vertical)
                         {
-                            di.Draw(graphics, baseXMarker, yMarker + descender, baseXMarker + line.OriginalWidth,
-                                    ascender - descender, yMarker);
+                            di.Draw(graphics,
+                                    baseXMarker,
+                                    yMarker + descender,
+                                    baseXMarker + line.OriginalWidth,
+                                    ascender - descender,
+                                    yMarker);
                         }
                         else
                         {
-                            di.Draw(graphics, xMarker, yMarker + descender, xMarker + width, ascender - descender,
+                            di.Draw(graphics,
+                                    xMarker,
+                                    yMarker + descender,
+                                    xMarker + width,
+                                    ascender - descender,
                                     yMarker);
                         }
                     }
@@ -2070,7 +2089,10 @@ public class PdfDocument : Document
                             subtract += hangingCorrection;
                         }
 
-                        text.AddAnnotation(new PdfAnnotation(Writer, xMarker, yMarker, xMarker + width - subtract,
+                        text.AddAnnotation(new PdfAnnotation(Writer,
+                                                             xMarker,
+                                                             yMarker,
+                                                             xMarker + width - subtract,
                                                              yMarker + chunk.Font.Size,
                                                              (PdfAction)chunk.GetAttribute(Chunk.ACTION)));
                     }
@@ -2092,12 +2114,20 @@ public class PdfDocument : Document
                         var filename = (string)obj[0];
                         if (obj[1] is string)
                         {
-                            RemoteGoto(filename, (string)obj[1], xMarker, yMarker, xMarker + width - subtract,
+                            RemoteGoto(filename,
+                                       (string)obj[1],
+                                       xMarker,
+                                       yMarker,
+                                       xMarker + width - subtract,
                                        yMarker + chunk.Font.Size);
                         }
                         else
                         {
-                            RemoteGoto(filename, (int)obj[1], xMarker, yMarker, xMarker + width - subtract,
+                            RemoteGoto(filename,
+                                       (int)obj[1],
+                                       xMarker,
+                                       yMarker,
+                                       xMarker + width - subtract,
                                        yMarker + chunk.Font.Size);
                         }
                     }
@@ -2115,8 +2145,11 @@ public class PdfDocument : Document
                             subtract += hangingCorrection;
                         }
 
-                        LocalGoto((string)chunk.GetAttribute(Chunk.LOCALGOTO), xMarker, yMarker,
-                                  xMarker + width - subtract, yMarker + chunk.Font.Size);
+                        LocalGoto((string)chunk.GetAttribute(Chunk.LOCALGOTO),
+                                  xMarker,
+                                  yMarker,
+                                  xMarker + width - subtract,
+                                  yMarker + chunk.Font.Size);
                     }
 
                     if (chunk.IsAttribute(Chunk.LOCALDESTINATION))
@@ -2149,7 +2182,9 @@ public class PdfDocument : Document
                             subtract += hangingCorrection;
                         }
 
-                        var rect = new Rectangle(xMarker, yMarker, xMarker + width - subtract,
+                        var rect = new Rectangle(xMarker,
+                                                 yMarker,
+                                                 xMarker + width - subtract,
                                                  yMarker + chunk.Font.Size);
                         var pev = Writer.PageEvent;
                         if (pev != null)
@@ -2177,7 +2212,9 @@ public class PdfDocument : Document
                         var annot =
                             PdfAnnotation.ShallowDuplicate((PdfAnnotation)chunk.GetAttribute(Chunk.PDFANNOTATION));
                         annot.Put(PdfName.Rect,
-                                  new PdfRectangle(xMarker, yMarker + descender, xMarker + width - subtract,
+                                  new PdfRectangle(xMarker,
+                                                   yMarker + descender,
+                                                   xMarker + width - subtract,
                                                    yMarker + ascender));
                         text.AddAnnotation(annot);
                     }
@@ -2930,8 +2967,12 @@ public class PdfDocument : Document
             // is the line preceeded by a symbol?
             if (l.ListSymbol != null)
             {
-                ColumnText.ShowTextAligned(Graphics, Element.ALIGN_LEFT, new Phrase(l.ListSymbol),
-                                           Text.Xtlm - l.ListIndent, Text.Ytlm, 0);
+                ColumnText.ShowTextAligned(Graphics,
+                                           Element.ALIGN_LEFT,
+                                           new Phrase(l.ListSymbol),
+                                           Text.Xtlm - l.ListIndent,
+                                           Text.Ytlm,
+                                           0);
             }
 
             currentValues[0] = currentFont;
@@ -3584,8 +3625,10 @@ public class PdfDocument : Document
         /// <summary>
         ///     Adds the names of the named destinations to the catalog.
         /// </summary>
-        internal void AddNames(OrderedTree localDestinations, INullValueDictionary<string, PdfObject> documentLevelJs,
-                               INullValueDictionary<string, PdfObject> documentFileAttachment, PdfWriter writer)
+        internal void AddNames(OrderedTree localDestinations,
+                               INullValueDictionary<string, PdfObject> documentLevelJs,
+                               INullValueDictionary<string, PdfObject> documentFileAttachment,
+                               PdfWriter writer)
         {
             if (localDestinations.Count == 0 && documentLevelJs.Count == 0 && documentFileAttachment.Count == 0)
             {
