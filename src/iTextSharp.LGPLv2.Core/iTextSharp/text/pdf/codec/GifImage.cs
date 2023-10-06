@@ -81,19 +81,8 @@ public class GifImage
     public GifImage(Uri url)
     {
         FromUrl = url;
-        Stream isp = null;
-        try
-        {
-            isp = url.GetResponseStream();
-            Process(isp);
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = url.GetResponseStream();
+        Process(isp);
     }
 
     /// <summary>
@@ -113,16 +102,8 @@ public class GifImage
     public GifImage(byte[] data)
     {
         FromData = data;
-        Stream isp = null;
-        try
-        {
-            isp = new MemoryStream(data);
-            Process(isp);
-        }
-        finally
-        {
-            isp.Dispose();
-        }
+        using var isp = new MemoryStream(data);
+        Process(isp);
     }
 
     /// <summary>

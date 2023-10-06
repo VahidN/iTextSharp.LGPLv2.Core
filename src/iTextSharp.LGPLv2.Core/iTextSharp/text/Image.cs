@@ -730,131 +730,117 @@ public abstract class Image : Rectangle
             }
         }
 
-        Stream istr = null;
-        try
+        using var istr = url.GetResponseStream();
+        var c1 = istr.ReadByte();
+        var c2 = istr.ReadByte();
+        var c3 = istr.ReadByte();
+        var c4 = istr.ReadByte();
+        // jbig2
+        var c5 = istr.ReadByte();
+        var c6 = istr.ReadByte();
+        var c7 = istr.ReadByte();
+        var c8 = istr.ReadByte();
+
+        if (c1 == 'G' && c2 == 'I' && c3 == 'F')
         {
-            istr = url.GetResponseStream();
-            var c1 = istr.ReadByte();
-            var c2 = istr.ReadByte();
-            var c3 = istr.ReadByte();
-            var c4 = istr.ReadByte();
-            // jbig2
-            var c5 = istr.ReadByte();
-            var c6 = istr.ReadByte();
-            var c7 = istr.ReadByte();
-            var c8 = istr.ReadByte();
-            istr.Dispose();
-
-            istr = null;
-            if (c1 == 'G' && c2 == 'I' && c3 == 'F')
-            {
-                var gif = new GifImage(url);
-                var img = gif.GetImage(1);
-                return img;
-            }
-
-            if (c1 == 0xFF && c2 == 0xD8)
-            {
-                return new Jpeg(url);
-            }
-
-            if (c1 == 0x00 && c2 == 0x00 && c3 == 0x00 && c4 == 0x0c)
-            {
-                return new Jpeg2000(url);
-            }
-
-            if (c1 == 0xff && c2 == 0x4f && c3 == 0xff && c4 == 0x51)
-            {
-                return new Jpeg2000(url);
-            }
-
-            if (c1 == PngImage.Pngid[0] && c2 == PngImage.Pngid[1]
-                                        && c3 == PngImage.Pngid[2] && c4 == PngImage.Pngid[3])
-            {
-                var img = PngImage.GetImage(url);
-                return img;
-            }
-
-            if (c1 == 0xD7 && c2 == 0xCD)
-            {
-                Image img = new ImgWmf(url);
-                return img;
-            }
-
-            if (c1 == 'B' && c2 == 'M')
-            {
-                var img = BmpImage.GetImage(url);
-                return img;
-            }
-
-            if ((c1 == 'M' && c2 == 'M' && c3 == 0 && c4 == 42)
-                || (c1 == 'I' && c2 == 'I' && c3 == 42 && c4 == 0))
-            {
-                RandomAccessFileOrArray ra = null;
-                try
-                {
-                    if (url.IsFile)
-                    {
-                        var file = url.LocalPath;
-                        ra = new RandomAccessFileOrArray(file);
-                    }
-                    else
-                    {
-                        ra = new RandomAccessFileOrArray(url);
-                    }
-
-                    var img = TiffImage.GetTiffImage(ra, 1);
-                    img.url = url;
-                    return img;
-                }
-                finally
-                {
-                    if (ra != null)
-                    {
-                        ra.Close();
-                    }
-                }
-            }
-
-            if (c1 == 0x97 && c2 == 'J' && c3 == 'B' && c4 == '2' &&
-                c5 == '\r' && c6 == '\n' && c7 == 0x1a && c8 == '\n')
-            {
-                RandomAccessFileOrArray ra = null;
-                try
-                {
-                    if (url.IsFile)
-                    {
-                        var file = url.LocalPath;
-                        ra = new RandomAccessFileOrArray(file);
-                    }
-                    else
-                    {
-                        ra = new RandomAccessFileOrArray(url);
-                    }
-
-                    var img = Jbig2Image.GetJbig2Image(ra, 1);
-                    img.url = url;
-                    return img;
-                }
-                finally
-                {
-                    if (ra != null)
-                    {
-                        ra.Close();
-                    }
-                }
-            }
-
-            throw new IOException(url
-                                  + " is not a recognized imageformat.");
+            var gif = new GifImage(url);
+            var img = gif.GetImage(1);
+            return img;
         }
-        finally
+
+        if (c1 == 0xFF && c2 == 0xD8)
         {
-            if (istr != null)
+            return new Jpeg(url);
+        }
+
+        if (c1 == 0x00 && c2 == 0x00 && c3 == 0x00 && c4 == 0x0c)
+        {
+            return new Jpeg2000(url);
+        }
+
+        if (c1 == 0xff && c2 == 0x4f && c3 == 0xff && c4 == 0x51)
+        {
+            return new Jpeg2000(url);
+        }
+
+        if (c1 == PngImage.Pngid[0] && c2 == PngImage.Pngid[1]
+                                    && c3 == PngImage.Pngid[2] && c4 == PngImage.Pngid[3])
+        {
+            var img = PngImage.GetImage(url);
+            return img;
+        }
+
+        if (c1 == 0xD7 && c2 == 0xCD)
+        {
+            Image img = new ImgWmf(url);
+            return img;
+        }
+
+        if (c1 == 'B' && c2 == 'M')
+        {
+            var img = BmpImage.GetImage(url);
+            return img;
+        }
+
+        if ((c1 == 'M' && c2 == 'M' && c3 == 0 && c4 == 42)
+            || (c1 == 'I' && c2 == 'I' && c3 == 42 && c4 == 0))
+        {
+            RandomAccessFileOrArray ra = null;
+            try
             {
-                istr.Dispose();
+                if (url.IsFile)
+                {
+                    var file = url.LocalPath;
+                    ra = new RandomAccessFileOrArray(file);
+                }
+                else
+                {
+                    ra = new RandomAccessFileOrArray(url);
+                }
+
+                var img = TiffImage.GetTiffImage(ra, 1);
+                img.url = url;
+                return img;
+            }
+            finally
+            {
+                if (ra != null)
+                {
+                    ra.Close();
+                }
             }
         }
+
+        if (c1 == 0x97 && c2 == 'J' && c3 == 'B' && c4 == '2' &&
+            c5 == '\r' && c6 == '\n' && c7 == 0x1a && c8 == '\n')
+        {
+            RandomAccessFileOrArray ra = null;
+            try
+            {
+                if (url.IsFile)
+                {
+                    var file = url.LocalPath;
+                    ra = new RandomAccessFileOrArray(file);
+                }
+                else
+                {
+                    ra = new RandomAccessFileOrArray(url);
+                }
+
+                var img = Jbig2Image.GetJbig2Image(ra, 1);
+                img.url = url;
+                return img;
+            }
+            finally
+            {
+                if (ra != null)
+                {
+                    ra.Close();
+                }
+            }
+        }
+
+        throw new IOException(url + " is not a recognized image format.");
     }
 
     public static Image GetInstance(Stream s)

@@ -120,9 +120,8 @@ public class IccProfile
 
     public static IccProfile GetInstance(string fname)
     {
-        var fs = new FileStream(fname, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var fs = new FileStream(fname, FileMode.Open, FileAccess.Read, FileShare.Read);
         var icc = GetInstance(fs);
-        fs.Dispose();
         return icc;
     }
 }

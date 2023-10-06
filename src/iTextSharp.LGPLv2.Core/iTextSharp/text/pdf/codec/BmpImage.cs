@@ -109,21 +109,10 @@ public class BmpImage
     /// <returns>the image</returns>
     public static Image GetImage(Uri url)
     {
-        Stream isp = null;
-        try
-        {
-            isp = url.GetResponseStream();
-            var img = GetImage(isp);
-            img.Url = url;
-            return img;
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = url.GetResponseStream();
+        var img = GetImage(isp);
+        img.Url = url;
+        return img;
     }
 
     /// <summary>
@@ -1050,7 +1039,8 @@ public class BmpImage
         var bytesRead = 0;
         while (bytesRead < imSize)
         {
-            bytesRead += _inputStream.Read(values, bytesRead,
+            bytesRead += _inputStream.Read(values,
+                                           bytesRead,
                                            imSize - bytesRead);
         }
 
@@ -1064,7 +1054,8 @@ public class BmpImage
                 Array.Copy(values,
                            imSize - (i + 1) * (bytesPerScanline + padding),
                            bdata,
-                           i * bytesPerScanline, bytesPerScanline);
+                           i * bytesPerScanline,
+                           bytesPerScanline);
             }
         }
         else
@@ -1105,7 +1096,8 @@ public class BmpImage
         var bytesRead = 0;
         while (bytesRead < imSize)
         {
-            var r = _inputStream.Read(values, bytesRead,
+            var r = _inputStream.Read(values,
+                                      bytesRead,
                                       imSize - bytesRead);
             if (r < 0)
             {
@@ -1176,7 +1168,8 @@ public class BmpImage
         var bytesRead = 0;
         while (bytesRead < imSize)
         {
-            bytesRead += _inputStream.Read(values, bytesRead,
+            bytesRead += _inputStream.Read(values,
+                                           bytesRead,
                                            imSize - bytesRead);
         }
 
@@ -1322,7 +1315,8 @@ public class BmpImage
         var bytesRead = 0;
         while (bytesRead < imSize)
         {
-            bytesRead += _inputStream.Read(values, bytesRead,
+            bytesRead += _inputStream.Read(values,
+                                           bytesRead,
                                            imSize - bytesRead);
         }
 
@@ -1385,7 +1379,8 @@ public class BmpImage
         var bytesRead = 0;
         while (bytesRead < imSize)
         {
-            bytesRead += _inputStream.Read(values, bytesRead,
+            bytesRead += _inputStream.Read(values,
+                                           bytesRead,
                                            imSize - bytesRead);
         }
 
@@ -1407,7 +1402,8 @@ public class BmpImage
                 Array.Copy(val,
                            imSize - (i + 1) * bytesPerScanline,
                            temp,
-                           i * bytesPerScanline, bytesPerScanline);
+                           i * bytesPerScanline,
+                           bytesPerScanline);
             }
 
             val = temp;

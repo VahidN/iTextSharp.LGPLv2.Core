@@ -737,14 +737,13 @@ public static class PdfEncodings
     internal static void ReadCmap(string name, IList<char[]> planes)
     {
         var fullName = BaseFont.RESOURCE_PATH + "cmaps." + name;
-        var inp = BaseFont.GetResourceStream(fullName);
+        using var inp = BaseFont.GetResourceStream(fullName);
         if (inp == null)
         {
             throw new IOException("The Cmap " + name + " was not found.");
         }
 
         EncodeStream(inp, planes);
-        inp.Dispose();
     }
 
     private class Cp437Conversion : IExtraEncoding

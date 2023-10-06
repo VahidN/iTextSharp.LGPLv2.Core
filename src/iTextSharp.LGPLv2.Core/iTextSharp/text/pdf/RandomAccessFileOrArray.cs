@@ -41,22 +41,9 @@ public class RandomAccessFileOrArray
                 filename.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                 filename.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                var isp = filename.GetResponseStream();
-                try
-                {
-                    ArrayIn = InputStreamToArray(isp);
-                    return;
-                }
-                finally
-                {
-                    try
-                    {
-                        isp.Dispose();
-                    }
-                    catch
-                    {
-                    }
-                }
+                using var isp = filename.GetResponseStream();
+                ArrayIn = InputStreamToArray(isp);
+                return;
             }
             else
             {
@@ -96,26 +83,8 @@ public class RandomAccessFileOrArray
 
         if (forceRead)
         {
-            Stream s = null;
-            try
-            {
-                s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-                ArrayIn = InputStreamToArray(s);
-            }
-            finally
-            {
-                try
-                {
-                    if (s != null)
-                    {
-                        s.Dispose();
-                    }
-                }
-                catch
-                {
-                }
-            }
-
+            using var s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            ArrayIn = InputStreamToArray(s);
             return;
         }
 
@@ -125,21 +94,8 @@ public class RandomAccessFileOrArray
 
     public RandomAccessFileOrArray(Uri url)
     {
-        var isp = url.GetResponseStream();
-        try
-        {
-            ArrayIn = InputStreamToArray(isp);
-        }
-        finally
-        {
-            try
-            {
-                isp.Dispose();
-            }
-            catch
-            {
-            }
-        }
+        using var isp = url.GetResponseStream();
+        ArrayIn = InputStreamToArray(isp);
     }
 
     public RandomAccessFileOrArray(Stream isp, bool forceRead = true)

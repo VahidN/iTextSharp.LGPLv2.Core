@@ -129,21 +129,10 @@ public class PngImage
     /// <returns>the image</returns>
     public static Image GetImage(Uri url)
     {
-        Stream isp = null;
-        try
-        {
-            isp = url.GetResponseStream();
-            var img = GetImage(isp);
-            img.Url = url;
-            return img;
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = url.GetResponseStream();
+        var img = GetImage(isp);
+        img.Url = url;
+        return img;
     }
 
     /// <summary>
@@ -235,8 +224,10 @@ public class PngImage
         return true;
     }
 
-    private static void decodeAverageFilter(byte[] curr, byte[] prev,
-                                            int count, int bpp)
+    private static void decodeAverageFilter(byte[] curr,
+                                            byte[] prev,
+                                            int count,
+                                            int bpp)
     {
         int raw, priorPixel, priorRow;
 
@@ -258,8 +249,10 @@ public class PngImage
         }
     }
 
-    private static void decodePaethFilter(byte[] curr, byte[] prev,
-                                          int count, int bpp)
+    private static void decodePaethFilter(byte[] curr,
+                                          byte[] prev,
+                                          int count,
+                                          int bpp)
     {
         int raw, priorPixel, priorRow, priorRowPixel;
 
@@ -297,7 +290,8 @@ public class PngImage
         }
     }
 
-    private static void decodeUpFilter(byte[] curr, byte[] prev,
+    private static void decodeUpFilter(byte[] curr,
+                                       byte[] prev,
                                        int count)
     {
         for (var i = 0; i < count; i++)
@@ -362,7 +356,13 @@ public class PngImage
         }
     }
 
-    private static void setPixel(byte[] image, int[] data, int offset, int size, int x, int y, int bitDepth,
+    private static void setPixel(byte[] image,
+                                 int[] data,
+                                 int offset,
+                                 int size,
+                                 int x,
+                                 int y,
+                                 int bitDepth,
                                  int bytesPerRow)
     {
         if (bitDepth == 8)
@@ -459,9 +459,12 @@ public class PngImage
         }
     }
 
-    private void decodePass(int xOffset, int yOffset,
-                            int xStep, int yStep,
-                            int passWidth, int passHeight)
+    private void decodePass(int xOffset,
+                            int yOffset,
+                            int xStep,
+                            int yStep,
+                            int passWidth,
+                            int passHeight)
     {
         if (passWidth == 0 || passHeight == 0)
         {

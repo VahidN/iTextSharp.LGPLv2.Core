@@ -105,11 +105,10 @@ public class MetaDo
             throw new IOException("Only BMP can be wrapped in WMF.");
         }
 
-        Stream imgIn;
         byte[] data = null;
         if (image.OriginalData == null)
         {
-            imgIn = image.Url.GetResponseStream();
+            using var imgIn = image.Url.GetResponseStream();
             using var outp = new MemoryStream();
             var b = 0;
             while ((b = imgIn.ReadByte()) != -1)
@@ -117,7 +116,6 @@ public class MetaDo
                 outp.WriteByte((byte)b);
             }
 
-            imgIn.Dispose();
             data = outp.ToArray();
         }
         else

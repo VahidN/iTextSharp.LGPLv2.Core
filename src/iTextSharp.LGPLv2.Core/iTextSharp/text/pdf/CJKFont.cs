@@ -474,7 +474,8 @@ internal class CjkFont : BaseFont
         return buf.ToString();
     }
 
-    internal static string ConvertToVcidMetrics(IList<int> keys, NullValueDictionary<int, int> v,
+    internal static string ConvertToVcidMetrics(IList<int> keys,
+                                                NullValueDictionary<int, int> v,
                                                 NullValueDictionary<int, int> h)
     {
         if (keys.Count == 0)
@@ -582,11 +583,10 @@ internal class CjkFont : BaseFont
 
     internal static char[] ReadCMap(string name)
     {
-        Stream istr = null;
         try
         {
             name = name + ".cmap";
-            istr = GetResourceStream(RESOURCE_PATH + name);
+            using var istr = GetResourceStream(RESOURCE_PATH + name);
             var c = new char[0x10000];
             for (var k = 0; k < 0x10000; ++k)
             {
@@ -599,16 +599,6 @@ internal class CjkFont : BaseFont
         {
             // empty on purpose
         }
-        finally
-        {
-            try
-            {
-                istr.Dispose();
-            }
-            catch
-            {
-            }
-        }
 
         return null;
     }
@@ -616,7 +606,7 @@ internal class CjkFont : BaseFont
     internal static INullValueDictionary<string, object> ReadFontProperties(string name)
     {
         name += ".properties";
-        var isp = GetResourceStream(RESOURCE_PATH + name);
+        using var isp = GetResourceStream(RESOURCE_PATH + name);
         if (isp == null)
         {
             return null;
@@ -624,7 +614,7 @@ internal class CjkFont : BaseFont
 
         var p = new Properties();
         p.Load(isp);
-        isp.Dispose();
+
         var w = CreateMetric(p["W"]);
         p.Remove("W");
         var w2 = CreateMetric(p["W2"]);
@@ -684,17 +674,15 @@ internal class CjkFont : BaseFont
 
             try
             {
-                var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
+                using var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
                 if (isp != null)
                 {
                     CjkFonts.Load(isp);
-                    isp.Dispose();
 
-                    isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
-                    if (isp != null)
+                    using var stream = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
+                    if (stream != null)
                     {
-                        CjkEncodings.Load(isp);
-                        isp.Dispose();
+                        CjkEncodings.Load(stream);
                     }
                 }
             }
