@@ -8,15 +8,15 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfReaderInstance
 {
-    internal static PdfLiteral Identitymatrix = new("[1 0 0 1 0 0]");
-    internal static PdfNumber One = new(1);
-    internal RandomAccessFileOrArray File;
-    internal INullValueDictionary<int, PdfImportedPage> ImportedPages = new NullValueDictionary<int, PdfImportedPage>();
-    internal int[] MyXref;
+    internal static readonly PdfLiteral Identitymatrix = new("[1 0 0 1 0 0]");
+    internal static readonly PdfNumber One = new(1);
+    internal readonly RandomAccessFileOrArray File;
+    internal readonly INullValueDictionary<int, PdfImportedPage> ImportedPages = new NullValueDictionary<int, PdfImportedPage>();
+    internal readonly int[] MyXref;
     internal List<int> NextRound = new();
-    internal PdfReader reader;
-    internal INullValueDictionary<int, object> Visited = new NullValueDictionary<int, object>();
-    internal PdfWriter Writer;
+    internal readonly PdfReader reader;
+    internal readonly INullValueDictionary<int, object> Visited = new NullValueDictionary<int, object>();
+    internal readonly PdfWriter Writer;
 
     internal PdfReaderInstance(PdfReader reader, PdfWriter writer)
     {

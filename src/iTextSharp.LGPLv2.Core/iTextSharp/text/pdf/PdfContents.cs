@@ -7,12 +7,12 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfContents : PdfStream
 {
-    internal static byte[] Savestate = DocWriter.GetIsoBytes("q\n");
-    internal static byte[] Restorestate = DocWriter.GetIsoBytes("Q\n");
-    internal static byte[] Rotate90 = DocWriter.GetIsoBytes("0 1 -1 0 ");
-    internal static byte[] Rotate180 = DocWriter.GetIsoBytes("-1 0 0 -1 ");
-    internal static byte[] Rotate270 = DocWriter.GetIsoBytes("0 -1 1 0 ");
-    internal static byte[] Rotatefinal = DocWriter.GetIsoBytes(" cm\n");
+    internal static readonly byte[] Savestate = DocWriter.GetIsoBytes("q\n");
+    internal static readonly byte[] Restorestate = DocWriter.GetIsoBytes("Q\n");
+    internal static readonly byte[] Rotate90 = DocWriter.GetIsoBytes("0 1 -1 0 ");
+    internal static readonly byte[] Rotate180 = DocWriter.GetIsoBytes("-1 0 0 -1 ");
+    internal static readonly byte[] Rotate270 = DocWriter.GetIsoBytes("0 -1 1 0 ");
+    internal static readonly byte[] Rotatefinal = DocWriter.GetIsoBytes(" cm\n");
 
     /// <summary>
     ///     Constructs a  PdfContents -object, containing text and general graphics.

@@ -10,10 +10,10 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class RandomAccessFileOrArray
 {
-    internal byte[] ArrayIn;
+    internal readonly byte[] ArrayIn;
     internal int ArrayInPtr;
     internal byte Back;
-    internal string Filename;
+    internal readonly string Filename;
     internal bool IsBack;
     internal FileStream Rf;
 

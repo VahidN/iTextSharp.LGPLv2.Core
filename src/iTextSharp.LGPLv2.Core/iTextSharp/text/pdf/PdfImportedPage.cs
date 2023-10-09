@@ -6,8 +6,8 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfImportedPage : PdfTemplate
 {
-    internal int pageNumber;
-    internal PdfReaderInstance ReaderInstance;
+    internal readonly int pageNumber;
+    internal readonly PdfReaderInstance ReaderInstance;
 
     internal PdfImportedPage(PdfReaderInstance readerInstance, PdfWriter writer, int pageNumber)
     {

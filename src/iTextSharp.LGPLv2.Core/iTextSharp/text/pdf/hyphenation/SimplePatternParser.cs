@@ -19,7 +19,7 @@ public class SimplePatternParser : ISimpleXmlDocHandler
     internal int CurrElement;
     internal List<object> Exception;
     internal char HyphenChar;
-    internal StringBuilder Token;
+    internal readonly StringBuilder Token;
 
     /// <summary>
     ///     Creates a new instance of PatternParser2

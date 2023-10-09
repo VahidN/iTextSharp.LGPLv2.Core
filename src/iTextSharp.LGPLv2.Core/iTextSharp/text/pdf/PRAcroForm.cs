@@ -9,13 +9,13 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PrAcroForm : PdfDictionary
 {
-    internal INullValueDictionary<string, FieldInformation> FieldByName;
+    internal readonly INullValueDictionary<string, FieldInformation> FieldByName;
 
-    internal List<FieldInformation> fields;
+    internal readonly List<FieldInformation> fields;
 
-    internal PdfReader Reader;
+    internal readonly PdfReader Reader;
 
-    internal List<PdfDictionary> Stack;
+    internal readonly List<PdfDictionary> Stack;
 
     /// <summary>
     ///     Constructor
@@ -189,9 +189,9 @@ public class PrAcroForm : PdfDictionary
     /// </summary>
     public class FieldInformation
     {
-        internal PdfDictionary info;
-        internal string name;
-        internal PrIndirectReference Refi;
+        internal readonly PdfDictionary info;
+        internal readonly string name;
+        internal readonly PrIndirectReference Refi;
 
         internal FieldInformation(string name, PdfDictionary info, PrIndirectReference refi)
         {

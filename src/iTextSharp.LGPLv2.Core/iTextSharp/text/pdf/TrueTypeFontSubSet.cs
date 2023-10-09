@@ -46,24 +46,24 @@ internal class TrueTypeFontSubSet
     };
 
 
-    protected int DirectoryOffset;
+    protected readonly int DirectoryOffset;
 
     /// <summary>
     ///     The file name.
     /// </summary>
-    protected string FileName;
+    protected readonly string FileName;
 
     protected int FontPtr;
 
     protected int GlyfTableRealSize;
 
-    protected List<int> GlyphsInList;
+    protected readonly List<int> GlyphsInList;
 
-    protected INullValueDictionary<int, int[]> GlyphsUsed;
+    protected readonly INullValueDictionary<int, int[]> GlyphsUsed;
 
-    protected bool IncludeCmap;
+    protected readonly bool IncludeCmap;
 
-    protected bool IncludeExtras;
+    protected readonly bool IncludeExtras;
 
     protected bool LocaShortTable;
 
@@ -82,7 +82,7 @@ internal class TrueTypeFontSubSet
     /// <summary>
     ///     The file in use.
     /// </summary>
-    protected RandomAccessFileOrArray Rf;
+    protected readonly RandomAccessFileOrArray Rf;
 
     /// <summary>
     ///     Contains the location of the several tables. The key is the name of

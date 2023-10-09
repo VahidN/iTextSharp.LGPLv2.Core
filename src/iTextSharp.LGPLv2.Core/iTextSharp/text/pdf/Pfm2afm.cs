@@ -390,7 +390,7 @@ public sealed class Pfm2Afm
     ///     in the pfm file, all unused characters are given the width of space.
     ///     Note that this array isn't used in iText.
     /// </summary>
-    private int[] _winClass =
+    private readonly int[] _winClass =
     {
         0, 0, 0, 0, 2, 2, 2, 0, 2, 0, 2, 2, 2, 0, 0, 0, /* 00 */
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 10 */

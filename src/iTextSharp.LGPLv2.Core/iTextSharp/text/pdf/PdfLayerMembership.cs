@@ -32,9 +32,9 @@ public class PdfLayerMembership : PdfDictionary, IPdfOcg
     /// </summary>
     public static readonly PdfName Anyon = new("AnyOn");
 
-    internal INullValueDictionary<PdfLayer, object> layers = new NullValueDictionary<PdfLayer, object>();
-    internal PdfArray Members = new();
-    internal PdfIndirectReference Refi;
+    internal readonly INullValueDictionary<PdfLayer, object> layers = new NullValueDictionary<PdfLayer, object>();
+    internal readonly PdfArray Members = new();
+    internal readonly PdfIndirectReference Refi;
 
     /// <summary>
     ///     Creates a new, empty, membership layer.

@@ -153,22 +153,22 @@ public sealed class Deflate
     /// <summary>
     ///     number of codes at each bit length for an optimal tree
     /// </summary>
-    internal short[] BlCount = new short[MaxBits + 1];
+    internal readonly short[] BlCount = new short[MaxBits + 1];
 
-    internal Tree BlDesc = new();
+    internal readonly Tree BlDesc = new();
     internal int BlockStart;
-    internal short[] BlTree;
+    internal readonly short[] BlTree;
     internal byte DataType;
     internal int DBuf;
-    internal Tree DDesc = new();
+    internal readonly Tree DDesc = new();
 
     /// <summary>
     ///     Depth of each subtree used as tie breaker for trees of equal frequency
     /// </summary>
-    internal byte[] Depth = new byte[2 * LCodes + 1];
+    internal readonly byte[] Depth = new byte[2 * LCodes + 1];
 
-    internal short[] DynDtree;
-    internal short[] DynLtree;
+    internal readonly short[] DynDtree;
+    internal readonly short[] DynLtree;
 
     /// <summary>
     ///     Use a faster search when the previous match is longer than this
@@ -203,7 +203,7 @@ public sealed class Deflate
     /// <summary>
     ///     heap used to build the Huffman trees
     /// </summary>
-    internal int[] Heap = new int[2 * LCodes + 1];
+    internal readonly int[] Heap = new int[2 * LCodes + 1];
 
     internal int HeapLen;
 
@@ -225,7 +225,7 @@ public sealed class Deflate
     /// </summary>
     internal int LBuf;
 
-    internal Tree LDesc = new();
+    internal readonly Tree LDesc = new();
     internal int Level;
 
     /// <summary>
@@ -2170,11 +2170,11 @@ public sealed class Deflate
     // 32K LZ77 window
     internal class Config
     {
-        internal int Func;
-        internal int GoodLength; // reduce lazy search above this match length
-        internal int MaxChain;
-        internal int MaxLazy; // do not perform lazy search above this match length
-        internal int NiceLength; // quit search above this match length
+        internal readonly int Func;
+        internal readonly int GoodLength; // reduce lazy search above this match length
+        internal readonly int MaxChain;
+        internal readonly int MaxLazy; // do not perform lazy search above this match length
+        internal readonly int NiceLength; // quit search above this match length
 
         internal Config(int goodLength, int maxLazy,
                         int niceLength, int maxChain, int func)

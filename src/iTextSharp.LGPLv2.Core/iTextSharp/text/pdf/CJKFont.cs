@@ -18,9 +18,9 @@ internal class CjkFont : BaseFont
     private const int First = 0;
     private const int Serial = 2;
     private const int V1Y = 880;
-    internal static INullValueDictionary<string, char[]> AllCMaps = new NullValueDictionary<string, char[]>();
+    internal static readonly INullValueDictionary<string, char[]> AllCMaps = new NullValueDictionary<string, char[]>();
 
-    internal static INullValueDictionary<string, INullValueDictionary<string, object>> AllFonts =
+    internal static readonly INullValueDictionary<string, INullValueDictionary<string, object>> AllFonts =
         new NullValueDictionary<string, INullValueDictionary<string, object>>();
 
     internal static Properties CjkEncodings = new();

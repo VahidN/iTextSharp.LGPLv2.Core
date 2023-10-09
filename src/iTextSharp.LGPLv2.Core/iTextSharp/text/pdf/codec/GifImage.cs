@@ -25,7 +25,7 @@ public class GifImage
     /// </summary>
     protected int Dispose;
 
-    internal List<GifFrame> Frames = new();
+    internal readonly List<GifFrame> Frames = new();
     protected byte[] FromData;
     protected Uri FromUrl;
     protected bool GctFlag;

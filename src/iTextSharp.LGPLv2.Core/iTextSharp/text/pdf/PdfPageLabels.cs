@@ -46,7 +46,7 @@ public class PdfPageLabels
     /// <summary>
     ///     Dictionary values to set the logical page styles
     /// </summary>
-    internal static PdfName[] NumberingStyle =
+    internal static readonly PdfName[] NumberingStyle =
     {
         PdfName.D, PdfName.R,
         new("r"), PdfName.A, new("a"),
@@ -55,7 +55,7 @@ public class PdfPageLabels
     /// <summary>
     ///     The sequence of logical pages. Will contain at least a value for page 1
     /// </summary>
-    internal INullValueDictionary<int, PdfDictionary> Map;
+    internal readonly INullValueDictionary<int, PdfDictionary> Map;
 
     /// <summary>
     ///     Creates a new PdfPageLabel with a default logical page 1

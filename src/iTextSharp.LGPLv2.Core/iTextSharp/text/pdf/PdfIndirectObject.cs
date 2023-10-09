@@ -33,9 +33,9 @@ public class PdfIndirectObject
     /// </summary>
     protected int Number;
 
-    internal PdfObject Objecti;
+    internal readonly PdfObject Objecti;
 
-    internal PdfWriter Writer;
+    internal readonly PdfWriter Writer;
 
     /// <summary>
     ///     constructors

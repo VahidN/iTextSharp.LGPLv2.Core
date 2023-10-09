@@ -4,7 +4,7 @@ namespace iTextSharp.text.pdf;
 
 public class CffFont
 {
-    internal static string[] OperatorNames =
+    internal static readonly string[] OperatorNames =
     {
         "version", "Notice", "FullName", "FamilyName",
         "Weight", "FontBBox", "BlueValues", "OtherBlues",
@@ -27,7 +27,7 @@ public class CffFont
         "FDArray", "FDSelect", "FontName",
     };
 
-    internal static string[] StandardStrings =
+    internal static readonly string[] StandardStrings =
     {
         // Automatically generated from Appendix A of the CFF specification; do
         // not edit. Size should be 391.
@@ -125,7 +125,7 @@ public class CffFont
         "Bold", "Book", "Light", "Medium", "Regular", "Roman", "Semibold",
     };
 
-    private int _offSize;
+    private readonly int _offSize;
 
     protected int ArgCount;
 

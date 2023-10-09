@@ -384,7 +384,7 @@ public class Jbig2SegmentReader
     public class Jbig2Page
     {
         private readonly OrderedTree _segs = new();
-        private Jbig2SegmentReader _sr;
+        private readonly Jbig2SegmentReader _sr;
         public int Page;
         public int PageBitmapHeight = -1;
         public int PageBitmapWidth = -1;

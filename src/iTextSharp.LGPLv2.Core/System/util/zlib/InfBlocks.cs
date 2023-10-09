@@ -80,7 +80,7 @@ internal sealed class InfBlocks
     // if CODES, current state
 
     private int _last; // true if this block is the last block
-    internal int[] Bb = new int[1];
+    internal readonly int[] Bb = new int[1];
     internal int Bitb;
 
     /// <summary>
@@ -90,17 +90,17 @@ internal sealed class InfBlocks
 
     internal int[] Blens;
     internal long Check;
-    internal object Checkfn;
-    internal InfCodes codes = new();
+    internal readonly object Checkfn;
+    internal readonly InfCodes codes = new();
 
-    internal int End;
+    internal readonly int End;
 
     // bits in bit buffer
     // bit buffer
     internal int[] Hufts;
 
     internal int Index;
-    internal InfTree Inftree = new();
+    internal readonly InfTree Inftree = new();
     internal int Left;
 
     internal int Mode;
@@ -113,7 +113,7 @@ internal sealed class InfBlocks
     // index into blens (or border)
     // bit lengths of codes
     // bit length tree depth
-    internal int[] Tb = new int[1];
+    internal readonly int[] Tb = new int[1];
 
     // single malloc for tree space
     internal byte[] Window;

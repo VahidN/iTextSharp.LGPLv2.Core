@@ -65,7 +65,7 @@ public class PdfEncryption
     /// <summary>
     ///     Work area to prepare the object/generation bytes
     /// </summary>
-    internal byte[] Extra = new byte[5];
+    internal readonly byte[] Extra = new byte[5];
 
     /// <summary>
     ///     The encryption key for a particular object/generation

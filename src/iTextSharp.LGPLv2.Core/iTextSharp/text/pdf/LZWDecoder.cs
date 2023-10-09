@@ -13,7 +13,7 @@ public class LzwDecoder
     private int _tableIndex, _bitsToGet = 9;
     private Stream _uncompData;
 
-    internal int[] AndTable =
+    internal readonly int[] AndTable =
     {
         511,
         1023,

@@ -8,8 +8,8 @@ namespace iTextSharp.text.pdf;
 internal class PdfCopyFieldsImp : PdfWriter
 {
     private const int _zero = 0;
-    protected internal static INullValueDictionary<PdfName, int> FieldKeys = new NullValueDictionary<PdfName, int>();
-    protected internal static INullValueDictionary<PdfName, int> WidgetKeys = new NullValueDictionary<PdfName, int>();
+    protected internal static readonly INullValueDictionary<PdfName, int> FieldKeys = new NullValueDictionary<PdfName, int>();
+    protected internal static readonly INullValueDictionary<PdfName, int> WidgetKeys = new NullValueDictionary<PdfName, int>();
 
     private static readonly PdfName _iTextTag = new("_iTextTag_");
     private readonly List<string> _calculationOrder = new();
@@ -17,25 +17,25 @@ internal class PdfCopyFieldsImp : PdfWriter
     private bool _closing;
     private bool _hasSignature;
     private INullValueDictionary<PdfArray, List<int>> _tabOrder;
-    internal List<AcroFields> Fields = new();
-    internal INullValueDictionary<string, object> FieldTree = new NullValueDictionary<string, object>();
+    internal readonly List<AcroFields> Fields = new();
+    internal readonly INullValueDictionary<string, object> FieldTree = new NullValueDictionary<string, object>();
     internal RandomAccessFileOrArray File;
     internal PdfDictionary Form;
-    internal Document Nd;
-    internal List<PdfDictionary> PageDics = new();
-    internal List<PdfIndirectReference> PageRefs = new();
+    internal readonly Document Nd;
+    internal readonly List<PdfDictionary> PageDics = new();
+    internal readonly List<PdfIndirectReference> PageRefs = new();
 
-    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Pages2Intrefs =
+    internal readonly INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Pages2Intrefs =
         new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
-    internal List<PdfReader> Readers = new();
+    internal readonly List<PdfReader> Readers = new();
 
-    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
+    internal readonly INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
         new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
-    internal PdfDictionary Resources = new();
+    internal readonly PdfDictionary Resources = new();
 
-    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Visited =
+    internal readonly INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Visited =
         new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     static PdfCopyFieldsImp()

@@ -16,7 +16,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The Strings in this array represent Type1/Type2 escape operator names
     /// </summary>
-    internal static string[] SubrsEscapeFuncs =
+    internal static readonly string[] SubrsEscapeFuncs =
     {
         "RESERVED_0", "RESERVED_1", "RESERVED_2", "and", "or", "not",
         "RESERVED_6",
@@ -33,7 +33,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The Strings in this array represent Type1/Type2 operator names
     /// </summary>
-    internal static string[] SubrsFunctions =
+    internal static readonly string[] SubrsFunctions =
     {
         "RESERVED_0", "hstem", "RESERVED_2", "vstem", "vmoveto", "rlineto",
         "hlineto", "vlineto",
@@ -49,7 +49,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     A HashMap for keeping the FDArrays being used by the font
     /// </summary>
-    internal INullValueDictionary<int, object> FdArrayUsed = new NullValueDictionary<int, object>();
+    internal readonly INullValueDictionary<int, object> FdArrayUsed = new NullValueDictionary<int, object>();
 
     /// <summary>
     ///     The bias for the global subroutines
@@ -59,18 +59,18 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The GlyphsUsed keys as an ArrayList
     /// </summary>
-    internal List<int> GlyphsInList;
+    internal readonly List<int> GlyphsInList;
 
     /// <summary>
     ///     A HashMap containing the glyphs used in the text after being converted
     ///     to glyph number by the CMap
     /// </summary>
-    internal INullValueDictionary<int, int[]> GlyphsUsed;
+    internal readonly INullValueDictionary<int, int[]> GlyphsUsed;
 
     /// <summary>
     ///     A HashMap for keeping the Global subroutines used in the font
     /// </summary>
-    internal INullValueDictionary<int, int[]> HGSubrsUsed = new NullValueDictionary<int, int[]>();
+    internal readonly INullValueDictionary<int, int[]> HGSubrsUsed = new NullValueDictionary<int, int[]>();
 
     /// <summary>
     ///     A HashMaps array for keeping the subroutines used in each FontDict
@@ -80,12 +80,12 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     A HashMap for keeping the subroutines used in a non-cid font
     /// </summary>
-    internal INullValueDictionary<int, int[]> HSubrsUsedNonCid = new NullValueDictionary<int, int[]>();
+    internal readonly INullValueDictionary<int, int[]> HSubrsUsedNonCid = new NullValueDictionary<int, int[]>();
 
     /// <summary>
     ///     The Global SubroutinesUsed HashMaps as ArrayLists
     /// </summary>
-    internal List<int> LGSubrsUsed = new();
+    internal readonly List<int> LGSubrsUsed = new();
 
     /// <summary>
     ///     The SubroutinesUsed HashMaps as ArrayLists
@@ -95,7 +95,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The SubroutinesUsed HashMap as ArrayList
     /// </summary>
-    internal List<int> LSubrsUsedNonCid = new();
+    internal readonly List<int> LSubrsUsedNonCid = new();
 
     /// <summary>
     ///     The new CharString of the font

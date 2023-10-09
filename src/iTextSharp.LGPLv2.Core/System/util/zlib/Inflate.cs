@@ -95,7 +95,7 @@ internal sealed class Inflate
     /// <summary>
     ///     if CHECK, check values to compare
     /// </summary>
-    internal long[] Was = new long[1];
+    internal readonly long[] Was = new long[1];
 
     // computed check value
     // flag for no wrapper

@@ -20,15 +20,15 @@ public static class PdfEncodings
     /// </summary>
     public static byte[][] CrlfCidNewline = { new[] { (byte)'\n' }, new[] { (byte)'\r', (byte)'\n' } };
 
-    internal static INullValueDictionary<string, char[][]> Cmaps =
+    internal static readonly INullValueDictionary<string, char[][]> Cmaps =
         new NullValueDictionary<string, char[][]>();
 
     internal static INullValueDictionary<string, IExtraEncoding> ExtraEncodings =
         new NullValueDictionary<string, IExtraEncoding>();
 
-    internal static NullValueDictionary<int, int> PdfEncoding = new();
+    internal static readonly NullValueDictionary<int, int> PdfEncoding = new();
 
-    internal static char[] PdfEncodingByteToChar =
+    internal static readonly char[] PdfEncodingByteToChar =
     {
         (char)0, (char)1, (char)2, (char)3, (char)4, (char)5, (char)6,
         (char)7, (char)8, (char)9, (char)10, (char)11, (char)12,
@@ -82,9 +82,9 @@ public static class PdfEncodings
         (char)252, (char)253, (char)254, (char)255,
     };
 
-    internal static NullValueDictionary<int, int> Winansi = new();
+    internal static readonly NullValueDictionary<int, int> Winansi = new();
 
-    internal static char[] WinansiByteToChar =
+    internal static readonly char[] WinansiByteToChar =
     {
         (char)0, (char)1, (char)2, (char)3, (char)4, (char)5, (char)6,
         (char)7, (char)8, (char)9, (char)10, (char)11, (char)12, (char)13,

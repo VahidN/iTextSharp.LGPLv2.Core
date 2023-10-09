@@ -13,7 +13,7 @@ internal class TrueTypeFont : BaseFont
     /// <summary>
     ///     The code pages possible for a True Type font.
     /// </summary>
-    internal static string[] CodePages =
+    internal static readonly string[] CodePages =
     {
         "1252 Latin 1",
         "1250 Latin 2: Eastern Europe",
@@ -150,12 +150,12 @@ internal class TrueTypeFont : BaseFont
     /// <summary>
     ///     The content of table 'head'.
     /// </summary>
-    protected FontHeader Head = new();
+    protected readonly FontHeader Head = new();
 
     /// <summary>
     ///     The content of table 'hhea'.
     /// </summary>
-    protected HorizontalHeader Hhea = new();
+    protected readonly HorizontalHeader Hhea = new();
 
     /// <summary>
     ///     true  if all the glyphs have the same width.
@@ -169,7 +169,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     protected double ItalicAngle;
 
-    protected bool JustNames;
+    protected readonly bool JustNames;
 
     /// <summary>
     ///     The map containing the kerning information. It represents the content of
@@ -178,12 +178,12 @@ internal class TrueTypeFont : BaseFont
     ///     glyph number for the second character. The value is the amount of kerning in
     ///     normalized 1000 units as an  Integer . This value is usually negative.
     /// </summary>
-    protected NullValueDictionary<int, int> Kerning = new();
+    protected readonly NullValueDictionary<int, int> Kerning = new();
 
     /// <summary>
     ///     The content of table 'OS/2'.
     /// </summary>
-    protected WindowsMetrics Os2 = new();
+    protected readonly WindowsMetrics Os2 = new();
 
     /// <summary>
     ///     The file in use.
@@ -1943,7 +1943,7 @@ internal class TrueTypeFont : BaseFont
         /// <summary>
         ///     A variable.
         /// </summary>
-        internal byte[] AchVendId = new byte[4];
+        internal readonly byte[] AchVendId = new byte[4];
 
         /// <summary>
         ///     A variable.
@@ -1958,7 +1958,7 @@ internal class TrueTypeFont : BaseFont
         /// <summary>
         ///     A variable.
         /// </summary>
-        internal byte[] Panose = new byte[10];
+        internal readonly byte[] Panose = new byte[10];
 
         /// <summary>
         ///     A variable.

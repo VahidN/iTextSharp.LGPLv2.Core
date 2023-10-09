@@ -55,7 +55,7 @@ public class PdfPkcs7
     private byte[] _externalDigest;
     private byte[] _externalRsAdata;
 
-    private ICipherParameters _privKey;
+    private readonly ICipherParameters _privKey;
 
     private byte[] _rsAdata;
     private List<X509Certificate> _signCerts;

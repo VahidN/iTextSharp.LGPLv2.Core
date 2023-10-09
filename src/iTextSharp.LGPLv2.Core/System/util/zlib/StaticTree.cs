@@ -92,17 +92,17 @@ internal sealed class StaticTree
         163, 8, 99, 8, 227, 8,
     };
 
-    internal int Elems;
-    internal int ExtraBase;
+    internal readonly int Elems;
+    internal readonly int ExtraBase;
 
-    internal int[] ExtraBits;
+    internal readonly int[] ExtraBits;
 
     // extra bits for each code or null
     // base index for extra_bits
     // max number of elements in the tree
-    internal int MaxLength;
+    internal readonly int MaxLength;
 
-    internal short[] static_tree;
+    internal readonly short[] static_tree;
     // static tree or null
     // max bit length for the codes
 

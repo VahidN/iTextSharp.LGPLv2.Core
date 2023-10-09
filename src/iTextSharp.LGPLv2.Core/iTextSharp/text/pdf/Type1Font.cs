@@ -148,7 +148,7 @@ internal class Type1Font : BaseFont
     /// <summary>
     ///     The PFB file if the input was made with a  byte  array.
     /// </summary>
-    protected byte[] Pfb;
+    protected readonly byte[] Pfb;
 
     /// <summary>
     ///     Creates a new Type1 font.

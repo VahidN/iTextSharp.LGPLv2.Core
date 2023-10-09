@@ -15,7 +15,7 @@ public class PdfStamperImp : PdfWriter
     protected bool FieldsAdded;
 
     protected INullValueDictionary<PdfTemplate, object> FieldTemplates = new NullValueDictionary<PdfTemplate, object>();
-    internal RandomAccessFileOrArray File;
+    internal readonly RandomAccessFileOrArray File;
 
     protected bool Flat;
 
@@ -24,7 +24,7 @@ public class PdfStamperImp : PdfWriter
     protected int InitialXrefSize;
 
     protected NullValueDictionary<int, int> Marked;
-    internal NullValueDictionary<int, int> MyXref = new();
+    internal readonly NullValueDictionary<int, int> MyXref = new();
 
     protected int[] NamePtr = { 0 };
 
@@ -33,17 +33,17 @@ public class PdfStamperImp : PdfWriter
     /// <summary>
     ///     Integer(page number) -> PageStamp
     /// </summary>
-    internal INullValueDictionary<PdfDictionary, PageStamp> PagesToContent =
+    internal readonly INullValueDictionary<PdfDictionary, PageStamp> PagesToContent =
         new NullValueDictionary<PdfDictionary, PageStamp>();
 
     protected INullValueDictionary<string, object> PartialFlattening = new NullValueDictionary<string, object>();
 
-    internal PdfReader Reader;
+    internal readonly PdfReader Reader;
 
-    internal INullValueDictionary<PdfReader, RandomAccessFileOrArray> Readers2File =
+    internal readonly INullValueDictionary<PdfReader, RandomAccessFileOrArray> Readers2File =
         new NullValueDictionary<PdfReader, RandomAccessFileOrArray>();
 
-    internal INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
+    internal readonly INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
         new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
 
     protected int sigFlags;
@@ -2235,8 +2235,8 @@ public class PdfStamperImp : PdfWriter
     internal class PageStamp
     {
         internal StampContent Over;
-        internal PdfDictionary PageN;
-        internal PageResources PageResources;
+        internal readonly PdfDictionary PageN;
+        internal readonly PageResources PageResources;
         internal int ReplacePoint;
         internal StampContent Under;
 

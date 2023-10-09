@@ -3728,7 +3728,7 @@ public class PdfWriter : DocWriter,
         /// <summary>
         ///     membervariables
         /// </summary>
-        internal int Offset;
+        internal readonly int Offset;
 
         /// <summary>
         ///     constructors

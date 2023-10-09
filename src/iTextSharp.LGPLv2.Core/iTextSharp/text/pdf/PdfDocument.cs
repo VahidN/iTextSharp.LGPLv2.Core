@@ -3593,7 +3593,7 @@ public class PdfDocument : Document
     /// </summary>
     internal class PdfCatalog : PdfDictionary
     {
-        internal PdfWriter Writer;
+        internal readonly PdfWriter Writer;
 
         /// <summary>
         ///     constructors
@@ -3688,7 +3688,7 @@ public class PdfDocument : Document
         internal float LostTableBottom;
         internal float MaxCellBottom;
         internal float OldHeight = -1;
-        internal INullValueDictionary<object, object> PageMap = new NullValueDictionary<object, object>();
+        internal readonly INullValueDictionary<object, object> PageMap = new NullValueDictionary<object, object>();
         internal float Pagetop = -1;
 
         /// <summary>

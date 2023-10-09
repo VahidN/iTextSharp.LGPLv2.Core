@@ -5,7 +5,7 @@ public class TiffFaxDecoder
     /// <summary>
     ///     Table to be used when fillOrder = 2, for flipping bytes.
     /// </summary>
-    internal static byte[] FlipTable =
+    internal static readonly byte[] FlipTable =
     {
         0, 256 - 128, 64, 256 - 64, 32, 256 - 96, 96, 256 - 32,
         16, 256 - 112, 80, 256 - 48, 48, 256 - 80, 112, 256 - 16,
@@ -546,7 +546,7 @@ public class TiffFaxDecoder
     private int[] _currChangingElems;
     private byte[] _data;
     private int _fillBits;
-    private int _h;
+    private readonly int _h;
 
     /// <summary>
     ///     Element at which to start search in getNextChangingElement

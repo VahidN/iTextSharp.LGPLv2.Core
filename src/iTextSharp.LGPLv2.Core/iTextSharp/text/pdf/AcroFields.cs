@@ -82,8 +82,8 @@ public class AcroFields
     private int _totalRevisions;
 
     internal INullValueDictionary<string, Item> fields;
-    internal PdfReader Reader;
-    internal PdfWriter Writer;
+    internal readonly PdfReader Reader;
+    internal readonly PdfWriter Writer;
 
     static AcroFields()
     {
