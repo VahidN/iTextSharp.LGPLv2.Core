@@ -1,4 +1,4 @@
-using iTextSharp.LGPLv2.Core.System.Drawing;
+﻿using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.NetUtils;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
@@ -1203,7 +1203,22 @@ public abstract class Image : Rectangle
     /// </summary>
     /// <param name="filename">a filename</param>
     /// <returns>an object of type Gif, Jpeg or Png</returns>
-    public static Image GetInstance(string filename) => GetInstance(Utilities.ToUrl(filename));
+    public static Image GetInstance(string filename)
+    {
+        if (string.IsNullOrEmpty(filename)) throw new ArgumentNullException(nameof(filename));
+
+        if (filename.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+        {
+            // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
+            var base64Data = filename.Substring(filename.IndexOf(",", StringComparison.OrdinalIgnoreCase) + 1);
+            var imagedata = Convert.FromBase64String(base64Data);
+            return GetInstance(imagedata);
+        }
+        else
+        {
+            return GetInstance(Utilities.ToUrl(filename));
+        }
+    }
 
     /// <summary>
     ///     Gets an instance of an Image in raw mode.
