@@ -721,12 +721,9 @@ public abstract class Image : Rectangle
         if (url.Scheme == "data")
         {
             var src = url.AbsoluteUri;
-            if (src.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            if (IsBase64EncodedImage(src))
             {
-                // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
-                var base64Data = src.Substring(src.IndexOf(",", StringComparison.OrdinalIgnoreCase) + 1);
-                var imagedata = Convert.FromBase64String(base64Data);
-                return GetInstance(imagedata);
+                return GetBase64EncodedImage(src);
             }
         }
 
@@ -842,6 +839,17 @@ public abstract class Image : Rectangle
 
         throw new IOException(url + " is not a recognized image format.");
     }
+
+    private static Image GetBase64EncodedImage(string src)
+    {
+        // data:[<MIME-type>][;charset=<encoding>][;base64],<data>
+        var base64Data = src.Substring(src.IndexOf(",", StringComparison.OrdinalIgnoreCase) + 1);
+        var imageData = Convert.FromBase64String(base64Data);
+        return GetInstance(imageData);
+    }
+
+    private static bool IsBase64EncodedImage(string src) =>
+        src.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase);
 
     public static Image GetInstance(Stream s)
     {
@@ -1203,7 +1211,17 @@ public abstract class Image : Rectangle
     /// </summary>
     /// <param name="filename">a filename</param>
     /// <returns>an object of type Gif, Jpeg or Png</returns>
-    public static Image GetInstance(string filename) => GetInstance(Utilities.ToUrl(filename));
+    public static Image GetInstance(string filename)
+    {
+        if (string.IsNullOrWhiteSpace(filename))
+        {
+            throw new ArgumentNullException(nameof(filename));
+        }
+
+        return IsBase64EncodedImage(filename)
+                   ? GetBase64EncodedImage(filename)
+                   : GetInstance(Utilities.ToUrl(filename));
+    }
 
     /// <summary>
     ///     Gets an instance of an Image in raw mode.
