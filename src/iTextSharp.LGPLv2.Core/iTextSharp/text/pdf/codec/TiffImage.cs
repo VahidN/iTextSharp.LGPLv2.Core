@@ -393,9 +393,10 @@ public static class TiffImage
             throw new InvalidOperationException("Planar images are not supported.");
         }
 
+        int extraSamples = 0;
         if (dir.IsTagPresent(TiffConstants.TIFFTAG_EXTRASAMPLES))
         {
-            throw new InvalidOperationException("Extra samples are not supported.");
+            extraSamples = 1;
         }
 
         var samplePerPixel = 1;
@@ -502,6 +503,9 @@ public static class TiffImage
             }
         }
 
+        using var memoryStream = extraSamples > 0 ? new MemoryStream() : null;
+        using var memoryDeflater = extraSamples > 0 ? new ZDeflaterOutputStream(memoryStream) : null;
+
         if (compression == TiffConstants.COMPRESSION_OJPEG)
         {
             // Assume that the TIFFTAG_JPEGIFBYTECOUNT tag is optional, since it's obsolete and
@@ -584,7 +588,32 @@ public static class TiffImage
                 }
                 else
                 {
-                    zip.Write(outBuf, 0, outBuf.Length);
+                    if (extraSamples > 0)
+                    {
+                        if (bitsPerSample != 8)
+                        {
+                            throw new InvalidOperationException("Extra samples are not supported.");
+                        }
+
+                        var maskPointer = 0;
+                        var outBufferPointer = 0;
+                        var mask = new byte[w * height];
+                        var total = w * height * samplePerPixel;
+                        for (var l = 0; l < total; l += samplePerPixel)
+                        {
+                            for (var m = 0; m < samplePerPixel - 1; m++)
+                            {
+                                outBuf[outBufferPointer++] = outBuf[l + m];
+                            }
+                            mask[maskPointer++] = outBuf[l + samplePerPixel - 1];
+                        }
+                        zip.Write(outBuf, offset: 0, outBufferPointer);
+                        memoryDeflater.Write(mask, offset: 0, maskPointer);
+                    }
+                    else
+                    {
+                        zip.Write(outBuf, offset: 0, outBuf.Length);
+                    }
                 }
 
                 rowsLeft -= rowsStrip;
@@ -600,7 +629,7 @@ public static class TiffImage
             else
             {
                 zip.Close();
-                img = Image.GetInstance(w, h, samplePerPixel, bitsPerSample, stream.ToArray());
+                img = new ImgRaw(w, h, samplePerPixel - extraSamples, bitsPerSample, stream.ToArray());
                 img.Deflated = true;
             }
         }
@@ -614,7 +643,7 @@ public static class TiffImage
                 {
                     var fd = dir.GetField(TiffConstants.TIFFTAG_ICCPROFILE);
                     var iccProf = IccProfile.GetInstance(fd.GetAsBytes());
-                    if (samplePerPixel == iccProf.NumComponents)
+                    if (samplePerPixel - extraSamples == iccProf.NumComponents)
                     {
                         img.TagIcc = iccProf;
                     }
@@ -660,6 +689,14 @@ public static class TiffImage
         if (rotation.ApproxNotEqual(0))
         {
             img.InitialRotation = rotation;
+        }
+
+        if (extraSamples > 0)
+        {
+            var maskedImage = Image.GetInstance(w, h, components: 1, bitsPerSample, memoryStream.ToArray());
+            maskedImage.MakeMask();
+            maskedImage.Deflated = true;
+            img.ImageMask = maskedImage;
         }
 
         return img;
