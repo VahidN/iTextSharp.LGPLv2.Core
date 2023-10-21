@@ -332,6 +332,25 @@ public static class TiffImage
         Array.Copy(outp, 0, inflated, 0, Math.Min(outp.Length, inflated.Length));
     }
 
+    private static void ApplyPredictor(byte[] outBuf, int predictor, int w, int h, int samplesPerPixel)
+    {
+        if (predictor != 2)
+        {
+            return;
+        }
+
+        int outBufPointer;
+        for (int j = 0; j < h; j++)
+        {
+            outBufPointer = samplesPerPixel * (j * w + 1);
+            for (int i = samplesPerPixel; i < w * samplesPerPixel; i++)
+            {
+                outBuf[outBufPointer] += outBuf[outBufPointer - samplesPerPixel];
+                outBufPointer++;
+            }
+        }
+    }
+
     private static Image GetTiffImageColor(TiffDirectory dir, RandomAccessFileOrArray s)
     {
         var predictor = 1;
@@ -464,7 +483,7 @@ public static class TiffImage
             size = new long[] { s.Length - (int)offset[0] };
         }
 
-        if (compression == TiffConstants.COMPRESSION_LZW)
+        if (compression is TiffConstants.COMPRESSION_LZW or TiffConstants.COMPRESSION_DEFLATE or TiffConstants.COMPRESSION_ADOBE_DEFLATE)
         {
             var predictorField = dir.GetField(TiffConstants.TIFFTAG_PREDICTOR);
             if (predictorField != null)
@@ -481,9 +500,10 @@ public static class TiffImage
                                                         "-bit samples are not supported for Horizontal differencing Predictor.");
                 }
             }
-
-            lzwDecoder = new TifflzwDecoder(w, predictor,
-                                            samplePerPixel);
+        }
+        if (compression == TiffConstants.COMPRESSION_LZW)
+        {
+            lzwDecoder = new TifflzwDecoder(w, predictor, samplePerPixel);
         }
 
         var rowsLeft = h;
@@ -603,6 +623,7 @@ public static class TiffImage
                     case TiffConstants.COMPRESSION_DEFLATE:
                     case TiffConstants.COMPRESSION_ADOBE_DEFLATE:
                         Inflate(im, outBuf);
+                        ApplyPredictor(outBuf, predictor, w, height, samplePerPixel);
                         break;
                     case TiffConstants.COMPRESSION_NONE:
                         outBuf = im;
