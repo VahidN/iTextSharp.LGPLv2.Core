@@ -517,23 +517,6 @@ public static class TiffImage
             lzwDecoder = new TifflzwDecoder(w, predictor, samplePerPixel);
         }
 
-        var rowsLeft = h;
-        MemoryStream stream = null;
-        ZDeflaterOutputStream zip = null;
-        Ccittg4Encoder g4 = null;
-        if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
-        {
-            g4 = new Ccittg4Encoder(w);
-        }
-        else
-        {
-            stream = new MemoryStream();
-            if (compression != TiffConstants.COMPRESSION_OJPEG && compression != TiffConstants.COMPRESSION_JPEG)
-            {
-                zip = new ZDeflaterOutputStream(stream);
-            }
-        }
-
         using var memoryStream = extraSamples > 0 ? new MemoryStream() : null;
         using var memoryDeflater = extraSamples > 0 ? new ZDeflaterOutputStream(memoryStream) : null;
 
@@ -612,6 +595,14 @@ public static class TiffImage
         }
         else
         {
+            var useCCITTG4Encoder = bitsPerSample is 1 && samplePerPixel is 1 && photometric is not TiffConstants.PHOTOMETRIC_PALETTE;
+            var useDeflateEncoder = compression is not TiffConstants.COMPRESSION_OJPEG and not TiffConstants.COMPRESSION_JPEG;
+
+            var rowsLeft = h;
+            var g4 = useCCITTG4Encoder ? new Ccittg4Encoder(w) : null;
+            using var stream = useDeflateEncoder ? new MemoryStream() : null;
+            using var zip = useDeflateEncoder ? new ZDeflaterOutputStream(stream) : null;
+
             for (var k = 0; k < offset.Length; ++k)
             {
                 var im = new byte[(int)size[k]];
@@ -647,11 +638,11 @@ public static class TiffImage
                         break;
                 }
 
-                if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
+                if (useCCITTG4Encoder)
                 {
                     g4.Fax4Encode(outBuf, height);
                 }
-                else
+                else if (useDeflateEncoder)
                 {
                     if (extraSamples > 0)
                     {
@@ -684,14 +675,12 @@ public static class TiffImage
                 rowsLeft -= rowsStrip;
             }
 
-            if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
+            if (useCCITTG4Encoder)
             {
-                img = Image.GetInstance(w, h, false, Element.CCITTG4,
-                                        photometric == TiffConstants.PHOTOMETRIC_MINISBLACK
-                                            ? Element.CCITT_BLACKIS1
-                                            : 0, g4.Close());
+                var parameters = photometric == TiffConstants.PHOTOMETRIC_MINISBLACK ? Element.CCITT_BLACKIS1 : 0;
+                img = Image.GetInstance(w, h, false, Element.CCITTG4, photometric, g4.Close());
             }
-            else
+            else if (useDeflateEncoder)
             {
                 zip.Close();
                 img = new ImgRaw(w, h, samplePerPixel - extraSamples, bitsPerSample, stream.ToArray());
@@ -779,6 +768,7 @@ public static class TiffImage
 
         if (extraSamples > 0)
         {
+            memoryDeflater.Close();
             var maskedImage = Image.GetInstance(w, h, components: 1, bitsPerSample, memoryStream.ToArray());
             maskedImage.MakeMask();
             maskedImage.Deflated = true;
