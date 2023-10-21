@@ -531,6 +531,39 @@ public static class TiffImage
             posFilePointer += jpegOffset;
             s.Seek(posFilePointer);
             s.ReadFully(jpeg);
+
+            // If quantization and/or Huffman tables are stored separately in the tiff, we need to add them to the jpeg data
+            var jpegTables = dir.GetField(TiffConstants.TIFFTAG_JPEGTABLES);
+            if (jpegTables is not null)
+            {
+                var temp = jpegTables.GetAsBytes();
+                int tableLength = temp.Length;
+                int tableOffset = 0;
+
+                // remove FFD8 from start
+                if (temp[0] == 0xFF && temp[1] == 0xD8)
+                {
+                    tableOffset = 2;
+                    tableLength -= 2;
+                }
+
+                // remove FFD9 from end
+                if (temp[temp.Length - 2] == 0xFF && temp[temp.Length - 1] == 0xD9)
+                {
+                    tableLength -= 2;
+                }
+
+                var tables = new byte[tableLength];
+                Array.Copy(temp, tableOffset, tables, 0, tableLength);
+
+                // TODO insert after JFIF header, instead of at the start
+                var jpegWithTables = new byte[jpeg.Length + tables.Length];
+                Array.Copy(jpeg, 0, jpegWithTables, 0, 2);
+                Array.Copy(tables, 0, jpegWithTables, 2, tables.Length);
+                Array.Copy(jpeg, 2, jpegWithTables, tables.Length + 2, jpeg.Length - 2);
+                jpeg = jpegWithTables;
+            }
+
             img = new Jpeg(jpeg);
         }
         else if (compression == TiffConstants.COMPRESSION_JPEG)
