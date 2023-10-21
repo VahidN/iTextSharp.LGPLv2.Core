@@ -98,7 +98,12 @@ public static class TiffImage
             throw new InvalidOperationException("Tiles are not supported.");
         }
 
-        var compression = (int)dir.GetFieldAsLong(TiffConstants.TIFFTAG_COMPRESSION);
+        var compression = TiffConstants.COMPRESSION_NONE;
+        if (dir.IsTagPresent(TiffConstants.TIFFTAG_COMPRESSION))
+        {
+            compression = (int) dir.GetFieldAsLong(TiffConstants.TIFFTAG_COMPRESSION);
+        }
+
         switch (compression)
         {
             case TiffConstants.COMPRESSION_CCITTRLEW:
@@ -355,7 +360,13 @@ public static class TiffImage
     {
         var predictor = 1;
         TifflzwDecoder lzwDecoder = null;
-        var compression = (int)dir.GetFieldAsLong(TiffConstants.TIFFTAG_COMPRESSION);
+
+        var compression = TiffConstants.COMPRESSION_NONE;
+        if (dir.IsTagPresent(TiffConstants.TIFFTAG_COMPRESSION))
+        {
+            compression = (int) dir.GetFieldAsLong(TiffConstants.TIFFTAG_COMPRESSION);
+        }
+
         switch (compression)
         {
             case TiffConstants.COMPRESSION_NONE:
