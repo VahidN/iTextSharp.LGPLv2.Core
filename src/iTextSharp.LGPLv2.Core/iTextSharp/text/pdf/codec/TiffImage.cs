@@ -490,7 +490,7 @@ public static class TiffImage
         MemoryStream stream = null;
         ZDeflaterOutputStream zip = null;
         Ccittg4Encoder g4 = null;
-        if (bitsPerSample == 1 && samplePerPixel == 1)
+        if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
         {
             g4 = new Ccittg4Encoder(w);
         }
@@ -582,7 +582,7 @@ public static class TiffImage
                         break;
                 }
 
-                if (bitsPerSample == 1 && samplePerPixel == 1)
+                if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
                 {
                     g4.Fax4Encode(outBuf, height);
                 }
@@ -619,7 +619,7 @@ public static class TiffImage
                 rowsLeft -= rowsStrip;
             }
 
-            if (bitsPerSample == 1 && samplePerPixel == 1)
+            if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TiffConstants.PHOTOMETRIC_PALETTE)
             {
                 img = Image.GetInstance(w, h, false, Element.CCITTG4,
                                         photometric == TiffConstants.PHOTOMETRIC_MINISBLACK
