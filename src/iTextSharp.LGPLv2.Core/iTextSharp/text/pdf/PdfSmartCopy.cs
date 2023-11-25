@@ -47,20 +47,6 @@ public class PdfSmartCopy : PdfCopy
             return null;
         }
 
-        ByteStore streamKey = null;
-        var validStream = false;
-
-        if (srcObj.IsStream() || srcObj.IsDictionary())
-        {
-            streamKey = new ByteStore(srcObj);
-            validStream = true;
-            var streamRef = _streamMap[streamKey];
-            if (streamRef != null)
-            {
-                return streamRef;
-            }
-        }
-
         PdfIndirectReference theRef;
         var key = new RefKey(inp);
         var iRef = Indirects[key];
@@ -74,9 +60,25 @@ public class PdfSmartCopy : PdfCopy
         }
         else
         {
+            ByteStore streamKey = null;
+            if (srcObj.IsStream() || srcObj.IsDictionary())
+            {
+                streamKey = new ByteStore(srcObj);
+                var streamRef = _streamMap[streamKey];
+                if (streamRef != null)
+                {
+                    return streamRef;
+                }
+            }
+            
             theRef = Body.PdfIndirectReference;
             iRef = new IndirectReferences(theRef);
             Indirects[key] = iRef;
+            
+            if (streamKey != null)
+            {
+                _streamMap[streamKey] = theRef;
+            }
         }
 
         if (srcObj.IsDictionary())
@@ -90,11 +92,6 @@ public class PdfSmartCopy : PdfCopy
 
         iRef.SetCopied();
 
-        if (validStream)
-        {
-            _streamMap[streamKey] = theRef;
-        }
-
         var obj = CopyObject(srcObj);
         AddToBody(obj, theRef);
         return theRef;
@@ -103,12 +100,12 @@ public class PdfSmartCopy : PdfCopy
     internal class ByteStore
     {
         private readonly byte[] _b;
-        private List<PdfObject> _references;
+        private List<RefKey> _references;
 
         internal ByteStore(PdfObject str)
         {
             var bb = new ByteBuffer();
-            _references = new List<PdfObject>();
+            _references = new List<RefKey>();
             var level = 100;
             serObject(str, level, bb);
             _b = bb.ToByteArray();
@@ -203,15 +200,18 @@ public class PdfSmartCopy : PdfCopy
 
             if (obj.IsIndirect())
             {
-                var refIdx = _references.IndexOf(obj);
+                var refKey = new RefKey((PdfIndirectReference)obj);
+                var refIdx = _references.IndexOf(refKey);
                 if (refIdx >= 0)
                 {
+                    // Already seen, print relative reference label only
                     bb.Append($"$R{refIdx}");
                     return;
                 }
 
+                // First occurence, print relative reference label and process content
                 bb.Append($"$R{_references.Count}");
-                _references.Add(obj);
+                _references.Add(refKey);
             }
 
             obj = PdfReader.GetPdfObject(obj);
