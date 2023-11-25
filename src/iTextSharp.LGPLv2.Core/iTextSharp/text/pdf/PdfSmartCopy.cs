@@ -50,7 +50,7 @@ public class PdfSmartCopy : PdfCopy
         ByteStore streamKey = null;
         var validStream = false;
 
-        if (srcObj.IsStream())
+        if (srcObj.IsStream() || srcObj.IsDictionary())
         {
             streamKey = new ByteStore(srcObj);
             validStream = true;
@@ -103,10 +103,12 @@ public class PdfSmartCopy : PdfCopy
     internal class ByteStore
     {
         private readonly byte[] _b;
+        private List<PdfObject> _references;
 
         internal ByteStore(PdfObject str)
         {
             var bb = new ByteBuffer();
+            _references = new List<PdfObject>();
             var level = 100;
             serObject(str, level, bb);
             _b = bb.ToByteArray();
@@ -199,18 +201,26 @@ public class PdfSmartCopy : PdfCopy
                 return;
             }
 
+            if (obj.IsIndirect())
+            {
+                var refIdx = _references.IndexOf(obj);
+                if (refIdx >= 0)
+                {
+                    bb.Append($"$R{refIdx}");
+                    return;
+                }
+
+                bb.Append($"$R{_references.Count}");
+                _references.Add(obj);
+            }
+
             obj = PdfReader.GetPdfObject(obj);
             if (obj.IsStream())
             {
                 bb.Append("$B");
                 serDic((PdfDictionary)obj, level - 1, bb);
-                if (level > 0)
-                {
-                    using (var md5 = MD5BouncyCastle.Create())
-                    {
-                        bb.Append(md5.ComputeHash(PdfReader.GetStreamBytesRaw((PrStream)obj)));
-                    }
-                }
+                using var md5 = MD5BouncyCastle.Create();
+                bb.Append(md5.ComputeHash(PdfReader.GetStreamBytesRaw((PrStream)obj)));
             }
             else if (obj.IsDictionary())
             {
