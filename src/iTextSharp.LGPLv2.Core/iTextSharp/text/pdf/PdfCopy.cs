@@ -937,7 +937,7 @@ public class PdfCopy : PdfWriter
                 return false;
             }
 
-            return Gen == other.Gen && Num == other.Num;
+            return Num == other.Num && Gen == other.Gen;
         }
 
         public override int GetHashCode() => (Gen << 16) + Num;
