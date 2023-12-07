@@ -324,7 +324,7 @@ internal class TrueTypeFontUnicode : TrueTypeFont, IComparer<int[]>
             tmp.Add(o);
         }
 
-        var metrics = tmp.ToArray();
+        var metrics = tmp.Where(m => m != null).ToArray();
         Array.Sort(metrics, this);
         PdfIndirectReference indFont = null;
         PdfObject pobj = null;
