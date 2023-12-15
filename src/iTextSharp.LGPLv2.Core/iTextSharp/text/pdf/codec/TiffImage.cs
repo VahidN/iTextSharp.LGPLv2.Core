@@ -393,9 +393,10 @@ public static class TiffImage
             throw new InvalidOperationException("Planar images are not supported.");
         }
 
+        var extraSamples = 0;
         if (dir.IsTagPresent(TiffConstants.TIFFTAG_EXTRASAMPLES))
         {
-            throw new InvalidOperationException("Extra samples are not supported.");
+            extraSamples = 1;
         }
 
         var samplePerPixel = 1;
@@ -487,7 +488,15 @@ public static class TiffImage
 
         var rowsLeft = h;
         MemoryStream stream = null;
+        MemoryStream mstream = null;
         ZDeflaterOutputStream zip = null;
+        ZDeflaterOutputStream mzip = null;
+        
+        if (extraSamples > 0) {
+            mstream = new MemoryStream();
+            mzip = new ZDeflaterOutputStream(mstream);
+        }
+        
         Ccittg4Encoder g4 = null;
         if (bitsPerSample == 1 && samplePerPixel == 1)
         {
@@ -584,7 +593,10 @@ public static class TiffImage
                 }
                 else
                 {
-                    zip.Write(outBuf, 0, outBuf.Length);
+                    if (extraSamples > 0)
+                        processExtraSamples(zip, mzip, outBuf, samplePerPixel, bitsPerSample, w, height);
+                    else
+                        zip.Write(outBuf, 0, outBuf.Length);
                 }
 
                 rowsLeft -= rowsStrip;
@@ -600,7 +612,7 @@ public static class TiffImage
             else
             {
                 zip.Close();
-                img = Image.GetInstance(w, h, samplePerPixel, bitsPerSample, stream.ToArray());
+                img = Image.GetInstance(w, h, samplePerPixel - extraSamples, bitsPerSample, stream.ToArray());
                 img.Deflated = true;
             }
         }
@@ -614,7 +626,7 @@ public static class TiffImage
                 {
                     var fd = dir.GetField(TiffConstants.TIFFTAG_ICCPROFILE);
                     var iccProf = IccProfile.GetInstance(fd.GetAsBytes());
-                    if (samplePerPixel == iccProf.NumComponents)
+                    if (samplePerPixel - extraSamples == iccProf.NumComponents)
                     {
                         img.TagIcc = iccProf;
                     }
@@ -661,8 +673,35 @@ public static class TiffImage
         {
             img.InitialRotation = rotation;
         }
+        
+        if (extraSamples > 0) {
+            mzip.Close();
+            var mimg = Image.GetInstance(w, h, 1, bitsPerSample, mstream.ToArray());
+            mimg.MakeMask();
+            mimg.Deflated = true;
+            img.ImageMask = mimg;
+        }
 
         return img;
+    }
+
+    private static void processExtraSamples(ZDeflaterOutputStream zip, ZDeflaterOutputStream mzip, byte[] outBuf, int samplePerPixel, int bitsPerSample, int width, int height) {
+        if (bitsPerSample == 8) {
+            var mask = new byte[width * height];
+            var mptr = 0;
+            var optr = 0;
+            var total = width * height * samplePerPixel;
+            for (var k = 0; k < total; k += samplePerPixel) {
+                for (var s = 0; s < samplePerPixel - 1; ++s) {
+                    outBuf[optr++] = outBuf[k + s];
+                }
+                mask[mptr++] = outBuf[k + samplePerPixel - 1];
+            }
+            zip.Write(outBuf, 0, optr);
+            mzip.Write(mask, 0, mptr);
+        }
+        else
+            throw new InvalidOperationException("Extra samples are not supported.");
     }
 
     private static long[] getArrayLongShort(TiffDirectory dir, int tag)
