@@ -1,11 +1,7 @@
 iTextSharp.LGPLv2.Core
 ======================
 
-<p align="left">
-  <a href="https://github.com/VahidN/iTextSharp.LGPLv2.Core">
-     <img alt="GitHub Actions status" src="https://github.com/VahidN/iTextSharp.LGPLv2.Core/workflows/.NET%20Core%20Build/badge.svg">
-  </a>
-</p>
+[![iTextSharp.LGPLv2.Core](https://github.com/VahidN/iTextSharp.LGPLv2.Core/workflows/.NET%20Core%20Build/badge.svg)](https://github.com/VahidN/iTextSharp.LGPLv2.Core)
 
 `iTextSharp.LGPLv2.Core` is an **unofficial** port of the last [LGPL version](http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html) of the [iTextSharp (V4.1.6)](https://github.com/itextsharper/iTextSharp-4.1.6) to .NET Core.
 
@@ -42,7 +38,7 @@ You also need to modify your `.csproj` file to include some MSBuild directives t
 
 Usage
 ------
-[Functional Tests](/src/iTextSharp.LGPLv2.Core.FunctionalTests)
+[Functional Tests](https://github.com/VahidN/iTextSharp.LGPLv2.Core/tree/master/src/iTextSharp.LGPLv2.Core.FunctionalTests)
 
 
 FAQ
