@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.4.15</VersionPrefix>
+        <VersionPrefix>3.4.16</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
         <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
@@ -28,6 +28,7 @@
         <Features>strict</Features>
         <Deterministic>true</Deterministic>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
@@ -38,6 +39,7 @@
     <ItemGroup>
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt"/>
         <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)"/>
+        <None Include="../../../README.md" Link="README.md" Pack="true" PackagePath="/" Visible="false" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>anycpu</PlatformTarget>
