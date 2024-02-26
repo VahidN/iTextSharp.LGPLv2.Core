@@ -22,7 +22,7 @@ public class RtfImportMgr
     /// <summary>
     ///     The Hashtable storing the color number mapings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _importColorMapping;
+    private readonly NullValueDictionary<string, string> _importColorMapping;
 
     /// <summary>
     ///     TODO: Add list, stylesheet, info, etc. mappings
@@ -30,17 +30,17 @@ public class RtfImportMgr
     /// <summary>
     ///     The Hashtable storing the font number mappings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _importFontMapping;
+    private readonly NullValueDictionary<string, string> _importFontMapping;
 
     /// <summary>
     ///     The Hashtable storing the List number mapings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _importListMapping;
+    private readonly NullValueDictionary<string, string> _importListMapping;
 
     /// <summary>
     ///     The Hashtable storing the Stylesheet List number mapings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _importStylesheetListMapping;
+    private readonly NullValueDictionary<string, string> _importStylesheetListMapping;
 
     /// <summary>
     ///     The RtfDocument to get font and color numbers from.
@@ -52,7 +52,6 @@ public class RtfImportMgr
     ///     Used for conversions, but not imports.
     /// </summary>
     private Document _doc;
-
 
     /// <summary>
     ///     Constructs a new RtfImportHeader.
@@ -92,8 +91,10 @@ public class RtfImportMgr
     {
         var rtfFont = new RtfFont(fontName);
         rtfFont.SetRtfDocument(_rtfDoc);
+
         _importFontMapping[fontNr] =
             _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
+
         return true;
     }
 
@@ -107,14 +108,17 @@ public class RtfImportMgr
     public bool ImportFont(string fontNr, string fontName, int charset)
     {
         var rtfFont = new RtfFont(fontName);
+
         if (charset >= 0)
         {
             rtfFont.SetCharset(charset);
         }
 
         rtfFont.SetRtfDocument(_rtfDoc);
+
         _importFontMapping[fontNr] =
             _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
+
         return true;
     }
 
@@ -141,8 +145,10 @@ public class RtfImportMgr
         }
 
         rtfFont.SetRtfDocument(_rtfDoc);
+
         _importFontMapping[fontNr] =
             _rtfDoc.GetDocumentHeader().GetFontNumber(rtfFont).ToString(CultureInfo.InvariantCulture);
+
         return true;
     }
 
@@ -151,9 +157,7 @@ public class RtfImportMgr
     ///     is determined and then the resulting mapping is added.
     /// </summary>
     public void ImportList(string origListNr, string newListNr)
-    {
-        _importListMapping[origListNr] = newListNr;
-    }
+        => _importListMapping[origListNr] = newListNr;
 
     /// <summary>
     ///     Imports a stylesheet list value. The stylesheet number for the stylesheet defined
@@ -163,6 +167,7 @@ public class RtfImportMgr
     {
         var rtfList = new RtfList(_rtfDoc, listIn);
         rtfList.SetRtfDocument(_rtfDoc);
+
         return true;
     }
 

@@ -13,7 +13,7 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     The Hashtable containing the RtfParagraphStyles.
     /// </summary>
-    private readonly INullValueDictionary<string, RtfParagraphStyle> _styleMap;
+    private readonly NullValueDictionary<string, RtfParagraphStyle> _styleMap;
 
     /// <summary>
     ///     Whether the default settings have been loaded.
@@ -24,8 +24,8 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
     ///     Constructs a new RtfStylesheetList for the RtfDocument.
     /// </summary>
     /// <param name="doc">The RtfDocument this RtfStylesheetList belongs to.</param>
-    public RtfStylesheetList(RtfDocument doc) : base(doc) =>
-        _styleMap = new NullValueDictionary<string, RtfParagraphStyle>();
+    public RtfStylesheetList(RtfDocument doc) : base(doc)
+        => _styleMap = new NullValueDictionary<string, RtfParagraphStyle>();
 
     /// <summary>
     ///     unused
@@ -49,6 +49,7 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
         outp.Write(t = DocWriter.GetIsoBytes("\\stylesheet"), 0, t.Length);
         outp.Write(t = Delimiter, 0, t.Length);
         Document.OutputDebugLinebreak(outp);
+
         foreach (var rps in _styleMap.Values)
         {
             rps.WriteDefinition(outp);
@@ -98,6 +99,7 @@ public class RtfStylesheetList : RtfElement, IRtfExtendedElement
     private void registerDefaultStyles()
     {
         _defaultsLoaded = true;
+
         if (!_styleMap.ContainsKey(RtfParagraphStyle.StyleNormal.GetStyleName()))
         {
             RegisterParagraphStyle(RtfParagraphStyle.StyleNormal);

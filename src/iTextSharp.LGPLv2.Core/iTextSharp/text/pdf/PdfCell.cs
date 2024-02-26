@@ -102,6 +102,7 @@ public class PdfCell : Rectangle
 
         List<PdfAction> allActions;
         int aCounter;
+
         // we loop over all the elements of the cell
         foreach (var ele in cell.Elements)
         {
@@ -113,7 +114,9 @@ public class PdfCell : Rectangle
                 case IMGRAW:
                 case IMGTEMPLATE:
                     addImage((Image)ele, left, right, 0.4f * Leading, alignment);
+
                     break;
+
                 // if the element is a list
                 case LIST:
                     if (_line != null && _line.Size > 0)
@@ -125,7 +128,9 @@ public class PdfCell : Rectangle
                     // we loop over all the listitems
                     addList((List)ele, left, right, alignment);
                     _line = new PdfLine(left, right, alignment, Leading);
+
                     break;
+
                 // if the element is something else
                 default:
                     allActions = new List<PdfAction>();
@@ -135,6 +140,7 @@ public class PdfCell : Rectangle
                     var currentLineLeading = Leading;
                     var currentLeft = left;
                     var currentRight = right;
+
                     if (ele is Phrase)
                     {
                         currentLineLeading = ((Phrase)ele).Leading;
@@ -154,6 +160,7 @@ public class PdfCell : Rectangle
 
                     // we loop over the chunks
                     var chunks = ele.Chunks;
+
                     if (chunks.Count == 0)
                     {
                         addLine(_line); // add empty line - all cells need some lines even if they are empty
@@ -164,6 +171,7 @@ public class PdfCell : Rectangle
                         foreach (var c in chunks)
                         {
                             chunk = new PdfChunk(c, allActions[aCounter++]);
+
                             while ((overflow = _line.Add(chunk)) != null)
                             {
                                 addLine(_line);
@@ -181,6 +189,7 @@ public class PdfCell : Rectangle
                         case CHAPTER:
                             _line.ResetAlignment();
                             flushCurrentLine();
+
                             break;
                     }
 
@@ -189,6 +198,7 @@ public class PdfCell : Rectangle
         }
 
         flushCurrentLine();
+
         if (_lines.Count > cell.MaxLines)
         {
             while (_lines.Count > cell.MaxLines)
@@ -199,14 +209,17 @@ public class PdfCell : Rectangle
             if (cell.MaxLines > 0)
             {
                 var more = cell.ShowTruncation;
+
                 if (!string.IsNullOrEmpty(more))
                 {
                     // Denote that the content has been truncated
                     _lastLine = _lines[_lines.Count - 1];
+
                     if (_lastLine.Size >= 0)
                     {
                         var lastChunk = _lastLine.GetChunk(_lastLine.Size - 1);
                         var moreWidth = new PdfChunk(more, lastChunk).Width;
+
                         while (lastChunk.ToString().Length > 0 && lastChunk.Width + moreWidth > right - left)
                         {
                             // Remove characters to leave room for the 'more' indicator
@@ -265,17 +278,21 @@ public class PdfCell : Rectangle
             {
                 case ALIGN_BOTTOM:
                     extraHeight = interiorHeight - _contentHeight;
+
                     break;
                 case ALIGN_MIDDLE:
                     extraHeight = (interiorHeight - _contentHeight) / 2.0f;
+
                     break;
                 default: // ALIGN_TOP
                     extraHeight = 0f;
+
                     break;
             }
 
             extraHeight += Cellpadding + Cellspacing;
             extraHeight += getBorderWidthInside(TOP_BORDER);
+
             if (_firstLine != null)
             {
                 _firstLine.height = firstLineRealHeight + extraHeight;
@@ -313,6 +330,7 @@ public class PdfCell : Rectangle
         get
         {
             var result = 0f;
+
             foreach (var image in _images)
             {
                 result += image.ScaledHeight;
@@ -383,12 +401,15 @@ public class PdfCell : Rectangle
         get
         {
             var firstLineRealHeight = 0f;
+
             if (_firstLine != null)
             {
                 var chunk = _firstLine.GetChunk(0);
+
                 if (chunk != null)
                 {
                     var image = chunk.Image;
+
                     if (image != null)
                     {
                         firstLineRealHeight = _firstLine.GetChunk(0).Image.ScaledHeight;
@@ -413,14 +434,18 @@ public class PdfCell : Rectangle
         }
 
         top = Math.Min(Top, top);
+
         // initialisations
         float height;
         List<Image> result = new();
+
         // we loop over the images
         List<Image> remove = new();
+
         foreach (var image in _images)
         {
             height = image.AbsoluteY;
+
             // if the currentPosition is higher than the bottom, we add the line to the result
             if (top - height > bottom + Cellpadding)
             {
@@ -454,11 +479,13 @@ public class PdfCell : Rectangle
         // we loop over the lines
         var size = _lines.Count;
         var aboveBottom = true;
+
         for (var i = 0; i < size && aboveBottom; i++)
         {
             _line = _lines[i];
             lineHeight = _line.Height;
             currentPosition -= lineHeight;
+
             // if the currentPosition is higher than the bottom, we add the line to the result
             if (currentPosition > bottom + Cellpadding + getBorderWidthInside(BOTTOM_BORDER))
             {
@@ -473,6 +500,7 @@ public class PdfCell : Rectangle
 
         // if the bottom of the cell is higher than the bottom of the page, the cell is written, so we can remove all lines
         var difference = 0f;
+
         if (!Header)
         {
             if (aboveBottom)
@@ -483,6 +511,7 @@ public class PdfCell : Rectangle
             else
             {
                 size = result.Count;
+
                 for (var i = 0; i < size; i++)
                 {
                     _line = removeLine(0);
@@ -506,6 +535,7 @@ public class PdfCell : Rectangle
     {
         var tmp = new Rectangle(Left, Bottom, Right, Top);
         tmp.CloneNonPositionParameters(this);
+
         if (Top > top)
         {
             tmp.Top = top;
@@ -521,14 +551,13 @@ public class PdfCell : Rectangle
         return tmp;
     }
 
-    internal bool MayBeRemoved() => Header || (_lines.Count == 0 && _images.Count == 0);
+    internal bool MayBeRemoved()
+        => Header || (_lines.Count == 0 && _images.Count == 0);
 
     internal void SetHeader()
-    {
-        Header = true;
-    }
+        => Header = true;
 
-    protected void ProcessActions(IElement element, PdfAction action, IList<PdfAction> allActions)
+    protected static void ProcessActions(IElement element, PdfAction action, IList<PdfAction> allActions)
     {
         if (element == null)
         {
@@ -543,6 +572,7 @@ public class PdfCell : Rectangle
         if (element.Type == ANCHOR)
         {
             var url = ((Anchor)element).Reference;
+
             if (url != null)
             {
                 action = new PdfAction(url);
@@ -565,6 +595,7 @@ public class PdfCell : Rectangle
                 break;
             case CHUNK:
                 allActions.Add(action);
+
                 break;
             case LIST:
                 foreach (var ele in ((List)element).Items)
@@ -575,6 +606,7 @@ public class PdfCell : Rectangle
                 break;
             default:
                 var n = element.Chunks.Count;
+
                 while (n-- > 0)
                 {
                     allActions.Add(action);
@@ -587,12 +619,14 @@ public class PdfCell : Rectangle
     private float addImage(Image i, float left, float right, float extraHeight, int alignment)
     {
         var image = Image.GetInstance(i);
+
         if (image.ScaledWidth > right - left)
         {
             image.ScaleToFit(right - left, float.MaxValue);
         }
 
         flushCurrentLine();
+
         if (_line == null)
         {
             _line = new PdfLine(left, right, alignment, Leading);
@@ -617,6 +651,7 @@ public class PdfCell : Rectangle
         var imageChunk = new Chunk(image, left, 0);
         imageLine.Add(new PdfChunk(imageChunk, null));
         addLine(imageLine);
+
         return imageLine.Height;
     }
 
@@ -635,6 +670,7 @@ public class PdfCell : Rectangle
         List<PdfAction> allActions = new();
         ProcessActions(list, null, allActions);
         var aCounter = 0;
+
         foreach (var ele in list.Items)
         {
             switch (ele.Type)
@@ -643,9 +679,11 @@ public class PdfCell : Rectangle
                     var item = (ListItem)ele;
                     _line = new PdfLine(left + item.IndentationLeft, right, alignment, item.Leading);
                     _line.ListItem = item;
+
                     foreach (var c in item.Chunks)
                     {
                         chunk = new PdfChunk(c, allActions[aCounter++]);
+
                         while ((overflow = _line.Add(chunk)) != null)
                         {
                             addLine(_line);
@@ -662,6 +700,7 @@ public class PdfCell : Rectangle
                 case LIST:
                     var sublist = (List)ele;
                     addList(sublist, left + sublist.IndentationLeft, right, alignment);
+
                     break;
             }
         }
@@ -688,24 +727,29 @@ public class PdfCell : Rectangle
     private float getBorderWidthInside(int side)
     {
         var width = 0f;
+
         if (_useBorderPadding)
         {
             switch (side)
             {
                 case LEFT_BORDER:
                     width = BorderWidthLeft;
+
                     break;
 
                 case RIGHT_BORDER:
                     width = BorderWidthRight;
+
                     break;
 
                 case TOP_BORDER:
                     width = BorderWidthTop;
+
                     break;
 
                 default: // default and BOTTOM
                     width = BorderWidthBottom;
+
                     break;
             }
 
@@ -729,6 +773,7 @@ public class PdfCell : Rectangle
         float result = 0;
         var size = _lines.Count;
         PdfLine line;
+
         for (var i = 0; i < size; i++)
         {
             line = _lines[i];
@@ -762,6 +807,7 @@ public class PdfCell : Rectangle
         var oldLine = _lines[index];
         _lines.RemoveAt(index);
         _contentHeight -= oldLine.Height;
+
         if (index == 0)
         {
             if (_lines.Count > 0)

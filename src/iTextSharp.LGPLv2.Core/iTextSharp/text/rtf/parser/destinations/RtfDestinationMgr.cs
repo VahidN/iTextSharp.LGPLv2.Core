@@ -25,8 +25,7 @@ public sealed class RtfDestinationMgr
     ///     Destination objects.
     ///     There is only one of each destination.
     /// </summary>
-    private static readonly INullValueDictionary<string, RtfDestination> _destinationObjects =
-        new NullValueDictionary<string, RtfDestination>();
+    private static readonly NullValueDictionary<string, RtfDestination> _destinationObjects = new();
 
     /// <summary>
     ///     CtrlWord :: Destination map object.
@@ -35,8 +34,7 @@ public sealed class RtfDestinationMgr
     ///     discarding unwanted data. This is primarily used when
     ///     skipping groups, binary data or unwanted/unknown data.
     /// </summary>
-    private static readonly INullValueDictionary<string, RtfDestination> _destinations =
-        new NullValueDictionary<string, RtfDestination>();
+    private static readonly NullValueDictionary<string, RtfDestination> _destinations = new();
 
     /// <summary>
     ///     Destinations
@@ -69,36 +67,37 @@ public sealed class RtfDestinationMgr
         if (thisClass.IndexOf("RtfDestinationNull", StringComparison.Ordinal) >= 0)
         {
             _destinations[destination] = RtfDestinationNull.GetInstance();
+
             return true;
         }
 
-        Type value = null;
+        Type type = null;
 
         try
         {
-            value = Type.GetType(thisClass);
+            type = Type.GetType(thisClass);
         }
         catch
         {
             return false;
         }
 
-        if (value == null)
+        if (type == null)
         {
             return false;
         }
 
         RtfDestination c = null;
 
-        if (_destinationObjects.ContainsKey(value.Name))
+        if (_destinationObjects.TryGetValue(type.Name, out var value))
         {
-            c = _destinationObjects[value.Name];
+            c = value;
         }
         else
         {
             try
             {
-                c = (RtfDestination)Activator.CreateInstance(value);
+                c = (RtfDestination)Activator.CreateInstance(type);
             }
             catch
             {
@@ -108,19 +107,20 @@ public sealed class RtfDestinationMgr
 
         c.SetParser(_rtfParser);
 
-        if (value == typeof(RtfDestinationInfo))
+        if (type == typeof(RtfDestinationInfo))
         {
             ((RtfDestinationInfo)c).SetElementName(destination);
         }
 
-        if (value == typeof(RtfDestinationStylesheetTable))
+        if (type == typeof(RtfDestinationStylesheetTable))
         {
             ((RtfDestinationStylesheetTable)c).SetElementName(destination);
             ((RtfDestinationStylesheetTable)c).SetType((string)args[1]);
         }
 
         _destinations[destination] = c;
-        _destinationObjects[value.Name] = c;
+        _destinationObjects[type.Name] = c;
+
         return true;
     }
 
@@ -133,6 +133,7 @@ public sealed class RtfDestinationMgr
     public static bool AddListener(string destination, IRtfDestinationListener listener)
     {
         var dest = GetDestination(destination);
+
         if (dest != null)
         {
             return RtfDestination.AddListener(listener);
@@ -144,16 +145,10 @@ public sealed class RtfDestinationMgr
     public static RtfDestination GetDestination(string destination)
     {
         RtfDestination dest;
-        if (_destinations.ContainsKey(destination))
-        {
-            dest = _destinations[destination];
-        }
-        else
-        {
-            dest = _destinations[DESTINATION_DOCUMENT];
-        }
+        dest = _destinations.TryGetValue(destination, out var value) ? value : _destinations[DESTINATION_DOCUMENT];
 
         dest.SetParser(_rtfParser);
+
         return dest;
     }
 
@@ -164,9 +159,17 @@ public sealed class RtfDestinationMgr
             if (_instance == null)
             {
                 _instance = new RtfDestinationMgr();
+
                 // 2 required destinations for all documents
-                AddDestination(DESTINATION_DOCUMENT, new object[] { "RtfDestinationDocument", "" });
-                AddDestination(DESTINATION_NULL, new object[] { "RtfDestinationNull", "" });
+                AddDestination(DESTINATION_DOCUMENT, new object[]
+                {
+                    "RtfDestinationDocument", ""
+                });
+
+                AddDestination(DESTINATION_NULL, new object[]
+                {
+                    "RtfDestinationNull", ""
+                });
             }
 
             return _instance;
@@ -178,12 +181,21 @@ public sealed class RtfDestinationMgr
         lock (_destinations)
         {
             SetParser(parser);
+
             if (_instance == null)
             {
                 _instance = new RtfDestinationMgr();
+
                 // 2 required destinations for all documents
-                AddDestination(DESTINATION_DOCUMENT, new object[] { "RtfDestinationDocument", "" });
-                AddDestination(DESTINATION_NULL, new object[] { "RtfDestinationNull", "" });
+                AddDestination(DESTINATION_DOCUMENT, new object[]
+                {
+                    "RtfDestinationDocument", ""
+                });
+
+                AddDestination(DESTINATION_NULL, new object[]
+                {
+                    "RtfDestinationNull", ""
+                });
             }
 
             return _instance;
@@ -202,6 +214,7 @@ public sealed class RtfDestinationMgr
     public static bool RemoveListener(string destination, IRtfDestinationListener listener)
     {
         var dest = GetDestination(destination);
+
         if (dest != null)
         {
             return RtfDestination.RemoveListener(listener);
@@ -211,7 +224,5 @@ public sealed class RtfDestinationMgr
     }
 
     public static void SetParser(RtfParser parser)
-    {
-        _rtfParser = parser;
-    }
+        => _rtfParser = parser;
 }

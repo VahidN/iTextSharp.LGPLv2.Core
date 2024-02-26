@@ -42,6 +42,7 @@ public class PdfEFStream : PdfStream
         }
 
         PdfEncryption crypto = null;
+
         if (writer != null)
         {
             crypto = writer.Encryption;
@@ -50,6 +51,7 @@ public class PdfEFStream : PdfStream
         if (crypto != null)
         {
             var filter = Get(PdfName.Filter);
+
             if (filter != null)
             {
                 if (PdfName.Crypt.Equals(filter))
@@ -59,6 +61,7 @@ public class PdfEFStream : PdfStream
                 else if (filter.IsArray())
                 {
                     var a = (PdfArray)filter;
+
                     if (!a.IsEmpty() && PdfName.Crypt.Equals(a[0]))
                     {
                         crypto = null;
@@ -75,6 +78,7 @@ public class PdfEFStream : PdfStream
             crypt.Put(PdfName.Name, PdfName.Stdcf);
             filter.Add(PdfName.Crypt);
             decodeparms.Add(crypt);
+
             if (Compressed)
             {
                 filter.Add(PdfName.Flatedecode);
@@ -86,6 +90,7 @@ public class PdfEFStream : PdfStream
         }
 
         var nn = Get(PdfName.LENGTH);
+
         if (crypto != null && nn != null && nn.IsNumber())
         {
             var sz = ((PdfNumber)nn).IntValue;
@@ -99,6 +104,7 @@ public class PdfEFStream : PdfStream
         }
 
         os.Write(Startstream, 0, Startstream.Length);
+
         if (InputStream != null)
         {
             rawLength = 0;
@@ -106,20 +112,25 @@ public class PdfEFStream : PdfStream
             var osc = new OutputStreamCounter(os);
             OutputStreamEncryption ose = null;
             Stream fout = osc;
+
             if (crypto != null)
             {
-                fout = ose = crypto.GetEncryptionStream(fout);
+                ose = crypto.GetEncryptionStream(fout);
+                fout = ose;
             }
 
             if (Compressed)
             {
-                fout = def = new ZDeflaterOutputStream(fout, CompressionLevel);
+                def = new ZDeflaterOutputStream(fout, CompressionLevel);
+                fout = def;
             }
 
             var buf = new byte[4192];
+
             while (true)
             {
                 var n = InputStream.Read(buf, 0, buf.Length);
+
                 if (n <= 0)
                 {
                     break;
@@ -157,6 +168,7 @@ public class PdfEFStream : PdfStream
             else
             {
                 byte[] b;
+
                 if (StreamBytes != null)
                 {
                     b = crypto.EncryptByteArray(StreamBytes.ToArray());

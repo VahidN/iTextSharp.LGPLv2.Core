@@ -37,13 +37,13 @@ public class TiffDirectory
         4, //  9 = slong
         8, // 10 = srational
         4, // 11 = float
-        8, // 12 = double
+        8 // 12 = double
     };
 
     /// <summary>
     ///     A Hashtable indexing the fields by tag number.
     /// </summary>
-    private readonly INullValueDictionary<int, int?> _fieldIndex = new NullValueDictionary<int, int?>();
+    private readonly NullValueDictionary<int, int?> _fieldIndex = new();
 
     /// <summary>
     ///     A bool storing the endianness of the stream.
@@ -92,6 +92,7 @@ public class TiffDirectory
         // Read the TIFF header
         stream.Seek(0L);
         var endian = stream.ReadUnsignedShort();
+
         if (!isValidEndianTag(endian))
         {
             throw new InvalidOperationException("Bad endianness tag (not 0x4949 or 0x4d4d).");
@@ -100,6 +101,7 @@ public class TiffDirectory
         _isBigEndian = endian == 0x4d4d;
 
         var magic = readUnsignedShort(stream);
+
         if (magic != 42)
         {
             throw new InvalidOperationException("Bad magic number, should be 42.");
@@ -149,6 +151,7 @@ public class TiffDirectory
         long globalSaveOffset = stream.FilePointer;
         stream.Seek(0L);
         var endian = stream.ReadUnsignedShort();
+
         if (!isValidEndianTag(endian))
         {
             throw new InvalidOperationException("Bad endianness tag (not 0x4949 or 0x4d4d).");
@@ -161,6 +164,7 @@ public class TiffDirectory
 
         // Seek to desired IFD if necessary.
         var dirNum = 0;
+
         while (dirNum < directory)
         {
             // Get the number of fields in the current IFD.
@@ -205,6 +209,7 @@ public class TiffDirectory
 
         stream.Seek(0L);
         var endian = stream.ReadUnsignedShort();
+
         if (!isValidEndianTag(endian))
         {
             throw new InvalidOperationException("Bad endianness tag (not 0x4949 or 0x4d4d).");
@@ -212,6 +217,7 @@ public class TiffDirectory
 
         var isBigEndian = endian == 0x4d4d;
         var magic = readUnsignedShort(stream, isBigEndian);
+
         if (magic != 42)
         {
             throw new InvalidOperationException("Bad magic number, should be 42.");
@@ -221,6 +227,7 @@ public class TiffDirectory
         var offset = readUnsignedInt(stream, isBigEndian);
 
         var numDirectories = 0;
+
         while (offset != 0L)
         {
             ++numDirectories;
@@ -241,6 +248,7 @@ public class TiffDirectory
         }
 
         stream.Seek(pointer); // Reset stream pointer
+
         return numDirectories;
     }
 
@@ -251,6 +259,7 @@ public class TiffDirectory
     public TiffField GetField(int tag)
     {
         var i = _fieldIndex[tag];
+
         return i.HasValue ? _fields[i.Value] : null;
     }
 
@@ -263,12 +272,14 @@ public class TiffDirectory
     public byte? GetFieldAsByte(int tag, int index)
     {
         var i = _fieldIndex[tag];
+
         if (!i.HasValue)
         {
             return null;
         }
 
         var b = _fields[i.Value].GetAsBytes();
+
         return b[index];
     }
 
@@ -278,7 +289,8 @@ public class TiffDirectory
     ///     present and has  type TIFFField.TIFF_SBYTE, TIFF_BYTE, or
     ///     TIFF_UNDEFINED.
     /// </summary>
-    public byte? GetFieldAsByte(int tag) => GetFieldAsByte(tag, 0);
+    public byte? GetFieldAsByte(int tag)
+        => GetFieldAsByte(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -289,6 +301,7 @@ public class TiffDirectory
     public double? GetFieldAsDouble(int tag, int index)
     {
         var i = _fieldIndex[tag];
+
         if (!i.HasValue)
         {
             return null;
@@ -302,7 +315,8 @@ public class TiffDirectory
     ///     caller is responsible for ensuring that the tag is present and
     ///     has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
     /// </summary>
-    public double? GetFieldAsDouble(int tag) => GetFieldAsDouble(tag, 0);
+    public double? GetFieldAsDouble(int tag)
+        => GetFieldAsDouble(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -313,6 +327,7 @@ public class TiffDirectory
     public float? GetFieldAsFloat(int tag, int index)
     {
         var i = _fieldIndex[tag];
+
         if (!i.HasValue)
         {
             return null;
@@ -326,7 +341,8 @@ public class TiffDirectory
     ///     caller is responsible for ensuring that the tag is present and
     ///     has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
     /// </summary>
-    public float? GetFieldAsFloat(int tag) => GetFieldAsFloat(tag, 0);
+    public float? GetFieldAsFloat(int tag)
+        => GetFieldAsFloat(tag, 0);
 
     /// <summary>
     ///     Returns the value of a particular index of a given tag as a
@@ -337,6 +353,7 @@ public class TiffDirectory
     public long? GetFieldAsLong(int tag, int index)
     {
         var i = _fieldIndex[tag];
+
         if (!i.HasValue)
         {
             return null;
@@ -351,30 +368,35 @@ public class TiffDirectory
     ///     present and has type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED,
     ///     TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG or TIFF_LONG.
     /// </summary>
-    public long? GetFieldAsLong(int tag) => GetFieldAsLong(tag, 0);
+    public long? GetFieldAsLong(int tag)
+        => GetFieldAsLong(tag, 0);
 
     /// <summary>
     ///     Returns an array of TIFFFields containing all the fields
     ///     in this directory.
     /// </summary>
-    public TiffField[] GetFields() => _fields;
+    public TiffField[] GetFields()
+        => _fields;
 
     /// <summary>
     ///     Returns the offset of the IFD corresponding to this
     ///     TIFFDirectory .
     /// </summary>
-    public long GetIfdOffset() => _ifdOffset;
+    public long GetIfdOffset()
+        => _ifdOffset;
 
     /// <summary>
     ///     Returns the offset of the next IFD after the IFD corresponding to this
     ///     TIFFDirectory .
     /// </summary>
-    public long GetNextIfdOffset() => _nextIfdOffset;
+    public long GetNextIfdOffset()
+        => _nextIfdOffset;
 
     /// <summary>
     ///     Returns the number of directory entries.
     /// </summary>
-    public int GetNumEntries() => _numEntries;
+    public int GetNumEntries()
+        => _numEntries;
 
     /// <summary>
     ///     Returns an ordered array of ints indicating the tag
@@ -384,6 +406,7 @@ public class TiffDirectory
     {
         var tags = new int[_fieldIndex.Count];
         _fieldIndex.Keys.CopyTo(tags, 0);
+
         return tags;
     }
 
@@ -395,17 +418,19 @@ public class TiffDirectory
     ///     the TIFF file is big-endian (i.e. whether the byte order is from
     ///     the most significant to the least significant)
     /// </summary>
-    public bool IsBigEndian() => _isBigEndian;
+    public bool IsBigEndian()
+        => _isBigEndian;
 
     /// <summary>
     ///     Returns true if a tag appears in the directory.
     /// </summary>
-    public bool IsTagPresent(int tag) => _fieldIndex.ContainsKey(tag);
+    public bool IsTagPresent(int tag)
+        => _fieldIndex.ContainsKey(tag);
 
-    private static bool isValidEndianTag(int endian) => endian == 0x4949 || endian == 0x4d4d;
+    private static bool isValidEndianTag(int endian)
+        => endian == 0x4949 || endian == 0x4d4d;
 
-    private static long readUnsignedInt(RandomAccessFileOrArray stream,
-                                        bool isBigEndian)
+    private static long readUnsignedInt(RandomAccessFileOrArray stream, bool isBigEndian)
     {
         if (isBigEndian)
         {
@@ -415,8 +440,7 @@ public class TiffDirectory
         return stream.ReadUnsignedIntLe();
     }
 
-    private static int readUnsignedShort(RandomAccessFileOrArray stream,
-                                         bool isBigEndian)
+    private static int readUnsignedShort(RandomAccessFileOrArray stream, bool isBigEndian)
     {
         if (isBigEndian)
         {
@@ -509,6 +533,7 @@ public class TiffDirectory
 
                             count = v.Count;
                             var strings = new string[count];
+
                             for (var c = 0; c < count; c++)
                             {
                                 strings[c] = v[c];
@@ -525,58 +550,73 @@ public class TiffDirectory
 
                     case TiffField.TIFF_SHORT:
                         var cvalues = new char[count];
+
                         for (j = 0; j < count; j++)
                         {
                             cvalues[j] = (char)readUnsignedShort(stream);
                         }
 
                         obj = cvalues;
+
                         break;
 
                     case TiffField.TIFF_LONG:
                         var lvalues = new long[count];
+
                         for (j = 0; j < count; j++)
                         {
                             lvalues[j] = readUnsignedInt(stream);
                         }
 
                         obj = lvalues;
+
                         break;
 
                     case TiffField.TIFF_RATIONAL:
                         var llvalues = new long[count][];
+
                         for (j = 0; j < count; j++)
                         {
                             var v0 = readUnsignedInt(stream);
                             var v1 = readUnsignedInt(stream);
-                            llvalues[j] = new[] { v0, v1 };
+
+                            llvalues[j] = new[]
+                            {
+                                v0, v1
+                            };
                         }
 
                         obj = llvalues;
+
                         break;
 
                     case TiffField.TIFF_SSHORT:
                         var svalues = new short[count];
+
                         for (j = 0; j < count; j++)
                         {
                             svalues[j] = readShort(stream);
                         }
 
                         obj = svalues;
+
                         break;
 
                     case TiffField.TIFF_SLONG:
                         var ivalues = new int[count];
+
                         for (j = 0; j < count; j++)
                         {
                             ivalues[j] = readInt(stream);
                         }
 
                         obj = ivalues;
+
                         break;
 
                     case TiffField.TIFF_SRATIONAL:
                         var iivalues = new int[count, 2];
+
                         for (j = 0; j < count; j++)
                         {
                             iivalues[j, 0] = readInt(stream);
@@ -584,26 +624,31 @@ public class TiffDirectory
                         }
 
                         obj = iivalues;
+
                         break;
 
                     case TiffField.TIFF_FLOAT:
                         var fvalues = new float[count];
+
                         for (j = 0; j < count; j++)
                         {
                             fvalues[j] = readFloat(stream);
                         }
 
                         obj = fvalues;
+
                         break;
 
                     case TiffField.TIFF_DOUBLE:
                         var dvalues = new double[count];
+
                         for (j = 0; j < count; j++)
                         {
                             dvalues[j] = readDouble(stream);
                         }
 
                         obj = dvalues;
+
                         break;
                 }
 

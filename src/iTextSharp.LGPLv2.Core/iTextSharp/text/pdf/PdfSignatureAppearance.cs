@@ -114,7 +114,7 @@ public class PdfSignatureAppearance
 
     private string _digestEncryptionAlgorithm;
 
-    private INullValueDictionary<PdfName, PdfLiteral> _exclusionLocations;
+    private NullValueDictionary<PdfName, PdfLiteral> _exclusionLocations;
 
     private byte[] _externalDigest;
 

@@ -97,10 +97,12 @@ public class PdfContentByte
     /// </summary>
     public const int TEXT_RENDER_MODE_STROKE_CLIP = 5;
 
-    private static readonly INullValueDictionary<PdfName, string> _abrev =
-        new NullValueDictionary<PdfName, string>();
+    private static readonly INullValueDictionary<PdfName, string> _abrev = new NullValueDictionary<PdfName, string>();
 
-    private static readonly float[] _unitRect = { 0, 0, 0, 1, 1, 0, 1, 1 };
+    private static readonly float[] _unitRect =
+    {
+        0, 0, 0, 1, 1, 0, 1, 1
+    };
 
     private bool _inText;
 
@@ -219,6 +221,7 @@ public class PdfContentByte
         get
         {
             CheckWriter();
+
             return Pdf.RootOutline;
         }
     }
@@ -272,6 +275,7 @@ public class PdfContentByte
     public static IList<double[]> BezierArc(float x1, float y1, float x2, float y2, float startAng, float extent)
     {
         float tmp;
+
         if (x1 > x2)
         {
             tmp = x1;
@@ -288,6 +292,7 @@ public class PdfContentByte
 
         float fragAngle;
         int nfrag;
+
         if (Math.Abs(extent) <= 90f)
         {
             fragAngle = extent;
@@ -306,6 +311,7 @@ public class PdfContentByte
         var halfAng = (float)(fragAngle * Math.PI / 360.0);
         var kappa = (float)Math.Abs(4.0 / 3.0 * (1.0 - Math.Cos(halfAng)) / Math.Sin(halfAng));
         List<double[]> pointList = new();
+
         for (var i = 0; i < nfrag; ++i)
         {
             var theta0 = (float)((startAng + i * fragAngle) * Math.PI / 180.0);
@@ -314,33 +320,24 @@ public class PdfContentByte
             var cos1 = (float)Math.Cos(theta1);
             var sin0 = (float)Math.Sin(theta0);
             var sin1 = (float)Math.Sin(theta1);
+
             if (fragAngle > 0f)
             {
                 pointList.Add(new double[]
-                              {
-                                  xCen + rx * cos0,
-                                  yCen - ry * sin0,
-                                  xCen + rx * (cos0 - kappa * sin0),
-                                  yCen - ry * (sin0 + kappa * cos0),
-                                  xCen + rx * (cos1 + kappa * sin1),
-                                  yCen - ry * (sin1 - kappa * cos1),
-                                  xCen + rx * cos1,
-                                  yCen - ry * sin1,
-                              });
+                {
+                    xCen + rx * cos0, yCen - ry * sin0, xCen + rx * (cos0 - kappa * sin0),
+                    yCen - ry * (sin0 + kappa * cos0), xCen + rx * (cos1 + kappa * sin1),
+                    yCen - ry * (sin1 - kappa * cos1), xCen + rx * cos1, yCen - ry * sin1
+                });
             }
             else
             {
                 pointList.Add(new double[]
-                              {
-                                  xCen + rx * cos0,
-                                  yCen - ry * sin0,
-                                  xCen + rx * (cos0 + kappa * sin0),
-                                  yCen - ry * (sin0 - kappa * cos0),
-                                  xCen + rx * (cos1 - kappa * sin1),
-                                  yCen - ry * (sin1 + kappa * cos1),
-                                  xCen + rx * cos1,
-                                  yCen - ry * sin1,
-                              });
+                {
+                    xCen + rx * cos0, yCen - ry * sin0, xCen + rx * (cos0 + kappa * sin0),
+                    yCen - ry * (sin0 - kappa * cos0), xCen + rx * (cos1 - kappa * sin1),
+                    yCen - ry * (sin1 + kappa * cos1), xCen + rx * cos1, yCen - ry * sin1
+                });
             }
         }
 
@@ -369,6 +366,7 @@ public class PdfContentByte
         var acc = new StringBuilder();
         var len = text.Length - 1;
         var c = text.ToCharArray();
+
         if (len >= 0)
         {
             acc.Append(c, 0, 1);
@@ -378,6 +376,7 @@ public class PdfContentByte
         {
             var c2 = c[k + 1];
             var kern = font.GetKerning(c[k], c2);
+
             if (kern == 0)
             {
                 acc.Append(c2);
@@ -392,6 +391,7 @@ public class PdfContentByte
         }
 
         pa.Add(acc.ToString());
+
         return pa;
     }
 
@@ -417,9 +417,7 @@ public class PdfContentByte
     /// </summary>
     /// <param name="image">the  Image  object</param>
     public virtual void AddImage(Image image)
-    {
-        AddImage(image, false);
-    }
+        => AddImage(image, false);
 
     /// <summary>
     ///     Adds an  Image  to the page. The  Image  must have
@@ -460,9 +458,7 @@ public class PdfContentByte
     /// <param name="e">an element of the transformation matrix</param>
     /// <param name="f">an element of the transformation matrix</param>
     public virtual void AddImage(Image image, float a, float b, float c, float d, float e, float f)
-    {
-        AddImage(image, a, b, c, d, e, f, false);
-    }
+        => AddImage(image, a, b, c, d, e, f, false);
 
     /// <summary>
     ///     Adds an  Image  to the page. The positioning of the  Image
@@ -507,13 +503,16 @@ public class PdfContentByte
             Content.Append(d).Append(' ');
             Content.Append(e).Append(' ');
             Content.Append(f).Append(" cm");
+
             if (inlineImage)
             {
                 Content.Append("\nBI\n");
                 var pimage = new PdfImage(image, "", null);
+
                 if (image is ImgJbig2)
                 {
                     var globals = ((ImgJbig2)image).GlobalBytes;
+
                     if (globals != null)
                     {
                         var decodeparms = new PdfDictionary();
@@ -526,6 +525,7 @@ public class PdfContentByte
                 {
                     var value = pimage.Get(key);
                     var s = _abrev[key];
+
                     if (s == null)
                     {
                         continue;
@@ -533,15 +533,13 @@ public class PdfContentByte
 
                     Content.Append(s);
                     var check = true;
+
                     if (key.Equals(PdfName.Colorspace) && value.IsArray())
                     {
                         var ar = (PdfArray)value;
-                        if (ar.Size == 4
-                            && PdfName.Indexed.Equals(ar.GetAsName(0))
-                            && ar[1].IsName()
-                            && ar[2].IsNumber()
-                            && ar[3].IsString()
-                           )
+
+                        if (ar.Size == 4 && PdfName.Indexed.Equals(ar.GetAsName(0)) && ar[1].IsName() &&
+                            ar[2].IsNumber() && ar[3].IsString())
                         {
                             check = false;
                         }
@@ -568,6 +566,7 @@ public class PdfContentByte
                 PdfName name;
                 var prs = PageResources;
                 var maskImage = image.ImageMask;
+
                 if (maskImage != null)
                 {
                     name = Writer.AddDirectImageSimple(maskImage);
@@ -596,12 +595,14 @@ public class PdfContentByte
         }
 
         var annot = image.Annotation;
+
         if (annot == null)
         {
             return;
         }
 
         var r = new float[_unitRect.Length];
+
         for (var k = 0; k < _unitRect.Length; k += 2)
         {
             r[k] = a * _unitRect[k] + c * _unitRect[k + 1] + e;
@@ -612,6 +613,7 @@ public class PdfContentByte
         var lly = r[1];
         var urx = llx;
         var ury = lly;
+
         for (var k = 2; k < r.Length; k += 2)
         {
             llx = Math.Min(llx, r[k]);
@@ -623,6 +625,7 @@ public class PdfContentByte
         annot = new Annotation(annot);
         annot.SetDimensions(llx, lly, urx, ury);
         var an = PdfAnnotationsImp.ConvertAnnotation(Writer, annot, new Rectangle(llx, lly, urx, ury));
+
         if (an == null)
         {
             return;
@@ -704,9 +707,7 @@ public class PdfContentByte
     /// <param name="x">the x location of this template</param>
     /// <param name="y">the y location of this template</param>
     public void AddTemplate(PdfTemplate pdfTemplate, float x, float y)
-    {
-        AddTemplate(pdfTemplate, 1, 0, 0, 1, x, y);
-    }
+        => AddTemplate(pdfTemplate, 1, 0, 0, 1, x, y);
 
     /// <summary>
     ///     Draws a partial ellipse inscribed within the rectangle x1,y1,x2,y2,
@@ -722,6 +723,7 @@ public class PdfContentByte
     public void Arc(float x1, float y1, float x2, float y2, float startAng, float extent)
     {
         var ar = BezierArc(x1, y1, x2, y2, startAng, extent);
+
         if (ar.Count == 0)
         {
             return;
@@ -729,6 +731,7 @@ public class PdfContentByte
 
         var pt = ar[0];
         MoveTo(pt[0], pt[1]);
+
         for (var k = 0; k < ar.Count; ++k)
         {
             pt = ar[k];
@@ -760,11 +763,13 @@ public class PdfContentByte
         {
             LayerDepth.Add(1);
             beginLayer2(layer);
+
             return;
         }
 
         var n = 0;
         var la = (PdfLayer)layer;
+
         while (la != null)
         {
             if (la.Title == null)
@@ -794,9 +799,11 @@ public class PdfContentByte
 
         var obj = struc.Get(PdfName.K);
         var mark = Pdf.GetMarkPoint();
+
         if (obj != null)
         {
             PdfArray ar = null;
+
             if (obj.IsNumber())
             {
                 ar = new PdfArray();
@@ -806,6 +813,7 @@ public class PdfContentByte
             else if (obj.IsArray())
             {
                 ar = (PdfArray)obj;
+
                 if (!ar[0].IsNumber())
                 {
                     throw new ArgumentException("The structure has kids.");
@@ -830,8 +838,9 @@ public class PdfContentByte
 
         Pdf.IncMarkPoint();
         _mcDepth++;
+
         Content.Append(struc.Get(PdfName.S).GetBytes()).Append(" <</MCID ").Append(mark).Append(">> BDC")
-               .Append_i(Separator);
+            .Append_i(Separator);
     }
 
     /// <summary>
@@ -852,10 +861,12 @@ public class PdfContentByte
         if (property == null)
         {
             Content.Append(tag.GetBytes()).Append(" BMC").Append_i(Separator);
+
             return;
         }
 
         Content.Append(tag.GetBytes()).Append(' ');
+
         if (inline)
         {
             property.ToPdf(Writer, Content);
@@ -863,6 +874,7 @@ public class PdfContentByte
         else
         {
             PdfObject[] objs;
+
             if (Writer.PropertyExists(property))
             {
                 objs = Writer.AddSimpleProperty(property, null);
@@ -887,9 +899,7 @@ public class PdfContentByte
     /// </summary>
     /// <param name="tag">the tag</param>
     public void BeginMarkedContentSequence(PdfName tag)
-    {
-        BeginMarkedContentSequence(tag, null, false);
-    }
+        => BeginMarkedContentSequence(tag, null, false);
 
     /// <summary>
     ///     Starts the writing of text.
@@ -924,29 +934,19 @@ public class PdfContentByte
     }
 
     public void Clip()
-    {
-        Content.Append('W').Append_i(Separator);
-    }
+        => Content.Append('W').Append_i(Separator);
 
     public void ClosePath()
-    {
-        Content.Append('h').Append_i(Separator);
-    }
+        => Content.Append('h').Append_i(Separator);
 
     public void ClosePathEoFillStroke()
-    {
-        Content.Append("b*").Append_i(Separator);
-    }
+        => Content.Append("b*").Append_i(Separator);
 
     public void ClosePathFillStroke()
-    {
-        Content.Append('b').Append_i(Separator);
-    }
+        => Content.Append('b').Append_i(Separator);
 
     public void ClosePathStroke()
-    {
-        Content.Append('s').Append_i(Separator);
-    }
+        => Content.Append('s').Append_i(Separator);
 
     /// <summary>
     ///     Concatenate a matrix to the current transformation matrix.
@@ -969,7 +969,8 @@ public class PdfContentByte
     /// <param name="width">the bounding box width</param>
     /// <param name="height">the bounding box height</param>
     /// <returns>the appearance created</returns>
-    public PdfAppearance CreateAppearance(float width, float height) => CreateAppearance(width, height, null);
+    public PdfAppearance CreateAppearance(float width, float height)
+        => CreateAppearance(width, height, null);
 
     /// <summary>
     ///     Create a new colored tiling pattern.
@@ -984,6 +985,7 @@ public class PdfContentByte
     public PdfPatternPainter CreatePattern(float width, float height, float xstep, float ystep)
     {
         CheckWriter();
+
         if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
         {
             throw new InvalidOperationException("XStep or YStep can not be ZERO.");
@@ -995,6 +997,7 @@ public class PdfContentByte
         painter.XStep = xstep;
         painter.YStep = ystep;
         Writer.AddSimplePattern(painter);
+
         return painter;
     }
 
@@ -1005,7 +1008,8 @@ public class PdfContentByte
     /// <param name="width">the width of the pattern</param>
     /// <param name="height">the height of the pattern</param>
     /// <returns>the  PdfPatternPainter  where the pattern will be created</returns>
-    public PdfPatternPainter CreatePattern(float width, float height) => CreatePattern(width, height, width, height);
+    public PdfPatternPainter CreatePattern(float width, float height)
+        => CreatePattern(width, height, width, height);
 
     /// <summary>
     ///     Create a new uncolored tiling pattern.
@@ -1021,6 +1025,7 @@ public class PdfContentByte
     public PdfPatternPainter CreatePattern(float width, float height, float xstep, float ystep, BaseColor color)
     {
         CheckWriter();
+
         if (xstep.ApproxEquals(0.0f) || ystep.ApproxEquals(0.0f))
         {
             throw new InvalidOperationException("XStep or YStep can not be ZERO.");
@@ -1032,6 +1037,7 @@ public class PdfContentByte
         painter.XStep = xstep;
         painter.YStep = ystep;
         Writer.AddSimplePattern(painter);
+
         return painter;
     }
 
@@ -1044,8 +1050,8 @@ public class PdfContentByte
     /// <param name="height">the height of the pattern</param>
     /// <param name="color">the default color. Can be  null </param>
     /// <returns>the  PdfPatternPainter  where the pattern will be created</returns>
-    public PdfPatternPainter CreatePattern(float width, float height, BaseColor color) =>
-        CreatePattern(width, height, width, height, color);
+    public PdfPatternPainter CreatePattern(float width, float height, BaseColor color)
+        => CreatePattern(width, height, width, height, color);
 
     /// <summary>
     ///     Creates a new template.
@@ -1057,30 +1063,23 @@ public class PdfContentByte
     /// <param name="width">the bounding box width</param>
     /// <param name="height">the bounding box height</param>
     /// <returns>the templated created</returns>
-    public PdfTemplate CreateTemplate(float width, float height) => CreateTemplate(width, height, null);
+    public PdfTemplate CreateTemplate(float width, float height)
+        => CreateTemplate(width, height, null);
 
     public void CurveFromTo(float x1, float y1, float x3, float y3)
-    {
-        Content.Append(x1).Append(' ').Append(y1).Append(' ').Append(x3).Append(' ').Append(y3).Append(" y")
-               .Append_i(Separator);
-    }
+        => Content.Append(x1).Append(' ').Append(y1).Append(' ').Append(x3).Append(' ').Append(y3).Append(" y")
+            .Append_i(Separator);
 
     public void CurveTo(double x1, double y1, double x2, double y2, double x3, double y3)
-    {
-        Content.Append(x1).Append(' ').Append(y1).Append(' ').Append(x2).Append(' ').Append(y2).Append(' ').Append(x3)
-               .Append(' ').Append(y3).Append(" c").Append_i(Separator);
-    }
+        => Content.Append(x1).Append(' ').Append(y1).Append(' ').Append(x2).Append(' ').Append(y2).Append(' ')
+            .Append(x3).Append(' ').Append(y3).Append(" c").Append_i(Separator);
 
     public void CurveTo(float x1, float y1, float x2, float y2, float x3, float y3)
-    {
-        CurveTo(x1, y1, x2, y2, x3, (double)y3);
-    }
+        => CurveTo(x1, y1, x2, y2, x3, (double)y3);
 
     public void CurveTo(float x2, float y2, float x3, float y3)
-    {
-        Content.Append(x2).Append(' ').Append(y2).Append(' ').Append(x3).Append(' ').Append(y3).Append(" v")
-               .Append_i(Separator);
-    }
+        => Content.Append(x2).Append(' ').Append(y2).Append(' ').Append(x3).Append(' ').Append(y3).Append(" v")
+            .Append_i(Separator);
 
     public void DrawButton(float llx, float lly, float urx, float ury, string text, BaseFont bf, float size)
     {
@@ -1104,12 +1103,14 @@ public class PdfContentByte
         SetLineCap(0);
         Rectangle(llx, lly, urx - llx, ury - lly);
         Stroke();
+
         // silver rectangle filled
         SetLineWidth(1);
         SetLineCap(0);
         SetColorFill(new BaseColor(0xC0, 0xC0, 0xC0));
         Rectangle(llx + 0.5f, lly + 0.5f, urx - llx - 1f, ury - lly - 1f);
         Fill();
+
         // white lines
         SetColorStroke(new BaseColor(0xFF, 0xFF, 0xFF));
         SetLineWidth(1);
@@ -1118,6 +1119,7 @@ public class PdfContentByte
         LineTo(llx + 1f, ury - 1f);
         LineTo(urx - 1f, ury - 1f);
         Stroke();
+
         // dark grey lines
         SetColorStroke(new BaseColor(0xA0, 0xA0, 0xA0));
         SetLineWidth(1);
@@ -1126,6 +1128,7 @@ public class PdfContentByte
         LineTo(urx - 1f, lly + 1f);
         LineTo(urx - 1f, ury - 1f);
         Stroke();
+
         // text
         ResetRgbColorFill();
         BeginText();
@@ -1156,18 +1159,21 @@ public class PdfContentByte
         SetColorStroke(new BaseColor(0xC0, 0xC0, 0xC0));
         Arc(llx + 1f, lly + 1f, urx - 1f, ury - 1f, 0f, 360f);
         Stroke();
+
         // gray circle-segment
         SetLineWidth(1);
         SetLineCap(1);
         SetColorStroke(new BaseColor(0xA0, 0xA0, 0xA0));
         Arc(llx + 0.5f, lly + 0.5f, urx - 0.5f, ury - 0.5f, 45, 180);
         Stroke();
+
         // black circle-segment
         SetLineWidth(1);
         SetLineCap(1);
         SetColorStroke(new BaseColor(0x00, 0x00, 0x00));
         Arc(llx + 1.5f, lly + 1.5f, urx - 1.5f, ury - 1.5f, 45, 180);
         Stroke();
+
         if (on)
         {
             // gray circle
@@ -1201,12 +1207,14 @@ public class PdfContentByte
         SetLineCap(0);
         Rectangle(llx, lly, urx - llx, ury - lly);
         Stroke();
+
         // white rectangle filled
         SetLineWidth(1);
         SetLineCap(0);
         SetColorFill(new BaseColor(0xFF, 0xFF, 0xFF));
         Rectangle(llx + 0.5f, lly + 0.5f, urx - llx - 1f, ury - lly - 1f);
         Fill();
+
         // silver lines
         SetColorStroke(new BaseColor(0xC0, 0xC0, 0xC0));
         SetLineWidth(1);
@@ -1215,6 +1223,7 @@ public class PdfContentByte
         LineTo(urx - 1.5f, lly + 1.5f);
         LineTo(urx - 1.5f, ury - 1f);
         Stroke();
+
         // gray lines
         SetColorStroke(new BaseColor(0xA0, 0xA0, 0xA0));
         SetLineWidth(1);
@@ -1223,6 +1232,7 @@ public class PdfContentByte
         LineTo(llx + 1f, ury - 1f);
         LineTo(urx - 1f, ury - 1f);
         Stroke();
+
         // black lines
         SetColorStroke(new BaseColor(0x00, 0x00, 0x00));
         SetLineWidth(1);
@@ -1241,9 +1251,7 @@ public class PdfContentByte
     /// <param name="x2">a corner of the enclosing rectangle</param>
     /// <param name="y2">a corner of the enclosing rectangle</param>
     public void Ellipse(float x1, float y1, float x2, float y2)
-    {
-        Arc(x1, y1, x2, y2, 0f, 360f);
-    }
+        => Arc(x1, y1, x2, y2, 0f, 360f);
 
     /// <summary>
     ///     Ends a layer controled graphic block. It will end the most recent open block.
@@ -1251,6 +1259,7 @@ public class PdfContentByte
     public void EndLayer()
     {
         var n = 1;
+
         if (LayerDepth != null && LayerDepth.Count > 0)
         {
             n = LayerDepth[LayerDepth.Count - 1];
@@ -1296,29 +1305,19 @@ public class PdfContentByte
     }
 
     public void EoClip()
-    {
-        Content.Append("W*").Append_i(Separator);
-    }
+        => Content.Append("W*").Append_i(Separator);
 
     public void EoFill()
-    {
-        Content.Append("f*").Append_i(Separator);
-    }
+        => Content.Append("f*").Append_i(Separator);
 
     public void EoFillStroke()
-    {
-        Content.Append("B*").Append_i(Separator);
-    }
+        => Content.Append("B*").Append_i(Separator);
 
     public void Fill()
-    {
-        Content.Append('f').Append_i(Separator);
-    }
+        => Content.Append('f').Append_i(Separator);
 
     public void FillStroke()
-    {
-        Content.Append('B').Append_i(Separator);
-    }
+        => Content.Append('B').Append_i(Separator);
 
     public float GetEffectiveStringWidth(string text, bool kerned)
     {
@@ -1330,6 +1329,7 @@ public class PdfContentByte
         var bf = State.FontDetails.BaseFont;
 
         float w;
+
         if (kerned)
         {
             w = bf.GetWidthPointKerned(text, State.size);
@@ -1345,6 +1345,7 @@ public class PdfContentByte
         }
 
         var ft = bf.FontType;
+
         if (State.WordSpace.ApproxNotEqual(0.0f) &&
             (ft == BaseFont.FONT_TYPE_T1 || ft == BaseFont.FONT_TYPE_TT || ft == BaseFont.FONT_TYPE_T3))
         {
@@ -1367,14 +1368,10 @@ public class PdfContentByte
     }
 
     public void LineTo(double x, double y)
-    {
-        Content.Append(x).Append(' ').Append(y).Append(" l").Append_i(Separator);
-    }
+        => Content.Append(x).Append(' ').Append(y).Append(" l").Append_i(Separator);
 
     public void LineTo(float x, float y)
-    {
-        LineTo(x, (double)y);
-    }
+        => LineTo(x, (double)y);
 
     /// <summary>
     ///     The local destination to where a local goto with the same
@@ -1405,9 +1402,7 @@ public class PdfContentByte
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     public void LocalGoto(string name, float llx, float lly, float urx, float ury)
-    {
-        Pdf.LocalGoto(name, llx, lly, urx, ury);
-    }
+        => Pdf.LocalGoto(name, llx, lly, urx, ury);
 
     /// <summary>
     ///     Moves to the start of the next line, offset from the start of the current line.
@@ -1436,9 +1431,7 @@ public class PdfContentByte
     }
 
     public void MoveTo(double x, double y)
-    {
-        Content.Append(x).Append(' ').Append(y).Append(" m").Append_i(Separator);
-    }
+        => Content.Append(x).Append(' ').Append(y).Append(" m").Append_i(Separator);
 
     /// <summary>
     ///     Moves to the next line and shows  text .
@@ -1480,9 +1473,7 @@ public class PdfContentByte
     }
 
     public void NewPath()
-    {
-        Content.Append('n').Append_i(Separator);
-    }
+        => Content.Append('n').Append_i(Separator);
 
     /// <summary>
     ///     Paints using a shading object.
@@ -1500,6 +1491,7 @@ public class PdfContentByte
         var name = prs.AddShading(shading.ShadingName, shading.ShadingReference);
         Content.Append(name.GetBytes()).Append(" sh").Append_i(Separator);
         var details = shading.ColorDetails;
+
         if (details != null)
         {
             prs.AddColor(details.ColorName, details.IndirectReference);
@@ -1521,10 +1513,8 @@ public class PdfContentByte
     }
 
     public void Rectangle(float x, float y, float w, float h)
-    {
-        Content.Append(x).Append(' ').Append(y).Append(' ').Append(w).Append(' ').Append(h).Append(" re")
-               .Append_i(Separator);
-    }
+        => Content.Append(x).Append(' ').Append(y).Append(' ').Append(w).Append(' ').Append(h).Append(" re")
+            .Append_i(Separator);
 
     public void Rectangle(Rectangle rectangle)
     {
@@ -1541,6 +1531,7 @@ public class PdfContentByte
 
         // the backgroundcolor is set
         var background = rectangle.BackgroundColor;
+
         if (background != null)
         {
             SetColorFill(background);
@@ -1572,6 +1563,7 @@ public class PdfContentByte
 
             // the color is set to the color of the element
             var color = rectangle.BorderColor;
+
             if (color != null)
             {
                 SetColorStroke(color);
@@ -1582,6 +1574,7 @@ public class PdfContentByte
             {
                 Rectangle(x1, y1, x2 - x1, y2 - y1);
             }
+
             // if the border isn't a rectangle, the different sides are added apart
             else
             {
@@ -1628,10 +1621,8 @@ public class PdfContentByte
     /// <param name="lly">the lower left y corner of the activation area</param>
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
-    public void RemoteGoto(string filename, string name, float llx, float lly, float urx, float ury)
-    {
-        RemoteGoto(filename, name, llx, lly, urx, ury);
-    }
+    public static void RemoteGoto(string filename, string name, float llx, float lly, float urx, float ury)
+        => RemoteGoto(filename, name, llx, lly, urx, ury);
 
     /// <summary>
     ///     Implements a link to another document.
@@ -1643,9 +1634,7 @@ public class PdfContentByte
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     public void RemoteGoto(string filename, int page, float llx, float lly, float urx, float ury)
-    {
-        Pdf.RemoteGoto(filename, page, llx, lly, urx, ury);
-    }
+        => Pdf.RemoteGoto(filename, page, llx, lly, urx, ury);
 
     /// <summary>
     ///     Closes the path and strokes it.
@@ -1673,9 +1662,7 @@ public class PdfContentByte
     ///     Calls  reset( true )
     /// </summary>
     public void Reset()
-    {
-        Reset(true);
-    }
+        => Reset(true);
 
     /// <summary>
     ///     Makes this  PdfContentByte  empty.
@@ -1685,6 +1672,7 @@ public class PdfContentByte
     public void Reset(bool validateContent)
     {
         Content.Reset();
+
         if (validateContent)
         {
             SanityCheck();
@@ -1694,34 +1682,22 @@ public class PdfContentByte
     }
 
     public virtual void ResetCmykColorFill()
-    {
-        Content.Append("0 0 0 1 k").Append_i(Separator);
-    }
+        => Content.Append("0 0 0 1 k").Append_i(Separator);
 
     public virtual void ResetCmykColorStroke()
-    {
-        Content.Append("0 0 0 1 K").Append_i(Separator);
-    }
+        => Content.Append("0 0 0 1 K").Append_i(Separator);
 
     public virtual void ResetGrayFill()
-    {
-        Content.Append("0 g").Append_i(Separator);
-    }
+        => Content.Append("0 g").Append_i(Separator);
 
     public virtual void ResetGrayStroke()
-    {
-        Content.Append("0 G").Append_i(Separator);
-    }
+        => Content.Append("0 G").Append_i(Separator);
 
     public virtual void ResetRgbColorFill()
-    {
-        Content.Append("0 g").Append_i(Separator);
-    }
+        => Content.Append("0 g").Append_i(Separator);
 
     public virtual void ResetRgbColorStroke()
-    {
-        Content.Append("0 G").Append_i(Separator);
-    }
+        => Content.Append("0 G").Append_i(Separator);
 
     /// <summary>
     ///     Restores the graphic state.  saveState  and
@@ -1731,6 +1707,7 @@ public class PdfContentByte
     {
         Content.Append('Q').Append_i(Separator);
         var idx = StateList.Count - 1;
+
         if (idx < 0)
         {
             throw new IllegalPdfSyntaxException("Unbalanced save/restore state operators.");
@@ -1832,9 +1809,7 @@ public class PdfContentByte
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     public virtual void SetAction(PdfAction action, float llx, float lly, float urx, float ury)
-    {
-        Pdf.SetAction(action, llx, lly, urx, ury);
-    }
+        => Pdf.SetAction(action, llx, lly, urx, ury);
 
     /// <summary>
     ///     Sets the character spacing parameter.
@@ -1896,39 +1871,46 @@ public class PdfContentByte
 
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_COLOR, value);
         var type = ExtendedColor.GetType(value);
+
         switch (type)
         {
             case ExtendedColor.TYPE_GRAY:
             {
                 SetGrayFill(((GrayColor)value).Gray);
+
                 break;
             }
             case ExtendedColor.TYPE_CMYK:
             {
                 var cmyk = (CmykColor)value;
                 SetCmykColorFillF(cmyk.Cyan, cmyk.Magenta, cmyk.Yellow, cmyk.Black);
+
                 break;
             }
             case ExtendedColor.TYPE_SEPARATION:
             {
                 var spot = (SpotColor)value;
                 SetColorFill(spot.PdfSpotColor, spot.Tint);
+
                 break;
             }
             case ExtendedColor.TYPE_PATTERN:
             {
                 var pat = (PatternColor)value;
                 SetPatternFill(pat.Painter);
+
                 break;
             }
             case ExtendedColor.TYPE_SHADING:
             {
                 var shading = (ShadingColor)value;
                 SetShadingFill(shading.PdfShadingPattern);
+
                 break;
             }
             default:
                 SetRgbColorFill(value.R, value.G, value.B);
+
                 break;
         }
     }
@@ -1963,39 +1945,46 @@ public class PdfContentByte
 
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_COLOR, value);
         var type = ExtendedColor.GetType(value);
+
         switch (type)
         {
             case ExtendedColor.TYPE_GRAY:
             {
                 SetGrayStroke(((GrayColor)value).Gray);
+
                 break;
             }
             case ExtendedColor.TYPE_CMYK:
             {
                 var cmyk = (CmykColor)value;
                 SetCmykColorStrokeF(cmyk.Cyan, cmyk.Magenta, cmyk.Yellow, cmyk.Black);
+
                 break;
             }
             case ExtendedColor.TYPE_SEPARATION:
             {
                 var spot = (SpotColor)value;
                 SetColorStroke(spot.PdfSpotColor, spot.Tint);
+
                 break;
             }
             case ExtendedColor.TYPE_PATTERN:
             {
                 var pat = (PatternColor)value;
                 SetPatternStroke(pat.Painter);
+
                 break;
             }
             case ExtendedColor.TYPE_SHADING:
             {
                 var shading = (ShadingColor)value;
                 SetShadingStroke(shading.PdfShadingPattern);
+
                 break;
             }
             default:
                 SetRgbColorStroke(value.R, value.G, value.B);
+
                 break;
         }
     }
@@ -2049,6 +2038,7 @@ public class PdfContentByte
         }
 
         CheckWriter();
+
         if (size < 0.0001f && size > -0.0001f)
         {
             throw new ArgumentException("Font size too small: " + size);
@@ -2063,14 +2053,10 @@ public class PdfContentByte
     }
 
     public virtual void SetGrayFill(float value)
-    {
-        Content.Append(value).Append(" g").Append_i(Separator);
-    }
+        => Content.Append(value).Append(" g").Append_i(Separator);
 
     public virtual void SetGrayStroke(float value)
-    {
-        Content.Append(value).Append(" G").Append_i(Separator);
-    }
+        => Content.Append(value).Append(" G").Append_i(Separator);
 
     /// <summary>
     ///     Draws a TextField.
@@ -2122,20 +2108,14 @@ public class PdfContentByte
     }
 
     public void SetLineDash(float value)
-    {
-        Content.Append("[] ").Append(value).Append(" d").Append_i(Separator);
-    }
+        => Content.Append("[] ").Append(value).Append(" d").Append_i(Separator);
 
     public void SetLineDash(float unitsOn, float phase)
-    {
-        Content.Append('[').Append(unitsOn).Append("] ").Append(phase).Append(" d").Append_i(Separator);
-    }
+        => Content.Append('[').Append(unitsOn).Append("] ").Append(phase).Append(" d").Append_i(Separator);
 
     public void SetLineDash(float unitsOn, float unitsOff, float phase)
-    {
-        Content.Append('[').Append(unitsOn).Append(' ').Append(unitsOff).Append("] ").Append(phase).Append(" d")
-               .Append_i(Separator);
-    }
+        => Content.Append('[').Append(unitsOn).Append(' ').Append(unitsOff).Append("] ").Append(phase).Append(" d")
+            .Append_i(Separator);
 
     public void SetLineDash(float[] array, float phase)
     {
@@ -2145,9 +2125,11 @@ public class PdfContentByte
         }
 
         Content.Append('[');
+
         for (var i = 0; i < array.Length; i++)
         {
             Content.Append(array[i]);
+
             if (i < array.Length - 1)
             {
                 Content.Append(' ');
@@ -2166,36 +2148,28 @@ public class PdfContentByte
     }
 
     public void SetLineWidth(float value)
-    {
-        Content.Append(value).Append(" w").Append_i(Separator);
-    }
+        => Content.Append(value).Append(" w").Append_i(Separator);
 
     /// <summary>
     ///     Outputs a  string  directly to the content.
     /// </summary>
     /// <param name="s">the  string </param>
     public void SetLiteral(string s)
-    {
-        Content.Append(s);
-    }
+        => Content.Append(s);
 
     /// <summary>
     ///     Outputs a  char  directly to the content.
     /// </summary>
     /// <param name="c">the  char </param>
     public void SetLiteral(char c)
-    {
-        Content.Append(c);
-    }
+        => Content.Append(c);
 
     /// <summary>
     ///     Outputs a  float  directly to the content.
     /// </summary>
     /// <param name="n">the  float </param>
     public void SetLiteral(float n)
-    {
-        Content.Append(n);
-    }
+        => Content.Append(n);
 
     public void SetMiterLimit(float value)
     {
@@ -2220,6 +2194,7 @@ public class PdfContentByte
         if (p.IsStencil())
         {
             SetPatternFill(p, p.DefaultColor);
+
             return;
         }
 
@@ -2227,8 +2202,9 @@ public class PdfContentByte
         var prs = PageResources;
         var name = Writer.AddSimplePattern(p);
         name = prs.AddPattern(name, p.IndirectReference);
+
         Content.Append(PdfName.Pattern.GetBytes()).Append(" cs ").Append(name.GetBytes()).Append(" scn")
-               .Append_i(Separator);
+            .Append_i(Separator);
     }
 
     /// <summary>
@@ -2272,6 +2248,7 @@ public class PdfContentByte
         }
 
         CheckWriter();
+
         if (!p.IsStencil())
         {
             throw new InvalidOperationException("An uncolored pattern was expected.");
@@ -2328,6 +2305,7 @@ public class PdfContentByte
         }
 
         CheckWriter();
+
         if (!p.IsStencil())
         {
             throw new InvalidOperationException("An uncolored pattern was expected.");
@@ -2358,6 +2336,7 @@ public class PdfContentByte
         if (p.IsStencil())
         {
             SetPatternStroke(p, p.DefaultColor);
+
             return;
         }
 
@@ -2365,8 +2344,9 @@ public class PdfContentByte
         var prs = PageResources;
         var name = Writer.AddSimplePattern(p);
         name = prs.AddPattern(name, p.IndirectReference);
+
         Content.Append(PdfName.Pattern.GetBytes()).Append(" CS ").Append(name.GetBytes()).Append(" SCN")
-               .Append_i(Separator);
+            .Append_i(Separator);
     }
 
     public virtual void SetRgbColorFill(int red, int green, int blue)
@@ -2407,9 +2387,12 @@ public class PdfContentByte
         Writer.AddSimpleShadingPattern(shading);
         var prs = PageResources;
         var name = prs.AddPattern(shading.PatternName, shading.PatternReference);
+
         Content.Append(PdfName.Pattern.GetBytes()).Append(" cs ").Append(name.GetBytes()).Append(" scn")
-               .Append_i(Separator);
+            .Append_i(Separator);
+
         var details = shading.ColorDetails;
+
         if (details != null)
         {
             prs.AddColor(details.ColorName, details.IndirectReference);
@@ -2430,9 +2413,12 @@ public class PdfContentByte
         Writer.AddSimpleShadingPattern(shading);
         var prs = PageResources;
         var name = prs.AddPattern(shading.PatternName, shading.PatternReference);
+
         Content.Append(PdfName.Pattern.GetBytes()).Append(" CS ").Append(name.GetBytes()).Append(" SCN")
-               .Append_i(Separator);
+            .Append_i(Separator);
+
         var details = shading.ColorDetails;
+
         if (details != null)
         {
             prs.AddColor(details.ColorName, details.IndirectReference);
@@ -2453,9 +2439,9 @@ public class PdfContentByte
     {
         State.XTlm = x;
         State.YTlm = y;
-        Content.Append(a).Append(' ').Append(b).Append_i(' ')
-               .Append(c).Append_i(' ').Append(d).Append_i(' ')
-               .Append(x).Append_i(' ').Append(y).Append(" Tm").Append_i(Separator);
+
+        Content.Append(a).Append(' ').Append(b).Append_i(' ').Append(c).Append_i(' ').Append(d).Append_i(' ').Append(x)
+            .Append_i(' ').Append(y).Append(" Tm").Append_i(Separator);
     }
 
     /// <summary>
@@ -2465,18 +2451,14 @@ public class PdfContentByte
     /// <param name="x">operand 3,1 in the matrix</param>
     /// <param name="y">operand 3,2 in the matrix</param>
     public void SetTextMatrix(float x, float y)
-    {
-        SetTextMatrix(1, 0, 0, 1, x, y);
-    }
+        => SetTextMatrix(1, 0, 0, 1, x, y);
 
     /// <summary>
     ///     Sets the text rendering parameter.
     /// </summary>
     /// <param name="value">a parameter</param>
     public void SetTextRenderingMode(int value)
-    {
-        Content.Append(value).Append(" Tr").Append_i(Separator);
-    }
+        => Content.Append(value).Append(" Tr").Append_i(Separator);
 
     /// <summary>
     ///     Sets the text rise parameter.
@@ -2484,9 +2466,7 @@ public class PdfContentByte
     /// </summary>
     /// <param name="value">a parameter</param>
     public void SetTextRise(float value)
-    {
-        Content.Append(value).Append(" Ts").Append_i(Separator);
-    }
+        => Content.Append(value).Append(" Ts").Append_i(Separator);
 
     /// <summary>
     ///     Sets the word spacing parameter.
@@ -2526,9 +2506,11 @@ public class PdfContentByte
         Content.Append('[');
         var arrayList = text.ArrayList;
         var lastWasNumber = false;
+
         for (var k = 0; k < arrayList.Count; ++k)
         {
             var obj = arrayList[k];
+
             if (obj is string)
             {
                 showText2((string)obj);
@@ -2561,9 +2543,7 @@ public class PdfContentByte
     /// <param name="y">the y pivot position</param>
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
     public void ShowTextAligned(int alignment, string text, float x, float y, float rotation)
-    {
-        showTextAligned(alignment, text, x, y, rotation, false);
-    }
+        => showTextAligned(alignment, text, x, y, rotation, false);
 
     /// <summary>
     ///     Shows text kerned right, left or center aligned with rotation.
@@ -2574,9 +2554,7 @@ public class PdfContentByte
     /// <param name="y">the y pivot position</param>
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
     public void ShowTextAlignedKerned(int alignment, string text, float x, float y, float rotation)
-    {
-        showTextAligned(alignment, text, x, y, rotation, true);
-    }
+        => showTextAligned(alignment, text, x, y, rotation, true);
 
     /// <summary>
     ///     Shows the  text  kerned.
@@ -2590,6 +2568,7 @@ public class PdfContentByte
         }
 
         var bf = State.FontDetails.BaseFont;
+
         if (bf.HasKernPairs())
         {
             ShowText(GetKernArray(text, bf));
@@ -2601,17 +2580,17 @@ public class PdfContentByte
     }
 
     public void Stroke()
-    {
-        Content.Append('S').Append_i(Separator);
-    }
+        => Content.Append('S').Append_i(Separator);
 
     public byte[] ToPdf(PdfWriter writer)
     {
         SanityCheck();
+
         return Content.ToByteArray();
     }
 
-    public override string ToString() => Content.ToString();
+    public override string ToString()
+        => Content.ToString();
 
     /// <summary>
     ///     Adds a variable width border to the current path.
@@ -2646,11 +2625,13 @@ public class PdfContentByte
         BaseColor ccol = null;
         var cdefi = false;
         BaseColor cfil = null;
+
         // draw top
         if (wt > 0)
         {
             SetLineWidth(clw = wt);
             cdef = true;
+
             if (ct == null)
             {
                 ResetRgbColorStroke();
@@ -2677,6 +2658,7 @@ public class PdfContentByte
             if (!cdef || !compareColors(ccol, cb))
             {
                 cdef = true;
+
                 if (cb == null)
                 {
                     ResetRgbColorStroke();
@@ -2705,6 +2687,7 @@ public class PdfContentByte
             if (!cdef || !compareColors(ccol, cr))
             {
                 cdef = true;
+
                 if (cr == null)
                 {
                     ResetRgbColorStroke();
@@ -2722,9 +2705,11 @@ public class PdfContentByte
             MoveTo(r - wr / 2f, bt ? t : t - wt);
             LineTo(r - wr / 2f, bb ? b : b + wb);
             Stroke();
+
             if (!bt || !bb)
             {
                 cdefi = true;
+
                 if (cr == null)
                 {
                     ResetRgbColorFill();
@@ -2735,6 +2720,7 @@ public class PdfContentByte
                 }
 
                 cfil = cr;
+
                 if (!bt)
                 {
                     MoveTo(r, t);
@@ -2778,6 +2764,7 @@ public class PdfContentByte
             MoveTo(l + wl / 2f, bt ? t : t - wt);
             LineTo(l + wl / 2f, bb ? b : b + wb);
             Stroke();
+
             if (!bt || !bb)
             {
                 if (!cdefi || !compareColors(cfil, cl))
@@ -2822,6 +2809,7 @@ public class PdfContentByte
     {
         var content = new ByteBuffer();
         EscapeString(b, content);
+
         return content.ToByteArray();
     }
 
@@ -2833,33 +2821,42 @@ public class PdfContentByte
     internal static void EscapeString(byte[] b, ByteBuffer content)
     {
         content.Append_i('(');
+
         for (var k = 0; k < b.Length; ++k)
         {
             var c = b[k];
+
             switch ((int)c)
             {
                 case '\r':
                     content.Append("\\r");
+
                     break;
                 case '\n':
                     content.Append("\\n");
+
                     break;
                 case '\t':
                     content.Append("\\t");
+
                     break;
                 case '\b':
                     content.Append("\\b");
+
                     break;
                 case '\f':
                     content.Append("\\f");
+
                     break;
                 case '(':
                 case ')':
                 case '\\':
                     content.Append_i('\\').Append_i(c);
+
                     break;
                 default:
                     content.Append_i(c);
+
                     break;
             }
         }
@@ -2868,12 +2865,16 @@ public class PdfContentByte
     }
 
     internal virtual void AddAnnotation(PdfAnnotation annot)
-    {
-        Writer.AddAnnotation(annot);
-    }
+        => Writer.AddAnnotation(annot);
 
-    internal void AddTemplateReference(PdfIndirectReference template, PdfName name, float a, float b, float c, float d,
-                                       float e, float f)
+    internal void AddTemplateReference(PdfIndirectReference template,
+        PdfName name,
+        float a,
+        float b,
+        float c,
+        float d,
+        float e,
+        float f)
     {
         CheckWriter();
         var prs = PageResources;
@@ -2907,6 +2908,7 @@ public class PdfContentByte
         template.Width = width;
         template.Height = height;
         Writer.AddDirectTemplateSimple(template, forcedName);
+
         return template;
     }
 
@@ -2917,6 +2919,7 @@ public class PdfContentByte
         template.Width = width;
         template.Height = height;
         Writer.AddDirectTemplateSimple(template, forcedName);
+
         return template;
     }
 
@@ -2929,6 +2932,7 @@ public class PdfContentByte
     {
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_COLOR, color);
         var type = ExtendedColor.GetType(color);
+
         switch (type)
         {
             case ExtendedColor.TYPE_RGB:
@@ -2937,19 +2941,23 @@ public class PdfContentByte
                 Content.Append((float)color.G / 0xFF);
                 Content.Append(' ');
                 Content.Append((float)color.B / 0xFF);
+
                 break;
             case ExtendedColor.TYPE_GRAY:
                 Content.Append(((GrayColor)color).Gray);
+
                 break;
             case ExtendedColor.TYPE_CMYK:
             {
                 var cmyk = (CmykColor)color;
                 Content.Append(cmyk.Cyan).Append(' ').Append(cmyk.Magenta);
                 Content.Append(' ').Append(cmyk.Yellow).Append(' ').Append(cmyk.Black);
+
                 break;
             }
             case ExtendedColor.TYPE_SEPARATION:
                 Content.Append(tint);
+
                 break;
             default:
                 throw new InvalidOperationException("Invalid color type.");
@@ -3052,6 +3060,7 @@ public class PdfContentByte
     private void helperRgb(float red, float green, float blue)
     {
         PdfXConformanceImp.CheckPdfxConformance(Writer, PdfXConformanceImp.PDFXKEY_RGB, null);
+
         if (red < 0)
         {
             red = 0.0f;
@@ -3114,13 +3123,16 @@ public class PdfContentByte
             {
                 case ALIGN_CENTER:
                     x -= GetEffectiveStringWidth(text, kerned) / 2;
+
                     break;
                 case ALIGN_RIGHT:
                     x -= GetEffectiveStringWidth(text, kerned);
+
                     break;
             }
 
             SetTextMatrix(x, y);
+
             if (kerned)
             {
                 ShowTextKerned(text);
@@ -3136,21 +3148,25 @@ public class PdfContentByte
             var cos = (float)Math.Cos(alpha);
             var sin = (float)Math.Sin(alpha);
             float len;
+
             switch (alignment)
             {
                 case ALIGN_CENTER:
                     len = GetEffectiveStringWidth(text, kerned) / 2;
                     x -= len * cos;
                     y -= len * sin;
+
                     break;
                 case ALIGN_RIGHT:
                     len = GetEffectiveStringWidth(text, kerned);
                     x -= len * cos;
                     y -= len * sin;
+
                     break;
             }
 
             SetTextMatrix(cos, sin, -sin, cos, x, y);
+
             if (kerned)
             {
                 ShowTextKerned(text);

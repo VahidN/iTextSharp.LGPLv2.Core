@@ -9,7 +9,7 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 {
-    private INullValueDictionary<string, string> _xmlLast;
+    private NullValueDictionary<string, string> _xmlLast;
     private INullValueDictionary<string, string> _xmlNames;
 
     private SimpleNamedDestination()
@@ -84,6 +84,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             if (tag.Equals("Destination", StringComparison.Ordinal))
             {
                 _xmlNames = new NullValueDictionary<string, string>();
+
                 return;
             }
 
@@ -114,9 +115,11 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
+
         for (var k = 0; k < len; ++k)
         {
             var c = cc[k];
+
             if (c < ' ')
             {
                 buf.Append('\\');
@@ -153,9 +156,9 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
     public static void ExportToXml(INullValueDictionary<string, string> names,
-                                   Stream outp,
-                                   string encoding,
-                                   bool onlyAscii)
+        Stream outp,
+        string encoding,
+        bool onlyAscii)
     {
         using var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
         ExportToXml(names, wrt, encoding, onlyAscii);
@@ -171,9 +174,9 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
     public static void ExportToXml(INullValueDictionary<string, string> names,
-                                   TextWriter wrt,
-                                   string encoding,
-                                   bool onlyAscii)
+        TextWriter wrt,
+        string encoding,
+        bool onlyAscii)
     {
         if (names == null)
         {
@@ -188,6 +191,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         wrt.Write("<?xml version=\"1.0\" encoding=\"");
         wrt.Write(SimpleXmlParser.EscapeXml(encoding, onlyAscii));
         wrt.Write("\"?>\n<Destination>\n");
+
         foreach (var key in names.Keys)
         {
             var value = names[key];
@@ -211,6 +215,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
         var pages = new NullValueDictionary<int, int>();
         var numPages = reader.NumberOfPages;
+
         for (var k = 1; k <= numPages; ++k)
         {
             pages[reader.GetPageOrigRef(k).Number] = k;
@@ -220,14 +225,17 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var n2 = new NullValueDictionary<string, string>(names.Count);
         var keys = new string[names.Count];
         names.Keys.CopyTo(keys, 0);
+
         foreach (var name in keys)
         {
             var arr = (PdfArray)names[name];
             var s = new StringBuilder();
+
             try
             {
                 s.Append(pages[arr.GetAsIndirectObject(0).Number]);
                 s.Append(' ').Append(arr[1].ToString().Substring(1));
+
                 for (var k = 2; k < arr.Size; ++k)
                 {
                     s.Append(' ').Append(arr[k]);
@@ -253,6 +261,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     {
         var names = new SimpleNamedDestination();
         SimpleXmlParser.Parse(names, inp);
+
         return names._xmlNames;
     }
 
@@ -266,11 +275,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     {
         var names = new SimpleNamedDestination();
         SimpleXmlParser.Parse(names, inp);
+
         return names._xmlNames;
     }
 
     public static PdfDictionary OutputNamedDestinationAsNames(INullValueDictionary<string, string> names,
-                                                              PdfWriter writer)
+        PdfWriter writer)
     {
         if (names == null)
         {
@@ -283,6 +293,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         }
 
         var dic = new PdfDictionary();
+
         foreach (var key in names.Keys)
         {
             try
@@ -302,7 +313,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     }
 
     public static PdfDictionary OutputNamedDestinationAsStrings(INullValueDictionary<string, string> names,
-                                                                PdfWriter writer)
+        PdfWriter writer)
     {
         if (names == null)
         {
@@ -315,6 +326,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         }
 
         var n2 = new NullValueDictionary<string, PdfObject>();
+
         foreach (var key in names.Keys)
         {
             try
@@ -342,25 +354,31 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
+
         for (var k = 0; k < len; ++k)
         {
             var c = cc[k];
+
             if (c == '\\')
             {
                 if (++k >= len)
                 {
                     buf.Append('\\');
+
                     break;
                 }
 
                 c = cc[k];
+
                 if (c >= '0' && c <= '7')
                 {
                     var n = c - '0';
                     ++k;
+
                     for (var j = 0; j < 2 && k < len; ++j)
                     {
                         c = cc[k];
+
                         if (c >= '0' && c <= '7')
                         {
                             ++k;
@@ -395,23 +413,31 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var tk = new StringTokenizer(value);
         var n = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
         ar.Add(writer.GetPageReference(n));
+
         if (!tk.HasMoreTokens())
         {
             ar.Add(PdfName.Xyz);
-            ar.Add(new float[] { 0, 10000, 0 });
+
+            ar.Add(new float[]
+            {
+                0, 10000, 0
+            });
         }
         else
         {
             var fn = tk.NextToken();
+
             if (fn.StartsWith("/", StringComparison.Ordinal))
             {
                 fn = fn.Substring(1);
             }
 
             ar.Add(new PdfName(fn));
+
             for (var k = 0; k < 4 && tk.HasMoreTokens(); ++k)
             {
                 fn = tk.NextToken();
+
                 if (fn.Equals("null", StringComparison.Ordinal))
                 {
                     ar.Add(PdfNull.Pdfnull);

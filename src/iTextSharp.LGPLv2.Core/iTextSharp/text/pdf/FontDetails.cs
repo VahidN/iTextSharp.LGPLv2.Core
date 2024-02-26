@@ -37,7 +37,7 @@ public class FontDetails
     ///     The map used with double byte encodings. The key is Int(glyph) and the
     ///     value is int[]{glyph, width, Unicode code}
     /// </summary>
-    private readonly INullValueDictionary<int, int[]> _longTag;
+    private readonly NullValueDictionary<int, int[]> _longTag;
 
     /// <summary>
     ///     The array used with single byte encodings
@@ -74,20 +74,24 @@ public class FontDetails
         _indirectReference = indirectReference;
         _baseFont = baseFont ?? throw new ArgumentNullException(nameof(baseFont));
         _fontType = baseFont.FontType;
+
         switch (_fontType)
         {
             case BaseFont.FONT_TYPE_T1:
             case BaseFont.FONT_TYPE_TT:
                 _shortTag = new byte[256];
+
                 break;
             case BaseFont.FONT_TYPE_CJK:
                 _cjkTag = new NullValueDictionary<int, int>();
                 _cjkFont = (CjkFont)baseFont;
+
                 break;
             case BaseFont.FONT_TYPE_TTUNI:
                 _longTag = new NullValueDictionary<int, int[]>();
                 _ttu = (TrueTypeFontUnicode)baseFont;
                 _symbolic = baseFont.IsFontSpecific();
+
                 break;
         }
     }
@@ -136,6 +140,7 @@ public class FontDetails
         }
 
         byte[] b = null;
+
         switch (_fontType)
         {
             case BaseFont.FONT_TYPE_T3:
@@ -145,6 +150,7 @@ public class FontDetails
             {
                 b = _baseFont.ConvertToBytes(text);
                 var len = b.Length;
+
                 for (var k = 0; k < len; ++k)
                 {
                     _shortTag[b[k] & 0xff] = 1;
@@ -155,17 +161,20 @@ public class FontDetails
             case BaseFont.FONT_TYPE_CJK:
             {
                 var len = text.Length;
+
                 for (var k = 0; k < len; ++k)
                 {
                     _cjkTag[_cjkFont.GetCidCode(text[k])] = 0;
                 }
 
                 b = _baseFont.ConvertToBytes(text);
+
                 break;
             }
             case BaseFont.FONT_TYPE_DOCUMENT:
             {
                 b = _baseFont.ConvertToBytes(text);
+
                 break;
             }
             case BaseFont.FONT_TYPE_TTUNI:
@@ -174,20 +183,26 @@ public class FontDetails
                 int[] metrics = null;
                 var glyph = new char[len];
                 var i = 0;
+
                 if (_symbolic)
                 {
                     b = PdfEncodings.ConvertToBytes(text, "symboltt");
                     len = b.Length;
+
                     for (var k = 0; k < len; ++k)
                     {
                         metrics = _ttu.GetMetricsTt(b[k] & 0xff);
+
                         if (metrics == null)
                         {
                             continue;
                         }
 
-                        _longTag[metrics[0]] =
-                            new[] { metrics[0], metrics[1], _ttu.GetUnicodeDifferences(b[k] & 0xff) };
+                        _longTag[metrics[0]] = new[]
+                        {
+                            metrics[0], metrics[1], _ttu.GetUnicodeDifferences(b[k] & 0xff)
+                        };
+
                         glyph[i++] = (char)metrics[0];
                     }
                 }
@@ -196,6 +211,7 @@ public class FontDetails
                     for (var k = 0; k < len; ++k)
                     {
                         int val;
+
                         if (Utilities.IsSurrogatePair(text, k))
                         {
                             val = Utilities.ConvertToUtf32(text, k);
@@ -207,6 +223,7 @@ public class FontDetails
                         }
 
                         metrics = _ttu.GetMetricsTt(val);
+
                         if (metrics == null)
                         {
                             continue;
@@ -214,9 +231,13 @@ public class FontDetails
 
                         var m0 = metrics[0];
                         var gl = m0;
+
                         if (!_longTag.ContainsKey(gl))
                         {
-                            _longTag[gl] = new[] { m0, metrics[1], val };
+                            _longTag[gl] = new[]
+                            {
+                                m0, metrics[1], val
+                            };
                         }
 
                         glyph[i++] = (char)m0;
@@ -225,6 +246,7 @@ public class FontDetails
 
                 var s = new string(glyph, 0, i);
                 b = PdfEncodings.ConvertToBytes(s, CjkFont.CJK_ENCODING);
+
                 break;
             }
         }
@@ -242,12 +264,14 @@ public class FontDetails
         {
             case BaseFont.FONT_TYPE_T3:
                 _baseFont.WriteFont(writer, _indirectReference, null);
+
                 break;
             case BaseFont.FONT_TYPE_T1:
             case BaseFont.FONT_TYPE_TT:
             {
                 int firstChar;
                 int lastChar;
+
                 for (firstChar = 0; firstChar < 256; ++firstChar)
                 {
                     if (_shortTag[firstChar] != 0)
@@ -270,15 +294,26 @@ public class FontDetails
                     lastChar = 255;
                 }
 
-                _baseFont.WriteFont(writer, _indirectReference,
-                                    new object[] { firstChar, lastChar, _shortTag, subset });
+                _baseFont.WriteFont(writer, _indirectReference, new object[]
+                {
+                    firstChar, lastChar, _shortTag, subset
+                });
+
                 break;
             }
             case BaseFont.FONT_TYPE_CJK:
-                _baseFont.WriteFont(writer, _indirectReference, new object[] { _cjkTag });
+                _baseFont.WriteFont(writer, _indirectReference, new object[]
+                {
+                    _cjkTag
+                });
+
                 break;
             case BaseFont.FONT_TYPE_TTUNI:
-                _baseFont.WriteFont(writer, _indirectReference, new object[] { _longTag, subset });
+                _baseFont.WriteFont(writer, _indirectReference, new object[]
+                {
+                    _longTag, subset
+                });
+
                 break;
         }
     }

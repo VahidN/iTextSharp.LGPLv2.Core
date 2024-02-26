@@ -35,6 +35,7 @@ public class FdfWriter
     {
         var map = _fields;
         var tk = new StringTokenizer(field, ".");
+
         if (!tk.HasMoreTokens())
         {
             return null;
@@ -44,6 +45,7 @@ public class FdfWriter
         {
             var s = tk.NextToken();
             var obj = map[s];
+
             if (obj == null)
             {
                 return null;
@@ -86,6 +88,7 @@ public class FdfWriter
     {
         var values = new NullValueDictionary<string, object>();
         IterateFields(values, _fields, "");
+
         return values;
     }
 
@@ -99,16 +102,19 @@ public class FdfWriter
     {
         var map = _fields;
         var tk = new StringTokenizer(field, ".");
+
         if (!tk.HasMoreTokens())
         {
             return false;
         }
 
         List<object> hist = new();
+
         while (true)
         {
             var s = tk.NextToken();
             var obj = map[s];
+
             if (obj == null)
             {
                 return false;
@@ -116,6 +122,7 @@ public class FdfWriter
 
             hist.Add(map);
             hist.Add(s);
+
             if (tk.HasMoreTokens())
             {
                 if (obj is INullValueDictionary<string, object>)
@@ -143,6 +150,7 @@ public class FdfWriter
             map = (INullValueDictionary<string, object>)hist[k];
             var s = (string)hist[k + 1];
             map.Remove(s);
+
             if (map.Count > 0)
             {
                 break;
@@ -165,7 +173,8 @@ public class FdfWriter
     /// <param name="field">the fully qualified field name</param>
     /// <param name="action">the field's action</param>
     /// <returns> true  if the value was inserted,</returns>
-    public bool SetFieldAsAction(string field, PdfAction action) => SetField(field, action);
+    public bool SetFieldAsAction(string field, PdfAction action)
+        => SetField(field, action);
 
     /// <summary>
     ///     Sets the field value as a name.
@@ -175,7 +184,8 @@ public class FdfWriter
     /// <param name="field">the fully qualified field name</param>
     /// <param name="value">the value</param>
     /// <returns> true  if the value was inserted,</returns>
-    public bool SetFieldAsName(string field, string value) => SetField(field, new PdfName(value));
+    public bool SetFieldAsName(string field, string value)
+        => SetField(field, new PdfName(value));
 
     /// <summary>
     ///     Sets the field value as a string.
@@ -185,8 +195,8 @@ public class FdfWriter
     /// <param name="field">the fully qualified field name</param>
     /// <param name="value">the value</param>
     /// <returns> true  if the value was inserted,</returns>
-    public bool SetFieldAsString(string field, string value) =>
-        SetField(field, new PdfString(value, PdfObject.TEXT_UNICODE));
+    public bool SetFieldAsString(string field, string value)
+        => SetField(field, new PdfString(value, PdfObject.TEXT_UNICODE));
 
     /// <summary>
     ///     Sets all the fields from this  FdfReader
@@ -200,17 +210,20 @@ public class FdfWriter
         }
 
         var map = fdf.Fields;
+
         foreach (var entry in map)
         {
             var key = entry.Key;
             var dic = entry.Value;
             var v = dic.Get(PdfName.V);
+
             if (v != null)
             {
                 SetField(key, v);
             }
 
             v = dic.Get(PdfName.A); // (plaflamme)
+
             if (v != null)
             {
                 SetField(key, v);
@@ -249,12 +262,14 @@ public class FdfWriter
             var item = entry.Value;
             var dic = item.GetMerged(0);
             var v = PdfReader.GetPdfObjectRelease(dic.Get(PdfName.V));
+
             if (v == null)
             {
                 continue;
             }
 
             var ft = PdfReader.GetPdfObjectRelease(dic.Get(PdfName.Ft));
+
             if (ft == null || PdfName.Sig.Equals(ft))
             {
                 continue;
@@ -276,13 +291,15 @@ public class FdfWriter
         wrt.WriteTo();
     }
 
-    internal void IterateFields(INullValueDictionary<string, object> values,
-                                INullValueDictionary<string, object> map, string name)
+    internal static void IterateFields(INullValueDictionary<string, object> values,
+        INullValueDictionary<string, object> map,
+        string name)
     {
         foreach (var entry in map)
         {
             var s = entry.Key;
             var obj = entry.Value;
+
             if (obj is INullValueDictionary<string, object> objects)
             {
                 IterateFields(values, objects, name + "." + s);
@@ -298,6 +315,7 @@ public class FdfWriter
     {
         var map = _fields;
         var tk = new StringTokenizer(field, ".");
+
         if (!tk.HasMoreTokens())
         {
             return false;
@@ -307,6 +325,7 @@ public class FdfWriter
         {
             var s = tk.NextToken();
             var obj = map[s];
+
             if (tk.HasMoreTokens())
             {
                 if (obj == null)
@@ -314,6 +333,7 @@ public class FdfWriter
                     obj = new NullValueDictionary<string, object>();
                     map[s] = obj;
                     map = (NullValueDictionary<string, object>)obj;
+
                     continue;
                 }
 
@@ -331,6 +351,7 @@ public class FdfWriter
                 if (!(obj is NullValueDictionary<string, object>))
                 {
                     map[s] = value;
+
                     return true;
                 }
 
@@ -350,15 +371,17 @@ public class FdfWriter
             Body = new PdfBody(this);
         }
 
-        internal PdfArray Calculate(INullValueDictionary<string, object> map)
+        internal static PdfArray Calculate(INullValueDictionary<string, object> map)
         {
             var ar = new PdfArray();
+
             foreach (var entry in map)
             {
                 var key = entry.Key;
                 var v = entry.Value;
                 var dic = new PdfDictionary();
                 dic.Put(PdfName.T, new PdfString(key, PdfObject.TEXT_UNICODE));
+
                 if (v is NullValueDictionary<string, object>)
                 {
                     dic.Put(PdfName.Kids, Calculate((NullValueDictionary<string, object>)v));
@@ -383,6 +406,7 @@ public class FdfWriter
         {
             var dic = new PdfDictionary();
             dic.Put(PdfName.Fields, Calculate(_fdf._fields));
+
             if (_fdf._file != null)
             {
                 dic.Put(PdfName.F, new PdfString(_fdf._file, PdfObject.TEXT_UNICODE));

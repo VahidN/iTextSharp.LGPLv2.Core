@@ -12,7 +12,7 @@ public static class IanaEncodings
     /// <summary>
     ///     The object that maps IANA to Java encodings.
     /// </summary>
-    private static readonly INullValueDictionary<string, int> _map = new NullValueDictionary<string, int>();
+    private static readonly NullValueDictionary<string, int> _map = new();
 
     static IanaEncodings()
     {
@@ -467,6 +467,7 @@ public static class IanaEncodings
         }
 
         object n = _map[name.ToUpper(CultureInfo.InvariantCulture)];
+
         if (n == null)
         {
             return 0;
@@ -483,6 +484,7 @@ public static class IanaEncodings
         }
 
         var nameU = name.ToUpper(CultureInfo.InvariantCulture);
+
         if (nameU.Equals("UNICODEBIGUNMARKED", StringComparison.Ordinal))
         {
             return new UnicodeEncoding(true, false);

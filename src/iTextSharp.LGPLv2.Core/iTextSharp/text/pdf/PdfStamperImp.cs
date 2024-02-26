@@ -8,35 +8,14 @@ namespace iTextSharp.text.pdf;
 
 public class PdfStamperImp : PdfWriter
 {
-    protected AcroFields acroFields;
-    protected internal bool Append;
-    internal bool Closed;
-
-    protected bool FieldsAdded;
-
-    protected INullValueDictionary<PdfTemplate, object> FieldTemplates = new NullValueDictionary<PdfTemplate, object>();
     internal readonly RandomAccessFileOrArray File;
-
-    protected bool Flat;
-
-    protected bool FlatFreeText;
-
-    protected int InitialXrefSize;
-
-    protected NullValueDictionary<int, int> Marked;
     internal readonly NullValueDictionary<int, int> MyXref = new();
-
-    protected int[] NamePtr = { 0 };
-
-    protected PdfAction OpenAction;
 
     /// <summary>
     ///     Integer(page number) -> PageStamp
     /// </summary>
     internal readonly INullValueDictionary<PdfDictionary, PageStamp> PagesToContent =
         new NullValueDictionary<PdfDictionary, PageStamp>();
-
-    protected INullValueDictionary<string, object> PartialFlattening = new NullValueDictionary<string, object>();
 
     internal readonly PdfReader Reader;
 
@@ -45,6 +24,31 @@ public class PdfStamperImp : PdfWriter
 
     internal readonly INullValueDictionary<PdfReader, NullValueDictionary<int, int>> Readers2Intrefs =
         new NullValueDictionary<PdfReader, NullValueDictionary<int, int>>();
+
+    protected AcroFields acroFields;
+    protected internal bool Append;
+    internal bool Closed;
+
+    protected bool FieldsAdded;
+
+    protected INullValueDictionary<PdfTemplate, object> FieldTemplates = new NullValueDictionary<PdfTemplate, object>();
+
+    protected bool Flat;
+
+    protected bool FlatFreeText;
+
+    protected int InitialXrefSize;
+
+    protected NullValueDictionary<int, int> Marked;
+
+    protected int[] NamePtr =
+    {
+        0
+    };
+
+    protected PdfAction OpenAction;
+
+    protected INullValueDictionary<string, object> PartialFlattening = new NullValueDictionary<string, object>();
 
     protected int sigFlags;
 
@@ -78,12 +82,13 @@ public class PdfStamperImp : PdfWriter
         Reader = reader;
         File = reader.SafeFile;
         Append = append;
+
         if (append)
         {
             if (reader.IsRebuilt())
             {
-                throw new
-                    DocumentException("Append mode requires a document without errors even if recovery was possible.");
+                throw new DocumentException(
+                    "Append mode requires a document without errors even if recovery was possible.");
             }
 
             if (reader.IsEncrypted())
@@ -95,6 +100,7 @@ public class PdfStamperImp : PdfWriter
             File.ReOpen();
             var buf = new byte[8192];
             int n;
+
             while ((n = File.Read(buf)) > 0)
             {
                 ((DocWriter)this).Os.Write(buf, 0, n);
@@ -118,10 +124,12 @@ public class PdfStamperImp : PdfWriter
 
         Open();
         Pdf.AddWriter(this);
+
         if (append)
         {
             Body.Refnum = reader.XrefSize;
             Marked = new NullValueDictionary<int, int>();
+
             if (reader.IsNewXrefType())
             {
                 fullCompression = true;
@@ -136,11 +144,11 @@ public class PdfStamperImp : PdfWriter
         InitialXrefSize = reader.XrefSize;
     }
 
-    public override PdfContentByte DirectContent =>
-        throw new InvalidOperationException("Use PdfStamper.GetUnderContent() or PdfStamper.GetOverContent()");
+    public override PdfContentByte DirectContent
+        => throw new InvalidOperationException("Use PdfStamper.GetUnderContent() or PdfStamper.GetOverContent()");
 
-    public override PdfContentByte DirectContentUnder =>
-        throw new InvalidOperationException("Use PdfStamper.GetUnderContent() or PdfStamper.GetOverContent()");
+    public override PdfContentByte DirectContentUnder
+        => throw new InvalidOperationException("Use PdfStamper.GetUnderContent() or PdfStamper.GetOverContent()");
 
     /// <summary>
     ///     Always throws an  UnsupportedOperationException .
@@ -221,9 +229,7 @@ public class PdfStamperImp : PdfWriter
     ///     @see com.lowagie.text.pdf.PdfWriter#addAnnotation(com.lowagie.text.pdf.PdfAnnotation)
     /// </summary>
     public override void AddAnnotation(PdfAnnotation annot)
-    {
-        throw new NotSupportedException("Unsupported in this context. Use PdfStamper.AddAnnotation()");
-    }
+        => throw new NotSupportedException("Unsupported in this context. Use PdfStamper.AddAnnotation()");
 
     /// <summary>
     ///     @throws IOException
@@ -243,12 +249,14 @@ public class PdfStamperImp : PdfWriter
 
         var catalog = fdf.Catalog;
         catalog = catalog.GetAsDict(PdfName.Fdf);
+
         if (catalog == null)
         {
             return;
         }
 
         var annots = catalog.GetAsArray(PdfName.Annots);
+
         if (annots == null || annots.Size == 0)
         {
             return;
@@ -258,11 +266,13 @@ public class PdfStamperImp : PdfWriter
         var hits = new NullValueDictionary<int, int>();
         var irt = new NullValueDictionary<string, PdfObject>();
         List<PdfObject> an = new();
+
         for (var k = 0; k < annots.Size; ++k)
         {
             var obj = annots[k];
             var annot = (PdfDictionary)PdfReader.GetPdfObject(obj);
             var page = annot.GetAsNumber(PdfName.Page);
+
             if (page == null || page.IntValue >= Reader.NumberOfPages)
             {
                 continue;
@@ -270,9 +280,11 @@ public class PdfStamperImp : PdfWriter
 
             FindAllObjects(fdf, obj, hits);
             an.Add(obj);
+
             if (obj.Type == PdfObject.INDIRECT)
             {
                 var nm = PdfReader.GetPdfObject(annot.Get(PdfName.Nm));
+
                 if (nm != null && nm.Type == PdfObject.STRING)
                 {
                     irt[nm.ToString()] = obj;
@@ -281,16 +293,20 @@ public class PdfStamperImp : PdfWriter
         }
 
         var arhits = hits.GetKeys();
+
         for (var k = 0; k < arhits.Count; ++k)
         {
             var n = arhits[k];
             var obj = fdf.GetPdfObject(n);
+
             if (obj.Type == PdfObject.DICTIONARY)
             {
                 var str = PdfReader.GetPdfObject(((PdfDictionary)obj).Get(PdfName.Irt));
+
                 if (str != null && str.Type == PdfObject.STRING)
                 {
                     var i = irt[str.ToString()];
+
                     if (i != null)
                     {
                         var dic2 = new PdfDictionary();
@@ -311,6 +327,7 @@ public class PdfStamperImp : PdfWriter
             var page = annot.GetAsNumber(PdfName.Page);
             var dic = Reader.GetPageN(page.IntValue + 1);
             var annotsp = (PdfArray)PdfReader.GetPdfObject(dic.Get(PdfName.Annots), dic);
+
             if (annotsp == null)
             {
                 annotsp = new PdfArray();
@@ -339,6 +356,7 @@ public class PdfStamperImp : PdfWriter
     public override PdfIndirectReference GetPageReference(int page)
     {
         PdfIndirectReference refP = Reader.GetPageOrigRef(page);
+
         if (refP == null)
         {
             throw new ArgumentException("Invalid page number " + page);
@@ -362,6 +380,7 @@ public class PdfStamperImp : PdfWriter
 
         var map = new NullValueDictionary<string, PdfLayer>();
         string key;
+
         foreach (PdfLayer layer in DocumentOcg.Keys)
         {
             if (layer.Title == null)
@@ -377,6 +396,7 @@ public class PdfStamperImp : PdfWriter
             {
                 var seq = 2;
                 var tmp = key + "(" + seq + ")";
+
                 while (map.ContainsKey(tmp))
                 {
                     seq++;
@@ -410,6 +430,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         Readers2Intrefs[reader] = new NullValueDictionary<int, int>();
+
         if (openFile)
         {
             var raf = reader.SafeFile;
@@ -435,16 +456,14 @@ public class PdfStamperImp : PdfWriter
             throw new ArgumentNullException(nameof(actionType));
         }
 
-        if (!(actionType.Equals(DocumentClose) ||
-              actionType.Equals(WillSave) ||
-              actionType.Equals(DidSave) ||
-              actionType.Equals(WillPrint) ||
-              actionType.Equals(DidPrint)))
+        if (!(actionType.Equals(DocumentClose) || actionType.Equals(WillSave) || actionType.Equals(DidSave) ||
+              actionType.Equals(WillPrint) || actionType.Equals(DidPrint)))
         {
             throw new PdfException("Invalid additional action type: " + actionType);
         }
 
         var aa = Reader.Catalog.GetAsDict(PdfName.Aa);
+
         if (aa == null)
         {
             if (action == null)
@@ -457,6 +476,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         MarkUsed(aa);
+
         if (action == null)
         {
             aa.Remove(actionType);
@@ -471,17 +491,13 @@ public class PdfStamperImp : PdfWriter
     ///     @see com.lowagie.text.pdf.PdfWriter#setOpenAction(com.lowagie.text.pdf.PdfAction)
     /// </summary>
     public override void SetOpenAction(PdfAction action)
-    {
-        OpenAction = action;
-    }
+        => OpenAction = action;
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.PdfWriter#setOpenAction(java.lang.String)
     /// </summary>
     public override void SetOpenAction(string name)
-    {
-        throw new InvalidOperationException("Open actions by name are not supported.");
-    }
+        => throw new InvalidOperationException("Open actions by name are not supported.");
 
     /// <summary>
     ///     Always throws an  UnsupportedOperationException .
@@ -491,9 +507,7 @@ public class PdfStamperImp : PdfWriter
     /// <param name="actionType">ignore</param>
     /// <param name="action">ignore</param>
     public override void SetPageAction(PdfName actionType, PdfAction action)
-    {
-        throw new InvalidOperationException("Use SetPageAction(PdfName actionType, PdfAction action, int page)");
-    }
+        => throw new InvalidOperationException("Use SetPageAction(PdfName actionType, PdfAction action, int page)");
 
     /// <summary>
     /// </summary>
@@ -507,12 +521,14 @@ public class PdfStamperImp : PdfWriter
 
         Readers2Intrefs.Remove(reader);
         var raf = Readers2File[reader];
+
         if (raf == null)
         {
             return;
         }
 
         Readers2File.Remove(reader);
+
         try
         {
             raf.Close();
@@ -533,6 +549,7 @@ public class PdfStamperImp : PdfWriter
         {
             case PdfObject.INDIRECT:
                 var iref = (PrIndirectReference)obj;
+
                 if (reader != iref.Reader)
                 {
                     return;
@@ -545,9 +562,11 @@ public class PdfStamperImp : PdfWriter
 
                 hits[iref.Number] = 1;
                 FindAllObjects(reader, PdfReader.GetPdfObject(obj), hits);
+
                 return;
             case PdfObject.ARRAY:
                 var a = (PdfArray)obj;
+
                 for (var k = 0; k < a.Size; ++k)
                 {
                     FindAllObjects(reader, a[k], hits);
@@ -557,6 +576,7 @@ public class PdfStamperImp : PdfWriter
             case PdfObject.DICTIONARY:
             case PdfObject.STREAM:
                 var dic = (PdfDictionary)obj;
+
                 foreach (var name in dic.Keys)
                 {
                     FindAllObjects(reader, dic.Get(name), hits);
@@ -569,11 +589,13 @@ public class PdfStamperImp : PdfWriter
     internal void AddAnnotation(PdfAnnotation annot, PdfDictionary pageN)
     {
         List<PdfAnnotation> allAnnots = new();
+
         if (annot.IsForm())
         {
             FieldsAdded = true;
             var afdummy = AcroFields;
             var field = (PdfFormField)annot;
+
             if (field.Parent != null)
             {
                 return;
@@ -589,6 +611,7 @@ public class PdfStamperImp : PdfWriter
         for (var k = 0; k < allAnnots.Count; ++k)
         {
             annot = allAnnots[k];
+
             if (annot.PlaceInPage > 0)
             {
                 pageN = Reader.GetPageN(annot.PlaceInPage);
@@ -599,6 +622,7 @@ public class PdfStamperImp : PdfWriter
                 if (!annot.IsUsed())
                 {
                     var templates = annot.Templates;
+
                     if (templates != null)
                     {
                         foreach (var tpl in templates.Keys)
@@ -609,6 +633,7 @@ public class PdfStamperImp : PdfWriter
                 }
 
                 var field = (PdfFormField)annot;
+
                 if (field.Parent == null)
                 {
                     AddDocumentField(field.IndirectReference);
@@ -619,6 +644,7 @@ public class PdfStamperImp : PdfWriter
             {
                 var pdfobj = PdfReader.GetPdfObject(pageN.Get(PdfName.Annots), pageN);
                 PdfArray annots = null;
+
                 if (pdfobj == null || !pdfobj.IsArray())
                 {
                     annots = new PdfArray();
@@ -632,36 +658,36 @@ public class PdfStamperImp : PdfWriter
 
                 annots.Add(annot.IndirectReference);
                 MarkUsed(annots);
+
                 if (!annot.IsUsed())
                 {
                     var rect = (PdfRectangle)annot.Get(PdfName.Rect);
+
                     if (rect != null && (rect.Left.ApproxNotEqual(0) || rect.Right.ApproxNotEqual(0) ||
                                          rect.Top.ApproxNotEqual(0) || rect.Bottom.ApproxNotEqual(0)))
                     {
                         var rotation = PdfReader.GetPageRotation(pageN);
                         var pageSize = PdfReader.GetPageSizeWithRotation(pageN);
+
                         switch (rotation)
                         {
                             case 90:
-                                annot.Put(PdfName.Rect, new PdfRectangle(
-                                                                         pageSize.Top - rect.Bottom,
-                                                                         rect.Left,
-                                                                         pageSize.Top - rect.Top,
-                                                                         rect.Right));
+                                annot.Put(PdfName.Rect,
+                                    new PdfRectangle(pageSize.Top - rect.Bottom, rect.Left, pageSize.Top - rect.Top,
+                                        rect.Right));
+
                                 break;
                             case 180:
-                                annot.Put(PdfName.Rect, new PdfRectangle(
-                                                                         pageSize.Right - rect.Left,
-                                                                         pageSize.Top - rect.Bottom,
-                                                                         pageSize.Right - rect.Right,
-                                                                         pageSize.Top - rect.Top));
+                                annot.Put(PdfName.Rect,
+                                    new PdfRectangle(pageSize.Right - rect.Left, pageSize.Top - rect.Bottom,
+                                        pageSize.Right - rect.Right, pageSize.Top - rect.Top));
+
                                 break;
                             case 270:
-                                annot.Put(PdfName.Rect, new PdfRectangle(
-                                                                         rect.Bottom,
-                                                                         pageSize.Right - rect.Left,
-                                                                         rect.Top,
-                                                                         pageSize.Right - rect.Right));
+                                annot.Put(PdfName.Rect,
+                                    new PdfRectangle(rect.Bottom, pageSize.Right - rect.Left, rect.Top,
+                                        pageSize.Right - rect.Right));
+
                                 break;
                         }
                     }
@@ -686,6 +712,7 @@ public class PdfStamperImp : PdfWriter
     {
         var catalog = Reader.Catalog;
         var acroForm = (PdfDictionary)PdfReader.GetPdfObject(catalog.Get(PdfName.Acroform), catalog);
+
         if (acroForm == null)
         {
             acroForm = new PdfDictionary();
@@ -694,6 +721,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var fields = (PdfArray)PdfReader.GetPdfObject(acroForm.Get(PdfName.Fields), acroForm);
+
         if (fields == null)
         {
             fields = new PdfArray();
@@ -720,6 +748,7 @@ public class PdfStamperImp : PdfWriter
 
         var catalog = Reader.Catalog;
         var acroForm = (PdfDictionary)PdfReader.GetPdfObject(catalog.Get(PdfName.Acroform), catalog);
+
         if (acroForm == null)
         {
             acroForm = new PdfDictionary();
@@ -728,6 +757,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var dr = (PdfDictionary)PdfReader.GetPdfObject(acroForm.Get(PdfName.Dr), acroForm);
+
         if (dr == null)
         {
             dr = new PdfDictionary();
@@ -736,6 +766,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         MarkUsed(dr);
+
         foreach (var template in FieldTemplates.Keys)
         {
             PdfFormField.MergeResources(dr, (PdfDictionary)template.Resources, this);
@@ -744,6 +775,7 @@ public class PdfStamperImp : PdfWriter
         //            if (dr.Get(PdfName.ENCODING) == null)
         //                dr.Put(PdfName.ENCODING, PdfName.WIN_ANSI_ENCODING);
         var fonts = dr.GetAsDict(PdfName.Font);
+
         if (fonts == null)
         {
             fonts = new PdfDictionary();
@@ -784,6 +816,7 @@ public class PdfStamperImp : PdfWriter
             MarkUsed(pageN);
             PdfArray ar = null;
             var content = PdfReader.GetPdfObject(pageN.Get(PdfName.Contents), pageN);
+
             if (content == null)
             {
                 ar = new PdfArray();
@@ -807,6 +840,7 @@ public class PdfStamperImp : PdfWriter
             }
 
             var outP = new ByteBuffer();
+
             if (ps.Under != null)
             {
                 outP.Append(PdfContents.Savestate);
@@ -824,6 +858,7 @@ public class PdfStamperImp : PdfWriter
             stream.FlateCompress(compressionLevel);
             ar.AddFirst(AddToBody(stream).IndirectReference);
             outP.Reset();
+
             if (ps.Over != null)
             {
                 outP.Append(' ');
@@ -844,9 +879,7 @@ public class PdfStamperImp : PdfWriter
     }
 
     internal static void AlterResources(PageStamp ps)
-    {
-        ps.PageN.Put(PdfName.Resources, ps.PageResources.Resources);
-    }
+        => ps.PageN.Put(PdfName.Resources, ps.PageResources.Resources);
 
     internal void ApplyRotation(PdfDictionary pageN, ByteBuffer outP)
     {
@@ -857,12 +890,14 @@ public class PdfStamperImp : PdfWriter
 
         var page = PdfReader.GetPageSizeWithRotation(pageN);
         var rotation = page.Rotation;
+
         switch (rotation)
         {
             case 90:
                 outP.Append(PdfContents.Rotate90);
                 outP.Append(page.Top);
                 outP.Append(' ').Append('0').Append(PdfContents.Rotatefinal);
+
                 break;
             case 180:
                 outP.Append(PdfContents.Rotate180);
@@ -870,12 +905,14 @@ public class PdfStamperImp : PdfWriter
                 outP.Append(' ');
                 outP.Append(page.Top);
                 outP.Append(PdfContents.Rotatefinal);
+
                 break;
             case 270:
                 outP.Append(PdfContents.Rotate270);
                 outP.Append('0').Append(' ');
                 outP.Append(page.Right);
                 outP.Append(PdfContents.Rotatefinal);
+
                 break;
         }
     }
@@ -909,9 +946,11 @@ public class PdfStamperImp : PdfWriter
         pages.Put(PdfName.Itxt, new PdfString(Document.Release));
         MarkUsed(pages);
         var acroForm = (PdfDictionary)PdfReader.GetPdfObject(catalog.Get(PdfName.Acroform), Reader.Catalog);
+
         if (acroFields != null && acroFields.Xfa.Changed)
         {
             MarkUsed(acroForm);
+
             if (!Flat)
             {
                 acroFields.Xfa.SetXfa(this);
@@ -955,6 +994,7 @@ public class PdfStamperImp : PdfWriter
         {
             FillOcProperties(false);
             var ocdict = catalog.GetAsDict(PdfName.Ocproperties);
+
             if (ocdict == null)
             {
                 Reader.Catalog.Put(PdfName.Ocproperties, OcProperties);
@@ -963,6 +1003,7 @@ public class PdfStamperImp : PdfWriter
             {
                 ocdict.Put(PdfName.Ocgs, OcProperties.Get(PdfName.Ocgs));
                 var ddict = ocdict.GetAsDict(PdfName.D);
+
                 if (ddict == null)
                 {
                     ddict = new PdfDictionary();
@@ -994,6 +1035,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         string producer = null;
+
         if (iInfo != null)
         {
             skipInfo = iInfo.Number;
@@ -1019,6 +1061,7 @@ public class PdfStamperImp : PdfWriter
         // XMP
         byte[] altMetadata = null;
         var xmpo = PdfReader.GetPdfObject(catalog.Get(PdfName.Metadata));
+
         if (xmpo != null && xmpo.IsStream())
         {
             altMetadata = PdfReader.GetStreamBytesRaw((PrStream)xmpo);
@@ -1032,12 +1075,15 @@ public class PdfStamperImp : PdfWriter
 
         // if there is XMP data to add: add it
         var date = new PdfDate();
+
         if (altMetadata != null)
         {
             PdfStream xmp;
+
             try
             {
                 var xmpr = new XmpReader(altMetadata);
+
                 if (!xmpr.Replace("http://ns.adobe.com/pdf/1.3/", "Producer", producer))
                 {
                     xmpr.Add("rdf:Description", "http://ns.adobe.com/pdf/1.3/", "pdf:Producer", producer);
@@ -1058,6 +1104,7 @@ public class PdfStamperImp : PdfWriter
 
             xmp.Put(PdfName.TYPE, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.Xml);
+
             if (Crypto != null && !Crypto.IsMetadataEncrypted())
             {
                 var ar = new PdfArray();
@@ -1081,13 +1128,16 @@ public class PdfStamperImp : PdfWriter
             File.ReOpen();
             AlterContents();
             var rootN = ((PrIndirectReference)Reader.trailer.Get(PdfName.Root)).Number;
+
             if (Append)
             {
                 var keys = Marked.GetKeys();
+
                 for (var k = 0; k < keys.Count; ++k)
                 {
                     var j = keys[k];
                     var obj = Reader.GetPdfObjectRelease(j);
+
                     if (obj != null && skipInfo != j && j < InitialXrefSize)
                     {
                         AddToBody(obj, j, j != rootN);
@@ -1097,6 +1147,7 @@ public class PdfStamperImp : PdfWriter
                 for (var k = InitialXrefSize; k < Reader.XrefSize; ++k)
                 {
                     var obj = Reader.GetPdfObject(k);
+
                     if (obj != null)
                     {
                         AddToBody(obj, GetNewObjectNumber(Reader, k, 0));
@@ -1108,6 +1159,7 @@ public class PdfStamperImp : PdfWriter
                 for (var k = 1; k < Reader.XrefSize; ++k)
                 {
                     var obj = Reader.GetPdfObjectRelease(k);
+
                     if (obj != null && skipInfo != k)
                     {
                         AddToBody(obj, GetNewObjectNumber(Reader, k, 0), k != rootN);
@@ -1129,6 +1181,7 @@ public class PdfStamperImp : PdfWriter
 
         PdfIndirectReference encryption = null;
         PdfObject fileId = null;
+
         if (Crypto != null)
         {
             if (Append)
@@ -1152,6 +1205,7 @@ public class PdfStamperImp : PdfWriter
         var root = new PdfIndirectReference(0, GetNewObjectNumber(Reader, iRoot.Number, 0));
         PdfIndirectReference info = null;
         var newInfo = new PdfDictionary();
+
         if (oldInfo != null)
         {
             foreach (var key in oldInfo.Keys)
@@ -1167,6 +1221,7 @@ public class PdfStamperImp : PdfWriter
             {
                 var keyName = new PdfName(entry.Key);
                 var value = entry.Value;
+
                 if (value == null)
                 {
                     newInfo.Remove(keyName);
@@ -1180,6 +1235,7 @@ public class PdfStamperImp : PdfWriter
 
         newInfo.Put(PdfName.Moddate, date);
         newInfo.Put(PdfName.Producer, new PdfString(producer));
+
         if (Append)
         {
             if (iInfo == null)
@@ -1198,6 +1254,7 @@ public class PdfStamperImp : PdfWriter
 
         // write the cross-reference table of the body
         Body.WriteCrossReferenceTable(((DocWriter)this).Os, root, info, encryption, fileId, Prevxref);
+
         if (fullCompression)
         {
             var tmp = GetIsoBytes("startxref\n");
@@ -1209,16 +1266,12 @@ public class PdfStamperImp : PdfWriter
         }
         else
         {
-            var trailer = new PdfTrailer(Body.Size,
-                                         Body.Offset,
-                                         root,
-                                         info,
-                                         encryption,
-                                         fileId, Prevxref);
+            var trailer = new PdfTrailer(Body.Size, Body.Offset, root, info, encryption, fileId, Prevxref);
             trailer.ToPdf(this, ((DocWriter)this).Os);
         }
 
         ((DocWriter)this).Os.Flush();
+
         if (CloseStream)
         {
             ((DocWriter)this).Os.Dispose();
@@ -1240,11 +1293,13 @@ public class PdfStamperImp : PdfWriter
         }
 
         var fields = acroFields.Fields;
+
         foreach (var item in fields.Values)
         {
             for (var k = 0; k < item.Size; ++k)
             {
                 var p = item.GetPage(k);
+
                 if (p >= page)
                 {
                     item.ForcePage(k, p + 1);
@@ -1257,6 +1312,7 @@ public class PdfStamperImp : PdfWriter
     {
         var catalog = Reader.Catalog;
         var outlines = (PrIndirectReference)catalog.Get(PdfName.Outlines);
+
         if (outlines == null)
         {
             return;
@@ -1271,6 +1327,7 @@ public class PdfStamperImp : PdfWriter
     internal void EliminateAcroformObjects()
     {
         var acro = Reader.Catalog.Get(PdfName.Acroform);
+
         if (acro == null)
         {
             return;
@@ -1280,6 +1337,7 @@ public class PdfStamperImp : PdfWriter
         Reader.KillXref(acrodic.Get(PdfName.Xfa));
         acrodic.Remove(PdfName.Xfa);
         var iFields = acrodic.Get(PdfName.Fields);
+
         if (iFields != null)
         {
             var kids = new PdfDictionary();
@@ -1288,14 +1346,16 @@ public class PdfStamperImp : PdfWriter
             PdfReader.KillIndirect(iFields);
             acrodic.Put(PdfName.Fields, new PdfArray());
         }
+
         //        PdfReader.KillIndirect(acro);
         //        reader.GetCatalog().Remove(PdfName.ACROFORM);
     }
 
-    internal void ExpandFields(PdfFormField field, IList<PdfAnnotation> allAnnots)
+    internal static void ExpandFields(PdfFormField field, IList<PdfAnnotation> allAnnots)
     {
         allAnnots.Add(field);
         var kids = field.Kids;
+
         if (kids != null)
         {
             for (var k = 0; k < kids.Count; ++k)
@@ -1314,6 +1374,7 @@ public class PdfStamperImp : PdfWriter
 
         var af = AcroFields;
         var fields = acroFields.Fields;
+
         if (FieldsAdded && PartialFlattening.Count == 0)
         {
             foreach (var obf in fields.Keys)
@@ -1324,6 +1385,7 @@ public class PdfStamperImp : PdfWriter
 
         var acroForm = Reader.Catalog.GetAsDict(PdfName.Acroform);
         PdfArray acroFds = null;
+
         if (acroForm != null)
         {
             acroFds = (PdfArray)PdfReader.GetPdfObject(acroForm.Get(PdfName.Fields), acroForm);
@@ -1332,17 +1394,20 @@ public class PdfStamperImp : PdfWriter
         foreach (var entry in fields)
         {
             var name = entry.Key;
+
             if (PartialFlattening.Count != 0 && !PartialFlattening.ContainsKey(name))
             {
                 continue;
             }
 
             var item = entry.Value;
+
             for (var k = 0; k < item.Size; ++k)
             {
                 var merged = item.GetMerged(k);
                 var ff = merged.GetAsNumber(PdfName.F);
                 var flags = 0;
+
                 if (ff != null)
                 {
                     flags = ff.IntValue;
@@ -1350,14 +1415,17 @@ public class PdfStamperImp : PdfWriter
 
                 var page = item.GetPage(k);
                 var appDic = merged.GetAsDict(PdfName.Ap);
+
                 if (appDic != null && (flags & PdfAnnotation.FLAGS_PRINT) != 0 &&
                     (flags & PdfAnnotation.FLAGS_HIDDEN) == 0)
                 {
                     var obj = appDic.Get(PdfName.N);
                     PdfAppearance app = null;
+
                     if (obj != null)
                     {
                         var objReal = PdfReader.GetPdfObject(obj);
+
                         if (obj is PdfIndirectReference && !obj.IsIndirect())
                         {
                             app = new PdfAppearance((PdfIndirectReference)obj);
@@ -1372,12 +1440,15 @@ public class PdfStamperImp : PdfWriter
                             if (objReal != null && objReal.IsDictionary())
                             {
                                 var asP = merged.GetAsName(PdfName.As);
+
                                 if (asP != null)
                                 {
                                     var iref = (PdfIndirectReference)((PdfDictionary)objReal).Get(asP);
+
                                     if (iref != null)
                                     {
                                         app = new PdfAppearance(iref);
+
                                         if (iref.IsIndirect())
                                         {
                                             objReal = PdfReader.GetPdfObject(iref);
@@ -1406,6 +1477,7 @@ public class PdfStamperImp : PdfWriter
 
                 var pageDic = Reader.GetPageN(page);
                 var annots = pageDic.GetAsArray(PdfName.Annots);
+
                 if (annots == null)
                 {
                     continue;
@@ -1414,12 +1486,14 @@ public class PdfStamperImp : PdfWriter
                 for (var idx = 0; idx < annots.Size; ++idx)
                 {
                     var ran = annots[idx];
+
                     if (!ran.IsIndirect())
                     {
                         continue;
                     }
 
                     PdfObject ran2 = item.GetWidgetRef(k);
+
                     if (!ran2.IsIndirect())
                     {
                         continue;
@@ -1429,17 +1503,20 @@ public class PdfStamperImp : PdfWriter
                     {
                         annots.Remove(idx--);
                         var wdref = (PrIndirectReference)ran2;
+
                         while (true)
                         {
                             var wd = (PdfDictionary)PdfReader.GetPdfObject(wdref);
                             var parentRef = (PrIndirectReference)wd.Get(PdfName.Parent);
                             PdfReader.KillIndirect(wdref);
+
                             if (parentRef == null)
                             {
                                 // reached AcroForm
                                 for (var fr = 0; fr < acroFds.Size; ++fr)
                                 {
                                     var h = acroFds[fr];
+
                                     if (h.IsIndirect() && ((PrIndirectReference)h).Number == wdref.Number)
                                     {
                                         acroFds.Remove(fr);
@@ -1452,9 +1529,11 @@ public class PdfStamperImp : PdfWriter
 
                             var parent = (PdfDictionary)PdfReader.GetPdfObject(parentRef);
                             var kids = parent.GetAsArray(PdfName.Kids);
+
                             for (var fr = 0; fr < kids.Size; ++fr)
                             {
                                 var h = kids[fr];
+
                                 if (h.IsIndirect() && ((PrIndirectReference)h).Number == wdref.Number)
                                 {
                                     kids.Remove(fr);
@@ -1486,6 +1565,7 @@ public class PdfStamperImp : PdfWriter
             {
                 var pageDic = Reader.GetPageN(page);
                 var annots = pageDic.GetAsArray(PdfName.Annots);
+
                 if (annots == null)
                 {
                     continue;
@@ -1494,6 +1574,7 @@ public class PdfStamperImp : PdfWriter
                 for (var idx = 0; idx < annots.Size; ++idx)
                 {
                     var annoto = annots.GetDirectObject(idx);
+
                     if (annoto is PdfIndirectReference && !annoto.IsIndirect())
                     {
                         continue;
@@ -1525,6 +1606,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var ps = GetPageStamp(pageNum);
+
         if (ps.Over == null)
         {
             ps.Over = new StampContent(this, ps);
@@ -1537,6 +1619,7 @@ public class PdfStamperImp : PdfWriter
     {
         var pageN = Reader.GetPageN(pageNum);
         var ps = PagesToContent[pageN];
+
         if (ps == null)
         {
             ps = new PageStamp(this, Reader, pageN);
@@ -1553,6 +1636,7 @@ public class PdfStamperImp : PdfWriter
 #pragma warning restore CA1854
         {
             var raf = Readers2File[reader];
+
             if (raf != null)
             {
                 return raf;
@@ -1577,6 +1661,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var ps = GetPageStamp(pageNum);
+
         if (ps.Under == null)
         {
             ps.Under = new StampContent(this, ps);
@@ -1604,6 +1689,7 @@ public class PdfStamperImp : PdfWriter
         var pref = Reader.AddPdfObject(page);
         PdfDictionary parent;
         PrIndirectReference parentRef;
+
         if (pageNumber > Reader.NumberOfPages)
         {
             var lastPage = Reader.GetPageNRelease(Reader.NumberOfPages);
@@ -1631,12 +1717,15 @@ public class PdfStamperImp : PdfWriter
             var kids = (PdfArray)PdfReader.GetPdfObject(parent.Get(PdfName.Kids), parent);
             var len = kids.Size;
             var num = firstPageRef.Number;
+
             for (var k = 0; k < len; ++k)
             {
                 var cur = (PrIndirectReference)kids[k];
+
                 if (num == cur.Number)
                 {
                     kids.Add(k, pref);
+
                     break;
                 }
             }
@@ -1652,6 +1741,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         page.Put(PdfName.Parent, parentRef);
+
         while (parent != null)
         {
             MarkUsed(parent);
@@ -1665,7 +1755,8 @@ public class PdfStamperImp : PdfWriter
     ///     Getter for property append.
     /// </summary>
     /// <returns>Value of property append.</returns>
-    internal bool IsAppend() => Append;
+    internal bool IsAppend()
+        => Append;
 
     /// <summary>
     ///     Adds or replaces the Collection Dictionary in the Catalog.
@@ -1680,6 +1771,7 @@ public class PdfStamperImp : PdfWriter
     internal bool PartialFormFlattening(string name)
     {
         var af = AcroFields;
+
         if (acroFields.Xfa.XfaPresent)
         {
             throw new InvalidOperationException("Partial form flattening is not supported with XFA forms.");
@@ -1691,12 +1783,14 @@ public class PdfStamperImp : PdfWriter
         }
 
         PartialFlattening[name] = null;
+
         return true;
     }
 
     internal void ReplacePage(PdfReader r, int pageImported, int pageReplaced)
     {
         var pageN = Reader.GetPageN(pageReplaced);
+
         if (PagesToContent.ContainsKey(pageN))
         {
             throw new InvalidOperationException("This page cannot be replaced: new content was already added");
@@ -1726,6 +1820,7 @@ public class PdfStamperImp : PdfWriter
     internal void SetDuration(int seconds, int page)
     {
         var pg = Reader.GetPageN(page);
+
         if (seconds < 0)
         {
             pg.Remove(PdfName.Dur);
@@ -1741,6 +1836,7 @@ public class PdfStamperImp : PdfWriter
     internal void SetJavaScript()
     {
         var djs = Pdf.GetDocumentLevelJs();
+
         if (djs.Count == 0)
         {
             return;
@@ -1748,6 +1844,7 @@ public class PdfStamperImp : PdfWriter
 
         var catalog = Reader.Catalog;
         var names = (PdfDictionary)PdfReader.GetPdfObject(catalog.Get(PdfName.Names), catalog);
+
         if (names == null)
         {
             names = new PdfDictionary();
@@ -1768,6 +1865,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         DeleteOutlines();
+
         if (NewBookmarks.Count == 0)
         {
             return;
@@ -1796,6 +1894,7 @@ public class PdfStamperImp : PdfWriter
 
         var pg = Reader.GetPageN(page);
         var aa = (PdfDictionary)PdfReader.GetPdfObject(pg.Get(PdfName.Aa), pg);
+
         if (aa == null)
         {
             aa = new PdfDictionary();
@@ -1824,6 +1923,7 @@ public class PdfStamperImp : PdfWriter
     internal void SetTransition(PdfTransition transition, int page)
     {
         var pg = Reader.GetPageN(page);
+
         if (transition == null)
         {
             pg.Remove(PdfName.Trans);
@@ -1836,9 +1936,10 @@ public class PdfStamperImp : PdfWriter
         MarkUsed(pg);
     }
 
-    internal void SweepKids(PdfObject obj)
+    internal static void SweepKids(PdfObject obj)
     {
         var oo = PdfReader.KillIndirect(obj);
+
         if (oo == null || !oo.IsDictionary())
         {
             return;
@@ -1846,6 +1947,7 @@ public class PdfStamperImp : PdfWriter
 
         var dic = (PdfDictionary)oo;
         var kids = (PdfArray)PdfReader.KillIndirect(dic.Get(PdfName.Kids));
+
         if (kids == null)
         {
             return;
@@ -1860,9 +1962,11 @@ public class PdfStamperImp : PdfWriter
     protected internal override int GetNewObjectNumber(PdfReader reader, int number, int generation)
     {
         var refP = Readers2Intrefs[reader];
+
         if (refP != null)
         {
             var n = refP[number];
+
             if (n == 0)
             {
                 n = IndirectReferenceNumber;
@@ -1880,6 +1984,7 @@ public class PdfStamperImp : PdfWriter
             }
 
             var n = MyXref[number];
+
             if (n == 0)
             {
                 n = IndirectReferenceNumber;
@@ -1897,6 +2002,7 @@ public class PdfStamperImp : PdfWriter
         if (Append && obj != null)
         {
             PrIndirectReference refP = null;
+
             if (obj.Type == PdfObject.INDIRECT)
             {
                 refP = (PrIndirectReference)obj;
@@ -1935,6 +2041,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var dict = Reader.Catalog.GetAsDict(PdfName.Ocproperties);
+
         if (dict == null)
         {
             return;
@@ -1944,6 +2051,7 @@ public class PdfStamperImp : PdfWriter
         PdfIndirectReference refi;
         PdfLayer layer;
         var ocgmap = new NullValueDictionary<string, PdfLayer>();
+
         for (var i = ocgs.GetListIterator(); i.HasNext();)
         {
             refi = (PdfIndirectReference)i.Next();
@@ -1956,6 +2064,7 @@ public class PdfStamperImp : PdfWriter
 
         var d = dict.GetAsDict(PdfName.D);
         var off = d.GetAsArray(PdfName.OFF);
+
         if (off != null)
         {
             for (var i = off.GetListIterator(); i.HasNext();)
@@ -1967,6 +2076,7 @@ public class PdfStamperImp : PdfWriter
         }
 
         var order = d.GetAsArray(PdfName.Order);
+
         if (order != null)
         {
             addOrder(null, order, ocgmap);
@@ -1979,6 +2089,7 @@ public class PdfStamperImp : PdfWriter
 
         OcgRadioGroup = d.GetAsArray(PdfName.Rbgroups);
         OcgLocked = d.GetAsArray(PdfName.Locked);
+
         if (OcgLocked == null)
         {
             OcgLocked = new PdfArray();
@@ -1988,6 +2099,7 @@ public class PdfStamperImp : PdfWriter
     private static void moveRectangle(PdfDictionary dic2, PdfReader r, int pageImported, PdfName key, string name)
     {
         var m = r.GetBoxSize(pageImported, name);
+
         if (m == null)
         {
             dic2.Remove(key);
@@ -2001,6 +2113,7 @@ public class PdfStamperImp : PdfWriter
     private void addFileAttachments()
     {
         var fs = Pdf.GetDocumentFileAttachment();
+
         if (fs.Count == 0)
         {
             return;
@@ -2008,6 +2121,7 @@ public class PdfStamperImp : PdfWriter
 
         var catalog = Reader.Catalog;
         var names = (PdfDictionary)PdfReader.GetPdfObject(catalog.Get(PdfName.Names), catalog);
+
         if (names == null)
         {
             names = new PdfDictionary();
@@ -2016,13 +2130,14 @@ public class PdfStamperImp : PdfWriter
         }
 
         MarkUsed(names);
-        var old =
-            PdfNameTree.ReadTree((PdfDictionary)PdfReader.GetPdfObjectRelease(names.Get(PdfName.Embeddedfiles)));
+        var old = PdfNameTree.ReadTree((PdfDictionary)PdfReader.GetPdfObjectRelease(names.Get(PdfName.Embeddedfiles)));
+
         foreach (var entry in fs)
         {
             var name = entry.Key;
             var k = 0;
             var nn = name;
+
             while (old.ContainsKey(nn))
             {
                 ++k;
@@ -2047,14 +2162,17 @@ public class PdfStamperImp : PdfWriter
     {
         PdfObject obj;
         PdfLayer layer;
+
         for (var i = 0; i < arr.Size; i++)
         {
             obj = arr[i];
+
             if (obj.IsIndirect())
             {
                 layer = ocgmap[obj.ToString()];
                 layer.OnPanel = true;
                 RegisterLayer(layer);
+
                 if (parent != null)
                 {
                     parent.AddChild(layer);
@@ -2069,23 +2187,27 @@ public class PdfStamperImp : PdfWriter
             else if (obj.IsArray())
             {
                 var sub = (PdfArray)obj;
+
                 if (sub.IsEmpty())
                 {
                     return;
                 }
 
                 obj = sub[0];
+
                 if (obj.IsString())
                 {
                     layer = new PdfLayer(obj.ToString());
                     layer.OnPanel = true;
                     RegisterLayer(layer);
+
                     if (parent != null)
                     {
                         parent.AddChild(layer);
                     }
 
                     var array = new PdfArray();
+
                     for (var j = sub.GetListIterator(); j.HasNext();)
                     {
                         array.Add(j.Next());
@@ -2112,6 +2234,7 @@ public class PdfStamperImp : PdfWriter
         {
             var pageDic = Reader.GetPageN(page);
             var annots = pageDic.GetAsArray(PdfName.Annots);
+
             if (annots == null)
             {
                 continue;
@@ -2120,12 +2243,14 @@ public class PdfStamperImp : PdfWriter
             for (var idx = 0; idx < annots.Size; ++idx)
             {
                 var annoto = annots.GetDirectObject(idx);
+
                 if (annoto is PdfIndirectReference && !annoto.IsIndirect())
                 {
                     continue;
                 }
 
                 var annDic = (PdfDictionary)annoto;
+
                 if (!((PdfName)annDic.Get(PdfName.Subtype)).Equals(PdfName.Freetext))
                 {
                     continue;
@@ -2137,16 +2262,19 @@ public class PdfStamperImp : PdfWriter
                 if ((flags & PdfAnnotation.FLAGS_PRINT) != 0 && (flags & PdfAnnotation.FLAGS_HIDDEN) == 0)
                 {
                     var obj1 = annDic.Get(PdfName.Ap);
+
                     if (obj1 == null)
                     {
                         continue;
                     }
 
                     var appDic = obj1 is PdfIndirectReference
-                                     ? (PdfDictionary)PdfReader.GetPdfObject(obj1)
-                                     : (PdfDictionary)obj1;
+                        ? (PdfDictionary)PdfReader.GetPdfObject(obj1)
+                        : (PdfDictionary)obj1;
+
                     var obj = appDic.Get(PdfName.N);
                     PdfAppearance app = null;
+
                     if (obj != null)
                     {
                         var objReal = PdfReader.GetPdfObject(obj);
@@ -2165,12 +2293,15 @@ public class PdfStamperImp : PdfWriter
                             if (objReal.IsDictionary())
                             {
                                 var asP = appDic.GetAsName(PdfName.As);
+
                                 if (asP != null)
                                 {
                                     var iref = (PdfIndirectReference)((PdfDictionary)objReal).Get(asP);
+
                                     if (iref != null)
                                     {
                                         app = new PdfAppearance(iref);
+
                                         if (iref.IsIndirect())
                                         {
                                             objReal = PdfReader.GetPdfObject(iref);
@@ -2196,6 +2327,7 @@ public class PdfStamperImp : PdfWriter
             for (var idx = 0; idx < annots.Size; ++idx)
             {
                 var annot = annots.GetAsDict(idx);
+
                 if (annot != null)
                 {
                     if (PdfName.Freetext.Equals(annot.Get(PdfName.Subtype)))
@@ -2214,12 +2346,13 @@ public class PdfStamperImp : PdfWriter
         }
     }
 
-    private void outlineTravel(PrIndirectReference outline)
+    private static void outlineTravel(PrIndirectReference outline)
     {
         while (outline != null)
         {
             var outlineR = (PdfDictionary)PdfReader.GetPdfObjectRelease(outline);
             var first = (PrIndirectReference)outlineR.Get(PdfName.First);
+
             if (first != null)
             {
                 outlineTravel(first);
@@ -2234,9 +2367,9 @@ public class PdfStamperImp : PdfWriter
 
     internal class PageStamp
     {
-        internal StampContent Over;
         internal readonly PdfDictionary PageN;
         internal readonly PageResources PageResources;
+        internal StampContent Over;
         internal int ReplacePoint;
         internal StampContent Under;
 

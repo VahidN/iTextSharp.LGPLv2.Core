@@ -98,7 +98,7 @@ public abstract class BaseField
     /// </summary>
     public const int VISIBLE_BUT_DOES_NOT_PRINT = 2;
 
-    private static readonly INullValueDictionary<PdfName, int> _fieldKeys = new NullValueDictionary<PdfName, int>();
+    private static readonly NullValueDictionary<PdfName, int> _fieldKeys = new();
     protected int alignment = Element.ALIGN_LEFT;
     protected BaseColor backgroundColor;
     protected BaseColor borderColor;
@@ -302,6 +302,7 @@ public abstract class BaseField
             }
 
             rotation = value % 360;
+
             if (rotation < 0)
             {
                 rotation += 360;
@@ -373,6 +374,7 @@ public abstract class BaseField
         }
 
         var keys = new PdfName[from.Size];
+
         foreach (var key in keys)
         {
             if (_fieldKeys.ContainsKey(key))
@@ -416,28 +418,34 @@ public abstract class BaseField
 
         List<string> lines = new();
         var buf = new StringBuilder();
+
         for (var ck = 0; ck < breaks.Count; ++ck)
         {
             buf.Length = 0;
             float w = 0;
             var cs = breaks[ck].ToCharArray();
             var len = cs.Length;
+
             // 0 inline first, 1 inline, 2 spaces
             var state = 0;
             var lastspace = -1;
             var c = (char)0;
             var refk = 0;
+
             for (var k = 0; k < len; ++k)
             {
                 c = cs[k];
+
                 switch (state)
                 {
                     case 0:
                         w += font.GetWidthPoint(c, fontSize);
                         buf.Append(c);
+
                         if (w > width)
                         {
                             w = 0;
+
                             if (buf.Length > 1)
                             {
                                 --k;
@@ -447,6 +455,7 @@ public abstract class BaseField
                             lines.Add(buf.ToString());
                             buf.Length = 0;
                             refk = k;
+
                             if (c == ' ')
                             {
                                 state = 2;
@@ -468,6 +477,7 @@ public abstract class BaseField
                     case 1:
                         w += font.GetWidthPoint(c, fontSize);
                         buf.Append(c);
+
                         if (c == ' ')
                         {
                             lastspace = k;
@@ -476,6 +486,7 @@ public abstract class BaseField
                         if (w > width)
                         {
                             w = 0;
+
                             if (lastspace >= 0)
                             {
                                 k = lastspace;
@@ -498,6 +509,7 @@ public abstract class BaseField
                                 lines.Add(buf.ToString());
                                 buf.Length = 0;
                                 refk = k;
+
                                 if (c == ' ')
                                 {
                                     state = 2;
@@ -536,9 +548,11 @@ public abstract class BaseField
         var cs = text.ToCharArray();
         var len = cs.Length;
         var buf = new StringBuilder();
+
         for (var k = 0; k < len; ++k)
         {
             var c = cs[k];
+
             if (c == '\r')
             {
                 if (k + 1 < len && cs[k + 1] == '\n')
@@ -561,6 +575,7 @@ public abstract class BaseField
         }
 
         arr.Add(buf.ToString());
+
         return arr;
     }
 
@@ -572,6 +587,7 @@ public abstract class BaseField
         }
 
         var len = buf.Length;
+
         while (true)
         {
             if (len == 0)
@@ -591,20 +607,25 @@ public abstract class BaseField
     protected PdfAppearance GetBorderAppearance()
     {
         var app = PdfAppearance.CreateAppearance(writer, box.Width, box.Height);
+
         switch (rotation)
         {
             case 90:
                 app.SetMatrix(0, 1, -1, 0, box.Height, 0);
+
                 break;
             case 180:
                 app.SetMatrix(-1, 0, 0, -1, box.Width, box.Height);
+
                 break;
             case 270:
                 app.SetMatrix(0, -1, 1, 0, 0, box.Width);
+
                 break;
         }
 
         app.SaveState();
+
         // background
         if (backgroundColor != null)
         {
@@ -637,6 +658,7 @@ public abstract class BaseField
 
             // beveled
             var actual = backgroundColor;
+
             if (actual == null)
             {
                 actual = BaseColor.White;
@@ -676,11 +698,13 @@ public abstract class BaseField
                 app.SetLineWidth(borderWidth);
                 app.Rectangle(borderWidth / 2, borderWidth / 2, box.Width - borderWidth, box.Height - borderWidth);
                 app.Stroke();
+
                 if ((options & COMB) != 0 && maxCharacterLength > 1)
                 {
                     var step = box.Width / maxCharacterLength;
                     var yb = borderWidth / 2;
                     var yt = box.Height - borderWidth / 2;
+
                     for (var k = 1; k < maxCharacterLength; ++k)
                     {
                         var x = step * k;
@@ -694,6 +718,7 @@ public abstract class BaseField
         }
 
         app.RestoreState();
+
         return app;
     }
 

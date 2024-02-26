@@ -14,7 +14,7 @@ public class RtfBorderGroup : RtfElement
     /// <summary>
     ///     The borders in this RtfBorderGroup
     /// </summary>
-    private readonly INullValueDictionary<int, RtfBorder> _borders;
+    private readonly NullValueDictionary<int, RtfBorder> _borders;
 
     /// <summary>
     ///     The type of borders this RtfBorderGroup contains.
@@ -25,7 +25,8 @@ public class RtfBorderGroup : RtfElement
     /// <summary>
     ///     Constructs an empty RtfBorderGroup.
     /// </summary>
-    public RtfBorderGroup() : base(null) => _borders = new NullValueDictionary<int, RtfBorder>();
+    public RtfBorderGroup() : base(null)
+        => _borders = new NullValueDictionary<int, RtfBorder>();
 
     /// <summary>
     ///     Constructs a RtfBorderGroup with on border style for multiple borders.
@@ -53,6 +54,7 @@ public class RtfBorderGroup : RtfElement
     {
         _borders = new NullValueDictionary<int, RtfBorder>();
         _borderType = borderType;
+
         if (borderGroup != null)
         {
             foreach (var entry in borderGroup.GetBorders())
@@ -75,8 +77,11 @@ public class RtfBorderGroup : RtfElement
     /// </param>
     /// <param name="borderWidth">The border width to use</param>
     /// <param name="borderColor">The border color to use</param>
-    protected internal RtfBorderGroup(RtfDocument doc, int borderType, int bordersToUse, float borderWidth,
-                                      BaseColor borderColor) : base(doc)
+    protected internal RtfBorderGroup(RtfDocument doc,
+        int borderType,
+        int bordersToUse,
+        float borderWidth,
+        BaseColor borderColor) : base(doc)
     {
         _borderType = borderType;
         _borders = new NullValueDictionary<int, RtfBorder>();
@@ -175,7 +180,8 @@ public class RtfBorderGroup : RtfElement
     ///     Gets the RtfBorders of this RtfBorderGroup
     /// </summary>
     /// <returns>The RtfBorders of this RtfBorderGroup</returns>
-    protected internal INullValueDictionary<int, RtfBorder> GetBorders() => _borders;
+    protected internal INullValueDictionary<int, RtfBorder> GetBorders()
+        => _borders;
 
     /// <summary>
     ///     Sets a border in the Hashtable of borders
