@@ -594,6 +594,9 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
     public void Dispose()
     {
         Close();
+
+        // Ensure large pdf cleaned up before continuing
+        _xrefObj.Clear();
     }
 
     /// <summary>
