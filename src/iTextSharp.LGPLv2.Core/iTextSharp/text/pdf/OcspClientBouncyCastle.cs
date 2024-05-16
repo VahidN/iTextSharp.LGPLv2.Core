@@ -1,6 +1,7 @@
 using System.Net;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.Oiw;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
@@ -85,13 +86,16 @@ public class OcspClientBouncyCastle : IOcspClient
         }
 
         var basicResponse = (BasicOcspResp)ocspResponse.GetResponseObject();
+
         if (basicResponse != null)
         {
             var responses = basicResponse.Responses;
+
             if (responses.Length == 1)
             {
                 var resp = responses[0];
                 var status = resp.GetCertStatus();
+
                 if (status == CertificateStatus.Good)
                 {
                     return basicResponse.GetEncoded();
@@ -120,11 +124,12 @@ public class OcspClientBouncyCastle : IOcspClient
     private static OcspReq generateOcspRequest(X509Certificate issuerCert, BigInteger serialNumber)
     {
         // Generate the id for the certificate we are looking for
-        var id = new CertificateID(CertificateID.HashSha1, issuerCert, serialNumber);
+        var id = new CertificateID(
+            new AlgorithmIdentifier(new DerObjectIdentifier(OiwObjectIdentifiers.IdSha1.Id), DerNull.Instance),
+            issuerCert, serialNumber);
 
         // basic request generation with nonce
         var gen = new OcspReqGenerator();
-
         gen.AddRequest(id);
 
         // create details for nonce extension
@@ -132,9 +137,9 @@ public class OcspClientBouncyCastle : IOcspClient
         var values = new List<X509Extension>();
 
         oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
+
         values.Add(new X509Extension(false,
-                                     new DerOctetString(new DerOctetString(PdfEncryption.CreateDocumentId())
-                                                            .GetEncoded())));
+            new DerOctetString(new DerOctetString(PdfEncryption.CreateDocumentId()).GetEncoded())));
 
         gen.SetRequestExtensions(new X509Extensions(oids, values));
 

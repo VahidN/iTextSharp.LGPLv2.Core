@@ -24,11 +24,7 @@ public class PdfPublicKeySecurityHandler
 
     public PdfPublicKeySecurityHandler() => _seed = IvGenerator.GetIv(SeedLength);
 
-
-    public void AddRecipient(PdfPublicKeyRecipient recipient)
-    {
-        _recipients.Add(recipient);
-    }
+    public void AddRecipient(PdfPublicKeyRecipient recipient) => _recipients.Add(recipient);
 
     public byte[] GetEncodedRecipient(int index)
     {
@@ -42,6 +38,7 @@ public class PdfPublicKeySecurityHandler
         }
 
         var certificate = recipient.Certificate;
+
         var permission =
             recipient.Permission; //PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders | PdfWriter.AllowAssembly;
 
@@ -69,6 +66,7 @@ public class PdfPublicKeySecurityHandler
         k.WriteObject(obj);
         cms = baos.ToArray();
         recipient.Cms = cms;
+
         return cms;
     }
 
@@ -76,6 +74,7 @@ public class PdfPublicKeySecurityHandler
     {
         var encodedRecipients = new PdfArray();
         byte[] cms = null;
+
         for (var i = 0; i < _recipients.Count; i++)
         {
             try
@@ -100,13 +99,12 @@ public class PdfPublicKeySecurityHandler
     {
         using var memoryStream = new MemoryStream(x509Certificate.GetTbsCertificate());
         using var asn1Inputstream = new Asn1InputStream(memoryStream);
-        var tbscertificatestructure =
-            TbsCertificateStructure.GetInstance(asn1Inputstream.ReadObject());
-        var algorithmidentifier = tbscertificatestructure.SubjectPublicKeyInfo.AlgorithmID;
+        var tbscertificatestructure = TbsCertificateStructure.GetInstance(asn1Inputstream.ReadObject());
+        var algorithmidentifier = tbscertificatestructure.SubjectPublicKeyInfo.Algorithm;
+
         var issuerandserialnumber =
-            new IssuerAndSerialNumber(
-                                      tbscertificatestructure.Issuer,
-                                      tbscertificatestructure.SerialNumber.Value);
+            new IssuerAndSerialNumber(tbscertificatestructure.Issuer, tbscertificatestructure.SerialNumber.Value);
+
         var cipher = CipherUtilities.GetCipher(algorithmidentifier.Algorithm);
         cipher.Init(true, x509Certificate.GetPublicKey());
         var outp = new byte[10000];
@@ -115,6 +113,7 @@ public class PdfPublicKeySecurityHandler
         Array.Copy(outp, 0, abyte1, 0, len);
         var deroctetstring = new DerOctetString(abyte1);
         var recipId = new RecipientIdentifier(issuerandserialnumber);
+
         return new KeyTransRecipientInfo(recipId, algorithmidentifier, deroctetstring);
     }
 
@@ -142,12 +141,13 @@ public class PdfPublicKeySecurityHandler
         ev.Add(new DerOctetString(iv));
         var seq = new DerSequence(ev);
         var algorithmidentifier = new AlgorithmIdentifier(derob, seq);
+
         var encryptedcontentinfo =
             new EncryptedContentInfo(PkcsObjectIdentifiers.Data, algorithmidentifier, deroctetstring);
 
         var env = new EnvelopedData(null, derset, encryptedcontentinfo, (Asn1Set)null);
-        var contentinfo =
-            new ContentInfo(PkcsObjectIdentifiers.EnvelopedData, env);
+        var contentinfo = new ContentInfo(PkcsObjectIdentifiers.EnvelopedData, env);
+
         return contentinfo.ToAsn1Object();
     }
 }
