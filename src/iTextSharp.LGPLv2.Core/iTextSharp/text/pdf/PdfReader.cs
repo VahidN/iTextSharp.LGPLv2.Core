@@ -602,7 +602,17 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
     internal PdfEncryption Decrypt => decrypt;
 
+<<<<<<< HEAD
     public void Dispose() => Close();
+=======
+    public void Dispose()
+    {
+        Close();
+
+        // Ensure large pdf cleaned up before continuing
+        _xrefObj.Clear();
+    }
+>>>>>>> c0d42b01bf31115fc2ef6304c50e862f3276ccb5
 
     /// <summary>
     ///     Sets the viewer preferences as the sum of several constants.
