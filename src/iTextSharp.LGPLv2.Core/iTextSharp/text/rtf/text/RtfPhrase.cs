@@ -47,6 +47,11 @@ public class RtfPhrase : RtfElement
     /// <param name="phrase">The Phrase this RtfPhrase is based on</param>
     public RtfPhrase(RtfDocument doc, Phrase phrase) : base(doc)
     {
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
+        }
+
         if (phrase == null)
         {
             return;
@@ -139,25 +144,30 @@ public class RtfPhrase : RtfElement
     ///     then if the RtfPhrase is in a RtfCell a marker for this is written and finally
     ///     the RtfChunks of this RtfPhrase are written.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
-        result.Write(Plain, 0, Plain.Length);
+        outp.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
+        outp.Write(Plain, 0, Plain.Length);
         if (base.InTable)
         {
-            result.Write(InTable, 0, InTable.Length);
+            outp.Write(InTable, 0, InTable.Length);
         }
 
         if (_lineLeading > 0)
         {
-            result.Write(LineSpacing, 0, LineSpacing.Length);
-            result.Write(t = IntToByteArray(_lineLeading), 0, t.Length);
+            outp.Write(LineSpacing, 0, LineSpacing.Length);
+            outp.Write(t = IntToByteArray(_lineLeading), 0, t.Length);
         }
 
         foreach (var rbe in Chunks)
         {
-            rbe.WriteContent(result);
+            rbe.WriteContent(outp);
         }
     }
 }

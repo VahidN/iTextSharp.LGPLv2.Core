@@ -53,6 +53,11 @@ public class PdfAcroForm : PdfDictionary
 
     public void AddCalculationOrder(PdfFormField formField)
     {
+        if (formField == null)
+        {
+            throw new ArgumentNullException(nameof(formField));
+        }
+
         _calculationOrder.Add(formField.IndirectReference);
     }
 
@@ -68,6 +73,11 @@ public class PdfAcroForm : PdfDictionary
     public PdfFormField AddComboBox(string name, string[] options, string defaultValue, bool editable, BaseFont font,
                                     float fontSize, float llx, float lly, float urx, float ury)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var choice = PdfFormField.CreateCombo(_writer, editable, options, 0);
         SetChoiceParams(choice, name, defaultValue, llx, lly, urx, ury);
         if (defaultValue == null)
@@ -83,12 +93,17 @@ public class PdfAcroForm : PdfDictionary
     public PdfFormField AddComboBox(string name, string[,] options, string defaultValue, bool editable, BaseFont font,
                                     float fontSize, float llx, float lly, float urx, float ury)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var choice = PdfFormField.CreateCombo(_writer, editable, options, 0);
         SetChoiceParams(choice, name, defaultValue, llx, lly, urx, ury);
         string value = null;
         for (var i = 0; i < options.GetLength(0); i++)
         {
-            if (options[i, 0].Equals(defaultValue))
+            if (options[i, 0].Equals(defaultValue, StringComparison.Ordinal))
             {
                 value = options[i, 1];
                 break;
@@ -112,6 +127,11 @@ public class PdfAcroForm : PdfDictionary
 
     public void AddFieldTemplates(INullValueDictionary<PdfTemplate, object> ft)
     {
+        if (ft == null)
+        {
+            throw new ArgumentNullException(nameof(ft));
+        }
+
         foreach (var key in ft.Keys)
         {
             _fieldTemplates[key] = ft[key];
@@ -184,10 +204,15 @@ public class PdfAcroForm : PdfDictionary
     public PdfFormField AddRadioButton(PdfFormField radiogroup, string value, float llx, float lly, float urx,
                                        float ury)
     {
+        if (radiogroup == null)
+        {
+            throw new ArgumentNullException(nameof(radiogroup));
+        }
+
         var radio = PdfFormField.CreateEmpty(_writer);
         radio.SetWidget(new Rectangle(llx, lly, urx, ury), PdfAnnotation.HighlightToggle);
         var name = ((PdfName)radiogroup.Get(PdfName.V)).ToString().Substring(1);
-        if (name.Equals(value))
+        if (name.Equals(value, StringComparison.Ordinal))
         {
             radio.AppearanceState = value;
         }
@@ -220,6 +245,11 @@ public class PdfAcroForm : PdfDictionary
     public PdfFormField AddSelectList(string name, string[] options, string defaultValue, BaseFont font, float fontSize,
                                       float llx, float lly, float urx, float ury)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var choice = PdfFormField.CreateList(_writer, options, 0);
         SetChoiceParams(choice, name, defaultValue, llx, lly, urx, ury);
         var text = new StringBuilder();
@@ -236,6 +266,11 @@ public class PdfAcroForm : PdfDictionary
     public PdfFormField AddSelectList(string name, string[,] options, string defaultValue, BaseFont font,
                                       float fontSize, float llx, float lly, float urx, float ury)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         var choice = PdfFormField.CreateList(_writer, options, 0);
         SetChoiceParams(choice, name, defaultValue, llx, lly, urx, ury);
         var text = new StringBuilder();
@@ -281,6 +316,11 @@ public class PdfAcroForm : PdfDictionary
     public void DrawButton(PdfFormField button, string caption, BaseFont font, float fontSize, float llx, float lly,
                            float urx, float ury)
     {
+        if (button == null)
+        {
+            throw new ArgumentNullException(nameof(button));
+        }
+
         var pa = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
         pa.DrawButton(0f, 0f, urx - llx, ury - lly, caption, font, fontSize);
         button.SetAppearance(PdfAnnotation.AppearanceNormal, pa);
@@ -288,6 +328,11 @@ public class PdfAcroForm : PdfDictionary
 
     public void DrawCheckBoxAppearences(PdfFormField field, string value, float llx, float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         var font = BaseFont.CreateFont(BaseFont.ZAPFDINGBATS, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
         var size = ury - lly;
         var tpOn = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
@@ -312,6 +357,11 @@ public class PdfAcroForm : PdfDictionary
     public void DrawMultiLineOfText(PdfFormField field, string text, BaseFont font, float fontSize, float llx,
                                     float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         var tp = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
         var tp2 = (PdfAppearance)tp.Duplicate;
         tp2.SetFontAndSize(font, fontSize);
@@ -343,6 +393,11 @@ public class PdfAcroForm : PdfDictionary
 
     public void DrawRadioAppearences(PdfFormField field, string value, float llx, float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         var tpOn = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
         tpOn.DrawRadioField(0f, 0f, urx - llx, ury - lly, true);
         field.SetAppearance(PdfAnnotation.AppearanceNormal, value, tpOn);
@@ -360,6 +415,11 @@ public class PdfAcroForm : PdfDictionary
     /// <param name="ury"></param>
     public void DrawSignatureAppearences(PdfFormField field, float llx, float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         var tp = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
         tp.SetGrayFill(1.0f);
         tp.Rectangle(0, 0, urx - llx, ury - lly);
@@ -379,6 +439,11 @@ public class PdfAcroForm : PdfDictionary
     public void DrawSingleLineOfText(PdfFormField field, string text, BaseFont font, float fontSize, float llx,
                                      float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         var tp = PdfAppearance.CreateAppearance(_writer, urx - llx, ury - lly);
         var tp2 = (PdfAppearance)tp.Duplicate;
         tp2.SetFontAndSize(font, fontSize);
@@ -449,8 +514,13 @@ public class PdfAcroForm : PdfDictionary
         return true;
     }
 
-    public void SetButtonParams(PdfFormField button, int characteristics, string name, string value)
+    public static void SetButtonParams(PdfFormField button, int characteristics, string name, string value)
     {
+        if (button == null)
+        {
+            throw new ArgumentNullException(nameof(button));
+        }
+
         button.Button = characteristics;
         button.Flags = PdfAnnotation.FLAGS_PRINT;
         button.SetPage();
@@ -461,9 +531,15 @@ public class PdfAcroForm : PdfDictionary
         }
     }
 
-    public void SetCheckBoxParams(PdfFormField field, string name, string value, bool status, float llx, float lly,
-                                  float urx, float ury)
+    public static void SetCheckBoxParams(PdfFormField field, string name, string value, bool status, float llx,
+                                         float lly,
+                                         float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         field.SetWidget(new Rectangle(llx, lly, urx, ury), PdfAnnotation.HighlightToggle);
         field.FieldName = name;
         if (status)
@@ -482,9 +558,15 @@ public class PdfAcroForm : PdfDictionary
         field.BorderStyle = new PdfBorderDictionary(1, PdfBorderDictionary.STYLE_SOLID);
     }
 
-    public void SetChoiceParams(PdfFormField field, string name, string defaultValue, float llx, float lly, float urx,
-                                float ury)
+    public static void SetChoiceParams(PdfFormField field, string name, string defaultValue, float llx, float lly,
+                                       float urx,
+                                       float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         field.SetWidget(new Rectangle(llx, lly, urx, ury), PdfAnnotation.HighlightInvert);
         if (defaultValue != null)
         {
@@ -506,8 +588,13 @@ public class PdfAcroForm : PdfDictionary
     /// <param name="lly"></param>
     /// <param name="urx"></param>
     /// <param name="ury"></param>
-    public void SetSignatureParams(PdfFormField field, string name, float llx, float lly, float urx, float ury)
+    public static void SetSignatureParams(PdfFormField field, string name, float llx, float lly, float urx, float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         field.SetWidget(new Rectangle(llx, lly, urx, ury), PdfAnnotation.HighlightInvert);
         field.FieldName = name;
         field.Flags = PdfAnnotation.FLAGS_PRINT;
@@ -516,9 +603,14 @@ public class PdfAcroForm : PdfDictionary
         field.MkBackgroundColor = BaseColor.White;
     }
 
-    public void SetTextFieldParams(PdfFormField field, string text, string name, float llx, float lly, float urx,
-                                   float ury)
+    public static void SetTextFieldParams(PdfFormField field, string text, string name, float llx, float lly, float urx,
+                                          float ury)
     {
+        if (field == null)
+        {
+            throw new ArgumentNullException(nameof(field));
+        }
+
         field.SetWidget(new Rectangle(llx, lly, urx, ury), PdfAnnotation.HighlightInvert);
         field.ValueAsString = text;
         field.DefaultValueAsString = text;

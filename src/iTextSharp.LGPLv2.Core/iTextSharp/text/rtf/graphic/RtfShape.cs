@@ -199,7 +199,7 @@ public class RtfShape : RtfAddableElement
     /// <summary>
     ///     A Hashtable with RtfShapePropertys that define further shape properties.
     /// </summary>
-    private readonly INullValueDictionary<string, RtfShapeProperty> _properties;
+    private readonly NullValueDictionary<string, RtfShapeProperty> _properties;
 
     /// <summary>
     ///     The shape type.
@@ -239,6 +239,11 @@ public class RtfShape : RtfAddableElement
     /// <param name="property">The property to set for this RtfShape.</param>
     public void SetProperty(RtfShapeProperty property)
     {
+        if (property == null)
+        {
+            throw new ArgumentNullException(nameof(property));
+        }
+
         property.SetRtfDocument(Doc);
         _properties[property.GetName()] = property;
     }
@@ -248,28 +253,30 @@ public class RtfShape : RtfAddableElement
     /// </summary>
     /// <param name="shapeText">The text to display.</param>
     public void SetShapeText(string shapeText)
-    {
-        _shapeText = shapeText;
-    }
+        => _shapeText = shapeText;
 
     /// <summary>
     ///     Set the wrapping mode.
     /// </summary>
     /// <param name="wrapping">The wrapping mode to use for this RtfShape.</param>
     public void SetWrapping(int wrapping)
-    {
-        _wrapping = wrapping;
-    }
+        => _wrapping = wrapping;
 
     /// <summary>
     ///     Writes the RtfShape. Some settings are automatically translated into
     ///     or require other properties and these are set first.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         _shapeNr = Doc.GetRandomInt();
 
         _properties["ShapeType"] = new RtfShapeProperty("ShapeType", _type);
+
         if (_position.IsShapeBelowText())
         {
             _properties["fBehindDocument"] = new RtfShapeProperty("fBehindDocument", true);
@@ -291,87 +298,101 @@ public class RtfShape : RtfAddableElement
         }
 
         byte[] t;
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shp"), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shplid"), 0, t.Length);
-        result.Write(t = IntToByteArray(_shapeNr), 0, t.Length);
-        _position.WriteContent(result);
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shp"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shplid"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_shapeNr), 0, t.Length);
+        _position.WriteContent(outp);
+
         switch (_wrapping)
         {
             case SHAPE_WRAP_NONE:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr3"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr3"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_TOP_BOTTOM:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr1"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr1"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_BOTH:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk0"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk0"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_LEFT:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk1"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk1"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_RIGHT:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk2"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_LARGEST:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk3"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk3"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_TIGHT_BOTH:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk0"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk0"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_TIGHT_LEFT:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk1"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk1"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_TIGHT_RIGHT:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk2"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk2"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_TIGHT_LARGEST:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwrk3"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr4"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwrk3"), 0, t.Length);
+
                 break;
             case SHAPE_WRAP_THROUGH:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr5"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr5"), 0, t.Length);
+
                 break;
             default:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpwr3"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpwr3"), 0, t.Length);
+
                 break;
         }
 
         if (InHeader)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\shpfhdr1"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shpfhdr1"), 0, t.Length);
         }
 
         if (Doc.GetDocumentSettings().IsOutputDebugLineBreaks())
         {
-            result.WriteByte((byte)'\n');
+            outp.WriteByte((byte)'\n');
         }
 
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\*\\shpinst"), 0, t.Length);
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\*\\shpinst"), 0, t.Length);
+
         foreach (var rsp in _properties.Values)
         {
-            rsp.WriteContent(result);
+            rsp.WriteContent(outp);
         }
 
-        if (!_shapeText.Equals(""))
+        if (!string.IsNullOrEmpty(_shapeText))
         {
-            result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
-            result.Write(t = DocWriter.GetIsoBytes("\\shptxt"), 0, t.Length);
-            result.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
-            result.Write(t = DocWriter.GetIsoBytes(_shapeText), 0, t.Length);
-            result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+            outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shptxt"), 0, t.Length);
+            outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(_shapeText), 0, t.Length);
+            outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
         }
 
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
-        Doc.OutputDebugLinebreak(result);
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        Doc.OutputDebugLinebreak(outp);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
     }
 }

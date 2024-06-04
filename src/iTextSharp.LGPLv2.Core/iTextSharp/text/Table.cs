@@ -45,10 +45,6 @@ namespace iTextSharp.text;
 ///     table.AddCell(cell);
 ///     table.AddCell("cell test2");
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Rectangle" />
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Row" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
 public class Table : Rectangle, ILargeElement
 {
     ///<summary> This is the horizontal Element. </summary>
@@ -170,6 +166,7 @@ public class Table : Rectangle, ILargeElement
         // the DEFAULT widths are calculated
         _widths = new float[columns];
         var width = 100f / columns;
+
         for (var i = 0; i < columns; i++)
         {
             _widths[i] = width;
@@ -209,6 +206,7 @@ public class Table : Rectangle, ILargeElement
         get
         {
             errorDimensions();
+
             return 0;
         }
         set => errorDimensions();
@@ -399,6 +397,7 @@ public class Table : Rectangle, ILargeElement
         get
         {
             errorDimensions();
+
             return 0;
         }
         set => errorDimensions();
@@ -465,6 +464,7 @@ public class Table : Rectangle, ILargeElement
         get
         {
             errorDimensions();
+
             return 0;
         }
         set => errorDimensions();
@@ -501,6 +501,7 @@ public class Table : Rectangle, ILargeElement
         set
         {
             _tableFitsPage = value;
+
             if (value)
             {
                 CellsFitPage = true;
@@ -514,6 +515,7 @@ public class Table : Rectangle, ILargeElement
         get
         {
             errorDimensions();
+
             return 0;
         }
         set => errorDimensions();
@@ -548,6 +550,11 @@ public class Table : Rectangle, ILargeElement
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (value.Length != _columns)
             {
                 throw new BadElementException("Wrong number of columns.");
@@ -555,6 +562,7 @@ public class Table : Rectangle, ILargeElement
 
             // The sum of all values is 100%
             float hundredPercent = 0;
+
             for (var i = 0; i < _columns; i++)
             {
                 hundredPercent += value[i];
@@ -563,6 +571,7 @@ public class Table : Rectangle, ILargeElement
             // The different percentages are calculated
             float width;
             _widths[_columns - 1] = 100;
+
             for (var i = 0; i < _columns - 1; i++)
             {
                 width = 100.0f * value[i] / hundredPercent;
@@ -584,6 +593,7 @@ public class Table : Rectangle, ILargeElement
             int i, j;
             i = value.X;
             j = value.Y;
+
             do
             {
                 if (j + 1 == _columns)
@@ -596,9 +606,8 @@ public class Table : Rectangle, ILargeElement
                 {
                     j++;
                 }
-            } while (
-                i < _rows.Count && j < _columns && _rows[i].IsReserved(j)
-            );
+            }
+            while (i < _rows.Count && j < _columns && _rows[i].IsReserved(j));
 
             _curPosition = new Point(i, j);
         }
@@ -628,6 +637,7 @@ public class Table : Rectangle, ILargeElement
     {
         NotAddedYet = false;
         var headerrows = new List<Row>();
+
         for (var i = 0; i < LastHeaderRow + 1; i++)
         {
             headerrows.Add(_rows[i]);
@@ -640,7 +650,8 @@ public class Table : Rectangle, ILargeElement
     ///     @see com.lowagie.text.Element#isNestable()
     ///     @since   iText 2.0.8
     /// </summary>
-    public override bool IsNestable() => true;
+    public override bool IsNestable()
+        => true;
 
     /// <summary>
     ///     Processes the element by adding it (or the different parts) to an
@@ -650,6 +661,11 @@ public class Table : Rectangle, ILargeElement
     /// <returns>true if the element was processed successfully</returns>
     public override bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -667,9 +683,7 @@ public class Table : Rectangle, ILargeElement
     /// <param name="row">The row where the Cell will be added</param>
     /// <param name="column">The column where the Cell will be added</param>
     public void AddCell(Cell aCell, int row, int column)
-    {
-        AddCell(aCell, new Point(row, column));
-    }
+        => AddCell(aCell, new Point(row, column));
 
     /// <summary>
     ///     methods to add content to the table
@@ -681,16 +695,17 @@ public class Table : Rectangle, ILargeElement
     /// <param name="aLocation">The location where the Cell will be added</param>
     public void AddCell(Cell aCell, object aLocation)
     {
-        Point p;
         if (aCell == null)
         {
-            throw new Exception("addCell - cell has null-value");
+            throw new ArgumentNullException(nameof(aCell));
         }
 
         if (aLocation == null)
         {
-            throw new Exception("addCell - point has null-value");
+            throw new ArgumentNullException(nameof(aLocation));
         }
+
+        Point p;
 
         p = (Point)aLocation;
 
@@ -753,9 +768,7 @@ public class Table : Rectangle, ILargeElement
     /// </remarks>
     /// <param name="content">a Phrase</param>
     public void AddCell(Phrase content)
-    {
-        AddCell(content, _curPosition);
-    }
+        => AddCell(content, _curPosition);
 
     /// <summary>
     ///     Adds a Cell to the Table.
@@ -785,9 +798,7 @@ public class Table : Rectangle, ILargeElement
     /// </remarks>
     /// <param name="content">a string</param>
     public void AddCell(string content)
-    {
-        AddCell(new Phrase(content), _curPosition);
-    }
+        => AddCell(new Phrase(content), _curPosition);
 
     /// <summary>
     ///     Adds a Cell to the Table.
@@ -799,9 +810,7 @@ public class Table : Rectangle, ILargeElement
     /// <param name="content">a string</param>
     /// <param name="location">a point</param>
     public void AddCell(string content, Point location)
-    {
-        AddCell(new Phrase(content), location);
-    }
+        => AddCell(new Phrase(content), location);
 
     /// <summary>
     ///     Gives you the posibility to add columns.
@@ -813,9 +822,11 @@ public class Table : Rectangle, ILargeElement
 
         var newColumns = _columns + aColumns;
         Row row;
+
         for (var i = 0; i < _rows.Count; i++)
         {
             row = new Row(newColumns);
+
             for (var j = 0; j < _columns; j++)
             {
                 row.SetElement(_rows[i].GetCell(j), j);
@@ -832,6 +843,7 @@ public class Table : Rectangle, ILargeElement
         // applied 1 column-fix; last column needs to have a width of 0
         var newWidths = new float[newColumns];
         Array.Copy(_widths, 0, newWidths, 0, _columns);
+
         for (var j = _columns; j < newColumns; j++)
         {
             newWidths[j] = 0;
@@ -875,6 +887,7 @@ public class Table : Rectangle, ILargeElement
         Complete();
         var pdfptable = new PdfPTable(_widths);
         pdfptable.ElementComplete = complete;
+
         if (NotAddedYet)
         {
             pdfptable.SkipFirstHeader = true;
@@ -887,12 +900,14 @@ public class Table : Rectangle, ILargeElement
         pdfptable.HeaderRows = _lastHeaderRow + 1;
         pdfptable.SplitLate = _cellsFitPage;
         pdfptable.KeepTogether = _tableFitsPage;
+
         if (!float.IsNaN(_offset))
         {
             pdfptable.SpacingBefore = _offset;
         }
 
         pdfptable.HorizontalAlignment = _alignment;
+
         if (Locked)
         {
             pdfptable.TotalWidth = _width;
@@ -907,6 +922,7 @@ public class Table : Rectangle, ILargeElement
         {
             IElement cell;
             PdfPCell pcell;
+
             for (var i = 0; i < row.Columns; i++)
             {
                 if ((cell = (IElement)row.GetCell(i)) != null)
@@ -960,6 +976,7 @@ public class Table : Rectangle, ILargeElement
         _widths = newWidths;
         Row row;
         var size = _rows.Count;
+
         for (var i = 0; i < size; i++)
         {
             row = _rows[i];
@@ -982,7 +999,8 @@ public class Table : Rectangle, ILargeElement
     ///     Deletes the last row in this table.
     /// </summary>
     /// <returns>true if the row was deleted; false if not</returns>
-    public bool DeleteLastRow() => DeleteRow(_rows.Count - 1);
+    public bool DeleteLastRow()
+        => DeleteRow(_rows.Count - 1);
 
     /// <summary>
     ///     Deletes a row.
@@ -998,6 +1016,7 @@ public class Table : Rectangle, ILargeElement
 
         _rows.RemoveAt(row);
         _curPosition.X--;
+
         return true;
     }
 
@@ -1009,12 +1028,14 @@ public class Table : Rectangle, ILargeElement
     {
         /* patch sep 8 2001 Francesco De Milato */
         _lastHeaderRow = _curPosition.X - 1;
+
         return _lastHeaderRow;
     }
 
     public override float GetBottom(float margin)
     {
         errorDimensions();
+
         return 0;
     }
 
@@ -1025,29 +1046,34 @@ public class Table : Rectangle, ILargeElement
     /// <param name="row"></param>
     /// <param name="column"></param>
     /// <returns>an object</returns>
-    public object GetElement(int row, int column) => _rows[row].GetCell(column);
+    public object GetElement(int row, int column)
+        => _rows[row].GetCell(column);
 
     /// <summary>
     ///     Gets an Iterator of all the Rows.
     /// </summary>
     /// <returns>an IEnumerator</returns>
-    public List<Row>.Enumerator GetEnumerator() => _rows.GetEnumerator();
+    public List<Row>.Enumerator GetEnumerator()
+        => _rows.GetEnumerator();
 
     public override float GetLeft(float margin)
     {
         errorDimensions();
+
         return 0;
     }
 
     public override float GetRight(float margin)
     {
         errorDimensions();
+
         return 0;
     }
 
     public override float GetTop(float margin)
     {
         errorDimensions();
+
         return 0;
     }
 
@@ -1069,6 +1095,7 @@ public class Table : Rectangle, ILargeElement
         // for x columns, there are x+1 borders
         var w = new float[_columns + 1];
         float wPercentage;
+
         if (Locked)
         {
             wPercentage = 100 * _width / totalWidth;
@@ -1083,18 +1110,22 @@ public class Table : Rectangle, ILargeElement
         {
             case ALIGN_LEFT:
                 w[0] = left;
+
                 break;
             case ALIGN_RIGHT:
                 w[0] = left + totalWidth * (100 - wPercentage) / 100;
+
                 break;
             case ALIGN_CENTER:
             default:
                 w[0] = left + totalWidth * (100 - wPercentage) / 200;
+
                 break;
         }
 
         // the total available width is changed
         totalWidth = totalWidth * wPercentage / 100;
+
         // the inner borders are calculated
         for (var i = 1; i < _columns; i++)
         {
@@ -1103,6 +1134,7 @@ public class Table : Rectangle, ILargeElement
 
         // the border at the right is calculated
         w[_columns] = w[0] + totalWidth;
+
         return w;
     }
 
@@ -1115,7 +1147,7 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         InsertTable(aTable, _curPosition);
@@ -1132,7 +1164,7 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         InsertTable(aTable, new Point(row, column));
@@ -1148,19 +1180,21 @@ public class Table : Rectangle, ILargeElement
     {
         if (aTable == null)
         {
-            throw new Exception("insertTable - table has null-value");
+            throw new ArgumentNullException(nameof(aTable));
         }
 
         _mTableInserted = true;
         aTable.Complete();
+
         if (p.Y > _columns)
         {
-            throw new ArgumentException("insertTable -- wrong columnposition(" + p.Y + ") of location; max =" +
-                                        _columns);
+            throw new ArgumentException(
+                "insertTable -- wrong columnposition(" + p.Y + ") of location; max =" + _columns);
         }
 
         var rowCount = p.X + 1 - _rows.Count;
         var i = 0;
+
         if (rowCount > 0)
         {
             //create new rows ?
@@ -1209,12 +1243,14 @@ public class Table : Rectangle, ILargeElement
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_LEFT))
         {
             _alignment = ALIGN_LEFT;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_RIGHT))
         {
             _alignment = ALIGN_RIGHT;
+
             return;
         }
 
@@ -1232,7 +1268,13 @@ public class Table : Rectangle, ILargeElement
     /// <param name="widths">an array with values</param>
     public void SetWidths(int[] widths)
     {
+        if (widths == null)
+        {
+            throw new ArgumentNullException(nameof(widths));
+        }
+
         var tb = new float[widths.Length];
+
         for (var k = 0; k < widths.Length; ++k)
         {
             tb[k] = widths[k];
@@ -1278,10 +1320,8 @@ public class Table : Rectangle, ILargeElement
         }
     }
 
-    private void errorDimensions()
-    {
-        throw new Exception("Dimensions of a Table can't be calculated. See the FAQ.");
-    }
+    private static void errorDimensions()
+        => throw new InvalidOperationException("Dimensions of a Table can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     Integrates all added tables and recalculates column widths.
@@ -1323,6 +1363,7 @@ public class Table : Rectangle, ILargeElement
 
             var difx = _rows.Count - aLocation.X > aCell.Rowspan ? aCell.Rowspan : _rows.Count - aLocation.X;
             var dify = _columns - aLocation.Y > aCell.Colspan ? aCell.Colspan : _columns - aLocation.Y;
+
             // no other content at cells targetted by rowspan/colspan
             for (var i = aLocation.X; i < aLocation.X + difx; i++)
             {
@@ -1370,12 +1411,14 @@ public class Table : Rectangle, ILargeElement
         {
             lNewMaxColumns = 1; // value to hold in how many columns the current one will be split
             float[] tmpWidths = null;
+
             for (i = 0; i < _rows.Count; i++)
             {
                 if (_rows[i].GetCell(j) is Table)
                 {
                     isTable = true;
                     lDummyTable = (Table)_rows[i].GetCell(j);
+
                     if (tmpWidths == null)
                     {
                         tmpWidths = lDummyTable._widths;
@@ -1389,12 +1432,14 @@ public class Table : Rectangle, ILargeElement
                         int tpI = 0, btI = 0, totI = 0;
                         tpW += tmpWidths[0];
                         btW += lDummyTable._widths[0];
+
                         while (tpI < tmpWidths.Length && btI < cols)
                         {
                             if (btW > tpW)
                             {
                                 tmpWidthsN[totI] = tpW - totW;
                                 tpI++;
+
                                 if (tpI < tmpWidths.Length)
                                 {
                                     tpW += tmpWidths[tpI];
@@ -1404,9 +1449,11 @@ public class Table : Rectangle, ILargeElement
                             {
                                 tmpWidthsN[totI] = btW - totW;
                                 btI++;
+
                                 if (Math.Abs(btW - tpW) < 0.0001)
                                 {
                                     tpI++;
+
                                     if (tpI < tmpWidths.Length)
                                     {
                                         tpW += tmpWidths[tpI];
@@ -1439,12 +1486,14 @@ public class Table : Rectangle, ILargeElement
         for (i = 0; i < _rows.Count; i++)
         {
             lNewMaxRows = 1; // holds value in how many rows the current one will be split
+
             for (j = 0; j < _columns; j++)
             {
                 if (_rows[i].GetCell(j) is Table)
                 {
                     isTable = true;
                     lDummyTable = (Table)_rows[i].GetCell(j);
+
                     if (lDummyTable.Dimension.height > lNewMaxRows)
                     {
                         lNewMaxRows = lDummyTable.Dimension.height;
@@ -1464,6 +1513,7 @@ public class Table : Rectangle, ILargeElement
             // Take new max columns of internal table and work out widths for each col
             lNewWidths = new float[lTotalColumns];
             var lDummy = 0;
+
             for (var tel = 0; tel < _widths.Length; tel++)
             {
                 if (lDummyWidths[tel] != 1)
@@ -1487,6 +1537,7 @@ public class Table : Rectangle, ILargeElement
             // set new widths
             // copy old values
             newRows = new List<Row>(lTotalRows);
+
             for (i = 0; i < lTotalRows; i++)
             {
                 newRows.Add(new Row(lTotalColumns));
@@ -1494,10 +1545,12 @@ public class Table : Rectangle, ILargeElement
 
             int lDummyRow = 0, lDummyColumn = 0; // to remember where we are in the new, larger table
             object lDummyElement = null;
+
             for (i = 0; i < _rows.Count; i++)
             {
                 lDummyColumn = 0;
                 lNewMaxRows = 1;
+
                 for (j = 0; j < _columns; j++)
                 {
                     if (_rows[i].GetCell(j) is Table) // copy values from embedded table
@@ -1516,9 +1569,11 @@ public class Table : Rectangle, ILargeElement
                             wb = lDummyTable._widths[cb];
 
                             float wt = 0;
+
                             while (ct < lDummyWidths[j])
                             {
                                 wt += lDummyColumnWidths[j][ct++];
+
                                 if (Math.Abs(wb - wt) < 0.0001)
                                 {
                                     break;
@@ -1534,6 +1589,7 @@ public class Table : Rectangle, ILargeElement
                             for (var l = 0; l < lDummyTable.Dimension.width; l++)
                             {
                                 lDummyElement = lDummyTable.GetElement(k, l);
+
                                 if (lDummyElement != null)
                                 {
                                     var col = lDummyColumn + l;
@@ -1541,6 +1597,7 @@ public class Table : Rectangle, ILargeElement
                                     if (lDummyElement is Cell)
                                     {
                                         var lDummyC = (Cell)lDummyElement;
+
                                         // Find col to add cell in and set col span
                                         col = colMap[l];
                                         var ot = colMap[l + lDummyC.Colspan];
@@ -1550,7 +1607,7 @@ public class Table : Rectangle, ILargeElement
 
                                     newRows[k + lDummyRow]
                                         .AddElement(lDummyElement,
-                                                    col); // use addElement to set reserved status ok in row
+                                            col); // use addElement to set reserved status ok in row
                                 }
                             }
                         }
@@ -1562,8 +1619,7 @@ public class Table : Rectangle, ILargeElement
                         if (aElement is Cell)
                         {
                             // adjust spans for cell
-                            ((Cell)aElement).Rowspan =
-                                ((Cell)_rows[i].GetCell(j)).Rowspan + lDummyHeights[i] - 1;
+                            ((Cell)aElement).Rowspan = ((Cell)_rows[i].GetCell(j)).Rowspan + lDummyHeights[i] - 1;
                             ((Cell)aElement).Colspan = ((Cell)_rows[i].GetCell(j)).Colspan + lDummyWidths[j] - 1;
 
                             // most likely this cell covers a larger area because of the row/cols splits : define not-to-be-filled cells
@@ -1590,12 +1646,13 @@ public class Table : Rectangle, ILargeElement
     /// <param name="someRows">some rows</param>
     /// <param name="aCell">the cell that has to be inserted</param>
     /// <param name="aPosition">the position where the cell has to be placed</param>
-    private void placeCell(IList<Row> someRows, Cell aCell, Point aPosition)
+    private void placeCell(List<Row> someRows, Cell aCell, Point aPosition)
     {
         int i;
         Row row = null;
         var rowCount = aPosition.X + aCell.Rowspan - someRows.Count;
         assumeTableDefaults(aCell);
+
         if (aPosition.X + aCell.Rowspan > someRows.Count)
         {
             //create new rows ?
@@ -1612,7 +1669,7 @@ public class Table : Rectangle, ILargeElement
             if (!someRows[i].Reserve(aPosition.Y, aCell.Colspan))
             {
                 // should be impossible to come here :-)
-                throw new Exception("addCell - error in reserve");
+                throw new InvalidOperationException("addCell - error in reserve");
             }
         }
 

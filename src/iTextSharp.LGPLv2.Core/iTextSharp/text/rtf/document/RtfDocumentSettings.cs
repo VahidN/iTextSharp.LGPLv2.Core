@@ -120,7 +120,8 @@ public class RtfDocumentSettings
     ///     @author Howard Shank (hgshank@yahoo.com)
     /// </summary>
     /// <returns>RTF document protection level as a byte array (byte[])</returns>
-    public byte[] GetProtectionLevelBytes() => DocWriter.GetIsoBytes(convertProtectionLevel().ToString());
+    public byte[] GetProtectionLevelBytes() =>
+        DocWriter.GetIsoBytes(convertProtectionLevel().ToString(CultureInfo.InvariantCulture));
 
     /// <summary>
     ///     @since 2.1.1
@@ -280,7 +281,7 @@ public class RtfDocumentSettings
     public bool SetNewPassword(string oldPwd, string newPwd)
     {
         var result = false;
-        if (_protectionHash.Equals(RtfProtection.GenerateHash(oldPwd)))
+        if (_protectionHash.Equals(RtfProtection.GenerateHash(oldPwd), StringComparison.Ordinal))
         {
             _protectionHash = RtfProtection.GenerateHash(newPwd);
             result = true;
@@ -389,7 +390,7 @@ public class RtfDocumentSettings
         }
         else
         {
-            if (_protectionHash.Equals(RtfProtection.GenerateHash(pwd)))
+            if (_protectionHash.Equals(RtfProtection.GenerateHash(pwd), StringComparison.Ordinal))
             {
                 if (!SetProtectionLevel(level))
                 {
@@ -465,7 +466,7 @@ public class RtfDocumentSettings
     public bool UnprotectDocument(string pwd)
     {
         var result = false;
-        if (_protectionHash.Equals(RtfProtection.GenerateHash(pwd)))
+        if (_protectionHash.Equals(RtfProtection.GenerateHash(pwd), StringComparison.Ordinal))
         {
             _protectionLevel = RtfProtection.LEVEL_NONE;
             _protectionHash = null;

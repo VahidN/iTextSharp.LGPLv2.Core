@@ -60,55 +60,60 @@ public class RtfListTable : RtfElement, IRtfExtendedElement
     /// <summary>
     ///     Writes the list and list override tables.
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_listTable, 0, _listTable.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_listTable, 0, _listTable.Length);
+        Document.OutputDebugLinebreak(outp);
 
         for (var i = 0; i < _picturelists.Count; i++)
         {
             var l = _picturelists[i];
             //          l.SetID(document.GetRandomInt());
-            l.WriteDefinition(result);
-            Document.OutputDebugLinebreak(result);
+            l.WriteDefinition(outp);
+            Document.OutputDebugLinebreak(outp);
         }
 
         for (var i = 0; i < _lists.Count; i++)
         {
             var l = _lists[i];
             l.SetId(Document.GetRandomInt());
-            l.WriteDefinition(result);
-            Document.OutputDebugLinebreak(result);
+            l.WriteDefinition(outp);
+            Document.OutputDebugLinebreak(outp);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
 
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_listOverrideTable, 0, _listOverrideTable.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_listOverrideTable, 0, _listOverrideTable.Length);
+        Document.OutputDebugLinebreak(outp);
 
         // list override index values are 1-based, not 0.
         // valid list override index values \ls are 1 to 2000.
         // if there are more then 2000 lists, the result is undefined.
         for (var i = 0; i < _lists.Count; i++)
         {
-            result.Write(OpenGroup, 0, OpenGroup.Length);
-            result.Write(_listOverride, 0, _listOverride.Length);
-            result.Write(RtfList.ListId, 0, RtfList.ListId.Length);
-            result.Write(t = IntToByteArray(_lists[i].GetId()), 0, t.Length);
-            result.Write(_listOverrideCount, 0, _listOverrideCount.Length);
-            result.Write(t = IntToByteArray(0), 0, t.Length); // is this correct? Spec says valid values are 1 or 9.
-            result.Write(RtfList.ListNumber, 0, RtfList.ListNumber.Length);
-            result.Write(t = IntToByteArray(_lists[i].GetListNumber()), 0, t.Length);
-            result.Write(CloseGroup, 0, CloseGroup.Length);
-            Document.OutputDebugLinebreak(result);
+            outp.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(_listOverride, 0, _listOverride.Length);
+            outp.Write(RtfList.ListId, 0, RtfList.ListId.Length);
+            outp.Write(t = IntToByteArray(_lists[i].GetId()), 0, t.Length);
+            outp.Write(_listOverrideCount, 0, _listOverrideCount.Length);
+            outp.Write(t = IntToByteArray(0), 0, t.Length); // is this correct? Spec says valid values are 1 or 9.
+            outp.Write(RtfList.ListNumber, 0, RtfList.ListNumber.Length);
+            outp.Write(t = IntToByteArray(_lists[i].GetListNumber()), 0, t.Length);
+            outp.Write(CloseGroup, 0, CloseGroup.Length);
+            Document.OutputDebugLinebreak(outp);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>

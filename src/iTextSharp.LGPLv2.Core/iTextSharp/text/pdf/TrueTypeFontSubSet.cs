@@ -10,17 +10,22 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 internal class TrueTypeFontSubSet
 {
-    internal static readonly int Arg1And2AreWords = 1;
+    internal const int Arg1And2AreWords = 1;
+
+    internal const int HeadLocaFormatOffset = 51;
+
+    internal const int MoreComponents = 32;
+
+    internal const int TableChecksum = 0;
+
+    internal const int TableLength = 2;
+
+    internal const int TableOffset = 1;
+    internal const int WeHaveAnXAndYScale = 64;
+    internal const int WeHaveAScale = 8;
+    internal const int WeHaveATwoByTwo = 128;
 
     internal static readonly int[] EntrySelectors = { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4 };
-
-    internal static readonly int HeadLocaFormatOffset = 51;
-
-    internal static readonly int MoreComponents = 32;
-
-    internal static readonly int TableChecksum = 0;
-
-    internal static readonly int TableLength = 2;
 
     internal static readonly string[] TableNamesCmap =
     {
@@ -40,30 +45,25 @@ internal class TrueTypeFontSubSet
         "hhea", "hmtx", "loca", "maxp", "prep",
     };
 
-    internal static readonly int TableOffset = 1;
-    internal static readonly int WeHaveAnXAndYScale = 64;
-    internal static readonly int WeHaveAScale = 8;
-    internal static readonly int WeHaveATwoByTwo = 128;
 
-
-    protected int DirectoryOffset;
+    protected readonly int DirectoryOffset;
 
     /// <summary>
     ///     The file name.
     /// </summary>
-    protected string FileName;
+    protected readonly string FileName;
 
     protected int FontPtr;
 
     protected int GlyfTableRealSize;
 
-    protected List<int> GlyphsInList;
+    protected readonly List<int> GlyphsInList;
 
-    protected INullValueDictionary<int, int[]> GlyphsUsed;
+    protected readonly INullValueDictionary<int, int[]> GlyphsUsed;
 
-    protected bool IncludeCmap;
+    protected readonly bool IncludeCmap;
 
-    protected bool IncludeExtras;
+    protected readonly bool IncludeExtras;
 
     protected bool LocaShortTable;
 
@@ -82,7 +82,7 @@ internal class TrueTypeFontSubSet
     /// <summary>
     ///     The file in use.
     /// </summary>
-    protected RandomAccessFileOrArray Rf;
+    protected readonly RandomAccessFileOrArray Rf;
 
     /// <summary>
     ///     Contains the location of the several tables. The key is the name of
@@ -174,7 +174,8 @@ internal class TrueTypeFontSubSet
         for (var k = 0; k < tableNames.Length; ++k)
         {
             var name = tableNames[k];
-            if (name.Equals("glyf") || name.Equals("loca"))
+            if (name.Equals("glyf", StringComparison.Ordinal) ||
+                name.Equals("loca", StringComparison.Ordinal))
             {
                 continue;
             }
@@ -211,12 +212,12 @@ internal class TrueTypeFontSubSet
             }
 
             WriteFontString(name);
-            if (name.Equals("glyf"))
+            if (name.Equals("glyf", StringComparison.Ordinal))
             {
                 WriteFontInt(CalculateChecksum(NewGlyfTable));
                 len = GlyfTableRealSize;
             }
-            else if (name.Equals("loca"))
+            else if (name.Equals("loca", StringComparison.Ordinal))
             {
                 WriteFontInt(CalculateChecksum(NewLocaTableOut));
                 len = LocaTableRealSize;
@@ -241,13 +242,13 @@ internal class TrueTypeFontSubSet
                 continue;
             }
 
-            if (name.Equals("glyf"))
+            if (name.Equals("glyf", StringComparison.Ordinal))
             {
                 Array.Copy(NewGlyfTable, 0, OutFont, FontPtr, NewGlyfTable.Length);
                 FontPtr += NewGlyfTable.Length;
                 NewGlyfTable = null;
             }
-            else if (name.Equals("loca"))
+            else if (name.Equals("loca", StringComparison.Ordinal))
             {
                 Array.Copy(NewLocaTableOut, 0, OutFont, FontPtr, NewLocaTableOut.Length);
                 FontPtr += NewLocaTableOut.Length;
@@ -262,7 +263,7 @@ internal class TrueTypeFontSubSet
         }
     }
 
-    protected int CalculateChecksum(byte[] b)
+    protected static int CalculateChecksum(byte[] b)
     {
         var len = b.Length / 4;
         var v0 = 0;
@@ -504,7 +505,7 @@ internal class TrueTypeFontSubSet
     {
         var buf = new byte[length];
         Rf.ReadFully(buf);
-        return EncodingsRegistry.Instance.GetEncoding(1252).GetString(buf);
+        return EncodingsRegistry.GetEncoding(1252).GetString(buf);
     }
 
     protected void WriteFontInt(int n)

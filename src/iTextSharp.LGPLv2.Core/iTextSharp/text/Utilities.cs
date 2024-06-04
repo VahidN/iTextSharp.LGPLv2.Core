@@ -39,8 +39,15 @@ public static class Utilities
     /// <param name="attributes"></param>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static bool CheckTrueOrFalse(Properties attributes, string key) =>
-        Util.EqualsIgnoreCase("true", attributes[key]);
+    public static bool CheckTrueOrFalse(Properties attributes, string key)
+    {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
+        return Util.EqualsIgnoreCase("true", attributes[key]);
+    }
 
     public static string ConvertFromUtf32(int codePoint)
     {
@@ -56,11 +63,25 @@ public static class Utilities
     public static int ConvertToUtf32(char highSurrogate, char lowSurrogate) =>
         (highSurrogate - 0xd800) * 0x400 + (lowSurrogate - 0xdc00) + 0x10000;
 
-    public static int ConvertToUtf32(char[] text, int idx) =>
-        (text[idx] - 0xd800) * 0x400 + (text[idx + 1] - 0xdc00) + 0x10000;
+    public static int ConvertToUtf32(char[] text, int idx)
+    {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
 
-    public static int ConvertToUtf32(string text, int idx) =>
-        (text[idx] - 0xd800) * 0x400 + (text[idx + 1] - 0xdc00) + 0x10000;
+        return (text[idx] - 0xd800) * 0x400 + (text[idx + 1] - 0xdc00) + 0x10000;
+    }
+
+    public static int ConvertToUtf32(string text, int idx)
+    {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        return (text[idx] - 0xd800) * 0x400 + (text[idx + 1] - 0xdc00) + 0x10000;
+    }
 
     /// <summary>
     /// </summary>
@@ -90,6 +111,11 @@ public static class Utilities
 
     public static bool IsSurrogatePair(string text, int idx)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         if (idx < 0 || idx > text.Length - 2)
         {
             return false;
@@ -100,6 +126,11 @@ public static class Utilities
 
     public static bool IsSurrogatePair(char[] text, int idx)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         if (idx < 0 || idx > text.Length - 2)
         {
             return false;
@@ -148,6 +179,11 @@ public static class Utilities
     /// <param name="size">the number of bytes to skip</param>
     public static void Skip(Stream istr, int size)
     {
+        if (istr == null)
+        {
+            throw new ArgumentNullException(nameof(istr));
+        }
+
         while (size > 0)
         {
             var r = istr.Read(_skipBuffer, 0, Math.Min(_skipBuffer.Length, size));
@@ -186,6 +222,11 @@ public static class Utilities
     /// <returns>the eunescaped value</returns>
     public static string UnEscapeUrl(string src)
     {
+        if (src == null)
+        {
+            throw new ArgumentNullException(nameof(src));
+        }
+
         var bf = new StringBuilder();
         var s = src.ToCharArray();
         for (var k = 0; k < s.Length; ++k)

@@ -45,7 +45,7 @@ public class PrTokeniser
 
     public int Reference => reference;
 
-    public RandomAccessFileOrArray SafeFile => new RandomAccessFileOrArray(file);
+    public RandomAccessFileOrArray SafeFile => new(file);
 
     public long Startxref
     {
@@ -74,7 +74,7 @@ public class PrTokeniser
                 pos = pos - arrLength + startxrefLength;
             }
 
-            throw new IOException("PDF startxref not found.");
+            throw new InvalidOperationException("PDF startxref not found.");
         }
     }
 
@@ -106,7 +106,7 @@ public class PrTokeniser
                 return null;
             }
 
-            if (!tk.StringValue.Equals("obj"))
+            if (!tk.StringValue.Equals("obj", StringComparison.Ordinal))
             {
                 return null;
             }
@@ -523,7 +523,7 @@ public class PrTokeniser
                 }
                 default:
                 {
-                    if (Type != TK_OTHER || !stringValue.Equals("R"))
+                    if (Type != TK_OTHER || !stringValue.Equals("R", StringComparison.Ordinal))
                     {
                         file.Seek(ptr);
                         Type = TK_NUMBER;
@@ -547,6 +547,11 @@ public class PrTokeniser
 
     public bool ReadLineSegment(byte[] input)
     {
+        if (input == null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
         var c = -1;
         var eol = false;
         var ptr = 0;

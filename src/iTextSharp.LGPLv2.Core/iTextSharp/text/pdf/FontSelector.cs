@@ -20,6 +20,11 @@ public class FontSelector
     /// <param name="font">the  Font </param>
     public void AddFont(Font font)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         if (font.BaseFont != null)
         {
             Fonts.Add(font);
@@ -39,6 +44,11 @@ public class FontSelector
     /// <returns>a  Phrase  with one or more chunks</returns>
     public Phrase Process(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var fsize = Fonts.Count;
         if (fsize == 0)
         {

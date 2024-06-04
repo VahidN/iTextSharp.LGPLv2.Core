@@ -144,6 +144,11 @@ public class VerticalText
     /// <param name="phrase">the text</param>
     public void AddText(Phrase phrase)
     {
+        if (phrase == null)
+        {
+            throw new ArgumentNullException(nameof(phrase));
+        }
+
         foreach (var c in phrase.Chunks)
         {
             Chunks.Add(new PdfChunk(c, null));
@@ -184,7 +189,7 @@ public class VerticalText
         }
         else if (!simulate)
         {
-            throw new Exception("VerticalText.go with simulate==false and text==null.");
+            throw new InvalidOperationException("VerticalText.go with simulate==false and text==null.");
         }
 
         var status = 0;
@@ -262,10 +267,10 @@ public class VerticalText
         Leading = leading;
     }
 
-    internal void WriteLine(PdfLine line, PdfContentByte text, PdfContentByte graphics)
+    internal static void WriteLine(PdfLine line, PdfContentByte text, PdfContentByte graphics)
     {
         PdfFont currentFont = null;
-        foreach (PdfChunk chunk in line)
+        foreach (var chunk in line)
         {
             if (chunk.Font.CompareTo(currentFont) != 0)
             {

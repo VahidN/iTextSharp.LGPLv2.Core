@@ -26,7 +26,15 @@ public abstract class Dimension2D : ICloneable
     /// <value>the size</value>
     public Dimension2D Size
     {
-        set => SetSize(value.Width, value.Height);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            SetSize(value.Width, value.Height);
+        }
     }
 
     /// <summary>
@@ -40,7 +48,7 @@ public abstract class Dimension2D : ICloneable
     ///     Creates a new object of the same class as this object.
     /// </summary>
     /// <returns>a clone of this instance</returns>
-    public object Clone() => throw new Exception("not implemented");
+    public object Clone() => throw new NotSupportedException("not implemented");
 
     /// <summary>
     ///     Sets the size of this  Dimension  object to the

@@ -19,6 +19,11 @@ public class PrStream : PdfStream
 
     public PrStream(PrStream stream, PdfDictionary newDic)
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
         reader = stream.reader;
         offset = stream.offset;
         length = stream.Length;
@@ -28,14 +33,7 @@ public class PrStream : PdfStream
         Bytes = stream.Bytes;
         objNum = stream.objNum;
         objGen = stream.objGen;
-        if (newDic != null)
-        {
-            Merge(newDic);
-        }
-        else
-        {
-            Merge(stream);
-        }
+        Merge(newDic ?? stream);
     }
 
     public PrStream(PrStream stream, PdfDictionary newDic, PdfReader reader) : this(stream, newDic) =>
@@ -61,6 +59,11 @@ public class PrStream : PdfStream
     /// <param name="compressionLevel">the compression level for the content</param>
     public PrStream(PdfReader reader, byte[] conts, int compressionLevel)
     {
+        if (conts == null)
+        {
+            throw new ArgumentNullException(nameof(conts));
+        }
+
         this.reader = reader;
         offset = -1;
         if (Document.Compress)
@@ -132,6 +135,11 @@ public class PrStream : PdfStream
     /// <param name="compressionLevel">a value between -1 and 9 (ignored if compress == false)</param>
     public void SetData(byte[] data, bool compress, int compressionLevel)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
         Remove(PdfName.Filter);
         offset = -1;
         if (Document.Compress && compress)
@@ -163,6 +171,11 @@ public class PrStream : PdfStream
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         var b = PdfReader.GetStreamBytesRaw(this);
         PdfEncryption crypto = null;
         if (writer != null)

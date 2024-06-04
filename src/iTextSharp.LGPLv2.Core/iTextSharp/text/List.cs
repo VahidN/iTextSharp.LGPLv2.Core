@@ -24,8 +24,6 @@ namespace iTextSharp.text;
 ///     This is an item
 ///     This is another item
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.ListItem" />
 public class List : ITextElementArray
 {
     /// <summary>
@@ -374,7 +372,7 @@ public class List : ITextElementArray
                 }
                 else
                 {
-                    chunk.Append(index.ToString());
+                    chunk.Append(index.ToString(CultureInfo.InvariantCulture));
                 }
 
                 chunk.Append(postSymbol);
@@ -423,6 +421,11 @@ public class List : ITextElementArray
     /// <returns>true if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             foreach (var ele in list)

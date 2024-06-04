@@ -55,6 +55,11 @@ public class HyphenationAuto : IHyphenationEvent
     /// <returns>the first part of the hyphenated word including</returns>
     public string GetHyphenatedWordPre(string word, BaseFont font, float fontSize, float remainingWidth)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         Post = word;
         var hyphen = HyphenSymbol;
         var hyphenWidth = font.GetWidthPoint(hyphen, fontSize);

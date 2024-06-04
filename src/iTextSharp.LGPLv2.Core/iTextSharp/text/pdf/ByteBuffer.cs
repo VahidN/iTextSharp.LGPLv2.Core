@@ -87,7 +87,8 @@ public class ByteBuffer : Stream
         {
             if (value > Count || value < 0)
             {
-                throw new ArgumentOutOfRangeException("The new size must be positive and <= of the current size");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                                                      "The new size must be positive and <= of the current size");
             }
 
             Count = value;
@@ -495,6 +496,11 @@ public class ByteBuffer : Stream
     /// <returns>a reference to this  ByteBuffer  object</returns>
     public ByteBuffer Append(byte[] b, int off, int len)
     {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         if (off < 0 || off > b.Length || len < 0 ||
             off + len > b.Length || off + len < 0 || len == 0)
         {
@@ -519,7 +525,15 @@ public class ByteBuffer : Stream
     /// </summary>
     /// <param name="b">the array to be appended</param>
     /// <returns>a reference to this  ByteBuffer  object</returns>
-    public ByteBuffer Append(byte[] b) => Append(b, 0, b.Length);
+    public ByteBuffer Append(byte[] b)
+    {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
+        return Append(b, 0, b.Length);
+    }
 
     /// <summary>
     ///     Appends a  string  to the buffer. The  string  is
@@ -550,7 +564,15 @@ public class ByteBuffer : Stream
     /// </summary>
     /// <param name="buf">the  ByteBuffer  to be appended</param>
     /// <returns>a reference to this  ByteBuffer  object</returns>
-    public ByteBuffer Append(ByteBuffer buf) => Append(buf.Buf, 0, buf.Count);
+    public ByteBuffer Append(ByteBuffer buf)
+    {
+        if (buf == null)
+        {
+            throw new ArgumentNullException(nameof(buf));
+        }
+
+        return Append(buf.Buf, 0, buf.Count);
+    }
 
     /// <summary>
     ///     Appends the string representation of an  int .
@@ -670,6 +692,11 @@ public class ByteBuffer : Stream
     /// <param name="str">the output stream to which to write the data.</param>
     public void WriteTo(Stream str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         str.Write(Buf, 0, Count);
     }
 

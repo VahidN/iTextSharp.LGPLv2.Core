@@ -19,6 +19,11 @@ public class DottedLineSeparator : LineSeparator
     /// </summary>
     public override void Draw(PdfContentByte canvas, float llx, float lly, float urx, float ury, float y)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         canvas.SaveState();
         canvas.SetLineWidth(LineWidth);
         canvas.SetLineCap(PdfContentByte.LINE_CAP_ROUND);

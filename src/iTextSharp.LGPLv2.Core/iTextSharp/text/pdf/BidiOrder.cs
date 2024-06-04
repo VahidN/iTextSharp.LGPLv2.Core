@@ -512,6 +512,11 @@ public sealed class BidiOrder
 
     public BidiOrder(char[] text, int offset, int length, sbyte paragraphEmbeddingLevel)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         _initialTypes = new sbyte[length];
         for (var k = 0; k < length; ++k)
         {
@@ -558,6 +563,10 @@ public sealed class BidiOrder
     /// <returns>the resolved levels of the text</returns>
     public byte[] GetLevels(int[] linebreaks)
     {
+        if (linebreaks == null)
+        {
+            throw new ArgumentNullException(nameof(linebreaks));
+        }
         // Note that since the previous processing has removed all
         // P, S, and WS values from resultTypes, the values referred to
         // in these rules are the initial types, before any processing

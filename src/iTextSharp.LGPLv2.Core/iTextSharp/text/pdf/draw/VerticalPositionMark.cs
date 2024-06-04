@@ -84,6 +84,11 @@ public class VerticalPositionMark : IDrawInterface, IElement
     /// </summary>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);

@@ -3,8 +3,6 @@ namespace iTextSharp.text;
 /// <summary>
 ///     Raw Image data that has to be inserted into the document
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Image" />
 public class ImgRaw : Image
 {
     public ImgRaw(Image image) : base(image)

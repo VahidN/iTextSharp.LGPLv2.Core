@@ -70,7 +70,7 @@ public abstract class RtfAddableElement : Chunk, IRtfBasicElement
     /// </summary>
     /// <param name="i">The integer to convert</param>
     /// <returns>A byte array representing the integer</returns>
-    public byte[] IntToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString());
+    public static byte[] IntToByteArray(int i) => DocWriter.GetIsoBytes(i.ToString(CultureInfo.InvariantCulture));
 
     /// <summary>
     ///     RtfAddableElement subclasses are never assumed to be empty.

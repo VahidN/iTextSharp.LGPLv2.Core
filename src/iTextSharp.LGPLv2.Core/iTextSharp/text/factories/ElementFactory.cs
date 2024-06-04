@@ -14,6 +14,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Anchor GetAnchor(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var anchor = new Anchor(GetPhrase(attributes));
         var value = attributes[ElementTags.NAME];
         if (value != null)
@@ -37,6 +42,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Annotation GetAnnotation(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         float llx = 0, lly = 0, urx = 0, ury = 0;
 
         var value = attributes[ElementTags.LLX];
@@ -109,6 +119,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Cell GetCell(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var cell = new Cell();
 
         cell.SetHorizontalAlignment(attributes[ElementTags.HORIZONTALALIGN]);
@@ -153,6 +168,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static ChapterAutoNumber GetChapter(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var chapter = new ChapterAutoNumber("");
         setSectionParameters(chapter, attributes);
         return chapter;
@@ -164,6 +184,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Chunk GetChunk(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var chunk = new Chunk { Font = FontFactory.GetFont(attributes) };
 
         var value = attributes[ElementTags.ITEXT];
@@ -209,7 +234,7 @@ public static class ElementFactory
         }
 
         value = attributes[Markup.CSS_KEY_VERTICALALIGN];
-        if (value != null && value.EndsWith("%"))
+        if (value != null && value.EndsWith("%", StringComparison.Ordinal))
         {
             var p = float.Parse(value.Substring(0, value.Length - 1), NumberFormatInfo.InvariantInfo) / 100f;
             chunk.SetTextRise(p * chunk.Font.Size);
@@ -238,6 +263,11 @@ public static class ElementFactory
     /// <returns>an Image</returns>
     public static Image GetImage(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var value = attributes[ElementTags.URL];
         if (value == null)
         {
@@ -317,6 +347,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static List GetList(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var list = new List
                    {
                        Numbered = Utilities.CheckTrueOrFalse(attributes, ElementTags.NUMBERED),
@@ -377,6 +412,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Paragraph GetParagraph(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var paragraph = new Paragraph(GetPhrase(attributes));
         var value = attributes[ElementTags.ALIGN];
         if (value != null)
@@ -405,6 +445,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Phrase GetPhrase(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var phrase = new Phrase { Font = FontFactory.GetFont(attributes) };
         var value = attributes[ElementTags.LEADING];
         if (value != null)
@@ -440,6 +485,16 @@ public static class ElementFactory
     /// <returns></returns>
     public static Section GetSection(Section parent, Properties attributes)
     {
+        if (parent == null)
+        {
+            throw new ArgumentNullException(nameof(parent));
+        }
+
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var section = parent.AddSection("");
         setSectionParameters(section, attributes);
         return section;
@@ -452,6 +507,11 @@ public static class ElementFactory
     /// <returns></returns>
     public static Table GetTable(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         Table table;
 
         var value = attributes[ElementTags.WIDTHS];
@@ -524,7 +584,7 @@ public static class ElementFactory
         value = attributes[ElementTags.WIDTH];
         if (value != null)
         {
-            if (value.EndsWith("%"))
+            if (value.EndsWith("%", StringComparison.Ordinal))
             {
                 table.Width = float.Parse(value.Substring(0, value.Length - 1), NumberFormatInfo.InvariantInfo);
             }

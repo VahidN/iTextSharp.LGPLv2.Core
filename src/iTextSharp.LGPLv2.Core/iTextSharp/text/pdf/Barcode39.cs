@@ -194,6 +194,11 @@ public class Barcode39 : Barcode
     /// <returns>the escaped text</returns>
     public static string GetCode39Ex(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var ret = "";
         for (var k = 0; k < text.Length; ++k)
         {
@@ -286,6 +291,11 @@ public class Barcode39 : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var fullCode = code;
         float fontX = 0;
         var bCode = code;

@@ -236,31 +236,36 @@ public class RtfProperty
 
     public void AfterChange(string propertyName)
     {
+        if (propertyName == null)
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
+
         // call listener for all
         foreach (var listener in _listeners)
         {
             listener.AfterPropertyChange(propertyName);
         }
 
-        if (propertyName.StartsWith(CHARACTER))
+        if (propertyName.StartsWith(CHARACTER, StringComparison.Ordinal))
         {
             // call listener for character chane
         }
         else
         {
-            if (propertyName.StartsWith(PARAGRAPH))
+            if (propertyName.StartsWith(PARAGRAPH, StringComparison.Ordinal))
             {
                 // call listener for paragraph change
             }
             else
             {
-                if (propertyName.StartsWith(SECTION))
+                if (propertyName.StartsWith(SECTION, StringComparison.Ordinal))
                 {
                     // call listener for section change
                 }
                 else
                 {
-                    if (propertyName.StartsWith(DOCUMENT))
+                    if (propertyName.StartsWith(DOCUMENT, StringComparison.Ordinal))
                     {
                         // call listener for document change
                     }
@@ -271,31 +276,36 @@ public class RtfProperty
 
     public void BeforeChange(string propertyName)
     {
+        if (propertyName == null)
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
+
         // call listener for all
         foreach (var listener in _listeners)
         {
             listener.BeforePropertyChange(propertyName);
         }
 
-        if (propertyName.StartsWith(CHARACTER))
+        if (propertyName.StartsWith(CHARACTER, StringComparison.Ordinal))
         {
             // call listener for character chane
         }
         else
         {
-            if (propertyName.StartsWith(PARAGRAPH))
+            if (propertyName.StartsWith(PARAGRAPH, StringComparison.Ordinal))
             {
                 // call listener for paragraph change
             }
             else
             {
-                if (propertyName.StartsWith(SECTION))
+                if (propertyName.StartsWith(SECTION, StringComparison.Ordinal))
                 {
                     // call listener for section change
                 }
                 else
                 {
-                    if (propertyName.StartsWith(DOCUMENT))
+                    if (propertyName.StartsWith(DOCUMENT, StringComparison.Ordinal))
                     {
                         // call listener for document change
                     }
@@ -317,7 +327,7 @@ public class RtfProperty
             //properties.get
             foreach (var key in Properties.Keys)
             {
-                if (key.StartsWith(propertyGroup))
+                if (key.StartsWith(propertyGroup, StringComparison.Ordinal))
                 {
                     props[key] = Properties[key];
                 }
@@ -375,25 +385,30 @@ public class RtfProperty
     /// <param name="modified">the modified to set</param>
     public void SetModified(string propertyName, bool modified)
     {
-        if (propertyName.StartsWith(CHARACTER))
+        if (propertyName == null)
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
+
+        if (propertyName.StartsWith(CHARACTER, StringComparison.Ordinal))
         {
             SetModifiedCharacter(modified);
         }
         else
         {
-            if (propertyName.StartsWith(PARAGRAPH))
+            if (propertyName.StartsWith(PARAGRAPH, StringComparison.Ordinal))
             {
                 SetModifiedParagraph(modified);
             }
             else
             {
-                if (propertyName.StartsWith(SECTION))
+                if (propertyName.StartsWith(SECTION, StringComparison.Ordinal))
                 {
                     SetModifiedSection(modified);
                 }
                 else
                 {
-                    if (propertyName.StartsWith(DOCUMENT))
+                    if (propertyName.StartsWith(DOCUMENT, StringComparison.Ordinal))
                     {
                         SetModifiedDocument(modified);
                     }
@@ -441,6 +456,11 @@ public class RtfProperty
     /// <returns> true  for handled or  false  if  propertyName  or  propertyValue  is  null </returns>
     public bool SetProperty(RtfCtrlWordData ctrlWordData)
     {
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
+
         //String propertyName, Object propertyValueNew) {
         var propertyName = ctrlWordData.SpecialHandler;
         object propertyValueNew = ctrlWordData.Param;
@@ -471,14 +491,14 @@ public class RtfProperty
     /// <param name="propertyGroup"> String  name of the property group to set to default.</param>
     public void SetToDefault(string propertyGroup)
     {
-        if (COLOR.Equals(propertyGroup))
+        if (COLOR.Equals(propertyGroup, StringComparison.Ordinal))
         {
             setProperty(COLOR_FG, new BaseColor(0, 0, 0));
             setProperty(COLOR_BG, new BaseColor(255, 255, 255));
             return;
         }
 
-        if (CHARACTER.Equals(propertyGroup))
+        if (CHARACTER.Equals(propertyGroup, StringComparison.Ordinal))
         {
             setProperty(CHARACTER_BOLD, 0);
             setProperty(CHARACTER_UNDERLINE, 0);
@@ -488,7 +508,7 @@ public class RtfProperty
             return;
         }
 
-        if (PARAGRAPH.Equals(propertyGroup))
+        if (PARAGRAPH.Equals(propertyGroup, StringComparison.Ordinal))
         {
             setProperty(PARAGRAPH_INDENT_LEFT, 0);
             setProperty(PARAGRAPH_INDENT_RIGHT, 0);
@@ -499,7 +519,7 @@ public class RtfProperty
             return;
         }
 
-        if (SECTION.Equals(propertyGroup))
+        if (SECTION.Equals(propertyGroup, StringComparison.Ordinal))
         {
             setProperty(SECTION_NUMBER_OF_COLUMNS, 0);
             setProperty(SECTION_BREAK_TYPE, SBK_NONE);
@@ -509,7 +529,7 @@ public class RtfProperty
             return;
         }
 
-        if (DOCUMENT.Equals(propertyGroup))
+        if (DOCUMENT.Equals(propertyGroup, StringComparison.Ordinal))
         {
             setProperty(DOCUMENT_PAGE_WIDTH_TWIPS, 12240);
             setProperty(DOCUMENT_PAGE_HEIGHT_TWIPS, 15480);
@@ -533,6 +553,10 @@ public class RtfProperty
     /// <returns> true  for handled or  false  if  propertyName  is  null  or <i>blank</i></returns>
     public bool ToggleProperty(RtfCtrlWordData ctrlWordData)
     {
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
         //String propertyName) {
 
         var propertyName = ctrlWordData.SpecialHandler;

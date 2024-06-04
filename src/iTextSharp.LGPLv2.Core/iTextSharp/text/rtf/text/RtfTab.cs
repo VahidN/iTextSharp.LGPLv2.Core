@@ -78,23 +78,28 @@ public class RtfTab : RtfAddableElement
     /// <summary>
     ///     Writes the tab settings.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         switch (_type)
         {
             case TAB_CENTER_ALIGN:
-                result.Write(t = DocWriter.GetIsoBytes("\\tqc"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\tqc"), 0, t.Length);
                 break;
             case TAB_RIGHT_ALIGN:
-                result.Write(t = DocWriter.GetIsoBytes("\\tqr"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\tqr"), 0, t.Length);
                 break;
             case TAB_DECIMAL_ALIGN:
-                result.Write(t = DocWriter.GetIsoBytes("\\tqdec"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\tqdec"), 0, t.Length);
                 break;
         }
 
-        result.Write(t = DocWriter.GetIsoBytes("\\tx"), 0, t.Length);
-        result.Write(t = IntToByteArray(_position), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\tx"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_position), 0, t.Length);
     }
 }

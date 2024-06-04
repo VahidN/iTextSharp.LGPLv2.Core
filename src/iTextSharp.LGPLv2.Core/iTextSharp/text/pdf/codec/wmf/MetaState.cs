@@ -114,6 +114,11 @@ public class MetaState
             if (LineJoin == 0)
             {
                 LineJoin = 1;
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 value.SetLineJoin(1);
             }
         }
@@ -126,6 +131,11 @@ public class MetaState
             if (LineJoin != 0)
             {
                 LineJoin = 0;
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 value.SetLineJoin(0);
             }
         }
@@ -137,6 +147,11 @@ public class MetaState
     {
         set
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             SavedStates = value.SavedStates;
             MetaObjects = value.MetaObjects;
             currentPoint = value.currentPoint;
@@ -216,6 +231,11 @@ public class MetaState
 
     public void Cleanup(PdfContentByte cb)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var k = SavedStates.Count;
         while (k-- > 0)
         {
@@ -230,6 +250,11 @@ public class MetaState
 
     public void RestoreState(int index, PdfContentByte cb)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         int pops;
         if (index < 0)
         {
@@ -257,6 +282,11 @@ public class MetaState
 
     public void SaveState(PdfContentByte cb)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         cb.SaveState();
         var state = new MetaState(this);
         SavedStates.Push(state);
@@ -264,6 +294,11 @@ public class MetaState
 
     public void SelectMetaObject(int index, PdfContentByte cb)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var obj = MetaObjects[index];
         if (obj == null)
         {

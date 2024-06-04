@@ -31,6 +31,11 @@ public class PdfFunction
     public static PdfFunction Type0(PdfWriter writer, float[] domain, float[] range, int[] size,
                                     int bitsPerSample, int order, float[] encode, float[] decode, byte[] stream)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var func = new PdfFunction(writer);
         func.Dictionary = new PdfStream(stream);
         ((PdfStream)func.Dictionary).FlateCompress(writer.CompressionLevel);
@@ -85,6 +90,11 @@ public class PdfFunction
     public static PdfFunction Type3(PdfWriter writer, float[] domain, float[] range, PdfFunction[] functions,
                                     float[] bounds, float[] encode)
     {
+        if (functions == null)
+        {
+            throw new ArgumentNullException(nameof(functions));
+        }
+
         var func = new PdfFunction(writer);
         func.Dictionary = new PdfDictionary();
         func.Dictionary.Put(PdfName.Functiontype, new PdfNumber(3));
@@ -108,6 +118,16 @@ public class PdfFunction
 
     public static PdfFunction Type4(PdfWriter writer, float[] domain, float[] range, string postscript)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (postscript == null)
+        {
+            throw new ArgumentNullException(nameof(postscript));
+        }
+
         var b = new byte[postscript.Length];
         for (var k = 0; k < b.Length; ++k)
         {

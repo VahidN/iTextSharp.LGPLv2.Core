@@ -24,6 +24,11 @@ public class MetaBrush : MetaObject
 
     public void Init(InputMeta meta)
     {
+        if (meta == null)
+        {
+            throw new ArgumentNullException(nameof(meta));
+        }
+
         Style = meta.ReadWord();
         Color = meta.ReadColor();
         Hatch = meta.ReadWord();

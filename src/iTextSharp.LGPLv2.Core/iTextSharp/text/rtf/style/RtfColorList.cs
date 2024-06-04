@@ -42,18 +42,23 @@ public class RtfColorList : RtfElement, IRtfExtendedElement
     ///     Write the definition part of the colour list. Calls the writeDefinition
     ///     methods of the RtfColors in the colour list.
     /// </summary>
-    public virtual void WriteDefinition(Stream result)
+    public virtual void WriteDefinition(Stream outp)
     {
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_colorTable, 0, _colorTable.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_colorTable, 0, _colorTable.Length);
         for (var i = 0; i < _colorList.Count; i++)
         {
             var color = _colorList[i];
-            color.WriteDefinition(result);
+            color.WriteDefinition(outp);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>

@@ -27,8 +27,8 @@ public class PdfPageEventHelper : IPdfPageEvent
     /// </summary>
     /// <param name="writer">the  PdfWriter  for this document</param>
     /// <param name="document">the document</param>
-    /// <param name="position">the position of the end of the chapter.</param>
-    public virtual void OnChapterEnd(PdfWriter writer, Document document, float position)
+    /// <param name="paragraphPosition">the position of the end of the chapter.</param>
+    public virtual void OnChapterEnd(PdfWriter writer, Document document, float paragraphPosition)
     {
     }
 
@@ -119,8 +119,8 @@ public class PdfPageEventHelper : IPdfPageEvent
     /// </summary>
     /// <param name="writer">the  PdfWriter  for this document</param>
     /// <param name="document">the document</param>
-    /// <param name="position">the position of the end of the section</param>
-    public virtual void OnSectionEnd(PdfWriter writer, Document document, float position)
+    /// <param name="paragraphPosition">the position of the end of the section</param>
+    public virtual void OnSectionEnd(PdfWriter writer, Document document, float paragraphPosition)
     {
     }
 

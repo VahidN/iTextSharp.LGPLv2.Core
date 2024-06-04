@@ -393,17 +393,22 @@ public class RtfDestinationShppict : RtfDestination
 
     public override bool HandleControlWord(RtfCtrlWordData ctrlWordData)
     {
+        if (ctrlWordData == null)
+        {
+            throw new ArgumentNullException(nameof(ctrlWordData));
+        }
+
         var result = false;
         var skipCtrlWord = false;
         if (RtfParser.IsImport())
         {
             skipCtrlWord = true;
-            if (ctrlWordData.CtrlWord.Equals("shppict"))
+            if (ctrlWordData.CtrlWord.Equals("shppict", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("nonshppict"))
+            if (ctrlWordData.CtrlWord.Equals("nonshppict", StringComparison.Ordinal))
             {
                 // never gets here because this is a destination set to null
                 skipCtrlWord = true;
@@ -411,180 +416,180 @@ public class RtfDestinationShppict : RtfDestination
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("blipuid"))
+            if (ctrlWordData.CtrlWord.Equals("blipuid", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picprop"))
+            if (ctrlWordData.CtrlWord.Equals("picprop", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pict"))
+            if (ctrlWordData.CtrlWord.Equals("pict", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("emfblip"))
+            if (ctrlWordData.CtrlWord.Equals("emfblip", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_NONE;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pngblip"))
+            if (ctrlWordData.CtrlWord.Equals("pngblip", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_PNG;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("jepgblip"))
+            if (ctrlWordData.CtrlWord.Equals("jepgblip", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_JPEG;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("macpict"))
+            if (ctrlWordData.CtrlWord.Equals("macpict", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_NONE;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pmmetafile"))
+            if (ctrlWordData.CtrlWord.Equals("pmmetafile", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_NONE;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wmetafile"))
+            if (ctrlWordData.CtrlWord.Equals("wmetafile", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_WMF;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("dibitmap"))
+            if (ctrlWordData.CtrlWord.Equals("dibitmap", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_NONE;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbitmap"))
+            if (ctrlWordData.CtrlWord.Equals("wbitmap", StringComparison.Ordinal))
             {
                 result = true;
                 PictureType = Image.ORIGINAL_BMP;
             }
 
             /* bitmap information */
-            if (ctrlWordData.CtrlWord.Equals("wbmbitspixel"))
+            if (ctrlWordData.CtrlWord.Equals("wbmbitspixel", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbmplanes"))
+            if (ctrlWordData.CtrlWord.Equals("wbmplanes", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbmwidthbytes"))
+            if (ctrlWordData.CtrlWord.Equals("wbmwidthbytes", StringComparison.Ordinal))
             {
                 result = true;
             }
 
             /* picture size, scaling and cropping */
-            if (ctrlWordData.CtrlWord.Equals("picw"))
+            if (ctrlWordData.CtrlWord.Equals("picw", StringComparison.Ordinal))
             {
                 _width = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pich"))
+            if (ctrlWordData.CtrlWord.Equals("pich", StringComparison.Ordinal))
             {
                 _height = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picwgoal"))
+            if (ctrlWordData.CtrlWord.Equals("picwgoal", StringComparison.Ordinal))
             {
                 _desiredWidth = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pichgoal"))
+            if (ctrlWordData.CtrlWord.Equals("pichgoal", StringComparison.Ordinal))
             {
                 _desiredHeight = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscalex"))
+            if (ctrlWordData.CtrlWord.Equals("picscalex", StringComparison.Ordinal))
             {
                 _scaleX = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscaley"))
+            if (ctrlWordData.CtrlWord.Equals("picscaley", StringComparison.Ordinal))
             {
                 _scaleY = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscaled"))
+            if (ctrlWordData.CtrlWord.Equals("picscaled", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picprop"))
+            if (ctrlWordData.CtrlWord.Equals("picprop", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("defshp"))
+            if (ctrlWordData.CtrlWord.Equals("defshp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropt"))
+            if (ctrlWordData.CtrlWord.Equals("piccropt", StringComparison.Ordinal))
             {
                 _cropTop = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropb"))
+            if (ctrlWordData.CtrlWord.Equals("piccropb", StringComparison.Ordinal))
             {
                 _cropBottom = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropl"))
+            if (ctrlWordData.CtrlWord.Equals("piccropl", StringComparison.Ordinal))
             {
                 _cropLeft = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropr"))
+            if (ctrlWordData.CtrlWord.Equals("piccropr", StringComparison.Ordinal))
             {
                 _cropRight = ctrlWordData.IntValue();
                 result = true;
             }
 
             /* metafile information */
-            if (ctrlWordData.CtrlWord.Equals("picbmp"))
+            if (ctrlWordData.CtrlWord.Equals("picbmp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picbpp"))
+            if (ctrlWordData.CtrlWord.Equals("picbpp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
             /* picture data */
-            if (ctrlWordData.CtrlWord.Equals("bin"))
+            if (ctrlWordData.CtrlWord.Equals("bin", StringComparison.Ordinal))
             {
                 _dataFormat = FORMAT_BINARY;
                 // set length to param
@@ -593,19 +598,19 @@ public class RtfDestinationShppict : RtfDestination
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("blipupi"))
+            if (ctrlWordData.CtrlWord.Equals("blipupi", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("blipuid"))
+            if (ctrlWordData.CtrlWord.Equals("blipuid", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("bliptag"))
+            if (ctrlWordData.CtrlWord.Equals("bliptag", StringComparison.Ordinal))
             {
                 result = true;
             }
@@ -613,197 +618,197 @@ public class RtfDestinationShppict : RtfDestination
 
         if (RtfParser.IsConvert())
         {
-            if (ctrlWordData.CtrlWord.Equals("shppict"))
+            if (ctrlWordData.CtrlWord.Equals("shppict", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("nonshppict"))
-            {
-                skipCtrlWord = true;
-                RtfParser.SetTokeniserStateSkipGroup();
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("blipuid"))
-            {
-                result = true;
-                RtfParser.SetTokeniserStateSkipGroup();
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("pict"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("emfblip"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("pngblip"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("jepgblip"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("macpict"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("pmmetafile"))
-            {
-                result = true;
-            }
-
-            if (ctrlWordData.CtrlWord.Equals("wmetafile"))
+            if (ctrlWordData.CtrlWord.Equals("nonshppict", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("dibitmap"))
+            if (ctrlWordData.CtrlWord.Equals("blipuid", StringComparison.Ordinal))
+            {
+                result = true;
+                RtfParser.SetTokeniserStateSkipGroup();
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("pict", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbitmap"))
+            if (ctrlWordData.CtrlWord.Equals("emfblip", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("pngblip", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("jepgblip", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("macpict", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("pmmetafile", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("wmetafile", StringComparison.Ordinal))
+            {
+                skipCtrlWord = true;
+                RtfParser.SetTokeniserStateSkipGroup();
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("dibitmap", StringComparison.Ordinal))
+            {
+                result = true;
+            }
+
+            if (ctrlWordData.CtrlWord.Equals("wbitmap", StringComparison.Ordinal))
             {
                 result = true;
             }
 
             /* bitmap information */
-            if (ctrlWordData.CtrlWord.Equals("wbmbitspixel"))
+            if (ctrlWordData.CtrlWord.Equals("wbmbitspixel", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbmplanes"))
+            if (ctrlWordData.CtrlWord.Equals("wbmplanes", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("wbmwidthbytes"))
+            if (ctrlWordData.CtrlWord.Equals("wbmwidthbytes", StringComparison.Ordinal))
             {
                 result = true;
             }
 
             /* picture size, scaling and cropping */
-            if (ctrlWordData.CtrlWord.Equals("picw"))
+            if (ctrlWordData.CtrlWord.Equals("picw", StringComparison.Ordinal))
             {
                 _width = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pich"))
+            if (ctrlWordData.CtrlWord.Equals("pich", StringComparison.Ordinal))
             {
                 _height = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picwgoal"))
+            if (ctrlWordData.CtrlWord.Equals("picwgoal", StringComparison.Ordinal))
             {
                 _desiredWidth = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("pichgoal"))
+            if (ctrlWordData.CtrlWord.Equals("pichgoal", StringComparison.Ordinal))
             {
                 _desiredHeight = ctrlWordData.LongValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscalex"))
+            if (ctrlWordData.CtrlWord.Equals("picscalex", StringComparison.Ordinal))
             {
                 _scaleX = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscaley"))
+            if (ctrlWordData.CtrlWord.Equals("picscaley", StringComparison.Ordinal))
             {
                 _scaleY = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picscaled"))
+            if (ctrlWordData.CtrlWord.Equals("picscaled", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picprop"))
+            if (ctrlWordData.CtrlWord.Equals("picprop", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("defshp"))
+            if (ctrlWordData.CtrlWord.Equals("defshp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropt"))
+            if (ctrlWordData.CtrlWord.Equals("piccropt", StringComparison.Ordinal))
             {
                 _cropTop = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropb"))
+            if (ctrlWordData.CtrlWord.Equals("piccropb", StringComparison.Ordinal))
             {
                 _cropBottom = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropl"))
+            if (ctrlWordData.CtrlWord.Equals("piccropl", StringComparison.Ordinal))
             {
                 _cropLeft = ctrlWordData.IntValue();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("piccropr"))
+            if (ctrlWordData.CtrlWord.Equals("piccropr", StringComparison.Ordinal))
             {
                 _cropRight = ctrlWordData.IntValue();
                 result = true;
             }
 
             /* metafile information */
-            if (ctrlWordData.CtrlWord.Equals("picbmp"))
+            if (ctrlWordData.CtrlWord.Equals("picbmp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("picbpp"))
+            if (ctrlWordData.CtrlWord.Equals("picbpp", StringComparison.Ordinal))
             {
                 result = true;
             }
 
             /* picture data */
-            if (ctrlWordData.CtrlWord.Equals("bin"))
+            if (ctrlWordData.CtrlWord.Equals("bin", StringComparison.Ordinal))
             {
                 _dataFormat = FORMAT_BINARY;
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("blipupi"))
+            if (ctrlWordData.CtrlWord.Equals("blipupi", StringComparison.Ordinal))
             {
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("blipuid"))
+            if (ctrlWordData.CtrlWord.Equals("blipuid", StringComparison.Ordinal))
             {
                 skipCtrlWord = true;
                 RtfParser.SetTokeniserStateSkipGroup();
                 result = true;
             }
 
-            if (ctrlWordData.CtrlWord.Equals("bliptag"))
+            if (ctrlWordData.CtrlWord.Equals("bliptag", StringComparison.Ordinal))
             {
                 result = true;
             }

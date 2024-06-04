@@ -11,8 +11,7 @@ public class Hyphenator
 {
     private const string DefaultHyphLocation = "iTextSharp.text.pdf.hyphenation.hyph.";
 
-    private static readonly INullValueDictionary<string, HyphenationTree> _hyphenTrees =
-        new NullValueDictionary<string, HyphenationTree>();
+    private static readonly NullValueDictionary<string, HyphenationTree> _hyphenTrees = new();
 
     private HyphenationTree _hyphenTree;
     private int _pushCharCount = 2;
@@ -24,8 +23,7 @@ public class Hyphenator
     /// <param name="country"></param>
     /// <param name="leftMin"></param>
     /// <param name="rightMin"></param>
-    public Hyphenator(string lang, string country, int leftMin,
-                      int rightMin)
+    public Hyphenator(string lang, string country, int leftMin, int rightMin)
     {
         _hyphenTree = GetHyphenationTree(lang, country);
         _remainCharCount = leftMin;
@@ -37,28 +35,29 @@ public class Hyphenator
     /// <param name="lang"></param>
     /// <param name="country"></param>
     /// <returns>the hyphenation tree</returns>
-    public static HyphenationTree GetHyphenationTree(string lang,
-                                                     string country)
+    public static HyphenationTree GetHyphenationTree(string lang, string country)
     {
         var key = lang;
+
         // check whether the country code has been used
-        if (country != null && !country.Equals("none"))
+        if (country != null && !country.Equals("none", StringComparison.Ordinal))
         {
             key += "_" + country;
         }
 
         // first try to find it in the cache
-        if (_hyphenTrees.ContainsKey(key))
+        if (_hyphenTrees.TryGetValue(key, out var tree))
         {
-            return _hyphenTrees[key];
+            return tree;
         }
 
-        if (_hyphenTrees.ContainsKey(lang))
+        if (_hyphenTrees.TryGetValue(lang, out var hyphenationTree))
         {
-            return _hyphenTrees[lang];
+            return hyphenationTree;
         }
 
         var hTree = GetResourceHyphenationTree(key);
+
         //if (hTree == null)
         //    hTree = GetFileHyphenationTree(key);
         // put it into the pattern cache
@@ -76,9 +75,15 @@ public class Hyphenator
     /// <returns>a hyphenation tree</returns>
     public static HyphenationTree GetResourceHyphenationTree(string key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         try
         {
             var stream = BaseFont.GetResourceStream(DefaultHyphLocation + key + ".xml");
+
             if (stream == null && key.Length > 2)
             {
                 stream = BaseFont.GetResourceStream(DefaultHyphLocation + key.Substring(0, 2) + ".xml");
@@ -91,6 +96,7 @@ public class Hyphenator
 
             var hTree = new HyphenationTree();
             hTree.LoadSimplePatterns(stream);
+
             return hTree;
         }
         catch
@@ -98,7 +104,6 @@ public class Hyphenator
             return null;
         }
     }
-
 
     /// <summary>
     /// </summary>
@@ -108,11 +113,10 @@ public class Hyphenator
     /// <param name="leftMin"></param>
     /// <param name="rightMin"></param>
     /// <returns>a hyphenation object</returns>
-    public static Hyphenation Hyphenate(string lang, string country,
-                                        string word, int leftMin,
-                                        int rightMin)
+    public static Hyphenation Hyphenate(string lang, string country, string word, int leftMin, int rightMin)
     {
         var hTree = GetHyphenationTree(lang, country);
+
         if (hTree == null)
         {
             //log.Error("Error building hyphenation tree for language "
@@ -133,11 +137,16 @@ public class Hyphenator
     /// <param name="leftMin"></param>
     /// <param name="rightMin"></param>
     /// <returns>a hyphenation object</returns>
-    public static Hyphenation Hyphenate(string lang, string country,
-                                        char[] word, int offset, int len,
-                                        int leftMin, int rightMin)
+    public static Hyphenation Hyphenate(string lang,
+        string country,
+        char[] word,
+        int offset,
+        int len,
+        int leftMin,
+        int rightMin)
     {
         var hTree = GetHyphenationTree(lang, country);
+
         if (hTree == null)
         {
             //log.Error("Error building hyphenation tree for language "
@@ -161,8 +170,7 @@ public class Hyphenator
             return null;
         }
 
-        return _hyphenTree.Hyphenate(word, offset, len, _remainCharCount,
-                                     _pushCharCount);
+        return _hyphenTree.Hyphenate(word, offset, len, _remainCharCount, _pushCharCount);
     }
 
     /// <summary>
@@ -184,23 +192,17 @@ public class Hyphenator
     /// <param name="lang"></param>
     /// <param name="country"></param>
     public void SetLanguage(string lang, string country)
-    {
-        _hyphenTree = GetHyphenationTree(lang, country);
-    }
+        => _hyphenTree = GetHyphenationTree(lang, country);
 
     /// <summary>
     /// </summary>
     /// <param name="min"></param>
     public void SetMinPushCharCount(int min)
-    {
-        _pushCharCount = min;
-    }
+        => _pushCharCount = min;
 
     /// <summary>
     /// </summary>
     /// <param name="min"></param>
     public void SetMinRemainCharCount(int min)
-    {
-        _remainCharCount = min;
-    }
+        => _remainCharCount = min;
 }

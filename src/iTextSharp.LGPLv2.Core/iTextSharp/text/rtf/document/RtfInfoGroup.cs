@@ -42,28 +42,33 @@ public class RtfInfoGroup : RtfElement
     /// <summary>
     ///     Writes the RTF information group and its elements.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_infoGroup, 0, _infoGroup.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_infoGroup, 0, _infoGroup.Length);
         for (var i = 0; i < _infoElements.Count; i++)
         {
             var infoElement = _infoElements[i];
-            infoElement.WriteContent(result);
+            infoElement.WriteContent(outp);
         }
 
         // handle document protection
         if (Document.GetDocumentSettings().IsDocumentProtected())
         {
             byte[] t;
-            result.Write(OpenGroup, 0, OpenGroup.Length);
-            result.Write(_infoPassword, 0, _infoPassword.Length);
-            result.Write(Delimiter, 0, Delimiter.Length);
-            result.Write(t = Document.GetDocumentSettings().GetProtectionHashBytes(), 0, t.Length);
-            result.Write(CloseGroup, 0, CloseGroup.Length);
+            outp.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(_infoPassword, 0, _infoPassword.Length);
+            outp.Write(Delimiter, 0, Delimiter.Length);
+            outp.Write(t = Document.GetDocumentSettings().GetProtectionHashBytes(), 0, t.Length);
+            outp.Write(CloseGroup, 0, CloseGroup.Length);
         }
 
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 }

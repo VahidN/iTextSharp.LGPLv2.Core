@@ -35,6 +35,16 @@ public class PdfAnnotationsImp
 
     public static PdfAnnotation ConvertAnnotation(PdfWriter writer, Annotation annot, Rectangle defaultRect)
     {
+        if (annot == null)
+        {
+            throw new ArgumentNullException(nameof(annot));
+        }
+
+        if (defaultRect == null)
+        {
+            throw new ArgumentNullException(nameof(defaultRect));
+        }
+
         switch (annot.AnnotationType)
         {
             case Annotation.URL_NET:
@@ -88,6 +98,11 @@ public class PdfAnnotationsImp
 
     public void AddAnnotation(PdfAnnotation annot)
     {
+        if (annot == null)
+        {
+            throw new ArgumentNullException(nameof(annot));
+        }
+
         if (annot.IsForm())
         {
             var field = (PdfFormField)annot;
@@ -127,6 +142,16 @@ public class PdfAnnotationsImp
 
     public PdfArray RotateAnnotations(PdfWriter writer, Rectangle pageSize)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (pageSize == null)
+        {
+            throw new ArgumentNullException(nameof(pageSize));
+        }
+
         var array = new PdfArray();
         var rotation = pageSize.Rotation % 360;
         var currentPage = writer.CurrentPageNumber;

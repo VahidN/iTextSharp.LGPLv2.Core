@@ -108,7 +108,7 @@ public class PdfPages
     {
         if (_parents.Count > 1)
         {
-            throw new Exception("Linear page mode can only be called with a single parent.");
+            throw new InvalidOperationException("Linear page mode can only be called with a single parent.");
         }
 
         if (topParent != null)

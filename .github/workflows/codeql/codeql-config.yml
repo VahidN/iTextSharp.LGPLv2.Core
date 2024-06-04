@@ -1,0 +1,12 @@
+name: "Security and Quality"
+
+queries:
+  - uses: security-and-quality
+
+query-filters:
+  - exclude:
+      id: cs/useless-if-statement
+  - exclude:
+      id: cs/empty-block
+  - exclude:
+      id: cs/useless-assignment-to-local

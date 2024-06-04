@@ -68,6 +68,11 @@ public class MarkedObject : IElement
     /// <returns> true  if the element was processed successfully</returns>
     public virtual bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(Element);

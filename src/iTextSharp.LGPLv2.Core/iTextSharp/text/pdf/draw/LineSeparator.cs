@@ -58,6 +58,11 @@ public class LineSeparator : VerticalPositionMark
     /// </summary>
     public override void Draw(PdfContentByte canvas, float llx, float lly, float urx, float ury, float y)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         canvas.SaveState();
         DrawLine(canvas, llx, urx, y);
         canvas.RestoreState();
@@ -72,6 +77,11 @@ public class LineSeparator : VerticalPositionMark
     /// <param name="y">the y coordinate</param>
     public void DrawLine(PdfContentByte canvas, float leftX, float rightX, float y)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         float w;
         if (Percentage < 0)
         {

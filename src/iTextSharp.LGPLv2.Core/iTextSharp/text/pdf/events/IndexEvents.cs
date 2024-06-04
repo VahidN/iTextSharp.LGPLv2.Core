@@ -79,6 +79,11 @@ public class IndexEvents : PdfPageEventHelper
     public void Create(Chunk text, string in1, string in2,
                        string in3)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var tag = $"idx_{_indexcounter++}";
         text.SetGenericTag(tag);
         text.SetLocalDestination(tag);
@@ -147,6 +152,11 @@ public class IndexEvents : PdfPageEventHelper
     public override void OnGenericTag(PdfWriter writer, Document document,
                                       Rectangle rect, string text)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         _indextag[text] = writer.PageNumber;
     }
 
@@ -262,11 +272,7 @@ public class IndexEvents : PdfPageEventHelper
         {
             var rt = -1;
             object i = _parent._indextag[_tag];
-            if (i != null)
-            {
-                rt = (int)i;
-            }
-
+            rt = (int)i;
             return rt;
         }
 

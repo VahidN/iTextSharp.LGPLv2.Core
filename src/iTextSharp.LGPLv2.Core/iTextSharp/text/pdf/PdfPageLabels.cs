@@ -46,7 +46,7 @@ public class PdfPageLabels
     /// <summary>
     ///     Dictionary values to set the logical page styles
     /// </summary>
-    internal static PdfName[] NumberingStyle =
+    internal static readonly PdfName[] NumberingStyle =
     {
         PdfName.D, PdfName.R,
         new("r"), PdfName.A, new("a"),
@@ -55,7 +55,7 @@ public class PdfPageLabels
     /// <summary>
     ///     The sequence of logical pages. Will contain at least a value for page 1
     /// </summary>
-    internal INullValueDictionary<int, PdfDictionary> Map;
+    internal readonly INullValueDictionary<int, PdfDictionary> Map;
 
     /// <summary>
     ///     Creates a new PdfPageLabel with a default logical page 1
@@ -74,6 +74,11 @@ public class PdfPageLabels
     /// <returns>a PdfPageLabelEntry array, containing an entry for each format change</returns>
     public static PdfPageLabelFormat[] GetPageLabelFormats(PdfReader reader)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var dict = reader.Catalog;
         var labels = (PdfDictionary)PdfReader.GetPdfObjectRelease(dict.Get(PdfName.Pagelabels));
         if (labels == null)
@@ -151,6 +156,11 @@ public class PdfPageLabels
     /// <returns>a String array or  null  if no page labels are present</returns>
     public static string[] GetPageLabels(PdfReader reader)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var n = reader.NumberOfPages;
 
         var dict = reader.Catalog;
@@ -168,9 +178,9 @@ public class PdfPageLabels
         var type = 'D';
         for (var i = 0; i < n; i++)
         {
-            if (numberTree.ContainsKey(i))
+            if (numberTree.TryGetValue(i, out var value))
             {
-                var d = (PdfDictionary)PdfReader.GetPdfObjectRelease(numberTree[i]);
+                var d = (PdfDictionary)PdfReader.GetPdfObjectRelease(value);
                 if (d.Contains(PdfName.St))
                 {
                     pagecount = ((PdfNumber)d.Get(PdfName.St)).IntValue;
@@ -277,6 +287,11 @@ public class PdfPageLabels
     /// </summary>
     public void AddPageLabel(PdfPageLabelFormat format)
     {
+        if (format == null)
+        {
+            throw new ArgumentNullException(nameof(format));
+        }
+
         AddPageLabel(format.PhysicalPage, format.NumberStyle, format.Prefix, format.LogicalPage);
     }
 

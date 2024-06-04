@@ -18,9 +18,9 @@ internal class CjkFont : BaseFont
     private const int First = 0;
     private const int Serial = 2;
     private const int V1Y = 880;
-    internal static INullValueDictionary<string, char[]> AllCMaps = new NullValueDictionary<string, char[]>();
+    internal static readonly INullValueDictionary<string, char[]> AllCMaps = new NullValueDictionary<string, char[]>();
 
-    internal static INullValueDictionary<string, INullValueDictionary<string, object>> AllFonts =
+    internal static readonly INullValueDictionary<string, INullValueDictionary<string, object>> AllFonts =
         new NullValueDictionary<string, INullValueDictionary<string, object>>();
 
     internal static Properties CjkEncodings = new();
@@ -36,7 +36,7 @@ internal class CjkFont : BaseFont
 
     private readonly INullValueDictionary<string, object> _fontDesc;
 
-    private readonly IntHashtable _hMetrics;
+    private readonly NullValueDictionary<int, int> _hMetrics;
 
     /// <summary>
     ///     The style modifier
@@ -47,7 +47,7 @@ internal class CjkFont : BaseFont
 
     private readonly bool _vertical;
 
-    private readonly IntHashtable _vMetrics;
+    private readonly NullValueDictionary<int, int> _vMetrics;
 
     /// <summary>
     ///     The font name
@@ -80,9 +80,9 @@ internal class CjkFont : BaseFont
 
         _fontName = fontName;
         encoding = CJK_ENCODING;
-        _vertical = enc.EndsWith("V");
+        _vertical = enc.EndsWith("V", StringComparison.Ordinal);
         _cMap = enc;
-        if (enc.StartsWith("Identity-"))
+        if (enc.StartsWith("Identity-", StringComparison.Ordinal))
         {
             _cidDirect = true;
             var s = CjkFonts[fontName];
@@ -150,8 +150,8 @@ internal class CjkFont : BaseFont
             AllFonts.Add(fontName, _fontDesc);
         }
 
-        _hMetrics = (IntHashtable)_fontDesc["W"];
-        _vMetrics = (IntHashtable)_fontDesc["W2"];
+        _hMetrics = (NullValueDictionary<int, int>)_fontDesc["W"];
+        _vMetrics = (NullValueDictionary<int, int>)_fontDesc["W2"];
     }
 
     /// <summary>
@@ -209,7 +209,8 @@ internal class CjkFont : BaseFont
     {
         loadProperties();
         var encodings = CjkFonts[fontName];
-        return encodings != null && (enc.Equals("Identity-H") || enc.Equals("Identity-V") ||
+        return encodings != null && (enc.Equals("Identity-H", StringComparison.Ordinal) ||
+                                     enc.Equals("Identity-V", StringComparison.Ordinal) ||
                                      encodings.IndexOf($"_{enc}_", StringComparison.OrdinalIgnoreCase) >= 0);
     }
 
@@ -357,9 +358,9 @@ internal class CjkFont : BaseFont
 
     public override bool SetKerning(int char1, int char2, int kern) => false;
 
-    internal static string ConvertToHcidMetrics(int[] keys, IntHashtable h)
+    internal static string ConvertToHcidMetrics(IList<int> keys, NullValueDictionary<int, int> h)
     {
-        if (keys.Length == 0)
+        if (keys.Count == 0)
         {
             return null;
         }
@@ -367,7 +368,7 @@ internal class CjkFont : BaseFont
         var lastCid = 0;
         var lastValue = 0;
         int start;
-        for (start = 0; start < keys.Length; ++start)
+        for (start = 0; start < keys.Count; ++start)
         {
             lastCid = keys[start];
             lastValue = h[lastCid];
@@ -387,7 +388,7 @@ internal class CjkFont : BaseFont
         buf.Append('[');
         buf.Append(lastCid);
         var state = First;
-        for (var k = start; k < keys.Length; ++k)
+        for (var k = start; k < keys.Count; ++k)
         {
             var cid = keys[k];
             var value = h[cid];
@@ -473,9 +474,11 @@ internal class CjkFont : BaseFont
         return buf.ToString();
     }
 
-    internal static string ConvertToVcidMetrics(int[] keys, IntHashtable v, IntHashtable h)
+    internal static string ConvertToVcidMetrics(IList<int> keys,
+                                                NullValueDictionary<int, int> v,
+                                                NullValueDictionary<int, int> h)
     {
-        if (keys.Length == 0)
+        if (keys.Count == 0)
         {
             return null;
         }
@@ -484,7 +487,7 @@ internal class CjkFont : BaseFont
         var lastValue = 0;
         var lastHValue = 0;
         int start;
-        for (start = 0; start < keys.Length; ++start)
+        for (start = 0; start < keys.Count; ++start)
         {
             lastCid = keys[start];
             lastValue = v[lastCid];
@@ -511,7 +514,7 @@ internal class CjkFont : BaseFont
         buf.Append('[');
         buf.Append(lastCid);
         var state = First;
-        for (var k = start; k < keys.Length; ++k)
+        for (var k = start; k < keys.Count; ++k)
         {
             var cid = keys[k];
             var value = v[cid];
@@ -565,9 +568,9 @@ internal class CjkFont : BaseFont
         return buf.ToString();
     }
 
-    internal static IntHashtable CreateMetric(string s)
+    internal static NullValueDictionary<int, int> CreateMetric(string s)
     {
-        var h = new IntHashtable();
+        var h = new NullValueDictionary<int, int>();
         var tk = new StringTokenizer(s);
         while (tk.HasMoreTokens())
         {
@@ -580,11 +583,10 @@ internal class CjkFont : BaseFont
 
     internal static char[] ReadCMap(string name)
     {
-        Stream istr = null;
         try
         {
             name = name + ".cmap";
-            istr = GetResourceStream(RESOURCE_PATH + name);
+            using var istr = GetResourceStream(RESOURCE_PATH + name);
             var c = new char[0x10000];
             for (var k = 0; k < 0x10000; ++k)
             {
@@ -597,16 +599,6 @@ internal class CjkFont : BaseFont
         {
             // empty on purpose
         }
-        finally
-        {
-            try
-            {
-                istr.Dispose();
-            }
-            catch
-            {
-            }
-        }
 
         return null;
     }
@@ -614,7 +606,7 @@ internal class CjkFont : BaseFont
     internal static INullValueDictionary<string, object> ReadFontProperties(string name)
     {
         name += ".properties";
-        var isp = GetResourceStream(RESOURCE_PATH + name);
+        using var isp = GetResourceStream(RESOURCE_PATH + name);
         if (isp == null)
         {
             return null;
@@ -622,7 +614,7 @@ internal class CjkFont : BaseFont
 
         var p = new Properties();
         p.Load(isp);
-        isp.Dispose();
+
         var w = CreateMetric(p["W"]);
         p.Remove("W");
         var w2 = CreateMetric(p["W2"]);
@@ -642,7 +634,7 @@ internal class CjkFont : BaseFont
 
     internal override void WriteFont(PdfWriter writer, PdfIndirectReference piref, object[] parms)
     {
-        var cjkTag = (IntHashtable)parms[0];
+        var cjkTag = (NullValueDictionary<int, int>)parms[0];
         PdfIndirectReference indFont = null;
         PdfObject pobj = null;
         PdfIndirectObject obj = null;
@@ -682,17 +674,15 @@ internal class CjkFont : BaseFont
 
             try
             {
-                var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
+                using var isp = GetResourceStream(RESOURCE_PATH + "cjkfonts.properties");
                 if (isp != null)
                 {
                     CjkFonts.Load(isp);
-                    isp.Dispose();
 
-                    isp = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
-                    if (isp != null)
+                    using var stream = GetResourceStream(RESOURCE_PATH + "cjkencodings.properties");
+                    if (stream != null)
                     {
-                        CjkEncodings.Load(isp);
-                        isp.Dispose();
+                        CjkEncodings.Load(stream);
                     }
                 }
             }
@@ -719,7 +709,7 @@ internal class CjkFont : BaseFont
         return int.Parse(ret, CultureInfo.InvariantCulture);
     }
 
-    private PdfDictionary getCidFont(PdfIndirectReference fontDescriptor, IntHashtable cjkTag)
+    private PdfDictionary getCidFont(PdfIndirectReference fontDescriptor, NullValueDictionary<int, int> cjkTag)
     {
         var dic = new PdfDictionary(PdfName.Font);
         dic.Put(PdfName.Subtype, PdfName.Cidfonttype0);

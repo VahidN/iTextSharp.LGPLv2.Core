@@ -123,10 +123,23 @@ public class TextField : BaseField
     /// </summary>
     /// <param name="text"></param>
     /// <returns>String</returns>
-    public static string ObfuscatePassword(string text) => new string('*', text.Length);
+    public static string ObfuscatePassword(string text)
+    {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        return new string('*', text.Length);
+    }
 
     public static string RemoveCrlf(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         if (text.IndexOf("\n", StringComparison.Ordinal) >= 0 || text.IndexOf("\r", StringComparison.Ordinal) >= 0)
         {
             var p = text.ToCharArray();
@@ -417,7 +430,7 @@ public class TextField : BaseField
         if (fieldName != null)
         {
             field.FieldName = fieldName;
-            if (!"".Equals(text))
+            if (!"".Equals(text, StringComparison.Ordinal))
             {
                 field.ValueAsString = text;
             }
@@ -617,7 +630,7 @@ public class TextField : BaseField
         var uchoices = _choices;
         if (uchoices == null)
         {
-            uchoices = new string[0];
+            uchoices = Array.Empty<string>();
         }
 
         var topChoice = _choiceSelection;

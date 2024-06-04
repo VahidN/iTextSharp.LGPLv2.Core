@@ -3,7 +3,7 @@ namespace iTextSharp.text.xml.simpleparser;
 /// <summary>
 ///     This class contains entities that can be used in an entity tag.
 /// </summary>
-public class EntitiesToSymbol
+public static class EntitiesToSymbol
 {
     /// <summary>
     ///     This is a map that contains all possible id values of the entity tag
@@ -298,6 +298,11 @@ public class EntitiesToSymbol
     /// <returns>a Chunk</returns>
     public static Chunk Get(string e, Font font)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
         var s = GetCorrespondingSymbol(e);
         if (s == '\0')
         {
@@ -322,9 +327,9 @@ public class EntitiesToSymbol
     /// <returns>the corresponding character in font Symbol</returns>
     public static char GetCorrespondingSymbol(string name)
     {
-        if (_map.ContainsKey(name))
+        if (_map.TryGetValue(name, out var symbol))
         {
-            return _map[name];
+            return symbol;
         }
 
         return '\0';

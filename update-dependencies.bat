@@ -1,5 +1,4 @@
 dotnet restore
-dotnet tool update --global dotnet-outdated-tool
-dotnet outdated
+dotnet list package --outdated
 dotnet restore
 pause

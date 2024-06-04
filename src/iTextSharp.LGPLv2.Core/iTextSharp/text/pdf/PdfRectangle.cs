@@ -76,12 +76,21 @@ public class PdfRectangle : PdfArray
     /// </summary>
     /// <param name="rectangle">a  Rectangle </param>
     /// <param name="rotation"></param>
-    public PdfRectangle(Rectangle rectangle, int rotation) : this(rectangle.Left, rectangle.Bottom, rectangle.Right,
-                                                                  rectangle.Top, rotation)
+    public PdfRectangle(Rectangle rectangle, int rotation) :
+        this(rectangle?.Left ?? throw new ArgumentNullException(nameof(rectangle)),
+             rectangle.Bottom,
+             rectangle.Right,
+             rectangle.Top,
+             rotation)
     {
     }
 
-    public PdfRectangle(Rectangle rectangle) : this(rectangle.Left, rectangle.Bottom, rectangle.Right, rectangle.Top, 0)
+    public PdfRectangle(Rectangle rectangle) :
+        this(rectangle?.Left ?? throw new ArgumentNullException(nameof(rectangle)),
+             rectangle.Bottom,
+             rectangle.Right,
+             rectangle.Top,
+             0)
     {
     }
 
@@ -105,14 +114,14 @@ public class PdfRectangle : PdfArray
     ///     Returns the high level version of this PdfRectangle
     /// </summary>
     /// <returns>this PdfRectangle translated to class Rectangle</returns>
-    public Rectangle Rectangle => new Rectangle(Left, Bottom, Right, Top);
+    public Rectangle Rectangle => new(Left, Bottom, Right, Top);
 
     /// <summary>
     ///     upper right x
     /// </summary>
     public float Right { get; }
 
-    public PdfRectangle Rotate => new PdfRectangle(_lly, Left, Top, Right, 0);
+    public PdfRectangle Rotate => new(_lly, Left, Top, Right, 0);
 
     /// <summary>
     ///     upper right y

@@ -40,6 +40,11 @@ public class PdfShading
         get => bBox;
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (value.Length != 4)
             {
                 throw new ArgumentException("BBox must be a 4 element array.");
@@ -77,6 +82,16 @@ public class PdfShading
 
     public static void CheckCompatibleColors(BaseColor c1, BaseColor c2)
     {
+        if (c1 == null)
+        {
+            throw new ArgumentNullException(nameof(c1));
+        }
+
+        if (c2 == null)
+        {
+            throw new ArgumentNullException(nameof(c2));
+        }
+
         var type1 = ExtendedColor.GetType(c1);
         var type2 = ExtendedColor.GetType(c2);
         if (type1 != type2)
@@ -97,6 +112,11 @@ public class PdfShading
 
     public static float[] GetColorArray(BaseColor color)
     {
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         var type = ExtendedColor.GetType(color);
         switch (type)
         {
@@ -158,6 +178,11 @@ public class PdfShading
     public static PdfShading Type1(PdfWriter writer, BaseColor colorSpace, float[] domain, float[] tMatrix,
                                    PdfFunction function)
     {
+        if (function == null)
+        {
+            throw new ArgumentNullException(nameof(function));
+        }
+
         var sp = new PdfShading(writer);
         sp.Shading = new PdfDictionary();
         sp.ShadingType = 1;
@@ -180,6 +205,11 @@ public class PdfShading
     public static PdfShading Type2(PdfWriter writer, BaseColor colorSpace, float[] coords, float[] domain,
                                    PdfFunction function, bool[] extend)
     {
+        if (function == null)
+        {
+            throw new ArgumentNullException(nameof(function));
+        }
+
         var sp = new PdfShading(writer);
         sp.Shading = new PdfDictionary();
         sp.ShadingType = 2;
@@ -228,7 +258,7 @@ public class PdfShading
 
     protected void SetColorSpace(BaseColor color)
     {
-        ColorSpace = color;
+        ColorSpace = color ?? throw new ArgumentNullException(nameof(color));
         var type = ExtendedColor.GetType(color);
         PdfObject colorSpace = null;
         switch (type)

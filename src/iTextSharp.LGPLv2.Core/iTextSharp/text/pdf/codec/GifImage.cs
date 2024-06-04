@@ -25,7 +25,7 @@ public class GifImage
     /// </summary>
     protected int Dispose;
 
-    internal List<GifFrame> Frames = new();
+    internal readonly List<GifFrame> Frames = new();
     protected byte[] FromData;
     protected Uri FromUrl;
     protected bool GctFlag;
@@ -81,19 +81,8 @@ public class GifImage
     public GifImage(Uri url)
     {
         FromUrl = url;
-        Stream isp = null;
-        try
-        {
-            isp = url.GetResponseStream();
-            Process(isp);
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = url.GetResponseStream();
+        Process(isp);
     }
 
     /// <summary>
@@ -113,19 +102,8 @@ public class GifImage
     public GifImage(byte[] data)
     {
         FromData = data;
-        Stream isp = null;
-        try
-        {
-            isp = new MemoryStream(data);
-            Process(isp);
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = new MemoryStream(data);
+        Process(isp);
     }
 
     /// <summary>
@@ -518,7 +496,7 @@ public class GifImage
             id += (char)Inp.ReadByte();
         }
 
-        if (!id.StartsWith("GIF8"))
+        if (!id.StartsWith("GIF8", StringComparison.Ordinal))
         {
             throw new IOException("Gif signature nor found.");
         }
@@ -628,13 +606,6 @@ public class GifImage
     protected int ReadShort() =>
         // read 16-bit value, LSB first
         Inp.ReadByte() | (Inp.ReadByte() << 8);
-
-    /// <summary>
-    ///     Resets frame state for reading next image.
-    /// </summary>
-    protected void ResetFrame()
-    {
-    }
 
     protected void SetPixel(int x, int y, int v)
     {

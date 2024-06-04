@@ -96,7 +96,7 @@ public class PdfPage : PdfDictionary
 
     internal PdfRectangle MediaBox => _mediaBox;
 
-    public bool IsParent() => false;
+    public static bool IsParent() => false;
 
     /// <summary>
     ///     methods

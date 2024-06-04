@@ -87,16 +87,22 @@ public class FieldPositioningEvents : PdfPageEventHelper, IPdfPCellEvent
     ///     @see com.lowagie.text.pdf.PdfPCellEvent#cellLayout(com.lowagie.text.pdf.PdfPCell, com.lowagie.text.Rectangle,
     ///     com.lowagie.text.pdf.PdfContentByte[])
     /// </summary>
-    public void CellLayout(PdfPCell cell, Rectangle rect, PdfContentByte[] canvases)
+    public void CellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases)
     {
+        if (position == null)
+        {
+            throw new ArgumentNullException(nameof(position));
+        }
+
         if (CellField == null || (FieldWriter == null && Parent == null))
         {
             throw new ArgumentException("You have used the wrong constructor for this FieldPositioningEvents class.");
         }
 
         CellField.Put(PdfName.Rect,
-                      new PdfRectangle(rect.GetLeft(Padding), rect.GetBottom(Padding), rect.GetRight(Padding),
-                                       rect.GetTop(Padding)));
+                      new PdfRectangle(position.GetLeft(Padding), position.GetBottom(Padding),
+                                       position.GetRight(Padding),
+                                       position.GetTop(Padding)));
         if (Parent == null)
         {
             FieldWriter.AddAnnotation(CellField);
@@ -122,6 +128,16 @@ public class FieldPositioningEvents : PdfPageEventHelper, IPdfPCellEvent
     public override void OnGenericTag(PdfWriter writer, Document document,
                                       Rectangle rect, string text)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (rect == null)
+        {
+            throw new ArgumentNullException(nameof(rect));
+        }
+
         rect.Bottom = rect.Bottom - 3;
         var field = GenericChunkFields[text];
         if (field == null)

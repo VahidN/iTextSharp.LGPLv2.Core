@@ -150,6 +150,16 @@ public class PdfFileSpecification : PdfDictionary
                                                     byte[] fileStore, string mimeType, PdfDictionary fileParameter,
                                                     int compressionLevel)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (filePath == null)
+        {
+            throw new ArgumentNullException(nameof(filePath));
+        }
+
         var fs = new PdfFileSpecification();
         fs.Writer = writer;
         fs.Put(PdfName.F, new PdfString(fileDisplay));

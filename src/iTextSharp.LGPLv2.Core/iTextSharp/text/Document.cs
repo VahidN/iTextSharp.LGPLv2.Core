@@ -273,6 +273,11 @@ public class Document : IDocListener
     /// <returns>true if the element was added, false if not</returns>
     public virtual bool Add(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (IsDocumentClose)
         {
             throw new DocumentException("The document has been closed. You can't add any Elements.");
@@ -505,7 +510,8 @@ public class Document : IDocListener
     /// </summary>
     /// <returns>true if successful, false otherwise</returns>
     public bool AddCreationDate() =>
-        Add(new Meta(Element.CREATIONDATE, DateTime.Now.ToString("ddd MMM dd HH:mm:ss zzz yyyy")));
+        Add(new Meta(Element.CREATIONDATE,
+                     DateTime.Now.ToString("ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture)));
 
     /// <summary>
     ///     Adds the creator to a Document.

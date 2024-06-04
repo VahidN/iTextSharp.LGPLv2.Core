@@ -36,7 +36,7 @@ public class Dimension : Dimension2D
     ///     width  and
     ///     height  values.
     /// </param>
-    public Dimension(Dimension d) : this(d.width, d.height)
+    public Dimension(Dimension d) : this(d?.width ?? throw new ArgumentNullException(nameof(d)), d.height)
     {
     }
 
@@ -74,9 +74,17 @@ public class Dimension : Dimension2D
     /// <value>the size</value>
     public new Dimension Size
     {
-        get => new Dimension(width, height);
+        get => new(width, height);
 
-        set => SetSize(value.width, value.height);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            SetSize(value.width, value.height);
+        }
     }
 
     /// <summary>

@@ -114,22 +114,22 @@ public class FdfReader : PdfReader
             {
                 if (Encoding.Equals(PdfName.ShiftJis))
                 {
-                    return EncodingsRegistry.Instance.GetEncoding(932).GetString(b);
+                    return EncodingsRegistry.GetEncoding(932).GetString(b);
                 }
 
                 if (Encoding.Equals(PdfName.Uhc))
                 {
-                    return EncodingsRegistry.Instance.GetEncoding(949).GetString(b);
+                    return EncodingsRegistry.GetEncoding(949).GetString(b);
                 }
 
                 if (Encoding.Equals(PdfName.Gbk))
                 {
-                    return EncodingsRegistry.Instance.GetEncoding(936).GetString(b);
+                    return EncodingsRegistry.GetEncoding(936).GetString(b);
                 }
 
                 if (Encoding.Equals(PdfName.Bigfive))
                 {
-                    return EncodingsRegistry.Instance.GetEncoding(950).GetString(b);
+                    return EncodingsRegistry.GetEncoding(950).GetString(b);
                 }
             }
             catch
@@ -168,6 +168,16 @@ public class FdfReader : PdfReader
 
     protected virtual void KidNode(PdfDictionary merged, string name)
     {
+        if (merged == null)
+        {
+            throw new ArgumentNullException(nameof(merged));
+        }
+
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         var kids = merged.GetAsArray(PdfName.Kids);
         if (kids == null || kids.Size == 0)
         {

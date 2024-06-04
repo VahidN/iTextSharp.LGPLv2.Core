@@ -66,6 +66,11 @@ public class HeaderFooter : Rectangle
 
     public HeaderFooter(Properties attributes) : base(0, 0, 0, 0)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         string value;
 
         if ((value = attributes.Remove(ElementTags.NUMBERED)) != null)
@@ -144,7 +149,7 @@ public class HeaderFooter : Rectangle
             paragraph.Add(_before);
             if (_numbered)
             {
-                paragraph.AddSpecial(new Chunk(_pageN.ToString(), _before.Font));
+                paragraph.AddSpecial(new Chunk(_pageN.ToString(CultureInfo.InvariantCulture), _before.Font));
             }
 
             if (_after != null)

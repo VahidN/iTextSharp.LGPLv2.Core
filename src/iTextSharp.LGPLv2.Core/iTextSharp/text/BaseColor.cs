@@ -3,7 +3,7 @@ using System.Drawing;
 namespace iTextSharp.text;
 
 /// <summary>
-///     Base class for Color, serves as wrapper class for <see cref="T:System.Drawing.Color" />
+///     Base class for Color, serves as wrapper class for System.Drawing.Color
 ///     to allow extension.
 /// </summary>
 public class BaseColor
@@ -73,21 +73,21 @@ public class BaseColor
     public BaseColor(Color color) => _color = color;
 
     /// <summary>
-    ///     Gets the blue component value of this <see cref="T:System.Drawing.Color" /> structure.
+    ///     Gets the blue component value of this System.Drawing.Color structure.
     /// </summary>
-    /// <value>The blue component value of this <see cref="T:System.Drawing.Color" /> structure.</value>
+    /// <value>The blue component value of this System.Drawing.Color structure.</value>
     public int B => _color.B;
 
     /// <summary>
-    ///     Gets the green component value of this <see cref="T:System.Drawing.Color" /> structure.
+    ///     Gets the green component value of this System.Drawing.Color structure.
     /// </summary>
-    /// <value>The green component value of this <see cref="T:System.Drawing.Color" /> structure.</value>
+    /// <value>The green component value of this System.Drawing.Color structure.</value>
     public int G => _color.G;
 
     /// <summary>
-    ///     Gets the red component value of this <see cref="T:System.Drawing.Color" /> structure.
+    ///     Gets the red component value of this System.Drawing.Color structure.
     /// </summary>
-    /// <value>The red component value of this <see cref="T:System.Drawing.Color" /> structure.</value>
+    /// <value>The red component value of this System.Drawing.Color structure.</value>
     public int R => _color.R;
 
     public BaseColor Brighter()
@@ -123,9 +123,9 @@ public class BaseColor
     }
 
     public BaseColor Darker() =>
-        new BaseColor(Math.Max((int)(_color.R * Factor), 0),
-                      Math.Max((int)(_color.G * Factor), 0),
-                      Math.Max((int)(_color.B * Factor), 0));
+        new(Math.Max((int)(_color.R * Factor), 0),
+            Math.Max((int)(_color.G * Factor), 0),
+            Math.Max((int)(_color.B * Factor), 0));
 
     public override bool Equals(object obj)
     {

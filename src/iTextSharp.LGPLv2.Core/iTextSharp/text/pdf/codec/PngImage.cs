@@ -72,13 +72,14 @@ public class PngImage
     /// <summary>
     ///     Some PNG specific values.
     /// </summary>
-    public static int[] Pngid = { 137, 80, 78, 71, 13, 10, 26, 10 };
+    public static int[] Pngid =
+    {
+        137, 80, 78, 71, 13, 10, 26, 10
+    };
 
     private static readonly PdfName[] _intents =
     {
-        PdfName.Perceptual,
-        PdfName.Relativecolorimetric, PdfName.Saturation,
-        PdfName.Absolutecolorimetric,
+        PdfName.Perceptual, PdfName.Relativecolorimetric, PdfName.Saturation, PdfName.Absolutecolorimetric
     };
 
     private readonly PdfDictionary _additional = new();
@@ -93,7 +94,7 @@ public class PngImage
 
     private int _colorType;
     private int _compressionMethod;
-    private Stream _dataStream;
+    private ZInflaterInputStream _dataStream;
     private int _dpiX;
     private int _dpiY;
     private int _filterMethod;
@@ -119,7 +120,8 @@ public class PngImage
     /// <summary>
     ///     Creates a new instance of PngImage
     /// </summary>
-    private PngImage(Stream isp) => _isp = isp;
+    private PngImage(Stream isp)
+        => _isp = isp;
 
     /// <summary>
     ///     Reads a PNG from an url.
@@ -129,21 +131,11 @@ public class PngImage
     /// <returns>the image</returns>
     public static Image GetImage(Uri url)
     {
-        Stream isp = null;
-        try
-        {
-            isp = url.GetResponseStream();
-            var img = GetImage(isp);
-            img.Url = url;
-            return img;
-        }
-        finally
-        {
-            if (isp != null)
-            {
-                isp.Dispose();
-            }
-        }
+        using var isp = url.GetResponseStream();
+        var img = GetImage(isp);
+        img.Url = url;
+
+        return img;
     }
 
     /// <summary>
@@ -155,6 +147,7 @@ public class PngImage
     public static Image GetImage(Stream isp)
     {
         var png = new PngImage(isp);
+
         return png.getImage();
     }
 
@@ -164,7 +157,8 @@ public class PngImage
     /// </summary>
     /// <param name="file">the file</param>
     /// <returns>the image</returns>
-    public static Image GetImage(string file) => GetImage(Utilities.ToUrl(file));
+    public static Image GetImage(string file)
+        => GetImage(Utilities.ToUrl(file));
 
     /// <summary>
     ///     Reads a PNG from a byte array.
@@ -177,15 +171,29 @@ public class PngImage
         Stream isp = new MemoryStream(data);
         var img = GetImage(isp);
         img.OriginalData = data;
+
         return img;
     }
 
-    public static int GetInt(Stream isp) =>
-        (isp.ReadByte() << 24) + (isp.ReadByte() << 16) + (isp.ReadByte() << 8) + isp.ReadByte();
+    public static int GetInt(Stream isp)
+    {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
+        return (isp.ReadByte() << 24) + (isp.ReadByte() << 16) + (isp.ReadByte() << 8) + isp.ReadByte();
+    }
 
     public static string GetString(Stream isp)
     {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
         var buf = new StringBuilder();
+
         for (var i = 0; i < 4; i++)
         {
             buf.Append((char)isp.ReadByte());
@@ -194,7 +202,15 @@ public class PngImage
         return buf.ToString();
     }
 
-    public static int GetWord(Stream isp) => (isp.ReadByte() << 8) + isp.ReadByte();
+    public static int GetWord(Stream isp)
+    {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
+        return (isp.ReadByte() << 8) + isp.ReadByte();
+    }
 
     private static bool checkMarker(string s)
     {
@@ -206,6 +222,7 @@ public class PngImage
         for (var k = 0; k < 4; ++k)
         {
             var c = s[k];
+
             if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z'))
             {
                 return false;
@@ -215,8 +232,7 @@ public class PngImage
         return true;
     }
 
-    private static void decodeAverageFilter(byte[] curr, byte[] prev,
-                                            int count, int bpp)
+    private static void decodeAverageFilter(byte[] curr, byte[] prev, int count, int bpp)
     {
         int raw, priorPixel, priorRow;
 
@@ -238,8 +254,7 @@ public class PngImage
         }
     }
 
-    private static void decodePaethFilter(byte[] curr, byte[] prev,
-                                          int count, int bpp)
+    private static void decodePaethFilter(byte[] curr, byte[] prev, int count, int bpp)
     {
         int raw, priorPixel, priorRow, priorRowPixel;
 
@@ -258,9 +273,7 @@ public class PngImage
             priorRow = prev[i] & 0xff;
             priorRowPixel = prev[i - bpp] & 0xff;
 
-            curr[i] = (byte)(raw + paethPredictor(priorPixel,
-                                                  priorRow,
-                                                  priorRowPixel));
+            curr[i] = (byte)(raw + paethPredictor(priorPixel, priorRow, priorRowPixel));
         }
     }
 
@@ -277,8 +290,7 @@ public class PngImage
         }
     }
 
-    private static void decodeUpFilter(byte[] curr, byte[] prev,
-                                       int count)
+    private static void decodeUpFilter(byte[] curr, byte[] prev, int count)
     {
         for (var i = 0; i < count; i++)
         {
@@ -294,12 +306,14 @@ public class PngImage
         if (bitDepth == 8)
         {
             var pos = bytesPerRow * y + x;
+
             return image[pos] & 0xff;
         }
         else
         {
             var pos = bytesPerRow * y + x / (8 / bitDepth);
             var v = image[pos] >> (8 - bitDepth * (x % (8 / bitDepth)) - bitDepth);
+
             return v & ((1 << bitDepth) - 1);
         }
     }
@@ -327,11 +341,12 @@ public class PngImage
     /// <summary>
     ///     Gets an  int  from an  Stream .
     /// </summary>
-    private static void readFully(Stream inp, byte[] b, int offset, int count)
+    private static void readFully(ZInflaterInputStream inp, byte[] b, int offset, int count)
     {
         while (count > 0)
         {
             var n = inp.Read(b, offset, count);
+
             if (n <= 0)
             {
                 throw new IOException("Insufficient data.");
@@ -342,12 +357,19 @@ public class PngImage
         }
     }
 
-    private static void setPixel(byte[] image, int[] data, int offset, int size, int x, int y, int bitDepth,
-                                 int bytesPerRow)
+    private static void setPixel(byte[] image,
+        int[] data,
+        int offset,
+        int size,
+        int x,
+        int y,
+        int bitDepth,
+        int bytesPerRow)
     {
         if (bitDepth == 8)
         {
             var pos = bytesPerRow * y + size * x;
+
             for (var k = 0; k < size; ++k)
             {
                 image[pos + k] = (byte)data[k + offset];
@@ -356,6 +378,7 @@ public class PngImage
         else if (bitDepth == 16)
         {
             var pos = bytesPerRow * y + size * x;
+
             for (var k = 0; k < size; ++k)
             {
                 image[pos + k] = (byte)(data[k + offset] >> 8);
@@ -372,6 +395,7 @@ public class PngImage
     private void decodeIdat()
     {
         var nbitDepth = _bitDepth;
+
         if (nbitDepth == 16)
         {
             nbitDepth = 8;
@@ -379,14 +403,17 @@ public class PngImage
 
         var size = -1;
         _bytesPerPixel = _bitDepth == 16 ? 2 : 1;
+
         switch (_colorType)
         {
             case 0:
                 size = (nbitDepth * _width + 7) / 8 * _height;
+
                 break;
             case 2:
                 size = _width * 3 * _height;
                 _bytesPerPixel *= 3;
+
                 break;
             case 3:
                 if (_interlaceMethod == 1)
@@ -395,14 +422,17 @@ public class PngImage
                 }
 
                 _bytesPerPixel = 1;
+
                 break;
             case 4:
                 size = _width * _height;
                 _bytesPerPixel *= 2;
+
                 break;
             case 6:
                 size = _width * 3 * _height;
                 _bytesPerPixel *= 4;
+
                 break;
         }
 
@@ -439,9 +469,7 @@ public class PngImage
         }
     }
 
-    private void decodePass(int xOffset, int yOffset,
-                            int xStep, int yStep,
-                            int passWidth, int passHeight)
+    private void decodePass(int xOffset, int yOffset, int xStep, int yStep, int passWidth, int passHeight)
     {
         if (passWidth == 0 || passHeight == 0)
         {
@@ -454,12 +482,12 @@ public class PngImage
 
         // Decode the (sub)image row-by-row
         int srcY, dstY;
-        for (srcY = 0, dstY = yOffset;
-             srcY < passHeight;
-             srcY++, dstY += yStep)
+
+        for (srcY = 0, dstY = yOffset; srcY < passHeight; srcY++, dstY += yStep)
         {
             // Read the filter type byte and a row of data
             var filter = 0;
+
             try
             {
                 filter = _dataStream.ReadByte();
@@ -476,19 +504,23 @@ public class PngImage
                     break;
                 case PngFilterSub:
                     decodeSubFilter(curr, bytesPerRow, _bytesPerPixel);
+
                     break;
                 case PngFilterUp:
                     decodeUpFilter(curr, prior, bytesPerRow);
+
                     break;
                 case PngFilterAverage:
                     decodeAverageFilter(curr, prior, bytesPerRow, _bytesPerPixel);
+
                     break;
                 case PngFilterPaeth:
                     decodePaethFilter(curr, prior, bytesPerRow, _bytesPerPixel);
+
                     break;
                 default:
                     // Error -- uknown filter type
-                    throw new Exception("PNG filter unknown.");
+                    throw new InvalidOperationException("PNG filter unknown.");
             }
 
             processPixels(curr, xOffset, xStep, dstY, passWidth);
@@ -524,6 +556,7 @@ public class PngImage
 
         var array = new PdfArray();
         var dic = new PdfDictionary();
+
         if ((_colorType & 2) == 0)
         {
             if (_gamma.ApproxEquals(1f))
@@ -540,6 +573,7 @@ public class PngImage
         {
             PdfObject wp = new PdfLiteral("[1 1 1]");
             array.Add(PdfName.Calrgb);
+
             if (_gamma.ApproxNotEqual(1f))
             {
                 var gm = new PdfArray();
@@ -596,11 +630,13 @@ public class PngImage
         var pal0 = 0;
         var palIdx = 0;
         _palShades = false;
+
         if (_trans != null)
         {
             for (var k = 0; k < _trans.Length; ++k)
             {
                 var n = _trans[k] & 0xff;
+
                 if (n == 0)
                 {
                     ++pal0;
@@ -610,6 +646,7 @@ public class PngImage
                 if (n != 0 && n != 255)
                 {
                     _palShades = true;
+
                     break;
                 }
             }
@@ -621,28 +658,35 @@ public class PngImage
         }
 
         _genBwMask = !_palShades && (pal0 > 1 || _transRedGray >= 0);
+
         if (!_palShades && !_genBwMask && pal0 == 1)
         {
             _additional.Put(PdfName.Mask, new PdfLiteral("[" + palIdx + " " + palIdx + "]"));
         }
 
         var needDecode = _interlaceMethod == 1 || _bitDepth == 16 || (_colorType & 4) != 0 || _palShades || _genBwMask;
+
         switch (_colorType)
         {
             case 0:
                 _inputBands = 1;
+
                 break;
             case 2:
                 _inputBands = 3;
+
                 break;
             case 3:
                 _inputBands = 1;
+
                 break;
             case 4:
                 _inputBands = 2;
+
                 break;
             case 6:
                 _inputBands = 4;
+
                 break;
         }
 
@@ -652,18 +696,21 @@ public class PngImage
         }
 
         var components = _inputBands;
+
         if ((_colorType & 4) != 0)
         {
             --components;
         }
 
         var bpc = _bitDepth;
+
         if (bpc == 16)
         {
             bpc = 8;
         }
 
         Image img;
+
         if (_image != null)
         {
             if (_colorType == 3)
@@ -724,6 +771,7 @@ public class PngImage
         img.SetDpi(_dpiX, _dpiY);
         img.XyRatio = _xyRatio;
         img.OriginalType = Image.ORIGINAL_PNG;
+
         return img;
     }
 
@@ -734,6 +782,7 @@ public class PngImage
             case 8:
             {
                 var outp = new int[curr.Length];
+
                 for (var k = 0; k < outp.Length; ++k)
                 {
                     outp[k] = curr[k] & 0xff;
@@ -744,6 +793,7 @@ public class PngImage
             case 16:
             {
                 var outp = new int[curr.Length / 2];
+
                 for (var k = 0; k < outp.Length; ++k)
                 {
                     outp[k] = ((curr[k * 2] & 0xff) << 8) + (curr[k * 2 + 1] & 0xff);
@@ -757,6 +807,7 @@ public class PngImage
                 var idx = 0;
                 var passes = 8 / _bitDepth;
                 var mask = (1 << _bitDepth) - 1;
+
                 for (var k = 0; k < curr.Length; ++k)
                 {
                     for (var j = passes - 1; j >= 0; --j)
@@ -776,16 +827,19 @@ public class PngImage
 
         var outp = getPixel(curr);
         var sizes = 0;
+
         switch (_colorType)
         {
             case 0:
             case 3:
             case 4:
                 sizes = 1;
+
                 break;
             case 2:
             case 6:
                 sizes = 3;
+
                 break;
         }
 
@@ -793,6 +847,7 @@ public class PngImage
         {
             dstX = xOffset;
             var yStride = (sizes * _width * (_bitDepth == 16 ? 8 : _bitDepth) + 7) / 8;
+
             for (srcX = 0; srcX < width; srcX++)
             {
                 setPixel(_image, outp, _inputBands * srcX, sizes, dstX, y, _bitDepth, yStride);
@@ -815,6 +870,7 @@ public class PngImage
 
                 var yStride = _width;
                 dstX = xOffset;
+
                 for (srcX = 0; srcX < width; srcX++)
                 {
                     setPixel(_smask, outp, _inputBands * srcX + sizes, 1, dstX, y, 8, yStride);
@@ -827,9 +883,11 @@ public class PngImage
                 var yStride = _width;
                 var v = new int[1];
                 dstX = xOffset;
+
                 for (srcX = 0; srcX < width; srcX++)
                 {
                     var idx = outp[srcX];
+
                     if (idx < _trans.Length)
                     {
                         v[0] = _trans[idx];
@@ -853,6 +911,7 @@ public class PngImage
                     var yStride = (_width + 7) / 8;
                     var v = new int[1];
                     dstX = xOffset;
+
                     for (srcX = 0; srcX < width; srcX++)
                     {
                         var idx = outp[srcX];
@@ -868,6 +927,7 @@ public class PngImage
                     var yStride = (_width + 7) / 8;
                     var v = new int[1];
                     dstX = xOffset;
+
                     for (srcX = 0; srcX < width; srcX++)
                     {
                         var g = outp[srcX];
@@ -883,13 +943,16 @@ public class PngImage
                     var yStride = (_width + 7) / 8;
                     var v = new int[1];
                     dstX = xOffset;
+
                     for (srcX = 0; srcX < width; srcX++)
                     {
                         var markRed = _inputBands * srcX;
-                        v[0] = outp[markRed] == _transRedGray && outp[markRed + 1] == _transGreen
-                                                              && outp[markRed + 2] == _transBlue
-                                   ? 1
-                                   : 0;
+
+                        v[0] = outp[markRed] == _transRedGray && outp[markRed + 1] == _transGreen &&
+                               outp[markRed + 2] == _transBlue
+                            ? 1
+                            : 0;
+
                         setPixel(_smask, v, 0, 1, dstX, y, 1, yStride);
                         dstX += step;
                     }
@@ -911,21 +974,25 @@ public class PngImage
         }
 
         var buffer = new byte[Transfersize];
+
         while (true)
         {
             var len = GetInt(_isp);
             var marker = GetString(_isp);
+
             if (len < 0 || !checkMarker(marker))
             {
                 throw new IOException("Corrupted PNG file.");
             }
 
-            if (IDAT.Equals(marker))
+            if (IDAT.Equals(marker, StringComparison.Ordinal))
             {
                 int size;
+
                 while (len != 0)
                 {
                     size = _isp.Read(buffer, 0, Math.Min(len, Transfersize));
+
                     if (size <= 0)
                     {
                         return;
@@ -935,7 +1002,7 @@ public class PngImage
                     len -= size;
                 }
             }
-            else if (tRNS.Equals(marker))
+            else if (tRNS.Equals(marker, StringComparison.Ordinal))
             {
                 switch (_colorType)
                 {
@@ -944,6 +1011,7 @@ public class PngImage
                         {
                             len -= 2;
                             var gray = GetWord(_isp);
+
                             if (_bitDepth == 16)
                             {
                                 _transRedGray = gray;
@@ -962,6 +1030,7 @@ public class PngImage
                             var red = GetWord(_isp);
                             var green = GetWord(_isp);
                             var blue = GetWord(_isp);
+
                             if (_bitDepth == 16)
                             {
                                 _transRedGray = red;
@@ -971,8 +1040,8 @@ public class PngImage
                             else
                             {
                                 _additional.Put(PdfName.Mask,
-                                                new PdfLiteral("[" + red + " " + red + " " + green + " " + green + " " +
-                                                               blue + " " + blue + "]"));
+                                    new PdfLiteral("[" + red + " " + red + " " + green + " " + green + " " + blue +
+                                                   " " + blue + "]"));
                             }
                         }
 
@@ -981,6 +1050,7 @@ public class PngImage
                         if (len > 0)
                         {
                             _trans = new byte[len];
+
                             for (var k = 0; k < len; ++k)
                             {
                                 _trans[k] = (byte)_isp.ReadByte();
@@ -994,7 +1064,7 @@ public class PngImage
 
                 Utilities.Skip(_isp, len);
             }
-            else if (IHDR.Equals(marker))
+            else if (IHDR.Equals(marker, StringComparison.Ordinal))
             {
                 _width = GetInt(_isp);
                 _height = GetInt(_isp);
@@ -1005,7 +1075,7 @@ public class PngImage
                 _filterMethod = _isp.ReadByte();
                 _interlaceMethod = _isp.ReadByte();
             }
-            else if (PLTE.Equals(marker))
+            else if (PLTE.Equals(marker, StringComparison.Ordinal))
             {
                 if (_colorType == 3)
                 {
@@ -1013,7 +1083,8 @@ public class PngImage
                     colorspace.Add(PdfName.Indexed);
                     colorspace.Add(getColorspace());
                     colorspace.Add(new PdfNumber(len / 3 - 1));
-                    var colortable = new ByteBuffer();
+                    using var colortable = new ByteBuffer();
+
                     while (len-- > 0)
                     {
                         colortable.Append_i(_isp.ReadByte());
@@ -1027,11 +1098,12 @@ public class PngImage
                     Utilities.Skip(_isp, len);
                 }
             }
-            else if (pHYs.Equals(marker))
+            else if (pHYs.Equals(marker, StringComparison.Ordinal))
             {
                 var dx = GetInt(_isp);
                 var dy = GetInt(_isp);
                 var unit = _isp.ReadByte();
+
                 if (unit == 1)
                 {
                     _dpiX = (int)(dx * 0.0254f + 0.5f);
@@ -1045,7 +1117,7 @@ public class PngImage
                     }
                 }
             }
-            else if (cHRM.Equals(marker))
+            else if (cHRM.Equals(marker, StringComparison.Ordinal))
             {
                 _xW = GetInt(_isp) / 100000f;
                 _yW = GetInt(_isp) / 100000f;
@@ -1055,11 +1127,12 @@ public class PngImage
                 _yG = GetInt(_isp) / 100000f;
                 _xB = GetInt(_isp) / 100000f;
                 _yB = GetInt(_isp) / 100000f;
+
                 _hasChrm = !(Math.Abs(_xW) < 0.0001f || Math.Abs(_yW) < 0.0001f || Math.Abs(_xR) < 0.0001f ||
                              Math.Abs(_yR) < 0.0001f || Math.Abs(_xG) < 0.0001f || Math.Abs(_yG) < 0.0001f ||
                              Math.Abs(_xB) < 0.0001f || Math.Abs(_yB) < 0.0001f);
             }
-            else if (sRGB.Equals(marker))
+            else if (sRGB.Equals(marker, StringComparison.Ordinal))
             {
                 var ri = _isp.ReadByte();
                 _intent = _intents[ri];
@@ -1074,12 +1147,14 @@ public class PngImage
                 _yB = 0.06f;
                 _hasChrm = true;
             }
-            else if (gAMA.Equals(marker))
+            else if (gAMA.Equals(marker, StringComparison.Ordinal))
             {
                 var gm = GetInt(_isp);
+
                 if (gm != 0)
                 {
                     _gamma = 100000f / gm;
+
                     if (!_hasChrm)
                     {
                         _xW = 0.3127f;
@@ -1094,20 +1169,23 @@ public class PngImage
                     }
                 }
             }
-            else if (iCCP.Equals(marker))
+            else if (iCCP.Equals(marker, StringComparison.Ordinal))
             {
                 do
                 {
                     --len;
-                } while (_isp.ReadByte() != 0);
+                }
+                while (_isp.ReadByte() != 0);
 
                 _isp.ReadByte();
                 --len;
                 var icccom = new byte[len];
                 var p = 0;
+
                 while (len > 0)
                 {
                     var r = _isp.Read(icccom, p, len);
+
                     if (r < 0)
                     {
                         throw new IOException("Premature end of file.");
@@ -1119,6 +1197,7 @@ public class PngImage
 
                 var iccp = PdfReader.FlateDecode(icccom, true);
                 icccom = null;
+
                 try
                 {
                     _iccProfile = IccProfile.GetInstance(iccp);
@@ -1128,7 +1207,7 @@ public class PngImage
                     _iccProfile = null;
                 }
             }
-            else if (IEND.Equals(marker))
+            else if (IEND.Equals(marker, StringComparison.Ordinal))
             {
                 break;
             }

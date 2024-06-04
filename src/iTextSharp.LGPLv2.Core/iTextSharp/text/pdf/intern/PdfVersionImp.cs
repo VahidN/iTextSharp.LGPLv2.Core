@@ -69,6 +69,11 @@ public class PdfVersionImp : IPdfVersion
     /// </summary>
     public void AddDeveloperExtension(PdfDeveloperExtension de)
     {
+        if (de == null)
+        {
+            throw new ArgumentNullException(nameof(de));
+        }
+
         if (Extensions == null)
         {
             Extensions = new PdfDictionary();
@@ -122,6 +127,11 @@ public class PdfVersionImp : IPdfVersion
     /// </summary>
     public void AddToCatalog(PdfDictionary catalog)
     {
+        if (catalog == null)
+        {
+            throw new ArgumentNullException(nameof(catalog));
+        }
+
         if (CatalogVersion != null)
         {
             catalog.Put(PdfName.Version, CatalogVersion);
@@ -137,14 +147,14 @@ public class PdfVersionImp : IPdfVersion
     ///     Returns the version as a byte[].
     /// </summary>
     /// <param name="version">the version character</param>
-    public byte[] GetVersionAsByteArray(char version) =>
+    public static byte[] GetVersionAsByteArray(char version) =>
         DocWriter.GetIsoBytes(GetVersionAsName(version).ToString().Substring(1));
 
     /// <summary>
     ///     Returns the PDF version as a name.
     /// </summary>
     /// <param name="version">the version character.</param>
-    public PdfName GetVersionAsName(char version)
+    public static PdfName GetVersionAsName(char version)
     {
         switch (version)
         {
@@ -179,6 +189,11 @@ public class PdfVersionImp : IPdfVersion
     /// </summary>
     public void WriteHeader(OutputStreamCounter os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (Appendmode)
         {
             os.Write(Header[0], 0, Header[0].Length);

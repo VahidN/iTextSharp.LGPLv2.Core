@@ -9,7 +9,7 @@ public class PdfPsxObject : PdfTemplate
     ///     Constructs a PSXObject
     /// </summary>
     /// <param name="wr"></param>
-    public PdfPsxObject(PdfWriter wr) : base(wr)
+    public PdfPsxObject(PdfWriter wr) : base(wr ?? throw new ArgumentNullException(nameof(wr)))
     {
     }
 

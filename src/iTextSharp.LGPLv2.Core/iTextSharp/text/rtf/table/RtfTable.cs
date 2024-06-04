@@ -77,6 +77,11 @@ public class RtfTable : RtfElement
     /// <param name="table">The Table that this RtfTable wraps</param>
     public RtfTable(RtfDocument doc, Table table) : base(doc)
     {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
         table.Complete();
         importTable(table);
     }
@@ -89,33 +94,43 @@ public class RtfTable : RtfElement
     /// <param name="table">The PdfPTable that this RtfTable wraps</param>
     public RtfTable(RtfDocument doc, PdfPTable table) : base(doc)
     {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
         importTable(table);
     }
 
     /// <summary>
     ///     Writes the content of this RtfTable
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         if (!InHeader)
         {
             if (_offset != -1)
             {
-                result.Write(RtfFont.FontSize, 0, RtfFont.FontSize.Length);
+                outp.Write(RtfFont.FontSize, 0, RtfFont.FontSize.Length);
                 byte[] t;
-                result.Write(t = IntToByteArray(_offset), 0, t.Length);
+                outp.Write(t = IntToByteArray(_offset), 0, t.Length);
             }
 
-            result.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+            outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
         }
 
         for (var i = 0; i < _rows.Count; i++)
         {
             var re = _rows[i];
-            re.WriteContent(result);
+            re.WriteContent(outp);
         }
 
-        result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+        outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
     }
 
     /// <summary>
@@ -195,7 +210,7 @@ public class RtfTable : RtfElement
         _alignment = table.Alignment;
 
         var i = 0;
-        foreach (Row row in table)
+        foreach (var row in table)
         {
             _rows.Add(new RtfRow(Document, this, row, i));
             i++;

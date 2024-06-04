@@ -24,6 +24,11 @@ public class StringTokenizer
 
     public StringTokenizer(string str, string delim, bool retDelims)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         _len = str.Length;
         _str = str;
         _delim = delim;
@@ -114,6 +119,6 @@ public class StringTokenizer
             return _str.Substring(start, _pos - start);
         }
 
-        throw new IndexOutOfRangeException();
+        throw new ArgumentOutOfRangeException();
     }
 }

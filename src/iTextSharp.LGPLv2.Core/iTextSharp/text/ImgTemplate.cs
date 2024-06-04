@@ -5,8 +5,6 @@ namespace iTextSharp.text;
 /// <summary>
 ///     PdfTemplate that has to be inserted into the document
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Image" />
 public class ImgTemplate : Image
 {
     /// <summary>

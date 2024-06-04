@@ -100,7 +100,7 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
         /// <param name="name"></param>
         public override void EndElement(string tag, string lname, string name)
         {
-            if (TAG.Equals(lname))
+            if (TAG.Equals(lname, StringComparison.Ordinal))
             {
                 _tagMap.Add(_currentPeer.Alias, _currentPeer);
             }
@@ -112,7 +112,7 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
         /// <param name="ch">an array of characters</param>
         /// <param name="start">the start position in the array</param>
         /// <param name="length">the number of characters to read from the array</param>
-        public void IgnorableWhitespace(char[] ch, int start, int length)
+        public static void IgnorableWhitespace(char[] ch, int start, int length)
         {
             // do nothing
         }
@@ -132,11 +132,11 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
             var value = attrs[VALUE];
             if (name != null)
             {
-                if (TAG.Equals(lname))
+                if (TAG.Equals(lname, StringComparison.Ordinal))
                 {
                     _currentPeer = new XmlPeer(name, alias);
                 }
-                else if (ATTRIBUTE.Equals(lname))
+                else if (ATTRIBUTE.Equals(lname, StringComparison.Ordinal))
                 {
                     if (alias != null)
                     {

@@ -33,7 +33,7 @@ public class OutputStreamEncryption : Stream
     }
 
     public OutputStreamEncryption(Stream outc, byte[] key, int revision) :
-        this(outc, key, 0, key.Length, revision)
+        this(outc, key, 0, key?.Length ?? throw new ArgumentNullException(nameof(key)), revision)
     {
     }
 
@@ -87,11 +87,11 @@ public class OutputStreamEncryption : Stream
         throw new NotSupportedException();
     }
 
-    public override void Write(byte[] b, int off, int len)
+    public override void Write(byte[] buffer, int offset, int count)
     {
         if (_aes)
         {
-            var b2 = Cipher.Update(b, off, len);
+            var b2 = Cipher.Update(buffer, offset, count);
             if (b2 == null || b2.Length == 0)
             {
                 return;
@@ -101,14 +101,14 @@ public class OutputStreamEncryption : Stream
         }
         else
         {
-            var b2 = new byte[Math.Min(len, 4192)];
-            while (len > 0)
+            var b2 = new byte[Math.Min(count, 4192)];
+            while (count > 0)
             {
-                var sz = Math.Min(len, b2.Length);
-                Arcfour.EncryptArcfour(b, off, sz, b2, 0);
+                var sz = Math.Min(count, b2.Length);
+                Arcfour.EncryptArcfour(buffer, offset, sz, b2, 0);
                 Outc.Write(b2, 0, sz);
-                len -= sz;
-                off += sz;
+                count -= sz;
+                offset += sz;
             }
         }
     }

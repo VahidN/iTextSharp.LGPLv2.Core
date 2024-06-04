@@ -1,4 +1,5 @@
 using System.Text;
+using System.util;
 
 namespace iTextSharp.text.pdf;
 
@@ -9,7 +10,7 @@ namespace iTextSharp.text.pdf;
 public class BidiLine
 {
     private const int PieceSizeStart = 256;
-    protected static IntHashtable MirrorChars = new();
+    protected static NullValueDictionary<int, int> MirrorChars = new();
     protected int ArabicOptions;
     protected List<PdfChunk> Chunks = new();
     protected int CurrentChar;
@@ -22,13 +23,13 @@ public class BidiLine
     protected int RunDirection;
     protected bool ShortStore;
     protected int StoredCurrentChar;
-    protected PdfChunk[] StoredDetailChunks = new PdfChunk[0];
-    protected int[] StoredIndexChars = new int[0];
+    protected PdfChunk[] StoredDetailChunks = Array.Empty<PdfChunk>();
+    protected int[] StoredIndexChars = Array.Empty<int>();
     protected int StoredIndexChunk;
     protected int StoredIndexChunkChar;
-    protected byte[] StoredOrderLevels = new byte[0];
+    protected byte[] StoredOrderLevels = Array.Empty<byte>();
     protected int StoredRunDirection;
-    protected char[] StoredText = new char[0];
+    protected char[] StoredText = Array.Empty<char>();
     protected int StoredTotalTextLength;
     protected char[] Text = new char[PieceSizeStart];
     protected int TotalTextLength;
@@ -364,6 +365,11 @@ public class BidiLine
 
     public BidiLine(BidiLine org)
     {
+        if (org == null)
+        {
+            throw new ArgumentNullException(nameof(org));
+        }
+
         RunDirection = org.RunDirection;
         PieceSize = org.PieceSize;
         Text = (char[])org.Text.Clone();

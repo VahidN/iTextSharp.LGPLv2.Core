@@ -42,6 +42,11 @@ public class RtfAnnotation : RtfElement
     /// <param name="annotation">The Annotation this RtfAnnotation is based off</param>
     public RtfAnnotation(RtfDocument doc, Annotation annotation) : base(doc)
     {
+        if (annotation == null)
+        {
+            throw new ArgumentNullException(nameof(annotation));
+        }
+
         _title = annotation.Title;
         _content = annotation.Content;
     }
@@ -49,24 +54,29 @@ public class RtfAnnotation : RtfElement
     /// <summary>
     ///     Writes the content of the RtfAnnotation
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_annotationId, 0, _annotationId.Length);
-        result.Write(Delimiter, 0, Delimiter.Length);
-        result.Write(t = IntToByteArray(Document.GetRandomInt()), 0, t.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_annotationAuthor, 0, _annotationAuthor.Length);
-        result.Write(Delimiter, 0, Delimiter.Length);
-        result.Write(t = DocWriter.GetIsoBytes(_title), 0, t.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(_annotation, 0, _annotation.Length);
-        result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
-        result.Write(Delimiter, 0, Delimiter.Length);
-        result.Write(t = DocWriter.GetIsoBytes(_content), 0, t.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_annotationId, 0, _annotationId.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(t = IntToByteArray(Document.GetRandomInt()), 0, t.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_annotationAuthor, 0, _annotationAuthor.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(_title), 0, t.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
+        outp.Write(_annotation, 0, _annotation.Length);
+        outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(_content), 0, t.Length);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
     }
 }

@@ -12,7 +12,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1250IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1250);
+        var encoding = EncodingsRegistry.GetEncoding(1250);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -20,7 +20,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1251IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1251);
+        var encoding = EncodingsRegistry.GetEncoding(1251);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -28,7 +28,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1252IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1252);
+        var encoding = EncodingsRegistry.GetEncoding(1252);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -36,7 +36,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1253IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1253);
+        var encoding = EncodingsRegistry.GetEncoding(1253);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -44,7 +44,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1254IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1254);
+        var encoding = EncodingsRegistry.GetEncoding(1254);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -52,7 +52,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1255IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1255);
+        var encoding = EncodingsRegistry.GetEncoding(1255);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -60,7 +60,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1256IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1256);
+        var encoding = EncodingsRegistry.GetEncoding(1256);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -68,7 +68,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1257IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1257);
+        var encoding = EncodingsRegistry.GetEncoding(1257);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }
@@ -76,7 +76,7 @@ public class EncodingTests
     [TestMethod]
     public void Test1258IsAvailable()
     {
-        var encoding = EncodingsRegistry.Instance.GetEncoding(1258);
+        var encoding = EncodingsRegistry.GetEncoding(1258);
         var bytes = encoding.GetBytes("Text");
         Assert.IsNotNull(bytes);
     }

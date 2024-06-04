@@ -65,9 +65,14 @@ public class TextmyHtmlHandler : TextHandler
     /// <param name="name">the name of the tag that is encountered</param>
     public override void EndElement(string uri, string lname, string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         //System.err.Println("End: " + name);
         name = name.ToLower(CultureInfo.InvariantCulture);
-        if (ElementTags.PARAGRAPH.Equals(name))
+        if (ElementTags.PARAGRAPH.Equals(name, StringComparison.OrdinalIgnoreCase))
         {
             Document.Add(Stack.Pop());
             return;
@@ -107,15 +112,14 @@ public class TextmyHtmlHandler : TextHandler
             return;
         }
 
-        if (MyTags.ContainsKey(name))
+        if (MyTags.TryGetValue(name, out var tag))
         {
-            var peer = MyTags[name];
-            if (ElementTags.TABLE.Equals(peer.Tag))
+            if (ElementTags.TABLE.Equals(tag.Tag, StringComparison.OrdinalIgnoreCase))
             {
                 _tableBorder = false;
             }
 
-            HandleEndingTags(peer.Tag);
+            HandleEndingTags(tag.Tag);
             return;
         }
 
@@ -127,6 +131,10 @@ public class TextmyHtmlHandler : TextHandler
     public override void StartElement(string uri, string lname, string name,
                                       INullValueDictionary<string, string> attrs)
     {
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
         //System.err.Println("Start: " + name);
 
         // super.handleStartingTags is replaced with handleStartingTags
@@ -198,14 +206,15 @@ public class TextmyHtmlHandler : TextHandler
             return;
         }
 
-        if (MyTags.ContainsKey(name))
+        if (MyTags.TryGetValue(name, out var tag))
         {
-            var peer = MyTags[name];
-            if (ElementTags.TABLE.Equals(peer.Tag) || ElementTags.CELL.Equals(peer.Tag))
+            if (ElementTags.TABLE.Equals(tag.Tag, StringComparison.OrdinalIgnoreCase) ||
+                ElementTags.CELL.Equals(tag.Tag, StringComparison.OrdinalIgnoreCase))
             {
-                var p = peer.GetAttributes(attrs);
+                var p = tag.GetAttributes(attrs);
                 string value;
-                if (ElementTags.TABLE.Equals(peer.Tag) && (value = p[ElementTags.BORDERWIDTH]) != null)
+                if (ElementTags.TABLE.Equals(tag.Tag, StringComparison.OrdinalIgnoreCase) &&
+                    (value = p[ElementTags.BORDERWIDTH]) != null)
                 {
                     if (float.Parse(value, NumberFormatInfo.InvariantInfo) > 0)
                     {
@@ -221,11 +230,11 @@ public class TextmyHtmlHandler : TextHandler
                     p.Add(ElementTags.BOTTOM, "true");
                 }
 
-                HandleStartingTags(peer.Tag, p);
+                HandleStartingTags(tag.Tag, p);
                 return;
             }
 
-            HandleStartingTags(peer.Tag, peer.GetAttributes(attrs));
+            HandleStartingTags(tag.Tag, tag.GetAttributes(attrs));
             return;
         }
 

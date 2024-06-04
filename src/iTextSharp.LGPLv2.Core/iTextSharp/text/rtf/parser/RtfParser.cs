@@ -310,11 +310,6 @@ public class RtfParser
     public const int TYPE_UNIDENTIFIED = -1;
 
     /// <summary>
-    ///     Debugging flag.
-    /// </summary>
-    private static readonly bool _debugParser = false; // DEBUG Files are unlikely to be read by any reader!
-
-    /// <summary>
     ///     The  RtfCtrlWordListener .
     /// </summary>
     private readonly List<IEventListener> _listeners = new();
@@ -578,7 +573,7 @@ public class RtfParser
     ///     @para destination The string destination.
     /// </summary>
     /// <returns>The destination object from the map</returns>
-    public RtfDestination GetDestination(string destination) => RtfDestinationMgr.GetDestination(destination);
+    public static RtfDestination GetDestination(string destination) => RtfDestinationMgr.GetDestination(destination);
 
     /// <summary>
     ///     Get the Document object.
@@ -678,31 +673,12 @@ public class RtfParser
 
         if (GetTokeniserState() != TOKENISER_SKIP_GROUP)
         {
-            if (_debugParser)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: HandleCloseGroup()");
-                if (_lastCtrlWordParam != null)
-                {
-                    OutputDebug(_rtfDoc, _groupLevel, "DEBUG: LastCtrlWord=" + _lastCtrlWordParam.CtrlWord);
-                }
-
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: grouplevel=" + _groupLevel);
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: destination=" + GetCurrentDestination());
-                OutputDebug(_rtfDoc, _groupLevel, "");
-            }
-
             var dest = GetCurrentDestination();
             var handled = false;
 
             if (dest != null)
             {
                 handled = dest.HandleCloseGroup();
-            }
-
-            if (_debugParser)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: After dest.HandleCloseGroup(); handled = " + handled);
-                OutputDebug(_rtfDoc, _groupLevel, "");
             }
         }
 
@@ -739,19 +715,9 @@ public class RtfParser
         var result = errOK;
         _ctrlWordCount++; // stats
 
-        if (_debugParser)
-        {
-            OutputDebug(_rtfDoc, _groupLevel, "DEBUG: handleCtrlWord=" + ctrlWordData.CtrlWord);
-        }
-
         if (GetTokeniserState() == TOKENISER_SKIP_GROUP)
         {
             _ctrlWordSkippedCount++;
-            if (_debugParser)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: SKIPPED");
-            }
-
             return result;
         }
 
@@ -796,17 +762,7 @@ public class RtfParser
 
         if (dest != null)
         {
-            if (_debugParser)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: before dest.HandleOpeningSubGroup()");
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: destination=" + dest);
-            }
-
             handled = dest.HandleOpeningSubGroup();
-            if (_debugParser)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: after dest.HandleOpeningSubGroup()");
-            }
         }
 
         _stackState.Push(_currentState);
@@ -816,26 +772,9 @@ public class RtfParser
         _currentState.NewGroup = true;
         dest = GetCurrentDestination();
 
-        if (_debugParser)
-        {
-            OutputDebug(_rtfDoc, _groupLevel, "DEBUG: HandleOpenGroup()");
-            if (_lastCtrlWordParam != null)
-            {
-                OutputDebug(_rtfDoc, _groupLevel, "DEBUG: LastCtrlWord=" + _lastCtrlWordParam.CtrlWord);
-            }
-
-            OutputDebug(_rtfDoc, _groupLevel, "DEBUG: grouplevel=" + _groupLevel);
-            OutputDebug(_rtfDoc, _groupLevel, "DEBUG: destination=" + dest);
-        }
-
         if (dest != null)
         {
             handled = dest.HandleOpenGroup();
-        }
-
-        if (_debugParser)
-        {
-            OutputDebug(_rtfDoc, _groupLevel, "DEBUG: after dest.HandleOpenGroup(); handled=" + handled);
         }
 
         return result;
@@ -1460,7 +1399,7 @@ public class RtfParser
     /// </summary>
     /// <param name="readerIn"></param>
     /// <returns></returns>
-    private PushbackStream Init_Reader(Stream readerIn)
+    private static PushbackStream Init_Reader(Stream readerIn)
     {
         if (readerIn is PushbackStream)
         {
@@ -1587,17 +1526,6 @@ public class RtfParser
         {
             // || this.IsImport() ) {
             reader.Unread(nextChar);
-        }
-
-        if (_debugParser)
-        {
-            //      // debug: insrsid6254399
-            //      if (ctrlWordParam.ctrlWord.Equals("proptype") && ctrlWordParam.param.Equals("30")) {
-            //          System.out.Print("Debug value found\n");
-            //      }
-            //      if (ctrlWordParam.ctrlWord.Equals("panose") ) {
-            //          System.out.Print("Debug value found\n");
-            //      }
         }
 
         result = HandleCtrlWord(ctrlWordParam);

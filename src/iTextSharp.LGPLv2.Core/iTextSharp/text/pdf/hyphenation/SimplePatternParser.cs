@@ -19,7 +19,7 @@ public class SimplePatternParser : ISimpleXmlDocHandler
     internal int CurrElement;
     internal List<object> Exception;
     internal char HyphenChar;
-    internal StringBuilder Token;
+    internal readonly StringBuilder Token;
 
     /// <summary>
     ///     Creates a new instance of PatternParser2
@@ -108,7 +108,17 @@ public class SimplePatternParser : ISimpleXmlDocHandler
 
     public void StartElement(string tag, INullValueDictionary<string, string> h)
     {
-        if (tag.Equals("hyphen-char"))
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (h == null)
+        {
+            throw new ArgumentNullException(nameof(h));
+        }
+
+        if (tag.Equals("hyphen-char", StringComparison.Ordinal))
         {
             var hh = h["value"];
             if (hh != null && hh.Length == 1)
@@ -116,20 +126,20 @@ public class SimplePatternParser : ISimpleXmlDocHandler
                 HyphenChar = hh[0];
             }
         }
-        else if (tag.Equals("classes"))
+        else if (tag.Equals("classes", StringComparison.Ordinal))
         {
             CurrElement = ELEM_CLASSES;
         }
-        else if (tag.Equals("patterns"))
+        else if (tag.Equals("patterns", StringComparison.Ordinal))
         {
             CurrElement = ELEM_PATTERNS;
         }
-        else if (tag.Equals("exceptions"))
+        else if (tag.Equals("exceptions", StringComparison.Ordinal))
         {
             CurrElement = ELEM_EXCEPTIONS;
             Exception = new List<object>();
         }
-        else if (tag.Equals("hyphen"))
+        else if (tag.Equals("hyphen", StringComparison.Ordinal))
         {
             if (Token.Length > 0)
             {
@@ -147,6 +157,11 @@ public class SimplePatternParser : ISimpleXmlDocHandler
 
     public void Parse(Stream stream, IPatternConsumer consumer)
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
         Consumer = consumer;
         try
         {
@@ -188,6 +203,11 @@ public class SimplePatternParser : ISimpleXmlDocHandler
 
     protected static string GetPattern(string word)
     {
+        if (word == null)
+        {
+            throw new ArgumentNullException(nameof(word));
+        }
+
         var pat = new StringBuilder();
         var len = word.Length;
         for (var i = 0; i < len; i++)
@@ -201,8 +221,13 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         return pat.ToString();
     }
 
-    protected string GetExceptionWord(List<object> ex)
+    protected static string GetExceptionWord(List<object> ex)
     {
+        if (ex == null)
+        {
+            throw new ArgumentNullException(nameof(ex));
+        }
+
         var res = new StringBuilder();
         for (var i = 0; i < ex.Count; i++)
         {
@@ -225,6 +250,11 @@ public class SimplePatternParser : ISimpleXmlDocHandler
 
     protected List<object> NormalizeException(List<object> ex)
     {
+        if (ex == null)
+        {
+            throw new ArgumentNullException(nameof(ex));
+        }
+
         var res = new List<object>();
         for (var i = 0; i < ex.Count; i++)
         {

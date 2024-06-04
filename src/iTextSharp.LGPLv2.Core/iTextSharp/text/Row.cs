@@ -11,9 +11,6 @@ namespace iTextSharp.text;
 ///     Since a Cell can span several rows and/or columns
 ///     a row can contain reserved space without any content.
 /// </remarks>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
-/// <seealso cref="T:iTextSharp.text.Table" />
 public class Row : IElement
 {
     /// <summary>
@@ -109,6 +106,11 @@ public class Row : IElement
     /// <returns>true if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -131,7 +133,7 @@ public class Row : IElement
     {
         if (column < 0 || column > columns)
         {
-            throw new Exception("getCell at illegal index :" + column + " max is " + columns);
+            throw new InvalidOperationException("getCell at illegal index :" + column + " max is " + columns);
         }
 
         return Cells[column];
@@ -181,12 +183,12 @@ public class Row : IElement
     {
         if (element == null)
         {
-            throw new Exception("addCell - null argument");
+            throw new ArgumentNullException(nameof(element));
         }
 
         if (column < 0 || column > columns)
         {
-            throw new Exception("addCell - illegal column argument");
+            throw new InvalidOperationException("addCell - illegal column argument");
         }
 
         if (!(getObjectId(element) == Cell || getObjectId(element) == Table))
@@ -215,7 +217,7 @@ public class Row : IElement
     {
         if (column >= columns || column < 0)
         {
-            throw new Exception("getCell at illegal index : " + column);
+            throw new InvalidOperationException("getCell at illegal index : " + column);
         }
 
         columns--;
@@ -273,7 +275,7 @@ public class Row : IElement
     {
         if (column < 0 || column + size > columns)
         {
-            throw new Exception("reserve - incorrect column/size");
+            throw new InvalidOperationException("reserve - incorrect column/size");
         }
 
         for (var i = column; i < column + size; i++)
@@ -348,7 +350,7 @@ public class Row : IElement
     /// </summary>
     /// <param name="element"></param>
     /// <returns>the object of which you'd like to know the type-id, -1 if invalid</returns>
-    private int getObjectId(object element)
+    private static int getObjectId(object element)
     {
         if (element == null)
         {

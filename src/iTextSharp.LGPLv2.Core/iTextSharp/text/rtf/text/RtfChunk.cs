@@ -87,45 +87,50 @@ public class RtfChunk : RtfElement
     ///     Writes the content of this RtfChunk. First the font information
     ///     is written, then the content, and then more font information
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
         if (_background != null)
         {
-            result.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(OpenGroup, 0, OpenGroup.Length);
         }
 
-        _font.WriteBegin(result);
+        _font.WriteBegin(outp);
         if (_superSubScript < 0)
         {
-            result.Write(_fontSubscript, 0, _fontSubscript.Length);
+            outp.Write(_fontSubscript, 0, _fontSubscript.Length);
         }
         else if (_superSubScript > 0)
         {
-            result.Write(_fontSuperscript, 0, _fontSuperscript.Length);
+            outp.Write(_fontSuperscript, 0, _fontSuperscript.Length);
         }
 
         if (_background != null)
         {
-            result.Write(_backgroundColor, 0, _backgroundColor.Length);
-            result.Write(t = IntToByteArray(_background.GetColorNumber()), 0, t.Length);
+            outp.Write(_backgroundColor, 0, _backgroundColor.Length);
+            outp.Write(t = IntToByteArray(_background.GetColorNumber()), 0, t.Length);
         }
 
-        result.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
 
-        Document.FilterSpecialChar(result, _content, false,
+        Document.FilterSpecialChar(outp, _content, false,
                                    _softLineBreaks || Document.GetDocumentSettings().IsAlwaysGenerateSoftLinebreaks());
 
         if (_superSubScript.ApproxNotEqual(0))
         {
-            result.Write(_fontEndSuperSubscript, 0, _fontEndSuperSubscript.Length);
+            outp.Write(_fontEndSuperSubscript, 0, _fontEndSuperSubscript.Length);
         }
 
-        _font.WriteEnd(result);
+        _font.WriteEnd(outp);
 
         if (_background != null)
         {
-            result.Write(CloseGroup, 0, CloseGroup.Length);
+            outp.Write(CloseGroup, 0, CloseGroup.Length);
         }
     }
 

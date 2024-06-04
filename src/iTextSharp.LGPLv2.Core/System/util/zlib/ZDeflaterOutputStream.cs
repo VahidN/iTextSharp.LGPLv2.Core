@@ -131,17 +131,17 @@ public class ZDeflaterOutputStream : Stream
         // TODO:  Add DeflaterOutputStream.SetLength implementation
     }
 
-    public override void Write(byte[] b, int off, int len)
+    public override void Write(byte[] buffer, int offset, int count)
     {
-        if (len == 0)
+        if (count == 0)
         {
             return;
         }
 
         int err;
-        Z.NextIn = b;
-        Z.NextInIndex = off;
-        Z.AvailIn = len;
+        Z.NextIn = buffer;
+        Z.NextInIndex = offset;
+        Z.AvailIn = count;
         do
         {
             Z.NextOut = Buf;
@@ -160,9 +160,9 @@ public class ZDeflaterOutputStream : Stream
         } while (Z.AvailIn > 0 || Z.AvailOut == 0);
     }
 
-    public override void WriteByte(byte b)
+    public override void WriteByte(byte value)
     {
-        _buf1[0] = b;
+        _buf1[0] = value;
         Write(_buf1, 0, 1);
     }
 }

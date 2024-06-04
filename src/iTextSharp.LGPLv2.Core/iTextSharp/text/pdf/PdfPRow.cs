@@ -40,7 +40,7 @@ public class PdfPRow
     /// <param name="cells"></param>
     public PdfPRow(PdfPCell[] cells)
     {
-        Cells = cells;
+        Cells = cells ?? throw new ArgumentNullException(nameof(cells));
         Widths = new float[cells.Length];
         InitExtraHeights();
     }
@@ -51,6 +51,11 @@ public class PdfPRow
     /// <param name="row"></param>
     public PdfPRow(PdfPRow row)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
         MaxHeight = row.MaxHeight;
         Calculated = row.Calculated;
         Cells = new PdfPCell[row.Cells.Length];
@@ -90,6 +95,11 @@ public class PdfPRow
     /// </summary>
     public static float SetColumn(ColumnText ct, float left, float bottom, float right, float top)
     {
+        if (ct == null)
+        {
+            throw new ArgumentNullException(nameof(ct));
+        }
+
         if (left > right)
         {
             right = left;
@@ -182,6 +192,11 @@ public class PdfPRow
     /// <returns>true if everything went right</returns>
     public bool SetWidths(float[] widths)
     {
+        if (widths == null)
+        {
+            throw new ArgumentNullException(nameof(widths));
+        }
+
         if (widths.Length != Cells.Length)
         {
             return false;
@@ -224,6 +239,11 @@ public class PdfPRow
     /// <returns>the remainder row or null if the newHeight was so small that only</returns>
     public PdfPRow SplitRow(PdfPTable table, int rowIndex, float new_height)
     {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
         var newCells = new PdfPCell[Cells.Length];
         var fixHs = new float[Cells.Length];
         var minHs = new float[Cells.Length];
@@ -351,9 +371,19 @@ public class PdfPRow
     /// <param name="currentMaxHeight">The height of the cell to be drawn.</param>
     /// <param name="cell"></param>
     /// <param name="canvases"></param>
-    public void WriteBorderAndBackground(float xPos, float yPos, float currentMaxHeight, PdfPCell cell,
-                                         PdfContentByte[] canvases)
+    public static void WriteBorderAndBackground(float xPos, float yPos, float currentMaxHeight, PdfPCell cell,
+                                                PdfContentByte[] canvases)
     {
+        if (cell == null)
+        {
+            throw new ArgumentNullException(nameof(cell));
+        }
+
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var background = cell.BackgroundColor;
         if (background != null || cell.HasBorders())
         {
@@ -722,6 +752,11 @@ public class PdfPRow
     /// </summary>
     protected void RestoreCanvases(PdfContentByte[] canvases)
     {
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var last = PdfPTable.TEXTCANVAS + 1;
         for (var k = 0; k < last; ++k)
         {
@@ -741,6 +776,11 @@ public class PdfPRow
     protected void SaveAndRotateCanvases(PdfContentByte[] canvases, float a, float b, float c, float d, float e,
                                          float f)
     {
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var last = PdfPTable.TEXTCANVAS + 1;
         if (_canvasesPos == null)
         {

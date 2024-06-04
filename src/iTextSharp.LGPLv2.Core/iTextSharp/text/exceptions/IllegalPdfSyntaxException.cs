@@ -12,4 +12,12 @@ public class IllegalPdfSyntaxException : ArgumentException
     public IllegalPdfSyntaxException(string message) : base(message)
     {
     }
+
+    public IllegalPdfSyntaxException()
+    {
+    }
+
+    public IllegalPdfSyntaxException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

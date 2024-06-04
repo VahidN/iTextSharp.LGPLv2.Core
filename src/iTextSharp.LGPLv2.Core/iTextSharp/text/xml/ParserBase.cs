@@ -26,6 +26,11 @@ public abstract class ParserBase
 
     public void Parse(XmlDocument xDoc)
     {
+        if (xDoc == null)
+        {
+            throw new ArgumentNullException(nameof(xDoc));
+        }
+
         var xml = xDoc.OuterXml;
         var stringReader = new StringReader(xml);
 
@@ -35,6 +40,11 @@ public abstract class ParserBase
 
     public void Parse(XmlReader reader)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         try
         {
             while (reader.Read())

@@ -7,7 +7,7 @@ public class SpotColor : ExtendedColor
 {
     public SpotColor(PdfSpotColor spot, float tint) :
         base(TYPE_SEPARATION,
-             (spot.AlternativeCs.R / 255f - 1f) * tint + 1,
+             ((spot?.AlternativeCs.R ?? throw new ArgumentNullException(nameof(spot))) / 255f - 1f) * tint + 1,
              (spot.AlternativeCs.G / 255f - 1f) * tint + 1,
              (spot.AlternativeCs.B / 255f - 1f) * tint + 1)
     {
@@ -15,7 +15,7 @@ public class SpotColor : ExtendedColor
         Tint = tint;
     }
 
-    public SpotColor(PdfSpotColor spot) : this(spot, spot.Tint)
+    public SpotColor(PdfSpotColor spot) : this(spot, spot?.Tint ?? throw new ArgumentNullException(nameof(spot)))
     {
     }
 

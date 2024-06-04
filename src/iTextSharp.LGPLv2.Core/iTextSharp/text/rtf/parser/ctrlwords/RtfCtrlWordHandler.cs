@@ -11,12 +11,6 @@ namespace iTextSharp.text.rtf.parser.ctrlwords;
 public class RtfCtrlWordHandler
 {
     /// <summary>
-    ///     Debug flag - internal use
-    ///     @since 2.0.8
-    /// </summary>
-    private static readonly bool _debug = false;
-
-    /// <summary>
     ///     The control word for this class.
     ///     @since 2.0.8
     /// </summary>
@@ -145,7 +139,7 @@ public class RtfCtrlWordHandler
                 }
                 else
                 {
-                    if (SpecialHandler.Length > 1 && SpecialHandler.EndsWith("."))
+                    if (SpecialHandler.Length > 1 && SpecialHandler.EndsWith(".", StringComparison.Ordinal))
                     {
                         SpecialHandler +=
                             CtrlWord; // if string length>1 and ends with a period, it's a group. Add ctrlWord
@@ -180,17 +174,10 @@ public class RtfCtrlWordHandler
         if (!CtrlWordData.HasParam && PassDefaultParameterValue)
         {
             CtrlWordData.HasParam = true;
-            CtrlWordData.Param = DefaultParameterValue.ToString();
+            CtrlWordData.Param = DefaultParameterValue.ToString(CultureInfo.InvariantCulture);
         }
 
-        if (_debug)
-        {
-            printDebug("handleKeyword: [" + CtrlWordData.CtrlWord + "] param=" + ctrlWordDataIn.Param);
-            RtfParser.OutputDebug(RtfParser.GetRtfDocument(), RtfParser.GetLevel() + 1,
-                                  "RtfCtrlWordHandler debug Start: " + CtrlWordData.CtrlWord + " ");
-        }
-
-        if (CtrlWordData.CtrlWord.Equals("*"))
+        if (CtrlWordData.CtrlWord.Equals("*", StringComparison.Ordinal))
         {
             return true;
         }
@@ -274,13 +261,6 @@ public class RtfCtrlWordHandler
         }
 
         AfterControlWord();
-
-        if (_debug)
-        {
-            RtfParser.OutputDebug(RtfParser.GetRtfDocument(), RtfParser.GetLevel() + 1,
-                                  "RtfCtrlWordHandler debug End: " + CtrlWordData.CtrlWord + " ");
-        }
-
         return result;
     }
 
@@ -289,16 +269,9 @@ public class RtfCtrlWordHandler
     ///     @since 2.0.8
     /// </summary>
     /// <returns> false  = stop processing,  true  = continue processing</returns>
-    protected bool AfterControlWord()
-    {
-        if (_debug)
-        {
-            printDebug("afterControlWord");
-        }
-
+    protected static bool AfterControlWord() =>
         // TODO: This is where events would be triggered
-        return true;
-    }
+        true;
 
     /// <summary>
     ///     Pre-processing before the control word.
@@ -310,32 +283,18 @@ public class RtfCtrlWordHandler
     /// <summary>
     ///     Primary purpose is for \* control word and event handling.
     /// </summary>
-    protected bool BeforeControlWord()
-    {
-        if (_debug)
-        {
-            printDebug("beforeControlWord");
-        }
-
+    protected static bool BeforeControlWord() =>
         // TODO: This is where events would be triggered
-        return true;
-    }
+        true;
 
     /// <summary>
     ///     Handle the control word.
     ///     @since 2.0.8
     /// </summary>
     /// <returns> true  if control word was handled,  false  if it was not handled.</returns>
-    protected bool OnControlWord()
-    {
-        if (_debug)
-        {
-            printDebug("onCtrlWord");
-        }
-
+    protected static bool OnControlWord() =>
         // TODO: This is where events would be triggered
-        return false;
-    }
+        false;
 
     /// <summary>
     ///     Debug function to print class/method

@@ -54,8 +54,7 @@ public class PdfDocument : Document
     ///     This is the size of the several boxes that will be used in
     ///     the next page.
     /// </summary>
-    protected INullValueDictionary<string, PdfRectangle> BoxSize =
-        new NullValueDictionary<string, PdfRectangle>();
+    protected INullValueDictionary<string, PdfRectangle> BoxSize = new NullValueDictionary<string, PdfRectangle>();
 
     protected internal PdfCollection collection;
 
@@ -208,8 +207,7 @@ public class PdfDocument : Document
     /// <summary>
     ///     This is the size of the several boxes of the current Page.
     /// </summary>
-    protected INullValueDictionary<string, PdfRectangle> ThisBoxSize =
-        new NullValueDictionary<string, PdfRectangle>();
+    protected INullValueDictionary<string, PdfRectangle> ThisBoxSize = new NullValueDictionary<string, PdfRectangle>();
 
     protected internal PdfIndirectReference Thumb;
 
@@ -262,7 +260,6 @@ public class PdfDocument : Document
     /// </summary>
     /// <returns>the PdfAcroform object of the PdfDocument</returns>
     public PdfAcroForm AcroForm => AnnotationsImp.AcroForm;
-
 
     /// <summary>
     ///     Sets the collection dictionary.
@@ -452,8 +449,8 @@ public class PdfDocument : Document
     protected internal float IndentLeft => GetLeft(indentation.indentLeft + indentation.ListIndentLeft +
                                                    indentation.ImageIndentLeft + indentation.SectionIndentLeft);
 
-    protected internal float IndentRight =>
-        GetRight(indentation.indentRight + indentation.SectionIndentRight + indentation.ImageIndentRight);
+    protected internal float IndentRight
+        => GetRight(indentation.indentRight + indentation.SectionIndentRight + indentation.ImageIndentRight);
 
     protected internal float IndentTop => GetTop(indentation.indentTop);
 
@@ -468,6 +465,11 @@ public class PdfDocument : Document
     /// <returns> true  if the element was added,  false  if not.</returns>
     public override bool Add(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (Writer != null && Writer.IsPaused())
         {
             return false;
@@ -478,29 +480,37 @@ public class PdfDocument : Document
             // Information (headers)
             case Element.HEADER:
                 info.Addkey(((Meta)element).Name, ((Meta)element).Content);
+
                 break;
             case Element.TITLE:
                 info.AddTitle(((Meta)element).Content);
+
                 break;
             case Element.SUBJECT:
                 info.AddSubject(((Meta)element).Content);
+
                 break;
             case Element.KEYWORDS:
                 info.AddKeywords(((Meta)element).Content);
+
                 break;
             case Element.AUTHOR:
                 info.AddAuthor(((Meta)element).Content);
+
                 break;
             case Element.CREATOR:
                 info.AddCreator(((Meta)element).Content);
+
                 break;
             case Element.PRODUCER:
                 // you can not change the name of the producer
                 info.AddProducer();
+
                 break;
             case Element.CREATIONDATE:
                 // you can not set the creation date, only reset it
                 info.AddCreationDate();
+
                 break;
 
             // content (text)
@@ -514,9 +524,11 @@ public class PdfDocument : Document
 
                 // we cast the element to a chunk
                 var chunk = new PdfChunk((Chunk)element, AnchorAction);
+
                 // we try to add the chunk to the line, until we succeed
                 {
                     PdfChunk overflow;
+
                     while ((overflow = Line.Add(chunk)) != null)
                     {
                         CarriageReturn();
@@ -524,7 +536,9 @@ public class PdfDocument : Document
                         chunk.TrimFirstSpace();
                     }
                 }
+
                 pageEmpty = false;
+
                 if (chunk.IsAttribute(Chunk.NEWPAGE))
                 {
                     NewPage();
@@ -538,6 +552,7 @@ public class PdfDocument : Document
                 var anchor = (Anchor)element;
                 var url = anchor.Reference;
                 leading = anchor.Leading;
+
                 if (url != null)
                 {
                     AnchorAction = new PdfAction(url);
@@ -547,6 +562,7 @@ public class PdfDocument : Document
                 element.Process(this);
                 AnchorAction = null;
                 LeadingCount--;
+
                 break;
             }
             case Element.ANNOTATION:
@@ -558,32 +574,37 @@ public class PdfDocument : Document
 
                 var annot = (Annotation)element;
                 var rect = new Rectangle(0, 0);
+
                 if (Line != null)
                 {
                     rect = new Rectangle(annot.GetLlx(IndentRight - Line.WidthLeft),
-                                         annot.GetLly(IndentTop - CurrentHeight),
-                                         annot.GetUrx(IndentRight - Line.WidthLeft + 20),
-                                         annot.GetUry(IndentTop - CurrentHeight - 20));
+                        annot.GetLly(IndentTop - CurrentHeight), annot.GetUrx(IndentRight - Line.WidthLeft + 20),
+                        annot.GetUry(IndentTop - CurrentHeight - 20));
                 }
 
                 var an = PdfAnnotationsImp.ConvertAnnotation(Writer, annot, rect);
                 AnnotationsImp.AddPlainAnnotation(an);
                 pageEmpty = false;
+
                 break;
             }
             case Element.PHRASE:
             {
                 LeadingCount++;
+
                 // we cast the element to a phrase and set the leading of the document
                 leading = ((Phrase)element).Leading;
+
                 // we process the element
                 element.Process(this);
                 LeadingCount--;
+
                 break;
             }
             case Element.PARAGRAPH:
             {
                 LeadingCount++;
+
                 // we cast the element to a paragraph
                 var paragraph = (Paragraph)element;
 
@@ -594,6 +615,7 @@ public class PdfDocument : Document
                 leading = paragraph.TotalLeading;
 
                 CarriageReturn();
+
                 // we don't want to make orphans/widows
                 if (CurrentHeight + Line.Height + leading > IndentTop - IndentBottom)
                 {
@@ -606,6 +628,7 @@ public class PdfDocument : Document
                 CarriageReturn();
 
                 var pageEvent = Writer.PageEvent;
+
                 if (pageEvent != null && !IsSectionTitle)
                 {
                     pageEvent.OnParagraph(Writer, this, IndentTop - CurrentHeight);
@@ -646,6 +669,7 @@ public class PdfDocument : Document
                 indentation.indentRight -= paragraph.IndentationRight;
                 CarriageReturn();
                 LeadingCount--;
+
                 break;
             }
             case Element.SECTION:
@@ -668,19 +692,22 @@ public class PdfDocument : Document
                 {
                     var fith = IndentTop - CurrentHeight;
                     var rotation = PageSize.Rotation;
+
                     if (rotation == 90 || rotation == 180)
                     {
                         fith = PageSize.Height - fith;
                     }
 
                     var destination = new PdfDestination(PdfDestination.FITH, fith);
+
                     while (CurrentOutline.Level >= section.Depth)
                     {
                         CurrentOutline = CurrentOutline.Parent;
                     }
 
                     var outline = new PdfOutline(CurrentOutline, destination, section.GetBookmarkTitle(),
-                                                 section.BookmarkOpen);
+                        section.BookmarkOpen);
+
                     CurrentOutline = outline;
                 }
 
@@ -688,6 +715,7 @@ public class PdfDocument : Document
                 CarriageReturn();
                 indentation.SectionIndentLeft += section.IndentationLeft;
                 indentation.SectionIndentRight += section.IndentationRight;
+
                 if (section.NotAddedYet && pageEvent != null)
                 {
                     if (element.Type == Element.CHAPTER)
@@ -709,8 +737,10 @@ public class PdfDocument : Document
                 }
 
                 indentation.SectionIndentLeft += section.Indentation;
+
                 // we process the section
                 element.Process(this);
+
                 // some parameters are set back to normal again
                 indentation.SectionIndentLeft -= section.IndentationLeft + section.Indentation;
                 indentation.SectionIndentRight -= section.IndentationRight;
@@ -733,6 +763,7 @@ public class PdfDocument : Document
             {
                 // we cast the element to a List
                 var list = (List)element;
+
                 if (list.Alignindent)
                 {
                     list.NormalizeIndentation();
@@ -741,17 +772,21 @@ public class PdfDocument : Document
                 // we adjust the document
                 indentation.ListIndentLeft += list.IndentationLeft;
                 indentation.indentRight += list.IndentationRight;
+
                 // we process the items in the list
                 element.Process(this);
+
                 // some parameters are set back to normal again
                 indentation.ListIndentLeft -= list.IndentationLeft;
                 indentation.indentRight -= list.IndentationRight;
                 CarriageReturn();
+
                 break;
             }
             case Element.LISTITEM:
             {
                 LeadingCount++;
+
                 // we cast the element to a ListItem
                 var listItem = (ListItem)element;
 
@@ -763,8 +798,10 @@ public class PdfDocument : Document
                 indentation.indentRight += listItem.IndentationRight;
                 leading = listItem.TotalLeading;
                 CarriageReturn();
+
                 // we prepare the current line to be able to show us the listsymbol
                 Line.ListItem = listItem;
+
                 // we process the item
                 element.Process(this);
 
@@ -781,6 +818,7 @@ public class PdfDocument : Document
                 indentation.ListIndentLeft -= listItem.IndentationLeft;
                 indentation.indentRight -= listItem.IndentationRight;
                 LeadingCount--;
+
                 break;
             }
             case Element.RECTANGLE:
@@ -788,11 +826,13 @@ public class PdfDocument : Document
                 var rectangle = (Rectangle)element;
                 Graphics.Rectangle(rectangle);
                 pageEmpty = false;
+
                 break;
             }
             case Element.PTABLE:
             {
                 var ptable = (PdfPTable)element;
+
                 if (ptable.Size <= ptable.HeaderRows)
                 {
                     break; //nothing to do
@@ -805,6 +845,7 @@ public class PdfDocument : Document
                 AddPTable(ptable);
                 pageEmpty = false;
                 NewLine();
+
                 break;
             }
             case Element.MULTI_COLUMN_TEXT:
@@ -816,6 +857,7 @@ public class PdfDocument : Document
                 CurrentHeight += height;
                 Text.MoveText(0, -1f * height);
                 pageEmpty = false;
+
                 break;
             }
             case Element.TABLE:
@@ -823,6 +865,7 @@ public class PdfDocument : Document
                 if (element is SimpleTable)
                 {
                     var ptable = ((SimpleTable)element).CreatePdfPTable();
+
                     if (ptable.Size <= ptable.HeaderRows)
                     {
                         break; //nothing to do
@@ -833,6 +876,7 @@ public class PdfDocument : Document
                     FlushLines();
                     AddPTable(ptable);
                     pageEmpty = false;
+
                     break;
                 }
 
@@ -841,6 +885,7 @@ public class PdfDocument : Document
                     try
                     {
                         var ptable = ((Table)element).CreatePdfPTable();
+
                         if (ptable.Size <= ptable.HeaderRows)
                         {
                             break; //nothing to do
@@ -857,6 +902,7 @@ public class PdfDocument : Document
                         // constructing the PdfTable
                         // Before the table, add a blank line using offset or default leading
                         var offset = ((Table)element).Offset;
+
                         if (float.IsNaN(offset))
                         {
                             offset = leading;
@@ -883,22 +929,28 @@ public class PdfDocument : Document
             {
                 //carriageReturn(); suggestion by Marc Campforts
                 Add((Image)element);
+
                 break;
             }
             case Element.YMARK:
             {
                 var zh = (IDrawInterface)element;
+
                 zh.Draw(Graphics, IndentLeft, IndentBottom, IndentRight, IndentTop,
-                        IndentTop - CurrentHeight - (LeadingCount > 0 ? leading : 0));
+                    IndentTop - CurrentHeight - (LeadingCount > 0 ? leading : 0));
+
                 pageEmpty = false;
+
                 break;
             }
             case Element.MARKED:
             {
                 MarkedObject mo;
+
                 if (element is MarkedSection)
                 {
                     mo = ((MarkedSection)element).Title;
+
                     if (mo != null)
                     {
                         mo.Process(this);
@@ -907,6 +959,7 @@ public class PdfDocument : Document
 
                 mo = (MarkedObject)element;
                 mo.Process(this);
+
                 break;
             }
             default:
@@ -914,6 +967,7 @@ public class PdfDocument : Document
         }
 
         LastElementType = element.Type;
+
         return true;
     }
 
@@ -924,6 +978,7 @@ public class PdfDocument : Document
     public void ClearTextWrap()
     {
         var tmpHeight = ImageEnd - CurrentHeight;
+
         if (Line != null)
         {
             tmpHeight += Line.Height;
@@ -950,6 +1005,7 @@ public class PdfDocument : Document
 
         var wasImage = ImageWait != null;
         NewPage();
+
         if (ImageWait != null || wasImage)
         {
             NewPage();
@@ -957,11 +1013,12 @@ public class PdfDocument : Document
 
         if (AnnotationsImp.HasUnusedAnnotations())
         {
-            throw new
-                Exception("Not all annotations could be added to the document (the document doesn't have enough pages).");
+            throw new InvalidOperationException(
+                "Not all annotations could be added to the document (the document doesn't have enough pages).");
         }
 
         var pageEvent = Writer.PageEvent;
+
         if (pageEvent != null)
         {
             pageEvent.OnCloseDocument(Writer, this);
@@ -1005,19 +1062,22 @@ public class PdfDocument : Document
     public override bool NewPage()
     {
         LastElementType = -1;
+
         if (Writer == null || (Writer.DirectContent.Size == 0 && Writer.DirectContentUnder.Size == 0 &&
                                (pageEmpty || Writer.IsPaused())))
         {
             SetNewPageSizeAndMargins();
+
             return false;
         }
 
         if (!IsDocumentOpen || IsDocumentClose)
         {
-            throw new Exception("The document isn't open.");
+            throw new InvalidOperationException("The document isn't open.");
         }
 
         var pageEvent = Writer.PageEvent;
+
         if (pageEvent != null)
         {
             pageEvent.OnEndPage(Writer, this);
@@ -1032,6 +1092,7 @@ public class PdfDocument : Document
 
         // we flush the arraylist with recently written lines
         FlushLines();
+
         // we prepare the elements of the page dictionary
 
         // [U1] page size and rotation
@@ -1040,16 +1101,19 @@ public class PdfDocument : Document
         // [C10]
         if (Writer.IsPdfX())
         {
-            if (ThisBoxSize.ContainsKey("art") && ThisBoxSize.ContainsKey("trim"))
+            var containsArtKey = ThisBoxSize.ContainsKey("art");
+            var containsTrimKey = ThisBoxSize.ContainsKey("trim");
+
+            if (containsArtKey && containsTrimKey)
             {
                 throw new PdfXConformanceException("Only one of ArtBox or TrimBox can exist in the page.");
             }
 
-            if (!ThisBoxSize.ContainsKey("art") && !ThisBoxSize.ContainsKey("trim"))
+            if (!containsArtKey && !containsTrimKey)
             {
-                if (ThisBoxSize.ContainsKey("crop"))
+                if (ThisBoxSize.TryGetValue("crop", out var crop))
                 {
-                    ThisBoxSize["trim"] = ThisBoxSize["crop"];
+                    ThisBoxSize["trim"] = crop;
                 }
                 else
                 {
@@ -1060,6 +1124,7 @@ public class PdfDocument : Document
 
         // [M1]
         pageResources.AddDefaultColorDiff(Writer.DefaultColorspace);
+
         if (Writer.RgbTransparencyBlending)
         {
             var dcs = new PdfDictionary();
@@ -1084,6 +1149,7 @@ public class PdfDocument : Document
             xmp.Put(PdfName.TYPE, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.Xml);
             var crypto = Writer.Encryption;
+
             if (crypto != null && !crypto.IsMetadataEncrypted())
             {
                 var ar = new PdfArray();
@@ -1130,6 +1196,7 @@ public class PdfDocument : Document
         if (AnnotationsImp.HasUnusedAnnotations())
         {
             var array = AnnotationsImp.RotateAnnotations(Writer, PageSize);
+
             if (array.Size != 0)
             {
                 page.Put(PdfName.Annots, array);
@@ -1152,8 +1219,10 @@ public class PdfDocument : Document
         }
 
         Writer.Add(page, new PdfContents(Writer.DirectContentUnder, Graphics, Text, Writer.DirectContent, PageSize));
+
         // we initialize the new page
         InitPage();
+
         return true;
     }
 
@@ -1217,14 +1286,14 @@ public class PdfDocument : Document
     /// <summary>
     ///     @see com.lowagie.text.DocListener#setMarginMirroring(bool)
     /// </summary>
-    public override bool SetMarginMirroring(bool MarginMirroring)
+    public override bool SetMarginMirroring(bool marginMirroring)
     {
         if (Writer != null && Writer.IsPaused())
         {
             return false;
         }
 
-        return base.SetMarginMirroring(MarginMirroring);
+        return base.SetMarginMirroring(marginMirroring);
     }
 
     /// <summary>
@@ -1234,14 +1303,14 @@ public class PdfDocument : Document
     ///     @see com.lowagie.text.DocListener#setMarginMirroring(boolean)
     ///     @since    2.1.6
     /// </summary>
-    public override bool SetMarginMirroringTopBottom(bool MarginMirroringTopBottom)
+    public override bool SetMarginMirroringTopBottom(bool marginMirroringTopBottom)
     {
         if (Writer != null && Writer.IsPaused())
         {
             return false;
         }
 
-        return base.SetMarginMirroringTopBottom(MarginMirroringTopBottom);
+        return base.SetMarginMirroringTopBottom(marginMirroringTopBottom);
     }
 
     /// <summary>
@@ -1263,6 +1332,7 @@ public class PdfDocument : Document
         NextMarginRight = marginRight;
         NextMarginTop = marginTop;
         NextMarginBottom = marginBottom;
+
         return true;
     }
 
@@ -1279,6 +1349,7 @@ public class PdfDocument : Document
         }
 
         NextPageSize = new Rectangle(pageSize);
+
         return true;
     }
 
@@ -1311,15 +1382,14 @@ public class PdfDocument : Document
     }
 
     internal void AddCalculationOrder(PdfFormField formField)
-    {
-        AnnotationsImp.AddCalculationOrder(formField);
-    }
+        => AnnotationsImp.AddCalculationOrder(formField);
 
     internal void AddFileAttachment(string description, PdfFileSpecification fs)
     {
         if (description == null)
         {
             var desc = (PdfString)fs.Get(PdfName.Desc);
+
             if (desc == null)
             {
                 description = "";
@@ -1331,6 +1401,7 @@ public class PdfDocument : Document
         }
 
         fs.AddDescription(description, true);
+
         if (description.Length == 0)
         {
             description = "Unnamed";
@@ -1338,11 +1409,13 @@ public class PdfDocument : Document
 
         var fn = PdfEncodings.ConvertToString(new PdfString(description, PdfObject.TEXT_UNICODE).GetBytes(), null);
         var k = 0;
+
         while (DocumentFileAttachment.ContainsKey(fn))
         {
             ++k;
+
             fn = PdfEncodings.ConvertToString(new PdfString(description + " " + k, PdfObject.TEXT_UNICODE).GetBytes(),
-                                              null);
+                null);
         }
 
         DocumentFileAttachment[fn] = fs.Reference;
@@ -1355,7 +1428,9 @@ public class PdfDocument : Document
             throw new ArgumentException("Only JavaScript actions are allowed.");
         }
 
-        DocumentLevelJs[_jsCounter.ToString().PadLeft(16, '0')] = Writer.AddToBody(js).IndirectReference;
+        DocumentLevelJs[_jsCounter.ToString(CultureInfo.InvariantCulture).PadLeft(16, '0')] =
+            Writer.AddToBody(js).IndirectReference;
+
         _jsCounter++;
     }
 
@@ -1378,9 +1453,7 @@ public class PdfDocument : Document
     /// <param name="outline">the outline to be added</param>
     /// <param name="name">the name of this local destination</param>
     internal void AddOutline(PdfOutline outline, string name)
-    {
-        LocalDestination(name, outline.PdfDestination);
-    }
+        => LocalDestination(name, outline.PdfDestination);
 
     /// <summary>
     ///     Adds a  PdfPTable  to the document.
@@ -1390,6 +1463,7 @@ public class PdfDocument : Document
     internal void AddPTable(PdfPTable ptable)
     {
         var ct = new ColumnText(Writer.DirectContent);
+
         // if the table prefers to be on a single page, and it wouldn't
         //fit on the current page, start a new page.
         if (ptable.KeepTogether && !FitsPage(ptable, 0f) && CurrentHeight > 0)
@@ -1410,14 +1484,17 @@ public class PdfDocument : Document
         var he = ptable.HeadersInEvent;
         ptable.HeadersInEvent = true;
         var loop = 0;
+
         while (true)
         {
             ct.SetSimpleColumn(IndentLeft, IndentBottom, IndentRight, IndentTop - CurrentHeight);
             var status = ct.Go();
+
             if ((status & ColumnText.NO_MORE_TEXT) != 0)
             {
                 Text.MoveText(0, ct.YLine - IndentTop + CurrentHeight);
                 CurrentHeight = IndentTop - ct.YLine;
+
                 break;
             }
 
@@ -1433,6 +1510,7 @@ public class PdfDocument : Document
             if (loop == 3)
             {
                 Add(new Paragraph("ERROR: Infinite table loop"));
+
                 break;
             }
 
@@ -1447,9 +1525,7 @@ public class PdfDocument : Document
     ///     com.lowagie.text.pdf.PdfObject)
     /// </summary>
     internal void AddViewerPreference(PdfName key, PdfObject value)
-    {
-        viewerPreferences.AddViewerPreference(key, value);
-    }
+        => viewerPreferences.AddViewerPreference(key, value);
 
     /// <summary>
     ///     CONSTRUCTING A PdfDocument/PdfWriter INSTANCE
@@ -1466,6 +1542,7 @@ public class PdfDocument : Document
         {
             Writer = writer;
             AnnotationsImp = new PdfAnnotationsImp(writer);
+
             return;
         }
 
@@ -1495,8 +1572,9 @@ public class PdfDocument : Document
 
         // ensuring that a new line has been started.
         EnsureNewLine();
-        return table.TotalHeight + (CurrentHeight > 0 ? table.SpacingBefore : 0f)
-               <= IndentTop - CurrentHeight - IndentBottom - margin;
+
+        return table.TotalHeight + (CurrentHeight > 0 ? table.SpacingBefore : 0f) <=
+               IndentTop - CurrentHeight - IndentBottom - margin;
     }
 
     /// <summary>
@@ -1508,6 +1586,7 @@ public class PdfDocument : Document
     {
         // constructing a PdfTable
         var tmp = new PdfTable(table, IndentLeft, IndentRight, IndentTop - CurrentHeight);
+
         return tmp.Bottom;
     }
 
@@ -1518,6 +1597,7 @@ public class PdfDocument : Document
     internal Rectangle GetBoxSize(string boxName)
     {
         var r = ThisBoxSize[boxName];
+
         if (r != null)
         {
             return r.Rectangle;
@@ -1588,14 +1668,17 @@ public class PdfDocument : Document
         return catalog;
     }
 
-    internal INullValueDictionary<string, PdfObject> GetDocumentFileAttachment() => DocumentFileAttachment;
+    internal INullValueDictionary<string, PdfObject> GetDocumentFileAttachment()
+        => DocumentFileAttachment;
 
-    internal INullValueDictionary<string, PdfObject> GetDocumentLevelJs() => DocumentLevelJs;
+    internal INullValueDictionary<string, PdfObject> GetDocumentLevelJs()
+        => DocumentLevelJs;
 
     internal PdfAction GetLocalGotoAction(string name)
     {
         PdfAction action;
         var obj = (object[])LocalDestinations[name];
+
         if (obj == null)
         {
             obj = new object[3];
@@ -1623,12 +1706,11 @@ public class PdfDocument : Document
     /// <summary>
     ///     [F12] tagged PDF
     /// </summary>
-    internal int GetMarkPoint() => MarkPoint;
+    internal int GetMarkPoint()
+        => MarkPoint;
 
     internal void IncMarkPoint()
-    {
-        ++MarkPoint;
-    }
+        => ++MarkPoint;
 
     /// <summary>
     ///     The local destination to where a local goto with the same
@@ -1642,6 +1724,7 @@ public class PdfDocument : Document
     internal bool LocalDestination(string name, PdfDestination destination)
     {
         var obj = (object[])LocalDestinations[name];
+
         if (obj == null)
         {
             obj = new object[3];
@@ -1655,6 +1738,7 @@ public class PdfDocument : Document
         obj[2] = destination;
         LocalDestinations[name] = obj;
         destination.AddPage(Writer.CurrentPage);
+
         return true;
     }
 
@@ -1676,6 +1760,7 @@ public class PdfDocument : Document
     internal void OutlineTree(PdfOutline outline)
     {
         outline.IndirectReference = Writer.PdfIndirectReference;
+
         if (outline.Parent != null)
         {
             outline.Put(PdfName.Parent, outline.Parent.IndirectReference);
@@ -1683,6 +1768,7 @@ public class PdfDocument : Document
 
         var kids = outline.Kids;
         var size = kids.Count;
+
         for (var k = 0; k < size; ++k)
         {
             OutlineTree(kids[k]);
@@ -1727,9 +1813,8 @@ public class PdfDocument : Document
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     internal void RemoteGoto(string filename, string name, float llx, float lly, float urx, float ury)
-    {
-        AnnotationsImp.AddPlainAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, new PdfAction(filename, name)));
-    }
+        => AnnotationsImp.AddPlainAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury,
+            new PdfAction(filename, name)));
 
     /// <summary>
     ///     Implements a link to another document.
@@ -1741,9 +1826,7 @@ public class PdfDocument : Document
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     internal void RemoteGoto(string filename, int page, float llx, float lly, float urx, float ury)
-    {
-        AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, new PdfAction(filename, page)));
-    }
+        => AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, new PdfAction(filename, page)));
 
     /// <summary>
     ///     Implements an action in an area.
@@ -1754,9 +1837,7 @@ public class PdfDocument : Document
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
     internal void SetAction(PdfAction action, float llx, float lly, float urx, float ury)
-    {
-        AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, action));
-    }
+        => AddAnnotation(new PdfAnnotation(Writer, llx, lly, urx, ury, action));
 
     internal void SetBoxSize(string boxName, Rectangle size)
     {
@@ -1795,10 +1876,11 @@ public class PdfDocument : Document
         PageAa.Put(actionType, action);
     }
 
-    internal void TraverseOutlineCount(PdfOutline outline)
+    internal static void TraverseOutlineCount(PdfOutline outline)
     {
         var kids = outline.Kids;
         var parent = outline.Parent;
+
         if (kids.Count == 0)
         {
             if (parent != null)
@@ -1839,11 +1921,15 @@ public class PdfDocument : Document
     /// <param name="graphics">the  PdfContentByte  where the graphics will be written to</param>
     /// <param name="currentValues">the current font and extra spacing values</param>
     /// <param name="ratio"></param>
-    internal void WriteLineToContent(PdfLine line, PdfContentByte text, PdfContentByte graphics, object[] currentValues,
-                                     float ratio)
+    internal void WriteLineToContent(PdfLine line,
+        PdfContentByte text,
+        PdfContentByte graphics,
+        object[] currentValues,
+        float ratio)
     {
         var currentFont = (PdfFont)currentValues[0];
         var lastBaseFactor = (float)currentValues[1];
+
         //PdfChunk chunkz;
         int numberOfSpaces;
         int lineLen;
@@ -1857,9 +1943,11 @@ public class PdfDocument : Document
 
         numberOfSpaces = line.NumberOfSpaces;
         lineLen = line.GetLineLengthUtf32();
+
         // does the line need to be justified?
         isJustified = line.HasToBeJustified() && (numberOfSpaces != 0 || lineLen > 1);
         var separatorCount = line.GetSeparatorCount();
+
         if (separatorCount > 0)
         {
             glueWidth = line.WidthLeft / separatorCount;
@@ -1880,10 +1968,12 @@ public class PdfDocument : Document
             {
                 var width = line.WidthLeft;
                 var last = line.GetChunk(line.Size - 1);
+
                 if (last != null)
                 {
                     var s = last.ToString();
                     char c;
+
                     if (s.Length > 0 &&
                         hangingPunctuation.IndexOf((c = s[s.Length - 1]).ToString(), StringComparison.Ordinal) >= 0)
                     {
@@ -1917,6 +2007,7 @@ public class PdfDocument : Document
             if (chunkStrokeIdx <= lastChunkStroke)
             {
                 float width;
+
                 if (isJustified)
                 {
                     width = chunk.GetWidthCorrected(baseCharacterSpacing, baseWordSpacing);
@@ -1929,6 +2020,7 @@ public class PdfDocument : Document
                 if (chunk.IsStroked())
                 {
                     var nextChunk = line.GetChunk(chunkStrokeIdx + 1);
+
                     if (chunk.IsSeparator())
                     {
                         width = glueWidth;
@@ -1938,15 +2030,16 @@ public class PdfDocument : Document
                         var fontSize = chunk.Font.Size;
                         var ascender = chunk.Font.Font.GetFontDescriptor(BaseFont.ASCENT, fontSize);
                         var descender = chunk.Font.Font.GetFontDescriptor(BaseFont.DESCENT, fontSize);
+
                         if (vertical)
                         {
                             di.Draw(graphics, baseXMarker, yMarker + descender, baseXMarker + line.OriginalWidth,
-                                    ascender - descender, yMarker);
+                                ascender - descender, yMarker);
                         }
                         else
                         {
                             di.Draw(graphics, xMarker, yMarker + descender, xMarker + width, ascender - descender,
-                                    yMarker);
+                                yMarker);
                         }
                     }
 
@@ -1958,6 +2051,7 @@ public class PdfDocument : Document
                         var fontSize = chunk.Font.Size;
                         var ascender = chunk.Font.Font.GetFontDescriptor(BaseFont.ASCENT, fontSize);
                         var descender = chunk.Font.Font.GetFontDescriptor(BaseFont.DESCENT, fontSize);
+
                         if (tabPosition > xMarker)
                         {
                             di.Draw(graphics, xMarker, yMarker + descender, tabPosition, ascender - descender, yMarker);
@@ -1971,6 +2065,7 @@ public class PdfDocument : Document
                     if (chunk.IsAttribute(Chunk.BACKGROUND))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.BACKGROUND))
                         {
                             subtract = 0;
@@ -1987,10 +2082,10 @@ public class PdfDocument : Document
                         var bgr = (object[])chunk.GetAttribute(Chunk.BACKGROUND);
                         graphics.SetColorFill((BaseColor)bgr[0]);
                         var extra = (float[])bgr[1];
-                        graphics.Rectangle(xMarker - extra[0],
-                                           yMarker + descender - extra[1] + chunk.TextRise,
-                                           width - subtract + extra[0] + extra[2],
-                                           ascender - descender + extra[1] + extra[3]);
+
+                        graphics.Rectangle(xMarker - extra[0], yMarker + descender - extra[1] + chunk.TextRise,
+                            width - subtract + extra[0] + extra[2], ascender - descender + extra[1] + extra[3]);
+
                         graphics.Fill();
                         graphics.SetGrayFill(0);
                     }
@@ -1998,6 +2093,7 @@ public class PdfDocument : Document
                     if (chunk.IsAttribute(Chunk.UNDERLINE))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.UNDERLINE))
                         {
                             subtract = 0;
@@ -2010,11 +2106,13 @@ public class PdfDocument : Document
 
                         var unders = (object[][])chunk.GetAttribute(Chunk.UNDERLINE);
                         BaseColor scolor = null;
+
                         for (var k = 0; k < unders.Length; ++k)
                         {
                             var obj = unders[k];
                             scolor = (BaseColor)obj[0];
                             var ps = (float[])obj[1];
+
                             if (scolor == null)
                             {
                                 scolor = color;
@@ -2029,6 +2127,7 @@ public class PdfDocument : Document
                             graphics.SetLineWidth(ps[0] + fsize * ps[1]);
                             var shift = ps[2] + fsize * ps[3];
                             var cap2 = (int)ps[4];
+
                             if (cap2 != 0)
                             {
                                 graphics.SetLineCap(cap2);
@@ -2037,6 +2136,7 @@ public class PdfDocument : Document
                             graphics.MoveTo(xMarker, yMarker + shift);
                             graphics.LineTo(xMarker + width - subtract, yMarker + shift);
                             graphics.Stroke();
+
                             if (scolor != null)
                             {
                                 graphics.ResetGrayStroke();
@@ -2054,6 +2154,7 @@ public class PdfDocument : Document
                     if (chunk.IsAttribute(Chunk.ACTION))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.ACTION))
                         {
                             subtract = 0;
@@ -2065,13 +2166,13 @@ public class PdfDocument : Document
                         }
 
                         text.AddAnnotation(new PdfAnnotation(Writer, xMarker, yMarker, xMarker + width - subtract,
-                                                             yMarker + chunk.Font.Size,
-                                                             (PdfAction)chunk.GetAttribute(Chunk.ACTION)));
+                            yMarker + chunk.Font.Size, (PdfAction)chunk.GetAttribute(Chunk.ACTION)));
                     }
 
                     if (chunk.IsAttribute(Chunk.REMOTEGOTO))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.REMOTEGOTO))
                         {
                             subtract = 0;
@@ -2084,21 +2185,23 @@ public class PdfDocument : Document
 
                         var obj = (object[])chunk.GetAttribute(Chunk.REMOTEGOTO);
                         var filename = (string)obj[0];
+
                         if (obj[1] is string)
                         {
                             RemoteGoto(filename, (string)obj[1], xMarker, yMarker, xMarker + width - subtract,
-                                       yMarker + chunk.Font.Size);
+                                yMarker + chunk.Font.Size);
                         }
                         else
                         {
                             RemoteGoto(filename, (int)obj[1], xMarker, yMarker, xMarker + width - subtract,
-                                       yMarker + chunk.Font.Size);
+                                yMarker + chunk.Font.Size);
                         }
                     }
 
                     if (chunk.IsAttribute(Chunk.LOCALGOTO))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.LOCALGOTO))
                         {
                             subtract = 0;
@@ -2110,12 +2213,13 @@ public class PdfDocument : Document
                         }
 
                         LocalGoto((string)chunk.GetAttribute(Chunk.LOCALGOTO), xMarker, yMarker,
-                                  xMarker + width - subtract, yMarker + chunk.Font.Size);
+                            xMarker + width - subtract, yMarker + chunk.Font.Size);
                     }
 
                     if (chunk.IsAttribute(Chunk.LOCALDESTINATION))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.LOCALDESTINATION))
                         {
                             subtract = 0;
@@ -2127,12 +2231,13 @@ public class PdfDocument : Document
                         }
 
                         LocalDestination((string)chunk.GetAttribute(Chunk.LOCALDESTINATION),
-                                         new PdfDestination(PdfDestination.XYZ, xMarker, yMarker + chunk.Font.Size, 0));
+                            new PdfDestination(PdfDestination.XYZ, xMarker, yMarker + chunk.Font.Size, 0));
                     }
 
                     if (chunk.IsAttribute(Chunk.GENERICTAG))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.GENERICTAG))
                         {
                             subtract = 0;
@@ -2144,8 +2249,10 @@ public class PdfDocument : Document
                         }
 
                         var rect = new Rectangle(xMarker, yMarker, xMarker + width - subtract,
-                                                 yMarker + chunk.Font.Size);
+                            yMarker + chunk.Font.Size);
+
                         var pev = Writer.PageEvent;
+
                         if (pev != null)
                         {
                             pev.OnGenericTag(Writer, this, rect, (string)chunk.GetAttribute(Chunk.GENERICTAG));
@@ -2155,6 +2262,7 @@ public class PdfDocument : Document
                     if (chunk.IsAttribute(Chunk.PDFANNOTATION))
                     {
                         var subtract = lastBaseFactor;
+
                         if (nextChunk != null && nextChunk.IsAttribute(Chunk.PDFANNOTATION))
                         {
                             subtract = 0;
@@ -2168,19 +2276,24 @@ public class PdfDocument : Document
                         var fontSize = chunk.Font.Size;
                         var ascender = chunk.Font.Font.GetFontDescriptor(BaseFont.ASCENT, fontSize);
                         var descender = chunk.Font.Font.GetFontDescriptor(BaseFont.DESCENT, fontSize);
-                        var annot =
-                            PdfAnnotation.ShallowDuplicate((PdfAnnotation)chunk.GetAttribute(Chunk.PDFANNOTATION));
+
+                        var annot = PdfAnnotation.ShallowDuplicate(
+                            (PdfAnnotation)chunk.GetAttribute(Chunk.PDFANNOTATION));
+
                         annot.Put(PdfName.Rect,
-                                  new PdfRectangle(xMarker, yMarker + descender, xMarker + width - subtract,
-                                                   yMarker + ascender));
+                            new PdfRectangle(xMarker, yMarker + descender, xMarker + width - subtract,
+                                yMarker + ascender));
+
                         text.AddAnnotation(annot);
                     }
 
                     var paramsx = (float[])chunk.GetAttribute(Chunk.SKEW);
                     var hs = chunk.GetAttribute(Chunk.HSCALE);
+
                     if (paramsx != null || hs != null)
                     {
                         float b = 0, c = 0;
+
                         if (paramsx != null)
                         {
                             b = paramsx[0];
@@ -2222,9 +2335,11 @@ public class PdfDocument : Document
             float strokeWidth = 1;
             BaseColor strokeColor = null;
             var fr = chunk.GetAttribute(Chunk.SUBSUPSCRIPT);
+
             if (textRender != null)
             {
                 tr = (int)textRender[0] & 3;
+
                 if (tr != PdfContentByte.TEXT_RENDER_MODE_FILL)
                 {
                     text.SetTextRenderingMode(tr);
@@ -2233,12 +2348,14 @@ public class PdfDocument : Document
                 if (tr == PdfContentByte.TEXT_RENDER_MODE_STROKE || tr == PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE)
                 {
                     strokeWidth = (float)textRender[1];
+
                     if (strokeWidth.ApproxNotEqual(1))
                     {
                         text.SetLineWidth(strokeWidth);
                     }
 
                     strokeColor = (BaseColor)textRender[2];
+
                     if (strokeColor == null)
                     {
                         strokeColor = color;
@@ -2282,6 +2399,7 @@ public class PdfDocument : Document
                 array.Add((tabPosition - xMarker) * 1000f / chunk.Font.Size / hScale);
                 text.ShowText(array);
             }
+
             // If it is a CJK chunk or Unicode TTF we will have to simulate the
             // space adjustment.
             else if (isJustified && numberOfSpaces > 0 && chunk.IsSpecialEncoding())
@@ -2295,6 +2413,7 @@ public class PdfDocument : Document
 
                 var s = chunk.ToString();
                 var idx = s.IndexOf(" ", StringComparison.Ordinal);
+
                 if (idx < 0)
                 {
                     text.ShowText(s);
@@ -2304,6 +2423,7 @@ public class PdfDocument : Document
                     var spaceCorrection = -baseWordSpacing * 1000f / chunk.Font.Size / hScale;
                     var textArray = new PdfTextArray(s.Substring(0, idx));
                     var lastIdx = idx;
+
                     while ((idx = s.IndexOf(" ", lastIdx + 1, StringComparison.Ordinal)) >= 0)
                     {
                         textArray.Add(spaceCorrection);
@@ -2364,6 +2484,7 @@ public class PdfDocument : Document
         {
             text.SetWordSpacing(0);
             text.SetCharacterSpacing(0);
+
             if (line.NewlineSplit)
             {
                 lastBaseFactor = 0;
@@ -2398,10 +2519,16 @@ public class PdfDocument : Document
     /// <param name="image">the  Image  to add</param>
     protected internal void Add(Image image)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (image.HasAbsolutePosition())
         {
             Graphics.AddImage(image);
             pageEmpty = false;
+
             return;
         }
 
@@ -2411,28 +2538,34 @@ public class PdfDocument : Document
             if (!strictImageSequence && ImageWait == null)
             {
                 ImageWait = image;
+
                 return;
             }
 
             NewPage();
+
             if (CurrentHeight.ApproxNotEqual(0) && IndentTop - CurrentHeight - image.ScaledHeight < IndentBottom)
             {
                 ImageWait = image;
+
                 return;
             }
         }
 
         pageEmpty = false;
+
         // avoid endless loops
         if (image == ImageWait)
         {
             ImageWait = null;
         }
 
-        var textwrap = (image.Alignment & Image.TEXTWRAP) == Image.TEXTWRAP
-                       && !((image.Alignment & Image.MIDDLE_ALIGN) == Image.MIDDLE_ALIGN);
+        var textwrap = (image.Alignment & Image.TEXTWRAP) == Image.TEXTWRAP &&
+                       !((image.Alignment & Image.MIDDLE_ALIGN) == Image.MIDDLE_ALIGN);
+
         var underlying = (image.Alignment & Image.UNDERLYING) == Image.UNDERLYING;
         var diff = leading / 2;
+
         if (textwrap)
         {
             diff += leading;
@@ -2441,6 +2574,7 @@ public class PdfDocument : Document
         var lowerleft = IndentTop - CurrentHeight - image.ScaledHeight - diff;
         var mt = image.Matrix;
         var startPosition = IndentLeft - mt[4];
+
         if ((image.Alignment & Image.RIGHT_ALIGN) == Image.RIGHT_ALIGN)
         {
             startPosition = IndentRight - image.ScaledWidth - mt[4];
@@ -2491,6 +2625,7 @@ public class PdfDocument : Document
         }
 
         Graphics.AddImage(image, mt[0], mt[1], mt[2], mt[3], startPosition, lowerleft - mt[5]);
+
         if (!(textwrap || underlying))
         {
             CurrentHeight += image.ScaledHeight + diff;
@@ -2522,6 +2657,11 @@ public class PdfDocument : Document
     /// </summary>
     protected internal void AddSpacing(float extraspace, float oldleading, Font f)
     {
+        if (f == null)
+        {
+            throw new ArgumentNullException(nameof(f));
+        }
+
         if (extraspace.ApproxEquals(0))
         {
             return;
@@ -2539,6 +2679,7 @@ public class PdfDocument : Document
 
         leading = extraspace;
         CarriageReturn();
+
         if (f.IsUnderlined() || f.IsStrikethru())
         {
             f = new Font(f);
@@ -2556,6 +2697,16 @@ public class PdfDocument : Document
 
     protected internal void AnalyzeRow(IList<IList<PdfCell>> rows, RenderingContext ctx)
     {
+        if (rows == null)
+        {
+            throw new ArgumentNullException(nameof(rows));
+        }
+
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
         ctx.MaxCellBottom = IndentBottom;
 
         // determine whether Row(index) is in a rowspan
@@ -2563,6 +2714,7 @@ public class PdfDocument : Document
 
         var row = rows[rowIndex];
         var maxRowspan = 1;
+
         foreach (var cell in row)
         {
             maxRowspan = Math.Max(ctx.CurrentRowspan(cell), maxRowspan);
@@ -2571,6 +2723,7 @@ public class PdfDocument : Document
         rowIndex += maxRowspan;
 
         var useTop = true;
+
         if (rowIndex == rows.Count)
         {
             rowIndex = rows.Count - 1;
@@ -2583,9 +2736,11 @@ public class PdfDocument : Document
         }
 
         row = rows[rowIndex];
+
         foreach (var cell in row)
         {
             var cellRect = cell.Rectangle(ctx.Pagetop, IndentBottom);
+
             if (useTop)
             {
                 ctx.MaxCellBottom = Math.Max(ctx.MaxCellBottom, cellRect.Top);
@@ -2622,6 +2777,7 @@ public class PdfDocument : Document
                     pageEmpty = false;
                 }
             }
+
             // if the end of the line is reached, we start a new page
             else
             {
@@ -2640,8 +2796,18 @@ public class PdfDocument : Document
         Line = new PdfLine(IndentLeft, IndentRight, Alignment, leading);
     }
 
-    protected internal void ConsumeRowspan(IList<PdfCell> row, RenderingContext ctx)
+    protected internal static void ConsumeRowspan(IList<PdfCell> row, RenderingContext ctx)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
         foreach (var c in row)
         {
             ctx.ConsumeRowspan(c);
@@ -2662,22 +2828,27 @@ public class PdfDocument : Document
         // Avoid footer identation
         var tmpIndentLeft = indentation.indentLeft;
         var tmpIndentRight = indentation.indentRight;
+
         // Begin added: Bonf (Marc Schneider) 2003-07-29
         var tmpListIndentLeft = indentation.ListIndentLeft;
         var tmpImageIndentLeft = indentation.ImageIndentLeft;
         var tmpImageIndentRight = indentation.ImageIndentRight;
+
         // End added: Bonf (Marc Schneider) 2003-07-29
 
         indentation.indentLeft = indentation.indentRight = 0;
+
         // Begin added: Bonf (Marc Schneider) 2003-07-29
         indentation.ListIndentLeft = 0;
         indentation.ImageIndentLeft = 0;
         indentation.ImageIndentRight = 0;
+
         // End added: Bonf (Marc Schneider) 2003-07-29
         // End Added by Edgar Leonardo Prieto Perilla
         footer.PageNumber = PageNumber;
         leading = footer.Paragraph.TotalLeading;
         Add(footer.Paragraph);
+
         // adding the footer limits the height
         indentation.indentBottom = CurrentHeight;
         Text.MoveText(Left, IndentBottom);
@@ -2690,13 +2861,16 @@ public class PdfDocument : Document
         Graphics.Rectangle(footer);
         indentation.indentBottom = CurrentHeight + leading * 2;
         CurrentHeight = 0;
+
         // Begin added by Edgar Leonardo Prieto Perilla
         indentation.indentLeft = tmpIndentLeft;
         indentation.indentRight = tmpIndentRight;
+
         // Begin added: Bonf (Marc Schneider) 2003-07-29
         indentation.ListIndentLeft = tmpListIndentLeft;
         indentation.ImageIndentLeft = tmpImageIndentLeft;
         indentation.ImageIndentRight = tmpImageIndentRight;
+
         // End added: Bonf (Marc Schneider) 2003-07-29
         // End added by Edgar Leonardo Prieto Perilla
     }
@@ -2713,16 +2887,20 @@ public class PdfDocument : Document
         // Avoid header identation
         var tmpIndentLeft = indentation.indentLeft;
         var tmpIndentRight = indentation.indentRight;
+
         // Begin added: Bonf (Marc Schneider) 2003-07-29
         var tmpListIndentLeft = indentation.ListIndentLeft;
         var tmpImageIndentLeft = indentation.ImageIndentLeft;
         var tmpImageIndentRight = indentation.ImageIndentRight;
+
         // End added: Bonf (Marc Schneider) 2003-07-29
         indentation.indentLeft = indentation.indentRight = 0;
+
         //  Added: Bonf
         indentation.ListIndentLeft = 0;
         indentation.ImageIndentLeft = 0;
         indentation.ImageIndentRight = 0;
+
         // End added: Bonf
         // Begin added by Edgar Leonardo Prieto Perilla
         header.PageNumber = PageNumber;
@@ -2738,14 +2916,17 @@ public class PdfDocument : Document
         Graphics.Rectangle(header);
         FlushLines();
         CurrentHeight = 0;
+
         // Begin added by Edgar Leonardo Prieto Perilla
         // Restore identation
         indentation.indentLeft = tmpIndentLeft;
         indentation.indentRight = tmpIndentRight;
+
         // Begin added: Bonf (Marc Schneider) 2003-07-29
         indentation.ListIndentLeft = tmpListIndentLeft;
         indentation.ImageIndentLeft = tmpImageIndentLeft;
         indentation.ImageIndentRight = tmpImageIndentRight;
+
         // End added: Bonf (Marc Schneider) 2003-07-29
         // End Added by Edgar Leonardo Prieto Perilla
     }
@@ -2760,15 +2941,14 @@ public class PdfDocument : Document
     /// </summary>
     protected internal void EnsureNewLine()
     {
-        if (LastElementType == Element.PHRASE ||
-            LastElementType == Element.CHUNK)
+        if (LastElementType == Element.PHRASE || LastElementType == Element.CHUNK)
         {
             NewLine();
             FlushLines();
         }
     }
 
-    protected internal IList<IList<PdfCell>> ExtractRows(IList<PdfCell> cells, RenderingContext ctx)
+    protected internal static IList<IList<PdfCell>> ExtractRows(IList<PdfCell> cells, RenderingContext ctx)
     {
         PdfCell cell;
         PdfCell previousCell = null;
@@ -2776,6 +2956,7 @@ public class PdfDocument : Document
         var rowCells = new List<PdfCell>();
 
         var iterator = new ListIterator<PdfCell>(cells);
+
         while (iterator.HasNext())
         {
             cell = iterator.Next();
@@ -2840,6 +3021,7 @@ public class PdfDocument : Document
                 for (var k = 1; k < rowspan && rows.Count < i + k; k++)
                 {
                     var spannedRow = rows[i + k];
+
                     if (spannedRow.Count > j)
                     {
                         spannedRow.Insert(j, c);
@@ -2883,6 +3065,7 @@ public class PdfDocument : Document
         float displacement = 0;
 
         currentValues[1] = (float)0;
+
         // looping over all the lines
         foreach (var l in Lines)
         {
@@ -2890,12 +3073,14 @@ public class PdfDocument : Document
 
             var moveTextX = l.IndentLeft - IndentLeft + indentation.indentLeft + indentation.ListIndentLeft +
                             indentation.SectionIndentLeft;
+
             Text.MoveText(moveTextX, -l.Height);
+
             // is the line preceeded by a symbol?
             if (l.ListSymbol != null)
             {
                 ColumnText.ShowTextAligned(Graphics, Element.ALIGN_LEFT, new Phrase(l.ListSymbol),
-                                           Text.Xtlm - l.ListIndent, Text.Ytlm, 0);
+                    Text.Xtlm - l.ListIndent, Text.Ytlm, 0);
             }
 
             currentValues[0] = currentFont;
@@ -2909,6 +3094,7 @@ public class PdfDocument : Document
         }
 
         Lines = new List<PdfLine>();
+
         return displacement;
     }
 
@@ -2939,21 +3125,23 @@ public class PdfDocument : Document
 
         // backgroundcolors, etc...
         ThisBoxSize = BoxSize.Clone();
-        if (PageSize.BackgroundColor != null
-            || PageSize.HasBorders()
-            || PageSize.BorderColor != null)
+
+        if (PageSize.BackgroundColor != null || PageSize.HasBorders() || PageSize.BorderColor != null)
         {
             Add(PageSize);
         }
 
         var oldleading = leading;
         var oldAlignment = Alignment;
+
         // if there is a footer, the footer is added
         DoFooter();
+
         // we move to the left/top position of the page
         Text.MoveText(Left, Top);
         DoHeader();
         pageEmpty = true;
+
         // if there is an image waiting to be drawn, draw it
         if (ImageWait != null)
         {
@@ -2966,6 +3154,7 @@ public class PdfDocument : Document
         CarriageReturn();
 
         var pageEvent = Writer.PageEvent;
+
         if (pageEvent != null)
         {
             if (FirstPageEvent)
@@ -2979,9 +3168,15 @@ public class PdfDocument : Document
         FirstPageEvent = false;
     }
 
-    protected internal bool MayBeRemoved(IList<PdfCell> row)
+    protected internal static bool MayBeRemoved(IList<PdfCell> row)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
         var mayBeRemoved = true;
+
         foreach (var cell in row)
         {
             mayBeRemoved &= cell.MayBeRemoved();
@@ -2994,6 +3189,7 @@ public class PdfDocument : Document
     {
         LastElementType = -1;
         CarriageReturn();
+
         if (Lines != null && Lines.Count > 0)
         {
             Lines.Add(Line);
@@ -3005,6 +3201,16 @@ public class PdfDocument : Document
 
     protected internal void RenderCells(RenderingContext ctx, IList<PdfCell> cells, bool hasToFit)
     {
+        if (ctx == null)
+        {
+            throw new ArgumentNullException(nameof(ctx));
+        }
+
+        if (cells == null)
+        {
+            throw new ArgumentNullException(nameof(cells));
+        }
+
         if (hasToFit)
         {
             foreach (var cell in cells)
@@ -3024,6 +3230,7 @@ public class PdfDocument : Document
             if (!ctx.IsCellRenderedOnPage(cell, PageNumber))
             {
                 float correction = 0;
+
                 if (ctx.NumCellRendered(cell) >= 1)
                 {
                     correction = 1.0f;
@@ -3040,6 +3247,7 @@ public class PdfDocument : Document
                     var cellDisplacement = FlushLines() - cellTop;
 
                     Text.MoveText(0, cellDisplacement);
+
                     if (ctx.OldHeight + cellDisplacement > CurrentHeight)
                     {
                         CurrentHeight = ctx.OldHeight + cellDisplacement;
@@ -3056,6 +3264,7 @@ public class PdfDocument : Document
 
                 // we paint the borders of the cells
                 var cellRect = cell.GetRectangle(tableRect.Top, indentBottom);
+
                 //cellRect.Bottom = cellRect.Bottom;
                 if (cellRect.Height > 0)
                 {
@@ -3065,6 +3274,7 @@ public class PdfDocument : Document
 
                 // and additional graphics
                 var images = cell.GetImages(ctx.Pagetop, IndentBottom);
+
                 foreach (var image in images)
                 {
                     Graphics.AddImage(image);
@@ -3076,6 +3286,7 @@ public class PdfDocument : Document
     protected internal void SetNewPageSizeAndMargins()
     {
         PageSize = NextPageSize;
+
         if (MarginMirroring && (PageNumber & 1) == 0)
         {
             RightMargin = NextMarginLeft;
@@ -3125,6 +3336,7 @@ public class PdfDocument : Document
         var cells = table.Cells;
         var rows = ExtractRows(cells, ctx);
         var isContinue = false;
+
         while (cells.Count != 0)
         {
             // initialisation of some extra parameters;
@@ -3137,6 +3349,7 @@ public class PdfDocument : Document
             var iterator = new ListIterator<IList<PdfCell>>(rows);
 
             var atLeastOneFits = false;
+
             while (iterator.HasNext())
             {
                 var row = iterator.Next();
@@ -3156,6 +3369,7 @@ public class PdfDocument : Document
             //          compose cells array list for subsequent code
             cells.Clear();
             var opt = new NullValueDictionary<PdfCell, object>();
+
             foreach (var row in rows)
             {
                 foreach (var cellp in row)
@@ -3177,25 +3391,30 @@ public class PdfDocument : Document
             var under = Writer.DirectContentUnder;
             under.Rectangle(tablerec.GetRectangle(Top, IndentBottom));
             under.Add(ctx.CellGraphics);
+
             // bugfix by Gerald Fehringer: now again add the border for the table
             // since it might have been covered by cell backgrounds
             tablerec.BackgroundColor = null;
             tablerec = tablerec.GetRectangle(Top, IndentBottom);
             tablerec.Border = table.Border;
             under.Rectangle(tablerec);
+
             // end bugfix
             ctx.CellGraphics = new PdfContentByte(null);
+
             // if the table continues on the next page
             if (rows.Count != 0)
             {
                 isContinue = true;
                 Graphics.SetLineWidth(table.BorderWidth);
+
                 if (cellsShown && (table.Border & Rectangle.BOTTOM_BORDER) == Rectangle.BOTTOM_BORDER)
                 {
                     // Draw the bottom line
 
                     // the color is set to the color of the element
                     var tColor = table.BorderColor;
+
                     if (tColor != null)
                     {
                         Graphics.SetColorStroke(tColor);
@@ -3204,6 +3423,7 @@ public class PdfDocument : Document
                     Graphics.MoveTo(table.Left, Math.Max(table.Bottom, IndentBottom));
                     Graphics.LineTo(table.Right, Math.Max(table.Bottom, IndentBottom));
                     Graphics.Stroke();
+
                     if (tColor != null)
                     {
                         Graphics.ResetRgbColorStroke();
@@ -3216,9 +3436,11 @@ public class PdfDocument : Document
 
                 // new page
                 NewPage();
+
                 // G.F.: if something added in page event i.e. currentHeight > 0
                 float heightCorrection = 0;
                 var somethingAdded = false;
+
                 if (CurrentHeight > 0)
                 {
                     heightCorrection = 6;
@@ -3236,23 +3458,29 @@ public class PdfDocument : Document
 
                 // this part repeats the table headers (if any)
                 var size = headercells.Count;
+
                 if (size > 0)
                 {
                     // this is the top of the headersection
                     cell = headercells[0];
                     var oldTop = cell.GetTop(0);
+
                     // loop over all the cells of the table header
                     for (var ii = 0; ii < size; ii++)
                     {
                         cell = headercells[ii];
+
                         // calculation of the new cellpositions
                         cell.Top = IndentTop - oldTop + cell.GetTop(0);
                         cell.Bottom = IndentTop - oldTop + cell.GetBottom(0);
                         ctx.Pagetop = cell.Bottom;
+
                         // we paint the borders of the cell
                         ctx.CellGraphics.Rectangle(cell.Rectangle(IndentTop, IndentBottom));
+
                         // we write the text of the cell
                         var images = cell.GetImages(IndentTop, IndentBottom);
+
                         foreach (var image in images)
                         {
                             cellsShown = true;
@@ -3279,16 +3507,20 @@ public class PdfDocument : Document
                 }
 
                 ctx.OldHeight = CurrentHeight - heightCorrection;
+
                 // calculating the new positions of the table and the cells
                 size = Math.Min(cells.Count, table.Columns);
                 var i = 0;
+
                 while (i < size)
                 {
                     cell = cells[i];
+
                     if (cell.GetTop(-table.Cellspacing) > ctx.LostTableBottom)
                     {
                         var newBottom = ctx.Pagetop - difference + cell.Bottom;
                         var neededHeight = cell.RemainingHeight;
+
                         if (newBottom > ctx.Pagetop - neededHeight)
                         {
                             difference += newBottom - (ctx.Pagetop - neededHeight);
@@ -3301,11 +3533,13 @@ public class PdfDocument : Document
                 size = cells.Count;
                 table.Top = IndentTop;
                 table.Bottom = ctx.Pagetop - difference + table.GetBottom(table.Cellspacing);
+
                 for (i = 0; i < size; i++)
                 {
                     cell = cells[i];
                     var newBottom = ctx.Pagetop - difference + cell.Bottom;
                     var newTop = ctx.Pagetop - difference + cell.GetTop(-table.Cellspacing);
+
                     if (newTop > IndentTop - CurrentHeight)
                     {
                         newTop = IndentTop - CurrentHeight;
@@ -3318,6 +3552,7 @@ public class PdfDocument : Document
         }
 
         var tableHeight = table.Top - table.Bottom;
+
         // bugfix by Adauto Martins when have more than two tables and more than one page
         // If continuation of table in other page (bug report #1460051)
         if (isContinue)
@@ -3434,9 +3669,7 @@ public class PdfDocument : Document
         }
 
         internal void AddAuthor(string author)
-        {
-            Put(PdfName.Author, new PdfString(author, TEXT_UNICODE));
-        }
+            => Put(PdfName.Author, new PdfString(author, TEXT_UNICODE));
 
         internal void AddCreationDate()
         {
@@ -3446,16 +3679,15 @@ public class PdfDocument : Document
         }
 
         internal void AddCreator(string creator)
-        {
-            Put(PdfName.Creator, new PdfString(creator, TEXT_UNICODE));
-        }
+            => Put(PdfName.Creator, new PdfString(creator, TEXT_UNICODE));
 
         /// <summary>
         ///     Adds the date of creation to the document.
         /// </summary>
         internal void Addkey(string key, string value)
         {
-            if (key.Equals("Producer") || key.Equals("CreationDate"))
+            if (key.Equals("Producer", StringComparison.Ordinal) ||
+                key.Equals("CreationDate", StringComparison.Ordinal))
             {
                 return;
             }
@@ -3464,26 +3696,19 @@ public class PdfDocument : Document
         }
 
         internal void AddKeywords(string keywords)
-        {
-            Put(PdfName.Keywords, new PdfString(keywords, TEXT_UNICODE));
-        }
+            => Put(PdfName.Keywords, new PdfString(keywords, TEXT_UNICODE));
 
         internal void AddProducer()
-        {
-            // This line may only be changed by Bruno Lowagie or Paulo Soares
-            Put(PdfName.Producer, new PdfString(Version));
-            // Do not edit the line above!
-        }
 
+            // This line may only be changed by Bruno Lowagie or Paulo Soares
+            => Put(PdfName.Producer, new PdfString(Version));
+
+        // Do not edit the line above!
         internal void AddSubject(string subject)
-        {
-            Put(PdfName.Subject, new PdfString(subject, TEXT_UNICODE));
-        }
+            => Put(PdfName.Subject, new PdfString(subject, TEXT_UNICODE));
 
         internal void AddTitle(string title)
-        {
-            Put(PdfName.Title, new PdfString(title, TEXT_UNICODE));
-        }
+            => Put(PdfName.Title, new PdfString(title, TEXT_UNICODE));
     }
 
     /// <summary>
@@ -3500,7 +3725,7 @@ public class PdfDocument : Document
     /// </summary>
     internal class PdfCatalog : PdfDictionary
     {
-        internal PdfWriter Writer;
+        internal readonly PdfWriter Writer;
 
         /// <summary>
         ///     constructors
@@ -3532,8 +3757,10 @@ public class PdfDocument : Document
         /// <summary>
         ///     Adds the names of the named destinations to the catalog.
         /// </summary>
-        internal void AddNames(OrderedTree localDestinations, INullValueDictionary<string, PdfObject> documentLevelJs,
-                               INullValueDictionary<string, PdfObject> documentFileAttachment, PdfWriter writer)
+        internal void AddNames(OrderedTree localDestinations,
+            INullValueDictionary<string, PdfObject> documentLevelJs,
+            INullValueDictionary<string, PdfObject> documentFileAttachment,
+            PdfWriter writer)
         {
             if (localDestinations.Count == 0 && documentLevelJs.Count == 0 && documentFileAttachment.Count == 0)
             {
@@ -3541,12 +3768,15 @@ public class PdfDocument : Document
             }
 
             var names = new PdfDictionary();
+
             if (localDestinations.Count > 0)
             {
                 var ar = new PdfArray();
+
                 foreach (string name in localDestinations.Keys)
                 {
                     var obj = (object[])localDestinations[name];
+
                     if (obj[2] == null) //no destination
                     {
                         continue;
@@ -3574,7 +3804,7 @@ public class PdfDocument : Document
             if (documentFileAttachment.Count > 0)
             {
                 names.Put(PdfName.Embeddedfiles,
-                          writer.AddToBody(PdfNameTree.WriteTree(documentFileAttachment, writer)).IndirectReference);
+                    writer.AddToBody(PdfNameTree.WriteTree(documentFileAttachment, writer)).IndirectReference);
             }
 
             if (names.Size > 0)
@@ -3589,11 +3819,11 @@ public class PdfDocument : Document
     /// </summary>
     protected internal class RenderingContext
     {
+        internal readonly INullValueDictionary<object, object> PageMap = new NullValueDictionary<object, object>();
         internal PdfContentByte CellGraphics;
         internal float LostTableBottom;
         internal float MaxCellBottom;
         internal float OldHeight = -1;
-        internal INullValueDictionary<object, object> PageMap = new NullValueDictionary<object, object>();
         internal float Pagetop = -1;
 
         /// <summary>
@@ -3609,6 +3839,7 @@ public class PdfDocument : Document
         public int CellRendered(PdfCell cell, int pageNumber)
         {
             var i = PageMap[cell];
+
             if (i == null)
             {
                 i = 1;
@@ -3640,12 +3871,18 @@ public class PdfDocument : Document
         /// <returns>a rowspan.</returns>
         public int ConsumeRowspan(PdfCell c)
         {
+            if (c == null)
+            {
+                throw new ArgumentNullException(nameof(c));
+            }
+
             if (c.Rowspan == 1)
             {
                 return 1;
             }
 
             var i = RowspanMap[c];
+
             if (i == null)
             {
                 i = c.Rowspan;
@@ -3669,7 +3906,13 @@ public class PdfDocument : Document
         /// <returns>the current rowspan</returns>
         public int CurrentRowspan(PdfCell c)
         {
+            if (c == null)
+            {
+                throw new ArgumentNullException(nameof(c));
+            }
+
             var i = RowspanMap[c];
+
             if (i == null)
             {
                 return c.Rowspan;
@@ -3693,6 +3936,7 @@ public class PdfDocument : Document
         public int NumCellRendered(PdfCell cell)
         {
             var i = PageMap[cell];
+
             if (i == null)
             {
                 i = 0;

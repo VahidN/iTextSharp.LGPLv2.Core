@@ -4,8 +4,8 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class StampContent : PdfContentByte
 {
-    internal PageResources pageResources;
-    internal PdfStamperImp.PageStamp Ps;
+    internal readonly PageResources pageResources;
+    internal readonly PdfStamperImp.PageStamp Ps;
 
     /// <summary>
     ///     Creates a new instance of StampContent

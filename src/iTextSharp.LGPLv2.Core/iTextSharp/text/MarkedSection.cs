@@ -20,6 +20,11 @@ public class MarkedSection : MarkedObject
     /// <param name="section">the marked section</param>
     public MarkedSection(Section section)
     {
+        if (section == null)
+        {
+            throw new ArgumentNullException(nameof(section));
+        }
+
         if (section.Title != null)
         {
             title = new MarkedObject(section.Title);
@@ -86,6 +91,11 @@ public class MarkedSection : MarkedObject
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (value.Element is Paragraph)
             {
                 title = value;
@@ -175,6 +185,11 @@ public class MarkedSection : MarkedObject
     /// <returns> true  if the element was processed successfully</returns>
     public override bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             foreach (var element in (Section)Element)

@@ -50,10 +50,11 @@ internal class TrueTypeFontUnicode : TrueTypeFont, IComparer<int[]>
         }
 
         FontType = FONT_TYPE_TTUNI;
-        if ((FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttf") ||
-             FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".otf") ||
-             FileName.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttc")) &&
-            (enc.Equals(IDENTITY_H) || enc.Equals(IDENTITY_V)) && emb)
+        if ((FileName.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
+             FileName.EndsWith(".otf", StringComparison.OrdinalIgnoreCase) ||
+             FileName.EndsWith(".ttc", StringComparison.OrdinalIgnoreCase)) &&
+            (enc.Equals(IDENTITY_H, StringComparison.Ordinal) || enc.Equals(IDENTITY_V, StringComparison.Ordinal)) &&
+            emb)
         {
             Process(ttfAfm, forceRead);
             if (Os2.FsType == 2)
@@ -83,7 +84,7 @@ internal class TrueTypeFontUnicode : TrueTypeFont, IComparer<int[]>
             throw new DocumentException(FileName + " " + Style + " is not a TTF font file.");
         }
 
-        _vertical = enc.EndsWith("V");
+        _vertical = enc.EndsWith("V", StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -323,7 +324,7 @@ internal class TrueTypeFontUnicode : TrueTypeFont, IComparer<int[]>
             tmp.Add(o);
         }
 
-        var metrics = tmp.ToArray();
+        var metrics = tmp.Where(m => m != null).ToArray();
         Array.Sort(metrics, this);
         PdfIndirectReference indFont = null;
         PdfObject pobj = null;

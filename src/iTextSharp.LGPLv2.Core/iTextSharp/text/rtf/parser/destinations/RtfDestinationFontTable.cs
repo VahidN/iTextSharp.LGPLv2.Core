@@ -232,132 +232,132 @@ public sealed class RtfDestinationFontTable : RtfDestination
         var result = true;
         // just let fonttbl fall through and set last ctrl word object.
 
-        if (ctrlWordData.CtrlWord.Equals("f"))
+        if (ctrlWordData.CtrlWord.Equals("f", StringComparison.Ordinal))
         {
             SetFontNumber(ctrlWordData.Param);
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fcharset"))
+        if (ctrlWordData.CtrlWord.Equals("fcharset", StringComparison.Ordinal))
         {
             SetCharset(ctrlWordData.Param);
             result = true;
         }
 
         // font families
-        if (ctrlWordData.CtrlWord.Equals("fnil"))
+        if (ctrlWordData.CtrlWord.Equals("fnil", StringComparison.Ordinal))
         {
             SetFontFamily("roman");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("froman"))
+        if (ctrlWordData.CtrlWord.Equals("froman", StringComparison.Ordinal))
         {
             SetFontFamily("roman");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fswiss"))
+        if (ctrlWordData.CtrlWord.Equals("fswiss", StringComparison.Ordinal))
         {
             SetFontFamily("swiss");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fmodern"))
+        if (ctrlWordData.CtrlWord.Equals("fmodern", StringComparison.Ordinal))
         {
             SetFontFamily("modern");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fscript"))
+        if (ctrlWordData.CtrlWord.Equals("fscript", StringComparison.Ordinal))
         {
             SetFontFamily("script");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fdecor"))
+        if (ctrlWordData.CtrlWord.Equals("fdecor", StringComparison.Ordinal))
         {
             SetFontFamily("decor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("ftech"))
+        if (ctrlWordData.CtrlWord.Equals("ftech", StringComparison.Ordinal))
         {
             SetFontFamily("tech");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fbidi"))
+        if (ctrlWordData.CtrlWord.Equals("fbidi", StringComparison.Ordinal))
         {
             SetFontFamily("bidi");
             result = true;
         }
 
         // pitch
-        if (ctrlWordData.CtrlWord.Equals("fprq"))
+        if (ctrlWordData.CtrlWord.Equals("fprq", StringComparison.Ordinal))
         {
             SetPitch(ctrlWordData.Param);
             result = true;
         }
 
         // bias
-        if (ctrlWordData.CtrlWord.Equals("fbias"))
+        if (ctrlWordData.CtrlWord.Equals("fbias", StringComparison.Ordinal))
         {
             SetBias(ctrlWordData.Param);
             result = true;
         }
 
         // theme font information
-        if (ctrlWordData.CtrlWord.Equals("flomajor"))
+        if (ctrlWordData.CtrlWord.Equals("flomajor", StringComparison.Ordinal))
         {
             SetThemeFont("flomajor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fhimajor"))
+        if (ctrlWordData.CtrlWord.Equals("fhimajor", StringComparison.Ordinal))
         {
             SetThemeFont("fhimajor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fdbmajor"))
+        if (ctrlWordData.CtrlWord.Equals("fdbmajor", StringComparison.Ordinal))
         {
             SetThemeFont("fdbmajor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fbimajor"))
+        if (ctrlWordData.CtrlWord.Equals("fbimajor", StringComparison.Ordinal))
         {
             SetThemeFont("fbimajor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("flominor"))
+        if (ctrlWordData.CtrlWord.Equals("flominor", StringComparison.Ordinal))
         {
             SetThemeFont("flominor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fhiminor"))
+        if (ctrlWordData.CtrlWord.Equals("fhiminor", StringComparison.Ordinal))
         {
             SetThemeFont("fhiminor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fdbminor"))
+        if (ctrlWordData.CtrlWord.Equals("fdbminor", StringComparison.Ordinal))
         {
             SetThemeFont("fdbminor");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fbiminor"))
+        if (ctrlWordData.CtrlWord.Equals("fbiminor", StringComparison.Ordinal))
         {
             SetThemeFont("fbiminor");
             result = true;
         }
 
         // panose
-        if (ctrlWordData.CtrlWord.Equals("panose"))
+        if (ctrlWordData.CtrlWord.Equals("panose", StringComparison.Ordinal))
         {
             _state = SettingPanose;
             result = true;
@@ -365,48 +365,48 @@ public sealed class RtfDestinationFontTable : RtfDestination
 
         // \*\fname
         // <font name> #PCDATA
-        if (ctrlWordData.CtrlWord.Equals("fname"))
+        if (ctrlWordData.CtrlWord.Equals("fname", StringComparison.Ordinal))
         {
             _state = SettingFontname;
             result = true;
         }
 
         // \*\falt
-        if (ctrlWordData.CtrlWord.Equals("falt"))
+        if (ctrlWordData.CtrlWord.Equals("falt", StringComparison.Ordinal))
         {
             _state = SettingAlternate;
             result = true;
         }
 
         // \*\fontemb
-        if (ctrlWordData.CtrlWord.Equals("fontemb"))
+        if (ctrlWordData.CtrlWord.Equals("fontemb", StringComparison.Ordinal))
         {
             _state = SettingFontEmbed;
             result = true;
         }
 
         // font type
-        if (ctrlWordData.CtrlWord.Equals("ftnil"))
+        if (ctrlWordData.CtrlWord.Equals("ftnil", StringComparison.Ordinal))
         {
             SetTrueType("ftnil");
             result = true;
         }
 
-        if (ctrlWordData.CtrlWord.Equals("fttruetype"))
+        if (ctrlWordData.CtrlWord.Equals("fttruetype", StringComparison.Ordinal))
         {
             SetTrueType("fttruetype");
             result = true;
         }
 
         // \*\fontfile
-        if (ctrlWordData.CtrlWord.Equals("fontemb"))
+        if (ctrlWordData.CtrlWord.Equals("fontemb", StringComparison.Ordinal))
         {
             _state = SettingFontFile;
             result = true;
         }
 
         // codepage
-        if (ctrlWordData.CtrlWord.Equals("cpg"))
+        if (ctrlWordData.CtrlWord.Equals("cpg", StringComparison.Ordinal))
         {
             SetCodePage(ctrlWordData.Param);
             result = true;
@@ -447,6 +447,11 @@ public sealed class RtfDestinationFontTable : RtfDestination
     /// <param name="charset">The charset value</param>
     public void SetCharset(string charset)
     {
+        if (charset == null)
+        {
+            throw new ArgumentNullException(nameof(charset));
+        }
+
         if (charset.Length == 0)
         {
             charset = "0";
@@ -585,7 +590,7 @@ public sealed class RtfDestinationFontTable : RtfDestination
     /// </summary>
     /// <param name="fontName">The font name to create</param>
     /// <returns>The created  Font  object</returns>
-    private Font createfont(string fontName)
+    private static Font createfont(string fontName)
     {
         Font f1 = null;
         var pos = -1;
@@ -612,7 +617,7 @@ public sealed class RtfDestinationFontTable : RtfDestination
     ///     Load system fonts into the static  FontFactory  object
     ///     @since 2.0.8
     /// </summary>
-    private void importSystemFonts()
+    private static void importSystemFonts()
     {
         FontFactory.RegisterDirectories();
     }
@@ -673,13 +678,13 @@ public sealed class RtfDestinationFontTable : RtfDestination
             //              }
             //          } else {
             if (!_importHeader.ImportFont(_fontNr, _fontName,
-                                          int.Parse(_charset == "" ? CharsetDefault : _charset,
+                                          int.Parse(string.IsNullOrEmpty(_charset) ? CharsetDefault : _charset,
                                                     CultureInfo.InvariantCulture)))
             {
                 if (_falt.Length > 0)
                 {
                     _importHeader.ImportFont(_fontNr, _falt,
-                                             int.Parse(_charset == "" ? CharsetDefault : _charset,
+                                             int.Parse(string.IsNullOrEmpty(_charset) ? CharsetDefault : _charset,
                                                        CultureInfo.InvariantCulture));
                 }
             }

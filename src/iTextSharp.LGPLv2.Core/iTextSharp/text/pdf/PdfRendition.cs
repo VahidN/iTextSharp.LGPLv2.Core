@@ -12,6 +12,11 @@ public class PdfRendition : PdfDictionary
     /// <param name="mimeType"></param>
     public PdfRendition(string file, PdfFileSpecification fs, string mimeType)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         Put(PdfName.S, new PdfName("MR"));
         Put(PdfName.N, new PdfString("Rendition for " + file));
         Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType));

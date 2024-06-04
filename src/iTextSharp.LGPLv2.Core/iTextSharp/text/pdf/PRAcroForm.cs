@@ -9,13 +9,13 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PrAcroForm : PdfDictionary
 {
-    internal INullValueDictionary<string, FieldInformation> FieldByName;
+    internal readonly INullValueDictionary<string, FieldInformation> FieldByName;
 
-    internal List<FieldInformation> fields;
+    internal readonly List<FieldInformation> fields;
 
-    internal PdfReader Reader;
+    internal readonly PdfReader Reader;
 
-    internal List<PdfDictionary> Stack;
+    internal readonly List<PdfDictionary> Stack;
 
     /// <summary>
     ///     Constructor
@@ -80,6 +80,11 @@ public class PrAcroForm : PdfDictionary
     /// <param name="title">the pathname of the field, up to this point or null</param>
     protected void IterateFields(PdfArray fieldlist, PrIndirectReference fieldDict, string title)
     {
+        if (fieldlist == null)
+        {
+            throw new ArgumentNullException(nameof(fieldlist));
+        }
+
         foreach (PrIndirectReference refi in fieldlist.ArrayList)
         {
             var dict = (PdfDictionary)PdfReader.GetPdfObjectRelease(refi);
@@ -136,8 +141,13 @@ public class PrAcroForm : PdfDictionary
     /// <param name="parent">one dictionary</param>
     /// <param name="child">the other dictionary</param>
     /// <returns>a merged dictionary</returns>
-    protected PdfDictionary MergeAttrib(PdfDictionary parent, PdfDictionary child)
+    protected static PdfDictionary MergeAttrib(PdfDictionary parent, PdfDictionary child)
     {
+        if (child == null)
+        {
+            throw new ArgumentNullException(nameof(child));
+        }
+
         var targ = new PdfDictionary();
         if (parent != null)
         {
@@ -179,9 +189,9 @@ public class PrAcroForm : PdfDictionary
     /// </summary>
     public class FieldInformation
     {
-        internal PdfDictionary info;
-        internal string name;
-        internal PrIndirectReference Refi;
+        internal readonly PdfDictionary info;
+        internal readonly string name;
+        internal readonly PrIndirectReference Refi;
 
         internal FieldInformation(string name, PdfDictionary info, PrIndirectReference refi)
         {

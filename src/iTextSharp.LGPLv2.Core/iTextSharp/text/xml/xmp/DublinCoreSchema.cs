@@ -115,6 +115,11 @@ public class DublinCoreSchema : XmpSchema
     /// <param name="author"></param>
     public void AddAuthor(string[] author)
     {
+        if (author == null)
+        {
+            throw new ArgumentNullException(nameof(author));
+        }
+
         var array = new XmpArray(XmpArray.ORDERED);
         for (var i = 0; i < author.Length; i++)
         {
@@ -152,6 +157,11 @@ public class DublinCoreSchema : XmpSchema
     /// <param name="publisher"></param>
     public void AddPublisher(string[] publisher)
     {
+        if (publisher == null)
+        {
+            throw new ArgumentNullException(nameof(publisher));
+        }
+
         var array = new XmpArray(XmpArray.ORDERED);
         for (var i = 0; i < publisher.Length; i++)
         {
@@ -167,6 +177,11 @@ public class DublinCoreSchema : XmpSchema
     /// <param name="subject">array of subjects</param>
     public void addSubject(string[] subject)
     {
+        if (subject == null)
+        {
+            throw new ArgumentNullException(nameof(subject));
+        }
+
         var array = new XmpArray(XmpArray.UNORDERED);
         for (var i = 0; i < subject.Length; i++)
         {

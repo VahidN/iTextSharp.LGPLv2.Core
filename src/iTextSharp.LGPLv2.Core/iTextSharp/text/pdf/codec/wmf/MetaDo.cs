@@ -95,24 +95,27 @@ public class MetaDo
 
     public static byte[] WrapBmp(Image image)
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         if (image.OriginalType != Image.ORIGINAL_BMP)
         {
             throw new IOException("Only BMP can be wrapped in WMF.");
         }
 
-        Stream imgIn;
         byte[] data = null;
         if (image.OriginalData == null)
         {
-            imgIn = image.Url.GetResponseStream();
-            var outp = new MemoryStream();
+            using var imgIn = image.Url.GetResponseStream();
+            using var outp = new MemoryStream();
             var b = 0;
             while ((b = imgIn.ReadByte()) != -1)
             {
                 outp.WriteByte((byte)b);
             }
 
-            imgIn.Dispose();
             data = outp.ToArray();
         }
         else
@@ -121,7 +124,7 @@ public class MetaDo
         }
 
         var sizeBmpWords = (data.Length - 14 + 1) >> 1;
-        var os = new MemoryStream();
+        using var os = new MemoryStream();
         // write metafile header
         WriteWord(os, 1);
         WriteWord(os, 9);
@@ -190,6 +193,11 @@ public class MetaDo
 
     public static void WriteWord(Stream os, int v)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         os.WriteByte((byte)(v & 0xff));
         os.WriteByte((byte)((v >> 8) & 0xff));
     }
@@ -486,7 +494,11 @@ public class MetaDo
                     var r = Meta.ReadShort();
                     var t = Meta.ReadShort();
                     var l = Meta.ReadShort();
-                    Cb.Arc(_state.TransformX(l), _state.TransformY(b), _state.TransformX(r), _state.TransformY(t), 0,
+                    Cb.Arc(_state.TransformX(l),
+                           _state.TransformY(b),
+                           _state.TransformX(r),
+                           _state.TransformY(t),
+                           0,
                            360);
                     StrokeAndFill();
                     break;
@@ -686,7 +698,7 @@ public class MetaDo
                     string s;
                     try
                     {
-                        s = EncodingsRegistry.Instance.GetEncoding(1252).GetString(text, 0, k);
+                        s = EncodingsRegistry.GetEncoding(1252).GetString(text, 0, k);
                     }
                     catch
                     {
@@ -715,7 +727,7 @@ public class MetaDo
                     string s;
                     try
                     {
-                        s = EncodingsRegistry.Instance.GetEncoding(1252).GetString(text, 0, k);
+                        s = EncodingsRegistry.GetEncoding(1252).GetString(text, 0, k);
                     }
                     catch
                     {

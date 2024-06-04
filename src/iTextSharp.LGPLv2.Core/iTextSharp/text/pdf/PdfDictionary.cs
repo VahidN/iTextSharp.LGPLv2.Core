@@ -254,6 +254,11 @@ public class PdfDictionary : PdfObject
     /// </summary>
     public void MergeDifferent(PdfDictionary other)
     {
+        if (other == null)
+        {
+            throw new ArgumentNullException(nameof(other));
+        }
+
         foreach (var key in other.HashMap.Keys)
         {
             if (!HashMap.ContainsKey(key))
@@ -302,6 +307,11 @@ public class PdfDictionary : PdfObject
     /// <returns>an array of  byte </returns>
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         os.WriteByte((byte)'<');
         os.WriteByte((byte)'<');
 

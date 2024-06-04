@@ -94,6 +94,11 @@ public class HtmlWriter : DocWriter
     /// <param name="os">The  Stream  the writer has to write to.</param>
     protected HtmlWriter(Document doc, Stream os) : base(doc, os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         Document.AddDocListener(this);
         PageN = Document.PageNumber;
         os.WriteByte(LT);
@@ -129,6 +134,11 @@ public class HtmlWriter : DocWriter
     /// <returns> true  if this action succeeded,  false  if not.</returns>
     public override bool Add(IElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (pause)
         {
             return false;
@@ -145,11 +155,11 @@ public class HtmlWriter : DocWriter
                 try
                 {
                     var h = (Header)element;
-                    if (HtmlTags.STYLESHEET.Equals(h.Name))
+                    if (HtmlTags.STYLESHEET.Equals(h.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         WriteLink(h);
                     }
-                    else if (HtmlTags.JAVASCRIPT.Equals(h.Name))
+                    else if (HtmlTags.JAVASCRIPT.Equals(h.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         WriteJavaScript(h);
                     }
@@ -405,6 +415,11 @@ public class HtmlWriter : DocWriter
     /// </summary>
     protected void Write(IElement element, int indent)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         Properties styleAttributes = null;
         switch (element.Type)
         {
@@ -579,7 +594,7 @@ public class HtmlWriter : DocWriter
                 WriteStart(HtmlTags.DIV);
                 WriteMarkupAttributes(Markup);
                 var alignment = HtmlEncoder.GetAlignment(paragraph.Alignment);
-                if (!"".Equals(alignment))
+                if (!"".Equals(alignment, StringComparison.OrdinalIgnoreCase))
                 {
                     Write(HtmlTags.ALIGN, alignment);
                 }
@@ -623,7 +638,7 @@ public class HtmlWriter : DocWriter
                 WriteMarkupAttributes(Markup);
                 Os.WriteByte(GT);
                 // contents
-                foreach (IElement i in list.Items)
+                foreach (var i in list.Items)
                 {
                     Write(i, indent + 1);
                 }
@@ -701,13 +716,13 @@ public class HtmlWriter : DocWriter
                 }
 
                 var alignment = HtmlEncoder.GetAlignment(cell.HorizontalAlignment);
-                if (!"".Equals(alignment))
+                if (!"".Equals(alignment, StringComparison.OrdinalIgnoreCase))
                 {
                     Write(HtmlTags.HORIZONTALALIGN, alignment);
                 }
 
                 alignment = HtmlEncoder.GetAlignment(cell.VerticalAlignment);
-                if (!"".Equals(alignment))
+                if (!"".Equals(alignment, StringComparison.OrdinalIgnoreCase))
                 {
                     Write(HtmlTags.VERTICALALIGN, alignment);
                 }
@@ -719,12 +734,12 @@ public class HtmlWriter : DocWriter
 
                 if (cell.Colspan != 1)
                 {
-                    Write(HtmlTags.COLSPAN, cell.Colspan.ToString());
+                    Write(HtmlTags.COLSPAN, cell.Colspan.ToString(CultureInfo.InvariantCulture));
                 }
 
                 if (cell.Rowspan != 1)
                 {
-                    Write(HtmlTags.ROWSPAN, cell.Rowspan.ToString());
+                    Write(HtmlTags.ROWSPAN, cell.Rowspan.ToString(CultureInfo.InvariantCulture));
                 }
 
                 if (cell.MaxLines == 1)
@@ -740,7 +755,7 @@ public class HtmlWriter : DocWriter
                 }
                 else
                 {
-                    foreach (IElement i in cell.Elements)
+                    foreach (var i in cell.Elements)
                     {
                         Write(i, indent + 1);
                     }
@@ -812,7 +827,7 @@ public class HtmlWriter : DocWriter
 
                 Os.WriteByte(QUOTE);
                 var alignment = HtmlEncoder.GetAlignment(table.Alignment);
-                if (!"".Equals(alignment))
+                if (!"".Equals(alignment, StringComparison.OrdinalIgnoreCase))
                 {
                     Write(HtmlTags.ALIGN, alignment);
                 }
@@ -836,7 +851,7 @@ public class HtmlWriter : DocWriter
 
                 Os.WriteByte(GT);
                 // contents
-                foreach (Row row in table)
+                foreach (var row in table)
                 {
                     Write(row, indent + 1);
                 }
@@ -922,7 +937,7 @@ public class HtmlWriter : DocWriter
         Write("=\"");
         if (styleAttributes != null)
         {
-            foreach (string key in styleAttributes.Keys)
+            foreach (var key in styleAttributes.Keys)
             {
                 WriteCssProperty(key, styleAttributes[key]);
             }
@@ -1020,6 +1035,11 @@ public class HtmlWriter : DocWriter
 
     protected void WriteHeader(Meta meta)
     {
+        if (meta == null)
+        {
+            throw new ArgumentNullException(nameof(meta));
+        }
+
         AddTabs(2);
         WriteStart(HtmlTags.META);
         switch (meta.Type)
@@ -1049,6 +1069,11 @@ public class HtmlWriter : DocWriter
     /// <param name="header">the element that has to be written</param>
     protected void WriteJavaScript(Header header)
     {
+        if (header == null)
+        {
+            throw new ArgumentNullException(nameof(header));
+        }
+
         AddTabs(2);
         WriteStart(HtmlTags.SCRIPT);
         Write(HtmlTags.LANGUAGE, HtmlTags.JAVASCRIPT);
@@ -1086,6 +1111,11 @@ public class HtmlWriter : DocWriter
 
     protected void WriteLink(Header header)
     {
+        if (header == null)
+        {
+            throw new ArgumentNullException(nameof(header));
+        }
+
         AddTabs(2);
         WriteStart(HtmlTags.LINK);
         Write(HtmlTags.REL, header.Name);
@@ -1102,6 +1132,11 @@ public class HtmlWriter : DocWriter
     /// <param name="indent">the indentation</param>
     protected void WriteSection(Section section, int indent)
     {
+        if (section == null)
+        {
+            throw new ArgumentNullException(nameof(section));
+        }
+
         if (section.Title != null)
         {
             var depth = section.Depth - 1;
@@ -1121,7 +1156,7 @@ public class HtmlWriter : DocWriter
             WriteStart(HtmlTags.H[depth]);
             Write(section.Title.Font, styleAttributes);
             var alignment = HtmlEncoder.GetAlignment(section.Title.Alignment);
-            if (!"".Equals(alignment))
+            if (!"".Equals(alignment, StringComparison.OrdinalIgnoreCase))
             {
                 Write(HtmlTags.ALIGN, alignment);
             }
@@ -1141,7 +1176,7 @@ public class HtmlWriter : DocWriter
             Currentfont.Pop();
         }
 
-        foreach (IElement i in section)
+        foreach (var i in section)
         {
             Write(i, indent);
         }

@@ -62,11 +62,16 @@ public class PdfBoolean : PdfObject
     /// <param name="value">the value of the new  PdfObject , represented as a  string </param>
     public PdfBoolean(string value) : base(BOOLEAN, value)
     {
-        if (value.Equals(TRUE))
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        if (value.Equals(TRUE, StringComparison.Ordinal))
         {
             _value = true;
         }
-        else if (value.Equals(FALSE))
+        else if (value.Equals(FALSE, StringComparison.Ordinal))
         {
             _value = false;
         }

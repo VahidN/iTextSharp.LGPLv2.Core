@@ -13,7 +13,7 @@ public class HtmlPeer : XmlPeer
     /// </summary>
     /// <param name="name">the iText name of the tag</param>
     /// <param name="alias">the Html name of the tag</param>
-    public HtmlPeer(string name, string alias) : base(name, alias.ToLower(CultureInfo.InvariantCulture))
+    public HtmlPeer(string name, string alias) : base(name, alias?.ToLower(CultureInfo.InvariantCulture))
     {
     }
 
@@ -21,10 +21,15 @@ public class HtmlPeer : XmlPeer
     ///     Sets an alias for an attribute.
     /// </summary>
     /// <param name="name">the iText tagname</param>
-    /// <param name="alias">the custom tagname</param>
-    public override void AddAlias(string name, string alias)
+    /// <param name="attributeAlias">the custom tagname</param>
+    public override void AddAlias(string name, string attributeAlias)
     {
-        AttributeAliases.Add(alias.ToLower(CultureInfo.InvariantCulture), name);
+        if (attributeAlias == null)
+        {
+            throw new ArgumentNullException(nameof(attributeAlias));
+        }
+
+        AttributeAliases.Add(attributeAlias.ToLower(CultureInfo.InvariantCulture), name);
     }
 
     /// <summary>

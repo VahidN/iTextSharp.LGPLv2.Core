@@ -101,13 +101,13 @@ public sealed class FontFactoryImp
     ///     Gets a set of registered font families.
     /// </summary>
     /// <value>a set of registered font families</value>
-    public ICollection<string> RegisteredFamilies => _fontFamilies.Keys;
+    public static ICollection<string> RegisteredFamilies => _fontFamilies.Keys;
 
     /// <summary>
     ///     Gets a set of registered fontnames.
     /// </summary>
     /// <value>a set of registered fontnames</value>
-    public ICollection<string> RegisteredFonts => _trueTypeFonts.Keys;
+    public static ICollection<string> RegisteredFonts => _trueTypeFonts.Keys;
 
     /// <summary>
     ///     Constructs a Font-object.
@@ -119,7 +119,8 @@ public sealed class FontFactoryImp
     /// <param name="style">the style of this font</param>
     /// <param name="color">the Color of this font</param>
     /// <returns>a Font object</returns>
-    public Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color) =>
+    public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style,
+                               BaseColor color) =>
         GetFont(fontname, encoding, embedded, size, style, color, true);
 
     /// <summary>
@@ -136,8 +137,8 @@ public sealed class FontFactoryImp
     ///     created new
     /// </param>
     /// <returns>a Font object</returns>
-    public Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
-                        bool cached)
+    public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
+                               bool cached)
     {
         lock (_syncLock)
         {
@@ -235,6 +236,11 @@ public sealed class FontFactoryImp
     /// <returns>a Font object</returns>
     public Font GetFont(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         lock (_syncLock)
         {
             string fontname = null;
@@ -300,7 +306,7 @@ public sealed class FontFactoryImp
                 encoding = value;
             }
 
-            if ("true".Equals(attributes[ElementTags.EMBEDDED]))
+            if ("true".Equals(attributes[ElementTags.EMBEDDED], StringComparison.Ordinal))
             {
                 embedded = true;
             }
@@ -373,7 +379,7 @@ public sealed class FontFactoryImp
     /// <param name="size">the size of this font</param>
     /// <param name="style">the style of this font</param>
     /// <returns>a Font object</returns>
-    public Font GetFont(string fontname, string encoding, bool embedded, float size, int style) =>
+    public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style) =>
         GetFont(fontname, encoding, embedded, size, style, null);
 
     /// <summary>
@@ -384,7 +390,7 @@ public sealed class FontFactoryImp
     /// <param name="embedded">true if the font is to be embedded in the PDF</param>
     /// <param name="size">the size of this font</param>
     /// <returns></returns>
-    public Font GetFont(string fontname, string encoding, bool embedded, float size) =>
+    public static Font GetFont(string fontname, string encoding, bool embedded, float size) =>
         GetFont(fontname, encoding, embedded, size, Font.UNDEFINED, null);
 
     /// <summary>
@@ -394,7 +400,7 @@ public sealed class FontFactoryImp
     /// <param name="encoding">the encoding of the font</param>
     /// <param name="embedded">true if the font is to be embedded in the PDF</param>
     /// <returns>a Font object</returns>
-    public Font GetFont(string fontname, string encoding, bool embedded) =>
+    public static Font GetFont(string fontname, string encoding, bool embedded) =>
         GetFont(fontname, encoding, embedded, Font.UNDEFINED, Font.UNDEFINED, null);
 
     /// <summary>
@@ -492,8 +498,13 @@ public sealed class FontFactoryImp
     /// </summary>
     /// <param name="fontname">the name of the font that has to be checked</param>
     /// <returns>true if the font is found</returns>
-    public bool IsRegistered(string fontname)
+    public static bool IsRegistered(string fontname)
     {
+        if (fontname == null)
+        {
+            throw new ArgumentNullException(nameof(fontname));
+        }
+
         lock (_syncLock)
         {
             return _trueTypeFonts.ContainsKey(fontname.ToLower(CultureInfo.InvariantCulture));
@@ -502,6 +513,11 @@ public sealed class FontFactoryImp
 
     public void Register(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         var path = attributes.Remove("path");
         var alias = attributes.Remove("alias");
         Register(path, alias);
@@ -523,6 +539,11 @@ public sealed class FontFactoryImp
     /// <param name="alias">the alias you want to use for the font</param>
     public void Register(string path, string alias)
     {
+        if (path == null)
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+
         lock (_syncLock)
         {
             if (path.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
@@ -550,8 +571,9 @@ public sealed class FontFactoryImp
                 {
                     for (var i = 0; i < names.Length; i++)
                     {
-                        if (_ttFamilyOrder[k].Equals(names[i][0]) && _ttFamilyOrder[k + 1].Equals(names[i][1]) &&
-                            _ttFamilyOrder[k + 2].Equals(names[i][2]))
+                        if (_ttFamilyOrder[k].Equals(names[i][0], StringComparison.Ordinal) &&
+                            _ttFamilyOrder[k + 1].Equals(names[i][1], StringComparison.Ordinal) &&
+                            _ttFamilyOrder[k + 2].Equals(names[i][2], StringComparison.Ordinal))
                         {
                             familyName = names[i][3].ToLower(CultureInfo.InvariantCulture);
                             k = _ttFamilyOrder.Length;
@@ -568,11 +590,12 @@ public sealed class FontFactoryImp
                     {
                         for (var k = 0; k < _ttFamilyOrder.Length; k += 3)
                         {
-                            if (_ttFamilyOrder[k].Equals(names[i][0]) && _ttFamilyOrder[k + 1].Equals(names[i][1]) &&
-                                _ttFamilyOrder[k + 2].Equals(names[i][2]))
+                            if (_ttFamilyOrder[k].Equals(names[i][0], StringComparison.Ordinal) &&
+                                _ttFamilyOrder[k + 1].Equals(names[i][1], StringComparison.Ordinal) &&
+                                _ttFamilyOrder[k + 2].Equals(names[i][2], StringComparison.Ordinal))
                             {
                                 fullName = names[i][3];
-                                if (fullName.Equals(lastName))
+                                if (fullName.Equals(lastName, StringComparison.Ordinal))
                                 {
                                     continue;
                                 }
@@ -585,7 +608,7 @@ public sealed class FontFactoryImp
                     }
                 }
             }
-            else if (path.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttc"))
+            else if (path.ToLower(CultureInfo.InvariantCulture).EndsWith(".ttc", StringComparison.Ordinal))
             {
                 var names = BaseFont.EnumerateTtcNames(path);
                 for (var i = 0; i < names.Length; i++)
@@ -593,8 +616,8 @@ public sealed class FontFactoryImp
                     Register(path + "," + i);
                 }
             }
-            else if (path.ToLower(CultureInfo.InvariantCulture).EndsWith(".afm") ||
-                     path.ToLower(CultureInfo.InvariantCulture).EndsWith(".pfm"))
+            else if (path.ToLower(CultureInfo.InvariantCulture).EndsWith(".afm", StringComparison.Ordinal) ||
+                     path.ToLower(CultureInfo.InvariantCulture).EndsWith(".pfm", StringComparison.Ordinal))
             {
                 var bf = BaseFont.CreateFont(path, BaseFont.CP1252, false);
                 var fullName = bf.FullFontName[0][3].ToLower(CultureInfo.InvariantCulture);
@@ -681,7 +704,8 @@ public sealed class FontFactoryImp
                             var suffix = name.Length < 4
                                              ? null
                                              : name.Substring(name.Length - 4).ToLower(CultureInfo.InvariantCulture);
-                            if (".afm".Equals(suffix) || ".pfm".Equals(suffix))
+                            if (".afm".Equals(suffix, StringComparison.Ordinal) ||
+                                ".pfm".Equals(suffix, StringComparison.Ordinal))
                             {
                                 /* Only register Type 1 fonts with matching .pfb files */
                                 var pfb = name.Substring(0, name.Length - 4) + ".pfb";
@@ -691,7 +715,9 @@ public sealed class FontFactoryImp
                                     ++count;
                                 }
                             }
-                            else if (".ttf".Equals(suffix) || ".otf".Equals(suffix) || ".ttc".Equals(suffix))
+                            else if (".ttf".Equals(suffix, StringComparison.Ordinal) ||
+                                     ".otf".Equals(suffix, StringComparison.Ordinal) ||
+                                     ".ttc".Equals(suffix, StringComparison.Ordinal))
                             {
                                 Register(name, null);
                                 ++count;
@@ -719,8 +745,13 @@ public sealed class FontFactoryImp
     /// <param name="familyName">the font family</param>
     /// <param name="fullName">the font name</param>
     /// <param name="path">the font path</param>
-    public void RegisterFamily(string familyName, string fullName, string path)
+    public static void RegisterFamily(string familyName, string fullName, string path)
     {
+        if (fullName == null)
+        {
+            throw new ArgumentNullException(nameof(fullName));
+        }
+
         lock (_syncLock)
         {
             if (path != null)

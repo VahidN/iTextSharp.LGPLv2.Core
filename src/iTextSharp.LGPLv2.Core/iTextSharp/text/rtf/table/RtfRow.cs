@@ -157,6 +157,11 @@ public class RtfRow : RtfElement
     /// <param name="rowNumber">The number of this row</param>
     protected internal RtfRow(RtfDocument doc, RtfTable rtfTable, Row row, int rowNumber) : base(doc)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
         _parentTable = rtfTable;
         _rowNumber = rowNumber;
         importRow(row);
@@ -172,6 +177,11 @@ public class RtfRow : RtfElement
     /// <param name="rowNumber">The number of this row</param>
     protected internal RtfRow(RtfDocument doc, RtfTable rtfTable, PdfPRow row, int rowNumber) : base(doc)
     {
+        if (row == null)
+        {
+            throw new ArgumentNullException(nameof(row));
+        }
+
         _parentTable = rtfTable;
         _rowNumber = rowNumber;
         importRow(row);
@@ -180,25 +190,30 @@ public class RtfRow : RtfElement
     /// <summary>
     ///     Writes the content of this RtfRow
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        writeRowDefinition(result);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        writeRowDefinition(outp);
 
         for (var i = 0; i < _cells.Count; i++)
         {
             var rtfCell = _cells[i];
-            rtfCell.WriteContent(result);
+            rtfCell.WriteContent(outp);
         }
 
-        result.Write(Delimiter, 0, Delimiter.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
 
         if (Document.GetDocumentSettings().IsOutputTableRowDefinitionAfter())
         {
-            writeRowDefinition(result);
+            writeRowDefinition(outp);
         }
 
-        result.Write(_rowEnd, 0, _rowEnd.Length);
-        Document.OutputDebugLinebreak(result);
+        outp.Write(_rowEnd, 0, _rowEnd.Length);
+        Document.OutputDebugLinebreak(outp);
     }
 
     /// <summary>

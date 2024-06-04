@@ -5,7 +5,7 @@ namespace iTextSharp.text.factories;
 /// <summary>
 ///     This class can produce String combinations representing a roman number.
 /// </summary>
-public class RomanNumberFactory
+public static class RomanNumberFactory
 {
     /// <summary>
     ///     Array with Roman digits.
@@ -124,17 +124,17 @@ public class RomanNumberFactory
         /// <summary>
         ///     part of a roman number
         /// </summary>
-        public char Digit;
+        public readonly char Digit;
 
         /// <summary>
         ///     can the digit be used as a prefix
         /// </summary>
-        public bool Pre;
+        public readonly bool Pre;
 
         /// <summary>
         ///     value of the roman digit
         /// </summary>
-        public int Value;
+        public readonly int Value;
 
         /// <summary>
         ///     Constructs a roman digit

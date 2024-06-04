@@ -150,62 +150,67 @@ public class RtfShapePosition : RtfAddableElement
     /// <summary>
     ///     Write this RtfShapePosition.
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
         byte[] t;
-        result.Write(t = DocWriter.GetIsoBytes("\\shpleft"), 0, t.Length);
-        result.Write(t = IntToByteArray(_left), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shptop"), 0, t.Length);
-        result.Write(t = IntToByteArray(_top), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shpright"), 0, t.Length);
-        result.Write(t = IntToByteArray(_right), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shpbottom"), 0, t.Length);
-        result.Write(t = IntToByteArray(_bottom), 0, t.Length);
-        result.Write(t = DocWriter.GetIsoBytes("\\shpz"), 0, t.Length);
-        result.Write(t = IntToByteArray(_zOrder), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shpleft"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_left), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shptop"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_top), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shpright"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_right), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shpbottom"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_bottom), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes("\\shpz"), 0, t.Length);
+        outp.Write(t = IntToByteArray(_zOrder), 0, t.Length);
         switch (_xRelativePos)
         {
             case POSITION_X_RELATIVE_PAGE:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbxpage"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbxpage"), 0, t.Length);
                 break;
             case POSITION_X_RELATIVE_MARGIN:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbxmargin"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbxmargin"), 0, t.Length);
                 break;
             case POSITION_X_RELATIVE_COLUMN:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbxcolumn"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbxcolumn"), 0, t.Length);
                 break;
         }
 
         if (_ignoreXRelative)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\shpbxignore"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shpbxignore"), 0, t.Length);
         }
 
         switch (_yRelativePos)
         {
             case POSITION_Y_RELATIVE_PAGE:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbypage"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbypage"), 0, t.Length);
                 break;
             case POSITION_Y_RELATIVE_MARGIN:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbymargin"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbymargin"), 0, t.Length);
                 break;
             case POSITION_Y_RELATIVE_PARAGRAPH:
-                result.Write(t = DocWriter.GetIsoBytes("\\shpbypara"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes("\\shpbypara"), 0, t.Length);
                 break;
         }
 
         if (_ignoreYRelative)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\shpbyignore"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shpbyignore"), 0, t.Length);
         }
 
         if (_shapeBelowText)
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\shpfblwtxt1"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shpfblwtxt1"), 0, t.Length);
         }
         else
         {
-            result.Write(t = DocWriter.GetIsoBytes("\\shpfblwtxt0"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes("\\shpfblwtxt0"), 0, t.Length);
         }
     }
 

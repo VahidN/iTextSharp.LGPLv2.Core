@@ -19,4 +19,8 @@ public class PdfXConformanceException : Exception
     public PdfXConformanceException(string s) : base(s)
     {
     }
+
+    public PdfXConformanceException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

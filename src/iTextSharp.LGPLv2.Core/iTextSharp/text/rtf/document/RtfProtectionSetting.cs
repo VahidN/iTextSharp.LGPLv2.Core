@@ -99,7 +99,7 @@ public class RtfProtectionSetting : RtfElement
     ///     @since 2.1.1
     ///     @author Howard Shank (hgshank@yahoo.com)
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
     }
 
@@ -110,6 +110,11 @@ public class RtfProtectionSetting : RtfElement
     /// </summary>
     public virtual void WriteDefinition(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         if (Document.GetDocumentSettings().IsDocumentProtected())
         {
             switch (Document.GetDocumentSettings().GetProtectionLevelRaw())

@@ -33,7 +33,7 @@ public class OrderedTree
         {
             if (key == null)
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             // create new node
@@ -266,6 +266,10 @@ public class OrderedTree
     /// </summary>
     public virtual void RotateLeft(OrderedTreeNode x)
     {
+        if (x == null)
+        {
+            throw new ArgumentNullException(nameof(x));
+        }
         // pushing node x down and to the Left to balance the tree. x's Right child (y)
         // replaces x (since y > x), and y's Left child becomes x's Right child
         // (since it's < y but > x).
@@ -317,6 +321,10 @@ public class OrderedTree
     /// </summary>
     public virtual void RotateRight(OrderedTreeNode x)
     {
+        if (x == null)
+        {
+            throw new ArgumentNullException(nameof(x));
+        }
         // pushing node x down and to the Right to balance the tree. x's Left child (y)
         // replaces x (since x < y), and y's Right child becomes x's Left child
         // (since it's < x but > y).
@@ -365,6 +373,11 @@ public class OrderedTree
 
     public virtual bool ContainsKey(IComparable key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         var treeNode = _rbTree; // begin at root
         // traverse tree until node is found
         while (treeNode != _sentinelNode)

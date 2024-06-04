@@ -146,6 +146,11 @@ public class Chunk : IElement
     /// <param name="ck">the  Chunk  to be copied</param>
     public Chunk(Chunk ck)
     {
+        if (ck == null)
+        {
+            throw new ArgumentNullException(nameof(ck));
+        }
+
         if (ck.content != null)
         {
             content = new StringBuilder(ck.content.ToString());
@@ -204,6 +209,11 @@ public class Chunk : IElement
     /// <param name="offsetY">the image offset in the y direction</param>
     public Chunk(Image image, float offsetX, float offsetY) : this(OBJECT_REPLACEMENT_CHARACTER, new Font())
     {
+        if (image == null)
+        {
+            throw new ArgumentNullException(nameof(image));
+        }
+
         var copyImage = Image.GetInstance(image);
         copyImage.SetAbsolutePosition(float.NaN, float.NaN);
         setAttribute(IMAGE, new object[] { copyImage, offsetX, offsetY, false });
@@ -370,6 +380,11 @@ public class Chunk : IElement
     /// <returns>true if the element was processed successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);
@@ -393,7 +408,7 @@ public class Chunk : IElement
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public static bool IsTag(string tag) => ElementTags.CHUNK.Equals(tag);
+    public static bool IsTag(string tag) => ElementTags.CHUNK.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     appends some text to this Chunk.
@@ -438,9 +453,9 @@ public class Chunk : IElement
 
     public float GetTextRise()
     {
-        if (attributes != null && attributes.ContainsKey(SUBSUPSCRIPT))
+        if (attributes != null && attributes.TryGetValue(SUBSUPSCRIPT, out var attribute))
         {
-            return (float)attributes[SUBSUPSCRIPT];
+            return (float)attribute;
         }
 
         return 0.0f;

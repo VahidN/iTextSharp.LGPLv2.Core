@@ -416,12 +416,12 @@ public static class Markup
                 continue;
             }
 
-            if (value.StartsWith("\""))
+            if (value.StartsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
                 value = value.Substring(1);
             }
 
-            if (value.EndsWith("\""))
+            if (value.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
                 value = value.Substring(0, value.Length - 1);
             }
@@ -442,6 +442,11 @@ public static class Markup
     /// <returns>a float</returns>
     public static float ParseLength(string str)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
         // TODO: Evaluate the effect of this.
         // It may change the default behavour of the methd if this is changed.
         // return ParseLength(string, Markup.DEFAULT_FONT_SIZE);
@@ -486,25 +491,25 @@ public static class Markup
         var f = float.Parse(str.Substring(0, pos), NumberFormatInfo.InvariantInfo);
         str = str.Substring(pos);
         // inches
-        if (str.StartsWith("in"))
+        if (str.StartsWith("in", StringComparison.OrdinalIgnoreCase))
         {
             return f * 72f;
         }
 
         // centimeters
-        if (str.StartsWith("cm"))
+        if (str.StartsWith("cm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 2.54f * 72f;
         }
 
         // millimeters
-        if (str.StartsWith("mm"))
+        if (str.StartsWith("mm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 25.4f * 72f;
         }
 
         // picas
-        if (str.StartsWith("pc"))
+        if (str.StartsWith("pc", StringComparison.OrdinalIgnoreCase))
         {
             return f * 12f;
         }
@@ -565,38 +570,38 @@ public static class Markup
         var f = float.Parse(str.Substring(0, pos), NumberFormatInfo.InvariantInfo);
         str = str.Substring(pos);
         // inches
-        if (str.StartsWith("in"))
+        if (str.StartsWith("in", StringComparison.OrdinalIgnoreCase))
         {
             return f * 72f;
         }
 
         // centimeters
-        if (str.StartsWith("cm"))
+        if (str.StartsWith("cm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 2.54f * 72f;
         }
 
         // millimeters
-        if (str.StartsWith("mm"))
+        if (str.StartsWith("mm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 25.4f * 72f;
         }
 
         // picas
-        if (str.StartsWith("pc"))
+        if (str.StartsWith("pc", StringComparison.OrdinalIgnoreCase))
         {
             return f * 12f;
         }
 
         // 1em is equal to the current font size
-        if (str.StartsWith("em"))
+        if (str.StartsWith("em", StringComparison.OrdinalIgnoreCase))
         {
             return f * actualFontSize;
         }
 
         // one ex is the x-height of a font (x-height is usually about half the
         // font-size)
-        if (str.StartsWith("ex"))
+        if (str.StartsWith("ex", StringComparison.OrdinalIgnoreCase))
         {
             return f * actualFontSize / 2;
         }
@@ -618,6 +623,16 @@ public static class Markup
     public static string RemoveComment(string str, string startComment,
                                        string endComment)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (endComment == null)
+        {
+            throw new ArgumentNullException(nameof(endComment));
+        }
+
         var result = new StringBuilder();
         var pos = 0;
         var end = endComment.Length;

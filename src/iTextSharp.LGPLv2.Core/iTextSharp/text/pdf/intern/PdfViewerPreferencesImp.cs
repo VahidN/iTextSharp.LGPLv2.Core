@@ -254,6 +254,11 @@ public class PdfViewerPreferencesImp : IPdfViewerPreferences
 
     public static PdfViewerPreferencesImp GetViewerPreferences(PdfDictionary catalog)
     {
+        if (catalog == null)
+        {
+            throw new ArgumentNullException(nameof(catalog));
+        }
+
         var preferences = new PdfViewerPreferencesImp();
         var prefs = 0;
         PdfName name = null;
@@ -344,6 +349,11 @@ public class PdfViewerPreferencesImp : IPdfViewerPreferences
     /// <param name="catalog"></param>
     public void AddToCatalog(PdfDictionary catalog)
     {
+        if (catalog == null)
+        {
+            throw new ArgumentNullException(nameof(catalog));
+        }
+
         // Page Layout
         catalog.Remove(PdfName.Pagelayout);
         if ((_pageLayoutAndMode & PdfWriter.PageLayoutSinglePage) != 0)
@@ -417,7 +427,7 @@ public class PdfViewerPreferencesImp : IPdfViewerPreferences
     /// </summary>
     /// <param name="key">a PdfName referring to a viewer preference</param>
     /// <returns>an index in the VIEWER_PREFERENCES array</returns>
-    private int getIndex(PdfName key)
+    private static int getIndex(PdfName key)
     {
         for (var i = 0; i < VIEWER_PREFERENCES.Length; i++)
         {
@@ -433,7 +443,7 @@ public class PdfViewerPreferencesImp : IPdfViewerPreferences
     /// <summary>
     ///     Checks if some value is valid for a certain key.
     /// </summary>
-    private bool isPossibleValue(PdfName value, PdfName[] accepted)
+    private static bool isPossibleValue(PdfName value, PdfName[] accepted)
     {
         for (var i = 0; i < accepted.Length; i++)
         {

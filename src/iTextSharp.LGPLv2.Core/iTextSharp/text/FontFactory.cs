@@ -67,20 +67,20 @@ public static class FontFactory
     ///     Gets a set of registered font families.
     /// </summary>
     /// <value>a set of registered font families</value>
-    public static ICollection<string> RegisteredFamilies => FontImp.RegisteredFamilies;
+    public static ICollection<string> RegisteredFamilies => FontFactoryImp.RegisteredFamilies;
 
     /// <summary>
     ///     Gets a set of registered fontnames.
     /// </summary>
     /// <value>a set of registered fontnames</value>
-    public static ICollection<string> RegisteredFonts => FontImp.RegisteredFonts;
+    public static ICollection<string> RegisteredFonts => FontFactoryImp.RegisteredFonts;
 
     /// <summary>
     ///     Checks whether the given font is contained within the object
     /// </summary>
     /// <param name="fontname">the name of the font</param>
     /// <returns>true if font is contained within the object</returns>
-    public static bool Contains(string fontname) => FontImp.IsRegistered(fontname);
+    public static bool Contains(string fontname) => FontFactoryImp.IsRegistered(fontname);
 
     /// <summary>
     ///     Constructs a Font-object.
@@ -94,7 +94,7 @@ public static class FontFactory
     /// <returns>a Font object</returns>
     public static Font
         GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color) =>
-        FontImp.GetFont(fontname, encoding, embedded, size, style, color);
+        FontFactoryImp.GetFont(fontname, encoding, embedded, size, style, color);
 
     /// <summary>
     ///     Constructs a Font-object.
@@ -112,7 +112,7 @@ public static class FontFactory
     /// <returns>a Font object</returns>
     public static Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
                                bool cached) =>
-        FontImp.GetFont(fontname, encoding, embedded, size, style, color, cached);
+        FontFactoryImp.GetFont(fontname, encoding, embedded, size, style, color, cached);
 
     /// <summary>
     ///     Constructs a Font-object.
@@ -254,10 +254,15 @@ public static class FontFactory
     /// </summary>
     /// <param name="fontname">the name of the font that has to be checked</param>
     /// <returns>true if the font is found</returns>
-    public static bool IsRegistered(string fontname) => FontImp.IsRegistered(fontname);
+    public static bool IsRegistered(string fontname) => FontFactoryImp.IsRegistered(fontname);
 
     public static void Register(Properties attributes)
     {
+        if (attributes == null)
+        {
+            throw new ArgumentNullException(nameof(attributes));
+        }
+
         string path;
         string alias = null;
 
@@ -318,6 +323,6 @@ public static class FontFactory
     /// <param name="path">the font path</param>
     public static void RegisterFamily(string familyName, string fullName, string path)
     {
-        FontImp.RegisterFamily(familyName, fullName, path);
+        FontFactoryImp.RegisterFamily(familyName, fullName, path);
     }
 }

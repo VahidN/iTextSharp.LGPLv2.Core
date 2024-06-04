@@ -115,6 +115,11 @@ public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement
     /// <param name="elements">The Elements to display as the content of this RtfHeaderFooter.</param>
     public RtfHeaderFooter(IElement[] elements) : base(new Phrase(""), false)
     {
+        if (elements == null)
+        {
+            throw new ArgumentNullException(nameof(elements));
+        }
+
         _content = new object[elements.Length];
         for (var i = 0; i < elements.Length; i++)
         {
@@ -133,6 +138,11 @@ public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement
     protected internal RtfHeaderFooter(RtfDocument doc, HeaderFooter headerFooter, int type, int displayAt) :
         base(new Phrase(""), false)
     {
+        if (headerFooter == null)
+        {
+            throw new ArgumentNullException(nameof(headerFooter));
+        }
+
         _document = doc;
         _type = type;
         _displayAt = displayAt;
@@ -181,6 +191,11 @@ public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement
     protected internal RtfHeaderFooter(RtfDocument doc, RtfHeaderFooter headerFooter, int displayAt) :
         base(new Phrase(""), false)
     {
+        if (headerFooter == null)
+        {
+            throw new ArgumentNullException(nameof(headerFooter));
+        }
+
         _document = doc;
         _content = headerFooter.getContent();
         _displayAt = displayAt;
@@ -211,7 +226,12 @@ public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement
     /// <param name="headerFooter">The HeaderFooter to base this RtfHeaderFooter on</param>
     protected internal RtfHeaderFooter(RtfDocument doc, HeaderFooter headerFooter) : base(new Phrase(""), false)
     {
-        _document = doc;
+        if (headerFooter == null)
+        {
+            throw new ArgumentNullException(nameof(headerFooter));
+        }
+
+        _document = doc ?? throw new ArgumentNullException(nameof(doc));
         var par = new Paragraph();
         par.Alignment = headerFooter.Alignment;
         if (headerFooter.Before != null)
@@ -290,59 +310,64 @@ public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement
     /// <summary>
     ///     Write the content of this RtfHeaderFooter.
     /// </summary>
-    public virtual void WriteContent(Stream result)
+    public virtual void WriteContent(Stream outp)
     {
-        result.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(RtfElement.OpenGroup, 0, RtfElement.OpenGroup.Length);
         if (_type == TYPE_HEADER)
         {
             if (_displayAt == DISPLAY_ALL_PAGES)
             {
-                result.Write(_headerAll, 0, _headerAll.Length);
+                outp.Write(_headerAll, 0, _headerAll.Length);
             }
             else if (_displayAt == DISPLAY_FIRST_PAGE)
             {
-                result.Write(_headerFirst, 0, _headerFirst.Length);
+                outp.Write(_headerFirst, 0, _headerFirst.Length);
             }
             else if (_displayAt == DISPLAY_LEFT_PAGES)
             {
-                result.Write(_headerLeft, 0, _headerLeft.Length);
+                outp.Write(_headerLeft, 0, _headerLeft.Length);
             }
             else if (_displayAt == DISPLAY_RIGHT_PAGES)
             {
-                result.Write(_headerRight, 0, _headerRight.Length);
+                outp.Write(_headerRight, 0, _headerRight.Length);
             }
         }
         else
         {
             if (_displayAt == DISPLAY_ALL_PAGES)
             {
-                result.Write(_footerAll, 0, _footerAll.Length);
+                outp.Write(_footerAll, 0, _footerAll.Length);
             }
             else if (_displayAt == DISPLAY_FIRST_PAGE)
             {
-                result.Write(_footerFirst, 0, _footerFirst.Length);
+                outp.Write(_footerFirst, 0, _footerFirst.Length);
             }
             else if (_displayAt == DISPLAY_LEFT_PAGES)
             {
-                result.Write(_footerLeft, 0, _footerLeft.Length);
+                outp.Write(_footerLeft, 0, _footerLeft.Length);
             }
             else if (_displayAt == DISPLAY_RIGHT_PAGES)
             {
-                result.Write(_footerRight, 0, _footerRight.Length);
+                outp.Write(_footerRight, 0, _footerRight.Length);
             }
         }
 
-        result.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
+        outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
         for (var i = 0; i < _content.Length; i++)
         {
             if (_content[i] is IRtfBasicElement)
             {
                 var rbe = (IRtfBasicElement)_content[i];
-                rbe.WriteContent(result);
+                rbe.WriteContent(outp);
             }
         }
 
-        result.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
+        outp.Write(RtfElement.CloseGroup, 0, RtfElement.CloseGroup.Length);
     }
 
     /// <summary>

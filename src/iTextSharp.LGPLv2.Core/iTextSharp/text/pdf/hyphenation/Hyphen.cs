@@ -38,7 +38,7 @@ public class Hyphen
         if (NoBreak == null
             && PostBreak == null
             && PreBreak != null
-            && PreBreak.Equals("-"))
+            && PreBreak.Equals("-", StringComparison.Ordinal))
         {
             return "-";
         }

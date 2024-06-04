@@ -23,6 +23,11 @@ public class RtfWriter2 : DocWriter
     /// <param name="os">The Stream to write to</param>
     protected RtfWriter2(Document doc, Stream os) : base(doc, os)
     {
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
+        }
+
         doc.AddDocListener(this);
         _rtfDoc = new RtfDocument();
     }
@@ -57,7 +62,7 @@ public class RtfWriter2 : DocWriter
     /// <param name="doc">The Document that this RtfWriter listens to</param>
     /// <param name="os">The Stream to write to</param>
     /// <returns>The new RtfWriter</returns>
-    public static RtfWriter2 GetInstance(Document doc, Stream os) => new RtfWriter2(doc, os);
+    public static RtfWriter2 GetInstance(Document doc, Stream os) => new(doc, os);
 
     /// <summary>
     ///     Adds an Element to the Document
@@ -302,28 +307,28 @@ public class RtfWriter2 : DocWriter
     /// <summary>
     ///     Sets the page margins
     /// </summary>
-    /// <param name="left">The left margin</param>
-    /// <param name="right">The right margin</param>
-    /// <param name="top">The top margin</param>
-    /// <param name="bottom">The bottom margin</param>
+    /// <param name="marginLeft">The left margin</param>
+    /// <param name="marginRight">The right margin</param>
+    /// <param name="marginTop">The top margin</param>
+    /// <param name="marginBottom">The bottom margin</param>
     /// <returns> false </returns>
-    public override bool SetMargins(float left, float right, float top, float bottom)
+    public override bool SetMargins(float marginLeft, float marginRight, float marginTop, float marginBottom)
     {
-        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginLeft((int)(left * RtfElement.TWIPS_FACTOR));
-        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginRight((int)(right * RtfElement.TWIPS_FACTOR));
-        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginTop((int)(top * RtfElement.TWIPS_FACTOR));
-        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginBottom((int)(bottom * RtfElement.TWIPS_FACTOR));
+        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginLeft((int)(marginLeft * RtfElement.TWIPS_FACTOR));
+        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginRight((int)(marginRight * RtfElement.TWIPS_FACTOR));
+        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginTop((int)(marginTop * RtfElement.TWIPS_FACTOR));
+        _rtfDoc.GetDocumentHeader().GetPageSetting().SetMarginBottom((int)(marginBottom * RtfElement.TWIPS_FACTOR));
         return true;
     }
 
     /// <summary>
     ///     Sets the size of the page
     /// </summary>
-    /// <param name="rect">A Rectangle representing the page</param>
+    /// <param name="pageSize">A Rectangle representing the page</param>
     /// <returns> false </returns>
-    public override bool SetPageSize(Rectangle rect)
+    public override bool SetPageSize(Rectangle pageSize)
     {
-        _rtfDoc.GetDocumentHeader().GetPageSetting().SetPageSize(rect);
+        _rtfDoc.GetDocumentHeader().GetPageSetting().SetPageSize(pageSize);
         return true;
     }
 }

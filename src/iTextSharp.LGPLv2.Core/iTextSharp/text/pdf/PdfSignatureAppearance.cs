@@ -114,7 +114,7 @@ public class PdfSignatureAppearance
 
     private string _digestEncryptionAlgorithm;
 
-    private INullValueDictionary<PdfName, PdfLiteral> _exclusionLocations;
+    private NullValueDictionary<PdfName, PdfLiteral> _exclusionLocations;
 
     private byte[] _externalDigest;
 
@@ -388,6 +388,21 @@ public class PdfSignatureAppearance
     /// <returns>the calculated font size that makes the text fit</returns>
     public static float FitText(Font font, string text, Rectangle rect, float maxFontSize, int runDirection)
     {
+        if (font == null)
+        {
+            throw new ArgumentNullException(nameof(font));
+        }
+
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        if (rect == null)
+        {
+            throw new ArgumentNullException(nameof(rect));
+        }
+
         ColumnText ct = null;
         var status = 0;
         if (maxFontSize <= 0)
@@ -466,6 +481,11 @@ public class PdfSignatureAppearance
     /// <param name="update">a  PdfDictionary  with the key/value that will fill the holes defined</param>
     public void Close(PdfDictionary update)
     {
+        if (update == null)
+        {
+            throw new ArgumentNullException(nameof(update));
+        }
+
         try
         {
             if (!_preClosed)
@@ -602,7 +622,7 @@ public class PdfSignatureAppearance
                 var buf = new StringBuilder();
                 buf.Append("Digitally signed by ").Append(PdfPkcs7.GetSubjectFields(CertChain[0]).GetField("CN"))
                    .Append('\n');
-                buf.Append("Date: ").Append(SignDate.ToString("yyyy.MM.dd HH:mm:ss zzz"));
+                buf.Append("Date: ").Append(SignDate.ToString("yyyy.MM.dd HH:mm:ss zzz", CultureInfo.InvariantCulture));
                 if (Reason != null)
                 {
                     buf.Append('\n').Append("Reason: ").Append(Reason);
@@ -893,7 +913,7 @@ public class PdfSignatureAppearance
             found = true;
             foreach (var fn in af.Fields.Keys)
             {
-                if (fn.StartsWith(n1))
+                if (fn.StartsWith(n1, StringComparison.Ordinal))
                 {
                     found = false;
                     break;
@@ -953,7 +973,7 @@ public class PdfSignatureAppearance
     /// </summary>
     public void PreClose()
     {
-        PreClose(null);
+        PreClose(new NullValueDictionary<PdfName, int>());
     }
 
     /// <summary>
@@ -972,6 +992,11 @@ public class PdfSignatureAppearance
     /// <param name="exclusionSizes">a  Hashtable  with names and sizes to be excluded in the signature</param>
     public void PreClose(INullValueDictionary<PdfName, int> exclusionSizes)
     {
+        if (exclusionSizes == null)
+        {
+            throw new ArgumentNullException(nameof(exclusionSizes));
+        }
+
         if (_preClosed)
         {
             throw new DocumentException("Document already pre closed.");
@@ -1404,20 +1429,20 @@ public class PdfSignatureAppearance
         /// <summary>
         ///     @see java.io.Stream#read(byte[], int, int)
         /// </summary>
-        public override int Read(byte[] b, int off, int len)
+        public override int Read(byte[] buffer, int offset, int count)
         {
-            if (b == null)
+            if (buffer == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(buffer));
             }
 
-            if (off < 0 || off > b.Length || len < 0 ||
-                off + len > b.Length || off + len < 0)
+            if (offset < 0 || offset > buffer.Length || count < 0 ||
+                offset + count > buffer.Length || offset + count < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
-            if (len == 0)
+            if (count == 0)
             {
                 return 0;
             }
@@ -1438,15 +1463,15 @@ public class PdfSignatureAppearance
 
                 if (_rangePosition >= start && _rangePosition < end)
                 {
-                    var lenf = Math.Min(len, end - _rangePosition);
+                    var lenf = Math.Min(count, end - _rangePosition);
                     if (_raf == null)
                     {
-                        Array.Copy(_bout, _rangePosition, b, off, lenf);
+                        Array.Copy(_bout, _rangePosition, buffer, offset, lenf);
                     }
                     else
                     {
                         _raf.Seek(_rangePosition, SeekOrigin.Begin);
-                        readFully(b, off, lenf);
+                        readFully(buffer, offset, lenf);
                     }
 
                     _rangePosition += lenf;

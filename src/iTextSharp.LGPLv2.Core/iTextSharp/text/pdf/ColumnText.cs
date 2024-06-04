@@ -427,7 +427,7 @@ public class ColumnText
         {
             if (value < PdfWriter.RUN_DIRECTION_DEFAULT || value > PdfWriter.RUN_DIRECTION_RTL)
             {
-                throw new Exception("Invalid run direction: " + value);
+                throw new InvalidOperationException("Invalid run direction: " + value);
             }
 
             runDirection = value;
@@ -524,9 +524,20 @@ public class ColumnText
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
     /// <param name="runDirection">the run direction</param>
     /// <param name="arabicOptions">the options for the arabic shaping</param>
-    public static void ShowTextAligned(PdfContentByte canvas, int alignment, Phrase phrase, float x, float y,
-                                       float rotation, int runDirection, int arabicOptions)
+    public static void ShowTextAligned(PdfContentByte canvas,
+                                       int alignment,
+                                       Phrase phrase,
+                                       float x,
+                                       float y,
+                                       float rotation,
+                                       int runDirection,
+                                       int arabicOptions)
     {
+        if (canvas == null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         if (alignment != Element.ALIGN_LEFT && alignment != Element.ALIGN_CENTER
                                             && alignment != Element.ALIGN_RIGHT)
         {
@@ -599,7 +610,11 @@ public class ColumnText
     /// <param name="x">the x reference position</param>
     /// <param name="y">the y reference position</param>
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
-    public static void ShowTextAligned(PdfContentByte canvas, int alignment, Phrase phrase, float x, float y,
+    public static void ShowTextAligned(PdfContentByte canvas,
+                                       int alignment,
+                                       Phrase phrase,
+                                       float x,
+                                       float y,
                                        float rotation)
     {
         ShowTextAligned(canvas, alignment, phrase, x, y, rotation, PdfWriter.RUN_DIRECTION_NO_BIDI, 0);
@@ -801,7 +816,7 @@ public class ColumnText
         }
         else if (!simulate)
         {
-            throw new Exception("ColumnText.go with simulate==false and text==null.");
+            throw new InvalidOperationException("ColumnText.go with simulate==false and text==null.");
         }
 
         if (!simulate)
@@ -842,8 +857,11 @@ public class ColumnText
                     break;
                 }
 
-                line = BidiLine.ProcessLine(LeftX, RectangularWidth - firstIndent - rightIndent, alignment,
-                                            localRunDirection, _arabicOptions);
+                line = BidiLine.ProcessLine(LeftX,
+                                            RectangularWidth - firstIndent - rightIndent,
+                                            alignment,
+                                            localRunDirection,
+                                            _arabicOptions);
                 if (line == null)
                 {
                     status = NO_MORE_TEXT;
@@ -918,7 +936,10 @@ public class ColumnText
                     dirty = true;
                 }
 
-                line = BidiLine.ProcessLine(x1, x2 - x1 - firstIndent - rightIndent, alignment, localRunDirection,
+                line = BidiLine.ProcessLine(x1,
+                                            x2 - x1 - firstIndent - rightIndent,
+                                            alignment,
+                                            localRunDirection,
                                             _arabicOptions);
                 if (line == null)
                 {
@@ -958,6 +979,11 @@ public class ColumnText
     /// <returns>itself</returns>
     public ColumnText SetACopy(ColumnText org)
     {
+        if (org == null)
+        {
+            throw new ArgumentNullException(nameof(org));
+        }
+
         SetSimpleVars(org);
         if (org.BidiLine != null)
         {
@@ -976,6 +1002,11 @@ public class ColumnText
     /// <param name="rightLine">the right column bound</param>
     public void SetColumns(float[] leftLine, float[] rightLine)
     {
+        if (leftLine == null)
+        {
+            throw new ArgumentNullException(nameof(leftLine));
+        }
+
         MaxY = -10e20f;
         MinY = 10e20f;
         YLine = Math.Max(leftLine[1], leftLine[leftLine.Length - 1]);
@@ -1091,6 +1122,11 @@ public class ColumnText
 
     protected internal void SetSimpleVars(ColumnText org)
     {
+        if (org == null)
+        {
+            throw new ArgumentNullException(nameof(org));
+        }
+
         MaxY = org.MaxY;
         MinY = org.MinY;
         alignment = org.alignment;
@@ -1163,9 +1199,14 @@ public class ColumnText
     /// <returns>the converted array</returns>
     protected IList<float[]> ConvertColumn(float[] cLine)
     {
+        if (cLine == null)
+        {
+            throw new ArgumentNullException(nameof(cLine));
+        }
+
         if (cLine.Length < 4)
         {
-            throw new Exception("No valid column line found.");
+            throw new InvalidOperationException("No valid column line found.");
         }
 
         List<float[]> cc = new();
@@ -1195,7 +1236,7 @@ public class ColumnText
 
         if (cc.Count == 0)
         {
-            throw new Exception("No valid column line found.");
+            throw new InvalidOperationException("No valid column line found.");
         }
 
         return cc;
@@ -1231,6 +1272,11 @@ public class ColumnText
     /// <returns>the x coordinate of the intersection</returns>
     protected float FindLimitsPoint(IList<float[]> wall)
     {
+        if (wall == null)
+        {
+            throw new ArgumentNullException(nameof(wall));
+        }
+
         LineStatus = LINE_STATUS_OK;
         if (yLine < MinY || yLine > MaxY)
         {
@@ -1333,7 +1379,7 @@ public class ColumnText
                     if (CompositeColumn == null)
                     {
                         CompositeColumn = new ColumnText(canvas);
-                        CompositeColumn.UseAscender = firstPass ? _useAscender : false;
+                        CompositeColumn.UseAscender = firstPass && _useAscender;
                         CompositeColumn.Alignment = para.Alignment;
                         CompositeColumn.Indent = para.IndentationLeft + para.FirstLineIndent;
                         CompositeColumn.ExtraParagraphSpace = para.ExtraParagraphSpace;
@@ -1457,7 +1503,7 @@ public class ColumnText
 
                         CompositeColumn = new ColumnText(canvas);
 
-                        CompositeColumn.UseAscender = firstPass ? _useAscender : false;
+                        CompositeColumn.UseAscender = firstPass && _useAscender;
                         CompositeColumn.Alignment = item.Alignment;
                         CompositeColumn.Indent = item.IndentationLeft + listIndentation + item.FirstLineIndent;
                         CompositeColumn.ExtraParagraphSpace = item.ExtraParagraphSpace;
@@ -1513,8 +1559,12 @@ public class ColumnText
                 {
                     if (!simulate)
                     {
-                        ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase(item.ListSymbol),
-                                        CompositeColumn.LeftX + listIndentation, CompositeColumn._firstLineY, 0);
+                        ShowTextAligned(canvas,
+                                        Element.ALIGN_LEFT,
+                                        new Phrase(item.ListSymbol),
+                                        CompositeColumn.LeftX + listIndentation,
+                                        CompositeColumn._firstLineY,
+                                        0);
                     }
 
                     CompositeColumn._firstLineYDone = true;
@@ -1706,13 +1756,9 @@ public class ColumnText
                     var sub = nt.Rows;
 
                     // first we add the real header rows (if necessary)
-                    if (!skipHeader)
+                    if (!skipHeader && realHeaderRows > 0)
                     {
-                        for (var j = 0; j < realHeaderRows; ++j)
-                        {
-                            var headerRow = table.GetRow(j);
-                            sub.Add(headerRow);
-                        }
+                        sub.AddRange(table.GetRows(0, realHeaderRows));
                     }
                     else
                     {
@@ -1738,7 +1784,13 @@ public class ColumnText
 
                     // we need a correction if the last row needs to be extended
                     float rowHeight = 0;
-                    var last = sub[sub.Count - 1 - footerRows];
+                    var index = sub.Count - 1;
+                    if (showFooter)
+                    {
+                        index -= footerRows;
+                    }
+
+                    var last = sub[index];
                     if (table.ExtendLastRow)
                     {
                         rowHeight = last.MaxHeights;

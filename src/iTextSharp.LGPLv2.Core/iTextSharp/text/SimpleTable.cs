@@ -100,6 +100,21 @@ public class SimpleTable : Rectangle, IPdfPTableEvent, ITextElementArray
     public void TableLayout(PdfPTable table, float[][] widths, float[] heights, int headerRows, int rowStart,
                             PdfContentByte[] canvases)
     {
+        if (widths == null)
+        {
+            throw new ArgumentNullException(nameof(widths));
+        }
+
+        if (heights == null)
+        {
+            throw new ArgumentNullException(nameof(heights));
+        }
+
+        if (canvases == null)
+        {
+            throw new ArgumentNullException(nameof(canvases));
+        }
+
         var width = widths[0];
         var rect = new Rectangle(width[0], heights[heights.Length - 1], width[width.Length - 1], heights[0]);
         rect.CloneNonPositionParameters(this);
@@ -145,6 +160,11 @@ public class SimpleTable : Rectangle, IPdfPTableEvent, ITextElementArray
     /// <param name="element"></param>
     public void AddElement(SimpleCell element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         if (!element.Cellgroup)
         {
             throw new BadElementException("You can't add cells to a table directly, add them to a row first.");

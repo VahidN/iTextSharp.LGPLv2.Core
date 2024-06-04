@@ -64,29 +64,34 @@ public class RtfTocEntry : RtfField
     /// <summary>
     ///     Writes the content of the RtfTOCEntry
     /// </summary>
-    public override void WriteContent(Stream result)
+    public override void WriteContent(Stream outp)
     {
-        result.Write(_textHiddenOn, 0, _textHiddenOn.Length);
-        result.Write(OpenGroup, 0, OpenGroup.Length);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        outp.Write(_textHiddenOn, 0, _textHiddenOn.Length);
+        outp.Write(OpenGroup, 0, OpenGroup.Length);
         if (_showPageNumber)
         {
-            result.Write(_tocEntryPageNumber, 0, _tocEntryPageNumber.Length);
+            outp.Write(_tocEntryPageNumber, 0, _tocEntryPageNumber.Length);
         }
         else
         {
-            result.Write(_tocEntryNoPageNumber, 0, _tocEntryNoPageNumber.Length);
+            outp.Write(_tocEntryNoPageNumber, 0, _tocEntryNoPageNumber.Length);
         }
 
-        result.Write(Delimiter, 0, Delimiter.Length);
-        Document.FilterSpecialChar(result, _entry, true, false);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
-        result.Write(_textHiddenOff, 0, _textHiddenOff.Length);
+        outp.Write(Delimiter, 0, Delimiter.Length);
+        Document.FilterSpecialChar(outp, _entry, true, false);
+        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(_textHiddenOff, 0, _textHiddenOff.Length);
     }
 
     /// <summary>
     ///     unused
     /// </summary>
-    protected override void WriteFieldInstContent(Stream outp)
+    protected override void WriteFieldInstContent(Stream oupt)
     {
     }
 
@@ -94,7 +99,7 @@ public class RtfTocEntry : RtfField
     ///     unused
     ///     @see com.lowagie.text.rtf.field.RtfField#writeFieldResultContent(java.io.OutputStream)
     /// </summary>
-    protected override void WriteFieldResultContent(Stream outp)
+    protected override void WriteFieldResultContent(Stream oupt)
     {
     }
 }

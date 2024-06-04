@@ -102,15 +102,17 @@ public class TernaryTree : ICloneable
 
     public object Clone()
     {
-        var t = new TernaryTree();
-        t.Lo = (char[])Lo.Clone();
-        t.Hi = (char[])Hi.Clone();
-        t.Eq = (char[])Eq.Clone();
-        t.Sc = (char[])Sc.Clone();
-        t.Kv = (CharVector)Kv.Clone();
-        t.Root = Root;
-        t.Freenode = Freenode;
-        t.Length = Length;
+        var t = new TernaryTree
+                {
+                    Lo = (char[])Lo.Clone(),
+                    Hi = (char[])Hi.Clone(),
+                    Eq = (char[])Eq.Clone(),
+                    Sc = (char[])Sc.Clone(),
+                    Kv = (CharVector)Kv.Clone(),
+                    Root = Root,
+                    Freenode = Freenode,
+                    Length = Length,
+                };
 
         return t;
     }
@@ -120,6 +122,16 @@ public class TernaryTree : ICloneable
     /// </summary>
     public static int Strcmp(char[] a, int startA, char[] b, int startB)
     {
+        if (a == null)
+        {
+            throw new ArgumentNullException(nameof(a));
+        }
+
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         for (; a[startA] == b[startB]; startA++, startB++)
         {
             if (a[startA] == 0)
@@ -136,6 +148,16 @@ public class TernaryTree : ICloneable
     /// </summary>
     public static int Strcmp(string str, char[] a, int start)
     {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (a == null)
+        {
+            throw new ArgumentNullException(nameof(a));
+        }
+
         int i, d, len = str.Length;
         for (i = 0; i < len; i++)
         {
@@ -161,6 +183,16 @@ public class TernaryTree : ICloneable
 
     public static void Strcpy(char[] dst, int di, char[] src, int si)
     {
+        if (dst == null)
+        {
+            throw new ArgumentNullException(nameof(dst));
+        }
+
+        if (src == null)
+        {
+            throw new ArgumentNullException(nameof(src));
+        }
+
         while (src[si] != 0)
         {
             dst[di++] = src[si++];
@@ -171,6 +203,11 @@ public class TernaryTree : ICloneable
 
     public static int Strlen(char[] a, int start)
     {
+        if (a == null)
+        {
+            throw new ArgumentNullException(nameof(a));
+        }
+
         var len = 0;
         for (var i = start; i < a.Length && a[i] != 0; i++)
         {
@@ -208,6 +245,11 @@ public class TernaryTree : ICloneable
 
     public int Find(string key)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         var len = key.Length;
         var strkey = new char[len + 1];
         key.CopyTo(0, strkey, 0, len);
@@ -218,6 +260,11 @@ public class TernaryTree : ICloneable
 
     public int Find(char[] key, int start)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         int d;
         var p = Root;
         var i = start;
@@ -270,6 +317,11 @@ public class TernaryTree : ICloneable
     /// </summary>
     public void Insert(string key, char val)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         // make sure we have enough room in the arrays
         var len = key.Length
                   + 1; // maximum number of nodes that may be generated
@@ -286,6 +338,11 @@ public class TernaryTree : ICloneable
 
     public void Insert(char[] key, int start, char val)
     {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         var len = Strlen(key) + 1;
         if (Freenode + len > Eq.Length)
         {
@@ -366,13 +423,22 @@ public class TernaryTree : ICloneable
     /// </summary>
     protected void InsertBalanced(string[] k, char[] v, int offset, int n)
     {
-        int m;
+        if (k == null)
+        {
+            throw new ArgumentNullException(nameof(k));
+        }
+
+        if (v == null)
+        {
+            throw new ArgumentNullException(nameof(v));
+        }
+
         if (n < 1)
         {
             return;
         }
 
-        m = n >> 1;
+        var m = n >> 1;
 
         Insert(k[m + offset], v[m + offset]);
         InsertBalanced(k, v, offset, m);

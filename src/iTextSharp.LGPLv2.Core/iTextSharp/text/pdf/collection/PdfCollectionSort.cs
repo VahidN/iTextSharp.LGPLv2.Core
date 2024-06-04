@@ -19,6 +19,11 @@ public class PdfCollectionSort : PdfDictionary
     /// <param name="keys">the keys of the fields that will be used to sort entries</param>
     public PdfCollectionSort(string[] keys) : base(PdfName.Collectionsort)
     {
+        if (keys == null)
+        {
+            throw new ArgumentNullException(nameof(keys));
+        }
+
         var array = new PdfArray();
         for (var i = 0; i < keys.Length; i++)
         {
@@ -51,6 +56,11 @@ public class PdfCollectionSort : PdfDictionary
     /// <param name="ascending">an array with every element corresponding with a name of a field.</param>
     public void SetSortOrder(bool[] ascending)
     {
+        if (ascending == null)
+        {
+            throw new ArgumentNullException(nameof(ascending));
+        }
+
         var o = Get(PdfName.S);
         if (o is PdfArray)
         {

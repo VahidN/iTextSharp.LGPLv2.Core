@@ -1412,7 +1412,7 @@ public class BarcodePdf417
     {
         _options = 0;
         _outBits = null;
-        _text = new byte[0];
+        _text = Array.Empty<byte>();
         _yHeight = 3;
         _aspectRatio = 0.5f;
     }
@@ -1625,7 +1625,7 @@ public class BarcodePdf417
         var size = length / 6 * 5 + length % 6;
         if (size + CwPtr > MAX_DATA_CODEWORDS)
         {
-            throw new ArgumentOutOfRangeException("The text is too big.");
+            throw new InvalidOperationException("The text is too big.");
         }
 
         length += start;
@@ -1772,7 +1772,7 @@ public class BarcodePdf417
         }
     }
 
-    protected bool CheckSegmentType(Segment segment, char type)
+    protected static bool CheckSegmentType(Segment segment, char type)
     {
         if (segment == null)
         {
@@ -1823,7 +1823,7 @@ public class BarcodePdf417
         return MAX_DATA_CODEWORDS + 2;
     }
 
-    protected int GetSegmentLength(Segment segment)
+    protected static int GetSegmentLength(Segment segment)
     {
         if (segment == null)
         {
@@ -2088,7 +2088,7 @@ public class BarcodePdf417
 
         if (size + CwPtr > MAX_DATA_CODEWORDS)
         {
-            throw new ArgumentOutOfRangeException("The text is too big.");
+            throw new InvalidOperationException("The text is too big.");
         }
 
         length += start;
@@ -2243,7 +2243,7 @@ public class BarcodePdf417
         size = (ptr + fullBytes) / 2;
         if (size + CwPtr > MAX_DATA_CODEWORDS)
         {
-            throw new ArgumentOutOfRangeException("The text is too big.");
+            throw new InvalidOperationException("The text is too big.");
         }
 
         length = ptr;

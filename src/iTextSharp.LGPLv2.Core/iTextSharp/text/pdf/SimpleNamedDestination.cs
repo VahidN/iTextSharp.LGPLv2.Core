@@ -9,7 +9,7 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 {
-    private INullValueDictionary<string, string> _xmlLast;
+    private NullValueDictionary<string, string> _xmlLast;
     private INullValueDictionary<string, string> _xmlNames;
 
     private SimpleNamedDestination()
@@ -22,7 +22,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public void EndElement(string tag)
     {
-        if (tag.Equals("Destination"))
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
+        if (tag.Equals("Destination", StringComparison.Ordinal))
         {
             if (_xmlLast == null && _xmlNames != null)
             {
@@ -32,7 +37,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentException("Destination end tag out of place.");
         }
 
-        if (!tag.Equals("Name"))
+        if (!tag.Equals("Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Invalid end tag - " + tag);
         }
@@ -42,12 +47,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentException("Name end tag out of place.");
         }
 
-        if (!_xmlLast.ContainsKey("Page"))
+        if (!_xmlLast.TryGetValue("Page", out var pageValue))
         {
             throw new ArgumentException("Page attribute missing.");
         }
 
-        _xmlNames[UnEscapeBinaryString(_xmlLast["Name"])] = _xmlLast["Page"];
+        _xmlNames[UnEscapeBinaryString(_xmlLast["Name"])] = pageValue;
         _xmlLast = null;
     }
 
@@ -69,18 +74,24 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public void StartElement(string tag, INullValueDictionary<string, string> h)
     {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+
         if (_xmlNames == null)
         {
-            if (tag.Equals("Destination"))
+            if (tag.Equals("Destination", StringComparison.Ordinal))
             {
                 _xmlNames = new NullValueDictionary<string, string>();
+
                 return;
             }
 
             throw new ArgumentException("Root element is not Destination.");
         }
 
-        if (!tag.Equals("Name"))
+        if (!tag.Equals("Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Tag " + tag + " not allowed.");
         }
@@ -96,12 +107,19 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static string EscapeBinaryString(string s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
+
         for (var k = 0; k < len; ++k)
         {
             var c = cc[k];
+
             if (c < ' ')
             {
                 buf.Append('\\');
@@ -137,10 +155,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="outp">the export destination. The stream is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(INullValueDictionary<string, string> names, Stream outp, string encoding,
-                                   bool onlyAscii)
+    public static void ExportToXml(INullValueDictionary<string, string> names,
+        Stream outp,
+        string encoding,
+        bool onlyAscii)
     {
-        var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
+        using var wrt = new StreamWriter(outp, IanaEncodings.GetEncodingEncoding(encoding));
         ExportToXml(names, wrt, encoding, onlyAscii);
     }
 
@@ -153,12 +173,25 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     /// <param name="wrt">the export destination. The writer is not closed</param>
     /// <param name="encoding">the encoding according to IANA conventions</param>
     /// <param name="onlyAscii">codes above 127 will always be escaped with &amp;#nn; if  true ,</param>
-    public static void ExportToXml(INullValueDictionary<string, string> names, TextWriter wrt, string encoding,
-                                   bool onlyAscii)
+    public static void ExportToXml(INullValueDictionary<string, string> names,
+        TextWriter wrt,
+        string encoding,
+        bool onlyAscii)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (wrt == null)
+        {
+            throw new ArgumentNullException(nameof(wrt));
+        }
+
         wrt.Write("<?xml version=\"1.0\" encoding=\"");
         wrt.Write(SimpleXmlParser.EscapeXml(encoding, onlyAscii));
         wrt.Write("\"?>\n<Destination>\n");
+
         foreach (var key in names.Keys)
         {
             var value = names[key];
@@ -175,8 +208,14 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static INullValueDictionary<string, string> GetNamedDestination(PdfReader reader, bool fromNames)
     {
-        var pages = new IntHashtable();
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        var pages = new NullValueDictionary<int, int>();
         var numPages = reader.NumberOfPages;
+
         for (var k = 1; k <= numPages; ++k)
         {
             pages[reader.GetPageOrigRef(k).Number] = k;
@@ -186,14 +225,17 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var n2 = new NullValueDictionary<string, string>(names.Count);
         var keys = new string[names.Count];
         names.Keys.CopyTo(keys, 0);
+
         foreach (var name in keys)
         {
             var arr = (PdfArray)names[name];
             var s = new StringBuilder();
+
             try
             {
                 s.Append(pages[arr.GetAsIndirectObject(0).Number]);
                 s.Append(' ').Append(arr[1].ToString().Substring(1));
+
                 for (var k = 2; k < arr.Size; ++k)
                 {
                     s.Append(' ').Append(arr[k]);
@@ -219,6 +261,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     {
         var names = new SimpleNamedDestination();
         SimpleXmlParser.Parse(names, inp);
+
         return names._xmlNames;
     }
 
@@ -232,13 +275,25 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     {
         var names = new SimpleNamedDestination();
         SimpleXmlParser.Parse(names, inp);
+
         return names._xmlNames;
     }
 
     public static PdfDictionary OutputNamedDestinationAsNames(INullValueDictionary<string, string> names,
-                                                              PdfWriter writer)
+        PdfWriter writer)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var dic = new PdfDictionary();
+
         foreach (var key in names.Keys)
         {
             try
@@ -258,9 +313,20 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
     }
 
     public static PdfDictionary OutputNamedDestinationAsStrings(INullValueDictionary<string, string> names,
-                                                                PdfWriter writer)
+        PdfWriter writer)
     {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var n2 = new NullValueDictionary<string, PdfObject>();
+
         foreach (var key in names.Keys)
         {
             try
@@ -280,28 +346,39 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
     public static string UnEscapeBinaryString(string s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var buf = new StringBuilder();
         var cc = s.ToCharArray();
         var len = cc.Length;
+
         for (var k = 0; k < len; ++k)
         {
             var c = cc[k];
+
             if (c == '\\')
             {
                 if (++k >= len)
                 {
                     buf.Append('\\');
+
                     break;
                 }
 
                 c = cc[k];
+
                 if (c >= '0' && c <= '7')
                 {
                     var n = c - '0';
                     ++k;
+
                     for (var j = 0; j < 2 && k < len; ++j)
                     {
                         c = cc[k];
+
                         if (c >= '0' && c <= '7')
                         {
                             ++k;
@@ -336,24 +413,32 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var tk = new StringTokenizer(value);
         var n = int.Parse(tk.NextToken(), CultureInfo.InvariantCulture);
         ar.Add(writer.GetPageReference(n));
+
         if (!tk.HasMoreTokens())
         {
             ar.Add(PdfName.Xyz);
-            ar.Add(new float[] { 0, 10000, 0 });
+
+            ar.Add(new float[]
+            {
+                0, 10000, 0
+            });
         }
         else
         {
             var fn = tk.NextToken();
-            if (fn.StartsWith("/"))
+
+            if (fn.StartsWith("/", StringComparison.Ordinal))
             {
                 fn = fn.Substring(1);
             }
 
             ar.Add(new PdfName(fn));
+
             for (var k = 0; k < 4 && tk.HasMoreTokens(); ++k)
             {
                 fn = tk.NextToken();
-                if (fn.Equals("null"))
+
+                if (fn.Equals("null", StringComparison.Ordinal))
                 {
                     ar.Add(PdfNull.Pdfnull);
                 }

@@ -200,6 +200,11 @@ public abstract class PdfObject
 
     public virtual void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (Bytes != null)
         {
             os.Write(Bytes, 0, Bytes.Length);

@@ -5,7 +5,7 @@ public class PdfCollectionItem : PdfDictionary
     /// <summary>
     ///     The PdfCollectionSchema with the names and types of the items.
     /// </summary>
-    internal PdfCollectionSchema Schema;
+    internal readonly PdfCollectionSchema Schema;
 
     /// <summary>
     ///     Constructs a Collection Item that can be added to a PdfFileSpecification.

@@ -102,11 +102,12 @@ public class PdfAction : PdfDictionary
     ///     Constructs a new  PdfAction  of Subtype URI.
     /// </summary>
     /// <param name="url">the Url to go to</param>
-    public PdfAction(Uri url) : this(url.AbsoluteUri)
+    public PdfAction(Uri url) : this(url?.AbsoluteUri ?? throw new ArgumentNullException(nameof(url)))
     {
     }
 
-    public PdfAction(Uri url, bool isMap) : this(url.AbsoluteUri, isMap)
+    public PdfAction(Uri url, bool isMap) : this(url?.AbsoluteUri ?? throw new ArgumentNullException(nameof(url)),
+                                                 isMap)
     {
     }
 
@@ -222,11 +223,27 @@ public class PdfAction : PdfDictionary
         Put(PdfName.D, destination);
     }
 
-    public static PdfAction CreateHide(PdfAnnotation annot, bool hide) => CreateHide(annot.IndirectReference, hide);
+    public static PdfAction CreateHide(PdfAnnotation annot, bool hide)
+    {
+        if (annot == null)
+        {
+            throw new ArgumentNullException(nameof(annot));
+        }
+
+        return CreateHide(annot.IndirectReference, hide);
+    }
 
     public static PdfAction CreateHide(string name, bool hide) => CreateHide(new PdfString(name), hide);
 
-    public static PdfAction CreateHide(object[] names, bool hide) => CreateHide(BuildArray(names), hide);
+    public static PdfAction CreateHide(object[] names, bool hide)
+    {
+        if (names == null)
+        {
+            throw new ArgumentNullException(nameof(names));
+        }
+
+        return CreateHide(BuildArray(names), hide);
+    }
 
     public static PdfAction CreateImportData(string file)
     {
@@ -249,7 +266,7 @@ public class PdfAction : PdfDictionary
     /// <param name="defaultDir">(Windows-specific) the default directory in standard DOS syntax.</param>
     /// <returns>a Launch action</returns>
     public static PdfAction CreateLaunch(string application, string parameters, string operation, string defaultDir) =>
-        new PdfAction(application, parameters, operation, defaultDir);
+        new(application, parameters, operation, defaultDir);
 
     public static PdfAction CreateResetForm(object[] names, int flags)
     {
@@ -333,6 +350,16 @@ public class PdfAction : PdfDictionary
     /// <returns>a GoTo action</returns>
     public static PdfAction GotoLocalPage(int page, PdfDestination dest, PdfWriter writer)
     {
+        if (dest == null)
+        {
+            throw new ArgumentNullException(nameof(dest));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var piref = writer.GetPageReference(page);
         dest.AddPage(piref);
         var action = new PdfAction();
@@ -409,6 +436,16 @@ public class PdfAction : PdfDictionary
     /// <returns>the JavaScript action</returns>
     public static PdfAction JavaScript(string code, PdfWriter writer, bool unicode)
     {
+        if (code == null)
+        {
+            throw new ArgumentNullException(nameof(code));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var js = new PdfAction();
         js.Put(PdfName.S, PdfName.Javascript);
         if (unicode && code.Length < 50)
@@ -488,6 +525,11 @@ public class PdfAction : PdfDictionary
     /// <returns>the action</returns>
     public static PdfAction SetOcGstate(IList<object> state, bool preserveRb)
     {
+        if (state == null)
+        {
+            throw new ArgumentNullException(nameof(state));
+        }
+
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Setocgstate);
         var a = new PdfArray();

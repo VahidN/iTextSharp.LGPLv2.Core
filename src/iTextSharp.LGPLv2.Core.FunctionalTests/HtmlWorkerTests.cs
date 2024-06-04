@@ -42,7 +42,6 @@ public class HtmlWorkerTests
                 using (var reader = new StringReader(html))
                 {
                     var parsedHtmlElements = HtmlWorker.ParseToList(reader, styles);
-
                     foreach (var htmlElement in parsedHtmlElements)
                     {
                         pdfCell.AddElement(htmlElement);
@@ -94,7 +93,11 @@ public class HtmlWorkerTests
                 document.Open();
                 // step 4
                 var objects = HtmlWorker.ParseToList(
-                                                     new StringReader(CreateHtmlSnippet()),
+                                                     new StringReader(@"<b>This is a test</b>
+                     <br/>
+                     <span style='color:blue;font-size:20pt;font-family:tahoma;font-style:italic;font-weight:bold'>
+                        اين يك آزمايش است.
+                    </span>"),
                                                      styles,
                                                      props
                                                     );
@@ -141,22 +144,35 @@ public class HtmlWorkerTests
                                                      new
                                                          StringReader(@"<table style='width: 100%;font-size:9pt;font-family:Tahoma;'>
  <tr>
-    <td align='center' bgcolor='#00FF00' colspan='2'>Hello</td>
+    <td align='center' bgcolor='#00FF00' colspan='2'>سلام!</td>
  </tr>
  <tr>
-    <td align = 'right'> Month </td>
+    <td align = 'right'> ماه </td>
     <td align = 'right'> Savings </td>
  </tr>
  <tr>
    <td align = 'right'> January </td>
    <td align = 'right'>$100 </td>
  </tr>
-</table>"),
+</table>
+<br/>
+<table style='width: 100%;font-size:9pt;font-family:Tahoma;'>
+ <tr>
+    <td align = 'right'> ماه </td>
+    <td align = 'right'> پس‌انداز </td>
+ </tr>
+ <tr>
+   <td align = 'right'> خرداد </td>
+   <td align = 'right'>$100 </td>
+ </tr>
+</table>
+"),
                                                      styles,
                                                      props
                                                     );
                 foreach (var element in objects)
                 {
+                    applyRtlRunDirection(element);
                     document.Add(element);
                 }
             }
@@ -165,10 +181,25 @@ public class HtmlWorkerTests
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
-    private string CreateHtmlSnippet() =>
-        @"<b>This is a test</b>
-                     <br/>
-                     <span style='color:blue;font-size:20pt;font-family:tahoma;font-style:italic;font-weight:bold'>
-                        <b>اين يك آزمايش است.<b/>
-                    </span>";
+    private void applyRtlRunDirection(IElement htmlElement)
+    {
+        if (htmlElement is not PdfPTable table)
+        {
+            return;
+        }
+
+        table.RunDirection = PdfWriter.RUN_DIRECTION_RTL;
+        foreach (var row in table.Rows)
+        {
+            foreach (var cell in row.GetCells())
+            {
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                cell.RunDirection = PdfWriter.RUN_DIRECTION_RTL;
+            }
+        }
+    }
 }

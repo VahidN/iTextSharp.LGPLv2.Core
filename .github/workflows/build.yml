@@ -8,13 +8,14 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: actions/checkout@v4
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.102
+        dotnet-version: 8.0.x
     - name: Build iTextSharp.LGPLv2.Core lib
       run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
       
     - name: Push Package to NuGet.org
+      if: github.event_name == 'push'
       run: dotnet nuget push **\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate

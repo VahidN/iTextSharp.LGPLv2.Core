@@ -94,7 +94,7 @@ public abstract class PdfSigGenericPkcs : PdfSignature
         Pkcs.SetExternalDigest(_externalDigest, _externalRsAdata, _digestEncryptionAlgorithm);
         if (PdfName.AdbeX509RsaSha1.Equals(Get(PdfName.Subfilter)))
         {
-            var bout = new MemoryStream();
+            using var bout = new MemoryStream();
             for (var k = 0; k < certChain.Length; ++k)
             {
                 var tmp = certChain[k].GetEncoded();

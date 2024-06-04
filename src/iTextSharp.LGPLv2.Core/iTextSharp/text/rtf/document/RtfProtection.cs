@@ -307,9 +307,9 @@ public static class RtfProtection
 
             // correct for little-endian -
             // Java always uses big-endian. According to tests - RTF wants little-endian but is not documented
-            var s = lo.ToString("x8");
+            var s = lo.ToString("x8", CultureInfo.InvariantCulture);
             encryptedPwd = s.Substring(6, 2) + s.Substring(4, 2);
-            s = hi.ToString("x8");
+            s = hi.ToString("x8", CultureInfo.InvariantCulture);
             encryptedPwd += s.Substring(6, 2) + s.Substring(4, 2);
         }
 

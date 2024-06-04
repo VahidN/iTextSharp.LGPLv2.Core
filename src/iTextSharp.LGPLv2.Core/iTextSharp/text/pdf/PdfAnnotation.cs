@@ -132,13 +132,26 @@ public class PdfAnnotation : PdfDictionary
 
     public BaseColor Color
     {
-        set => Put(PdfName.C, new PdfColor(value));
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Put(PdfName.C, new PdfColor(value));
+        }
     }
 
     public PdfContentByte DefaultAppearanceString
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             var b = value.InternalBuffer.ToByteArray();
             var len = b.Length;
             for (var k = 0; k < len; ++k)
@@ -186,7 +199,15 @@ public class PdfAnnotation : PdfDictionary
     /// </summary>
     public IPdfOcg Layer
     {
-        set => Put(PdfName.Oc, value.Ref);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Put(PdfName.Oc, value.Ref);
+        }
     }
 
     public string MkAlternateCaption
@@ -196,7 +217,15 @@ public class PdfAnnotation : PdfDictionary
 
     public PdfTemplate MkAlternateIcon
     {
-        set => Mk.Put(PdfName.Ix, value.IndirectReference);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Mk.Put(PdfName.Ix, value.IndirectReference);
+        }
     }
 
     public BaseColor MkBackgroundColor
@@ -236,7 +265,15 @@ public class PdfAnnotation : PdfDictionary
 
     public PdfTemplate MkNormalIcon
     {
-        set => Mk.Put(PdfName.I, value.IndirectReference);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Mk.Put(PdfName.I, value.IndirectReference);
+        }
     }
 
     public string MkRolloverCaption
@@ -246,7 +283,15 @@ public class PdfAnnotation : PdfDictionary
 
     public PdfTemplate MkRolloverIcon
     {
-        set => Mk.Put(PdfName.Ri, value.IndirectReference);
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Mk.Put(PdfName.Ri, value.IndirectReference);
+        }
     }
 
     public int MkRotation
@@ -289,6 +334,11 @@ public class PdfAnnotation : PdfDictionary
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             Put(PdfName.Popup, value.IndirectReference);
             value.Put(PdfName.Parent, IndirectReference);
         }
@@ -360,6 +410,11 @@ public class PdfAnnotation : PdfDictionary
     public static PdfAnnotation CreateFileAttachment(PdfWriter writer, Rectangle rect, string contents,
                                                      PdfFileSpecification fs)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         var annot = new PdfAnnotation(writer, rect);
         annot.Put(PdfName.Subtype, PdfName.Fileattachment);
         if (contents != null)
@@ -383,6 +438,11 @@ public class PdfAnnotation : PdfDictionary
 
     public static PdfAnnotation CreateInk(PdfWriter writer, Rectangle rect, string contents, float[][] inkList)
     {
+        if (inkList == null)
+        {
+            throw new ArgumentNullException(nameof(inkList));
+        }
+
         var annot = new PdfAnnotation(writer, rect);
         annot.Put(PdfName.Subtype, PdfName.Ink);
         annot.Put(PdfName.Contents, new PdfString(contents, TEXT_UNICODE));
@@ -434,6 +494,16 @@ public class PdfAnnotation : PdfDictionary
     public static PdfAnnotation CreateLink(PdfWriter writer, Rectangle rect, PdfName highlight, int page,
                                            PdfDestination dest)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        if (dest == null)
+        {
+            throw new ArgumentNullException(nameof(dest));
+        }
+
         var annot = CreateLink(writer, rect, highlight);
         var piref = writer.GetPageReference(page);
         dest.AddPage(piref);
@@ -444,6 +514,11 @@ public class PdfAnnotation : PdfDictionary
     public static PdfAnnotation CreateMarkup(PdfWriter writer, Rectangle rect, string contents, int type,
                                              float[] quadPoints)
     {
+        if (quadPoints == null)
+        {
+            throw new ArgumentNullException(nameof(quadPoints));
+        }
+
         var annot = new PdfAnnotation(writer, rect);
         var name = PdfName.Highlight;
         switch (type)
@@ -503,6 +578,11 @@ public class PdfAnnotation : PdfDictionary
                                              PdfFileSpecification fs,
                                              string mimeType, bool playOnDisplay)
     {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         var ann = new PdfAnnotation(writer, rect);
         ann.Put(PdfName.Subtype, PdfName.Screen);
         ann.Put(PdfName.F, new PdfNumber(FLAGS_PRINT));
@@ -578,6 +658,11 @@ public class PdfAnnotation : PdfDictionary
 
     public static PdfArray GetMkColor(BaseColor color)
     {
+        if (color == null)
+        {
+            throw new ArgumentNullException(nameof(color));
+        }
+
         var array = new PdfArray();
         var type = ExtendedColor.GetType(color);
         switch (type)
@@ -599,7 +684,8 @@ public class PdfAnnotation : PdfDictionary
             case ExtendedColor.TYPE_SEPARATION:
             case ExtendedColor.TYPE_PATTERN:
             case ExtendedColor.TYPE_SHADING:
-                throw new Exception("Separations, patterns and shadings are not allowed in MK dictionary.");
+                throw new
+                    InvalidOperationException("Separations, patterns and shadings are not allowed in MK dictionary.");
             default:
                 array.Add(new PdfNumber(color.R / 255f));
                 array.Add(new PdfNumber(color.G / 255f));
@@ -612,6 +698,11 @@ public class PdfAnnotation : PdfDictionary
 
     public static PdfAnnotation ShallowDuplicate(PdfAnnotation annot)
     {
+        if (annot == null)
+        {
+            throw new ArgumentNullException(nameof(annot));
+        }
+
         PdfAnnotation dup;
         if (annot.IsForm())
         {
@@ -664,6 +755,11 @@ public class PdfAnnotation : PdfDictionary
 
     public void SetAppearance(PdfName ap, PdfTemplate template)
     {
+        if (template == null)
+        {
+            throw new ArgumentNullException(nameof(template));
+        }
+
         var dic = (PdfDictionary)Get(PdfName.Ap);
         if (dic == null)
         {
@@ -687,6 +783,11 @@ public class PdfAnnotation : PdfDictionary
 
     public void SetAppearance(PdfName ap, string state, PdfTemplate template)
     {
+        if (template == null)
+        {
+            throw new ArgumentNullException(nameof(template));
+        }
+
         var dicAp = (PdfDictionary)Get(PdfName.Ap);
         if (dicAp == null)
         {
@@ -728,6 +829,11 @@ public class PdfAnnotation : PdfDictionary
     /// <param name="highlight">the annotation's highlighting mode</param>
     public void SetHighlighting(PdfName highlight)
     {
+        if (highlight == null)
+        {
+            throw new ArgumentNullException(nameof(highlight));
+        }
+
         if (highlight.Equals(HighlightInvert))
         {
             Remove(PdfName.H);
@@ -741,6 +847,16 @@ public class PdfAnnotation : PdfDictionary
     public void SetMkIconFit(PdfName scale, PdfName scalingType, float leftoverLeft, float leftoverBottom,
                              bool fitInBounds)
     {
+        if (scale == null)
+        {
+            throw new ArgumentNullException(nameof(scale));
+        }
+
+        if (scalingType == null)
+        {
+            throw new ArgumentNullException(nameof(scalingType));
+        }
+
         var dic = new PdfDictionary();
         if (!scale.Equals(PdfName.A))
         {
@@ -781,6 +897,11 @@ public class PdfAnnotation : PdfDictionary
 
     protected static PdfAnnotation CreateLink(PdfWriter writer, Rectangle rect, PdfName highlight)
     {
+        if (highlight == null)
+        {
+            throw new ArgumentNullException(nameof(highlight));
+        }
+
         var annot = new PdfAnnotation(writer, rect);
         annot.Put(PdfName.Subtype, PdfName.Link);
         if (!highlight.Equals(HighlightInvert))
@@ -871,6 +992,11 @@ public class PdfAnnotation : PdfDictionary
 
         public PdfAnnotation CreateAnnotation(PdfWriter writer)
         {
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
             var annotation = new PdfAnnotation(writer, new Rectangle(_llx, _lly, _urx, _ury));
             if (_newPage != 0)
             {

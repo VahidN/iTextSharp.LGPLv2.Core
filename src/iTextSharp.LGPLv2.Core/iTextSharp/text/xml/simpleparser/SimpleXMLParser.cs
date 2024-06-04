@@ -77,17 +77,17 @@ public sealed class SimpleXmlParser
     /// <summary>
     ///     The handler to which we are going to forward comments.
     /// </summary>
-    internal ISimpleXmlDocHandlerComment comment;
+    internal readonly ISimpleXmlDocHandlerComment comment;
 
     /// <summary>
     ///     The handler to which we are going to forward document content
     /// </summary>
-    internal ISimpleXmlDocHandler Doc;
+    internal readonly ISimpleXmlDocHandler Doc;
 
     /// <summary>
     ///     current entity
     /// </summary>
-    internal StringBuilder entity = new();
+    internal readonly StringBuilder entity = new();
 
     /// <summary>
     ///     was the last character equivalent to a newline?
@@ -97,7 +97,7 @@ public sealed class SimpleXmlParser
     /// <summary>
     ///     Are we parsing HTML?
     /// </summary>
-    internal bool Html;
+    internal readonly bool Html;
 
     /// <summary>
     ///     the line we are currently reading
@@ -130,7 +130,7 @@ public sealed class SimpleXmlParser
     /// <summary>
     ///     the state stack
     /// </summary>
-    internal Stack<int> Stack;
+    internal readonly Stack<int> Stack;
 
     /// <summary>
     ///     the current state
@@ -145,7 +145,7 @@ public sealed class SimpleXmlParser
     /// <summary>
     ///     current text (whatever is encountered between tags)
     /// </summary>
-    internal StringBuilder text = new();
+    internal readonly StringBuilder text = new();
 
     /// <summary>
     ///     Creates a Simple XML parser object.
@@ -168,6 +168,11 @@ public sealed class SimpleXmlParser
     /// <returns>the escaped string</returns>
     public static string EscapeXml(string s, bool onlyAscii)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var cc = s.ToCharArray();
         var len = cc.Length;
         var sb = new StringBuilder();
@@ -224,6 +229,11 @@ public sealed class SimpleXmlParser
     /// <param name="html"></param>
     public static void Parse(ISimpleXmlDocHandler doc, ISimpleXmlDocHandlerComment comment, TextReader r, bool html)
     {
+        if (r == null)
+        {
+            throw new ArgumentNullException(nameof(r));
+        }
+
         var parser = new SimpleXmlParser(doc, comment, html);
         parser.go(r);
     }
@@ -236,6 +246,11 @@ public sealed class SimpleXmlParser
     /// <param name="inp">the document. The encoding is deduced from the stream. The stream is not closed</param>
     public static void Parse(ISimpleXmlDocHandler doc, Stream inp)
     {
+        if (inp == null)
+        {
+            throw new ArgumentNullException(nameof(inp));
+        }
+
         var b4 = new byte[4];
         var count = inp.Read(b4, 0, b4.Length);
         if (count != 4)
@@ -245,7 +260,7 @@ public sealed class SimpleXmlParser
 
         var encoding = getEncodingName(b4);
         string decl = null;
-        if (encoding.Equals("UTF-8"))
+        if (encoding.Equals("UTF-8", StringComparison.Ordinal))
         {
             var sb = new StringBuilder();
             int c;
@@ -261,9 +276,9 @@ public sealed class SimpleXmlParser
 
             decl = sb.ToString();
         }
-        else if (encoding.Equals("CP037"))
+        else if (encoding.Equals("CP037", StringComparison.Ordinal))
         {
-            var bi = new MemoryStream();
+            using var bi = new MemoryStream();
             int c;
             while ((c = inp.ReadByte()) != -1)
             {
@@ -275,7 +290,7 @@ public sealed class SimpleXmlParser
                 bi.WriteByte((byte)c);
             }
 
-            decl = EncodingsRegistry.Instance.GetEncoding(37).GetString(bi.ToArray()); //cp037 ebcdic
+            decl = EncodingsRegistry.GetEncoding(37).GetString(bi.ToArray()); //cp037 ebcdic
         }
 
         if (decl != null)
@@ -287,7 +302,8 @@ public sealed class SimpleXmlParser
             }
         }
 
-        Parse(doc, new StreamReader(inp, IanaEncodings.GetEncodingEncoding(encoding)));
+        using var streamReader = new StreamReader(inp, IanaEncodings.GetEncodingEncoding(encoding));
+        Parse(doc, streamReader);
     }
 
     public static void Parse(ISimpleXmlDocHandler doc, TextReader r)
@@ -631,17 +647,17 @@ public sealed class SimpleXmlParser
                     {
                         State = SingleTag;
                     }
-                    else if (Character == '-' && text.ToString().Equals("!-"))
+                    else if (Character == '-' && text.ToString().Equals("!-", StringComparison.Ordinal))
                     {
                         flush();
                         State = Comment;
                     }
-                    else if (Character == '[' && text.ToString().Equals("![CDATA"))
+                    else if (Character == '[' && text.ToString().Equals("![CDATA", StringComparison.Ordinal))
                     {
                         flush();
                         State = Cdata;
                     }
-                    else if (Character == 'E' && text.ToString().Equals("!DOCTYP"))
+                    else if (Character == 'E' && text.ToString().Equals("!DOCTYP", StringComparison.Ordinal))
                     {
                         flush();
                         State = Pi;
@@ -728,7 +744,7 @@ public sealed class SimpleXmlParser
                 // we are processing CDATA
                 case Cdata:
                     if (Character == '>'
-                        && text.ToString().EndsWith("]]"))
+                        && text.ToString().EndsWith("]]", StringComparison.Ordinal))
                     {
                         text.Length = text.Length - 2;
                         flush();
@@ -745,7 +761,7 @@ public sealed class SimpleXmlParser
                 // the <!-- .... --> looking for the -->.
                 case Comment:
                     if (Character == '>'
-                        && text.ToString().EndsWith("--"))
+                        && text.ToString().EndsWith("--", StringComparison.Ordinal))
                     {
                         text.Length = text.Length - 2;
                         flush();

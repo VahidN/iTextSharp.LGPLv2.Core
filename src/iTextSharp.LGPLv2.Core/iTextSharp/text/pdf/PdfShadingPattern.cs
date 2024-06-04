@@ -18,6 +18,11 @@ public class PdfShadingPattern : PdfDictionary
     /// </summary>
     public PdfShadingPattern(PdfShading shading)
     {
+        if (shading == null)
+        {
+            throw new ArgumentNullException(nameof(shading));
+        }
+
         Writer = shading.Writer;
         Put(PdfName.Patterntype, new PdfNumber(2));
         this.shading = shading;
@@ -29,9 +34,14 @@ public class PdfShadingPattern : PdfDictionary
 
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (value.Length != 6)
             {
-                throw new Exception("The matrix size must be 6.");
+                throw new ArgumentException("The matrix size must be 6.");
             }
 
             matrix = value;

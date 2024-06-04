@@ -23,9 +23,6 @@ namespace iTextSharp.text;
 ///     This is an item
 ///     This is another item
 /// </example>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.List" />
-/// <seealso cref="T:iTextSharp.text.Paragraph" />
 public class ListItem : Paragraph
 {
     /// <summary>
@@ -158,7 +155,7 @@ public class ListItem : Paragraph
     /// </summary>
     /// <param name="tag">the given tag</param>
     /// <returns>true if the tag corresponds</returns>
-    public new static bool IsTag(string tag) => ElementTags.LISTITEM.Equals(tag);
+    public new static bool IsTag(string tag) => ElementTags.LISTITEM.Equals(tag, StringComparison.Ordinal);
 
     /// <summary>
     ///     Sets the indentation of this paragraph on the left side.

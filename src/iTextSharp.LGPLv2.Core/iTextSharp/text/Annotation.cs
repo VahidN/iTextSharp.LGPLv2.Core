@@ -6,8 +6,6 @@ namespace iTextSharp.text;
 ///     An Annotation is a little note that can be added to a page
 ///     on a document.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Element" />
-/// <seealso cref="T:iTextSharp.text.Anchor" />
 public class Annotation : IElement
 {
     /// <summary>
@@ -105,6 +103,11 @@ public class Annotation : IElement
     /// </summary>
     public Annotation(Annotation an)
     {
+        if (an == null)
+        {
+            throw new ArgumentNullException(nameof(an));
+        }
+
         AnnotationType = an.AnnotationType;
         AnnotationAttributes = an.AnnotationAttributes;
         _llx = an._llx;
@@ -355,6 +358,11 @@ public class Annotation : IElement
     /// <returns>true if the element was process successfully</returns>
     public bool Process(IElementListener listener)
     {
+        if (listener == null)
+        {
+            throw new ArgumentNullException(nameof(listener));
+        }
+
         try
         {
             return listener.Add(this);

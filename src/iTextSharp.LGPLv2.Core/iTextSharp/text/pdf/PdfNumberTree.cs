@@ -6,7 +6,7 @@ namespace iTextSharp.text.pdf;
 ///     Creates a number tree.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
-public class PdfNumberTree
+public static class PdfNumberTree
 {
     private const int LeafSize = 64;
 
@@ -31,6 +31,16 @@ public class PdfNumberTree
     /// <returns>the dictionary with the number tree.</returns>
     public static PdfDictionary WriteTree<T>(INullValueDictionary<int, T> items, PdfWriter writer) where T : PdfObject
     {
+        if (items == null)
+        {
+            throw new ArgumentNullException(nameof(items));
+        }
+
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
         if (items.Count == 0)
         {
             return null;

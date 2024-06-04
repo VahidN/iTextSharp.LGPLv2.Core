@@ -187,18 +187,23 @@ public abstract class RtfField : Chunk, IRtfBasicElement
     /// <summary>
     ///     Writes the field to the  OutputStream .
     /// </summary>
-    public virtual void WriteContent(Stream result)
+    public virtual void WriteContent(Stream outp)
     {
-        _font.WriteBegin(result);
-        writeFieldBegin(result);
-        writeFieldInstBegin(result);
-        WriteFieldInstContent(result);
-        writeFieldInstEnd(result);
-        writeFieldResultBegin(result);
-        WriteFieldResultContent(result);
-        writeFieldResultEnd(result);
-        writeFieldEnd(result);
-        _font.WriteEnd(result);
+        if (outp == null)
+        {
+            throw new ArgumentNullException(nameof(outp));
+        }
+
+        _font.WriteBegin(outp);
+        writeFieldBegin(outp);
+        writeFieldInstBegin(outp);
+        WriteFieldInstContent(outp);
+        writeFieldInstEnd(outp);
+        writeFieldResultBegin(outp);
+        WriteFieldResultContent(outp);
+        writeFieldResultEnd(outp);
+        writeFieldEnd(outp);
+        _font.WriteEnd(outp);
     }
 
     /// <summary>
@@ -338,7 +343,7 @@ public abstract class RtfField : Chunk, IRtfBasicElement
     /// <summary>
     ///     Writes the end of the field
     /// </summary>
-    private void writeFieldEnd(Stream result)
+    private static void writeFieldEnd(Stream result)
     {
         result.Write(CloseGroup, 0, CloseGroup.Length);
     }
@@ -348,7 +353,7 @@ public abstract class RtfField : Chunk, IRtfBasicElement
     ///     @throws IOException
     /// </summary>
     /// <returns>The beginning of the field instruction area</returns>
-    private void writeFieldInstBegin(Stream result)
+    private static void writeFieldInstBegin(Stream result)
     {
         result.Write(OpenGroup, 0, OpenGroup.Length);
         result.Write(_fieldInstructionsBytes, 0, _fieldInstructionsBytes.Length);
@@ -372,7 +377,7 @@ public abstract class RtfField : Chunk, IRtfBasicElement
     /// <summary>
     ///     Writes the beginning of the field result area
     /// </summary>
-    private void writeFieldResultBegin(Stream result)
+    private static void writeFieldResultBegin(Stream result)
     {
         result.Write(OpenGroup, 0, OpenGroup.Length);
         result.Write(_fieldResultBytes, 0, _fieldResultBytes.Length);
@@ -382,7 +387,7 @@ public abstract class RtfField : Chunk, IRtfBasicElement
     /// <summary>
     ///     Writes the end of the field result area
     /// </summary>
-    private void writeFieldResultEnd(Stream result)
+    private static void writeFieldResultEnd(Stream result)
     {
         result.Write(Delimiter, 0, Delimiter.Length);
         result.Write(CloseGroup, 0, CloseGroup.Length);

@@ -170,6 +170,11 @@ public class PdfPCell : Rectangle
     /// <param name="style">The style to apply to the cell (you could use getDefaultCell())</param>
     public PdfPCell(PdfPTable table, PdfPCell style) : base(0, 0, 0, 0)
     {
+        if (table == null)
+        {
+            throw new ArgumentNullException(nameof(table));
+        }
+
         borderWidth = 0.5f;
         border = BOX;
         Column.SetLeading(0, 1);
@@ -202,7 +207,10 @@ public class PdfPCell : Rectangle
     ///     Constructs a deep copy of a  PdfPCell .
     /// </summary>
     /// <param name="cell">the  PdfPCell  to duplicate</param>
-    public PdfPCell(PdfPCell cell) : base(cell.Llx, cell.Lly, cell.Urx, cell.Ury)
+    public PdfPCell(PdfPCell cell) : base(cell?.Llx ?? throw new ArgumentNullException(nameof(cell)),
+                                          cell.Lly,
+                                          cell.Urx,
+                                          cell.Ury)
     {
         CloneNonPositionParameters(cell);
         _verticalAlignment = cell._verticalAlignment;
@@ -712,7 +720,7 @@ public class PdfPCell : Rectangle
         }
         else
         {
-            if (pivoted && HasFixedHeight())
+            if ((pivoted && HasFixedHeight()) || Column == null)
             {
                 Bottom = Top - FixedHeight;
             }
@@ -755,7 +763,7 @@ public class PdfPCell : Rectangle
         }
 
         var height = Height;
-        if (height < FixedHeight)
+        if (HasFixedHeight())
         {
             height = FixedHeight;
         }

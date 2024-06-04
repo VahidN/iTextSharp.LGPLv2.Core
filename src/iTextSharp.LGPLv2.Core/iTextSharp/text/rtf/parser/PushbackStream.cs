@@ -28,6 +28,11 @@ public class PushbackStream : Stream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
         if (_buf != -1 && count > 0)
         {
             // TODO Can this case be made more efficient?

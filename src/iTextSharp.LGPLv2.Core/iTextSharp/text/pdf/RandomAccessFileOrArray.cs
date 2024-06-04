@@ -10,10 +10,10 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class RandomAccessFileOrArray
 {
-    internal byte[] ArrayIn;
+    internal readonly byte[] ArrayIn;
     internal int ArrayInPtr;
     internal byte Back;
-    internal string Filename;
+    internal readonly string Filename;
     internal bool IsBack;
     internal FileStream Rf;
 
@@ -23,6 +23,11 @@ public class RandomAccessFileOrArray
 
     public RandomAccessFileOrArray(string filename, bool forceRead)
     {
+        if (filename == null)
+        {
+            throw new ArgumentNullException(nameof(filename));
+        }
+
         var cachedBytes = PdfResourceFileCache.Get(filename);
         if (cachedBytes != null)
         {
@@ -36,28 +41,15 @@ public class RandomAccessFileOrArray
                 filename.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                 filename.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                var isp = filename.GetResponseStream();
-                try
-                {
-                    ArrayIn = InputStreamToArray(isp);
-                    return;
-                }
-                finally
-                {
-                    try
-                    {
-                        isp.Dispose();
-                    }
-                    catch
-                    {
-                    }
-                }
+                using var isp = filename.GetResponseStream();
+                ArrayIn = InputStreamToArray(isp);
+                return;
             }
             else
             {
                 //Stream isp = BaseFont.GetResourceStream(filename);
                 Stream isp = null;
-                if ("-".Equals(filename))
+                if ("-".Equals(filename, StringComparison.Ordinal))
                 {
                     isp = ((StreamReader)Console.In).BaseStream;
                 }
@@ -91,26 +83,8 @@ public class RandomAccessFileOrArray
 
         if (forceRead)
         {
-            Stream s = null;
-            try
-            {
-                s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-                ArrayIn = InputStreamToArray(s);
-            }
-            finally
-            {
-                try
-                {
-                    if (s != null)
-                    {
-                        s.Dispose();
-                    }
-                }
-                catch
-                {
-                }
-            }
-
+            using var s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            ArrayIn = InputStreamToArray(s);
             return;
         }
 
@@ -120,21 +94,8 @@ public class RandomAccessFileOrArray
 
     public RandomAccessFileOrArray(Uri url)
     {
-        var isp = url.GetResponseStream();
-        try
-        {
-            ArrayIn = InputStreamToArray(isp);
-        }
-        finally
-        {
-            try
-            {
-                isp.Dispose();
-            }
-            catch
-            {
-            }
-        }
+        using var isp = url.GetResponseStream();
+        ArrayIn = InputStreamToArray(isp);
     }
 
     public RandomAccessFileOrArray(Stream isp, bool forceRead = true)
@@ -154,6 +115,11 @@ public class RandomAccessFileOrArray
 
     public RandomAccessFileOrArray(RandomAccessFileOrArray file)
     {
+        if (file == null)
+        {
+            throw new ArgumentNullException(nameof(file));
+        }
+
         Filename = file.Filename;
         ArrayIn = file.ArrayIn;
         StartOffset = file.StartOffset;
@@ -195,8 +161,13 @@ public class RandomAccessFileOrArray
 
     public static byte[] InputStreamToArray(Stream isp)
     {
+        if (isp == null)
+        {
+            throw new ArgumentNullException(nameof(isp));
+        }
+
         var b = new byte[8192];
-        var outp = new MemoryStream();
+        using var outp = new MemoryStream();
         while (true)
         {
             var read = isp.Read(b, 0, b.Length);
@@ -252,6 +223,11 @@ public class RandomAccessFileOrArray
 
     public int Read(byte[] b, int off, int len)
     {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         if (len == 0)
         {
             return 0;
@@ -292,7 +268,15 @@ public class RandomAccessFileOrArray
         return len + n;
     }
 
-    public int Read(byte[] b) => Read(b, 0, b.Length);
+    public int Read(byte[] b)
+    {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
+        return Read(b, 0, b.Length);
+    }
 
     public bool ReadBoolean()
     {
@@ -385,6 +369,11 @@ public class RandomAccessFileOrArray
 
     public void ReadFully(byte[] b)
     {
+        if (b == null)
+        {
+            throw new ArgumentNullException(nameof(b));
+        }
+
         ReadFully(b, 0, b.Length);
     }
 

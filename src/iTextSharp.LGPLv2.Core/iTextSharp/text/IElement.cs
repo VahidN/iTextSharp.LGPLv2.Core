@@ -3,24 +3,6 @@ namespace iTextSharp.text;
 /// <summary>
 ///     Interface for a text element.
 /// </summary>
-/// <seealso cref="T:iTextSharp.text.Anchor" />
-/// <seealso cref="T:iTextSharp.text.Cell" />
-/// <seealso cref="T:iTextSharp.text.Chapter" />
-/// <seealso cref="T:iTextSharp.text.Chunk" />
-/// <seealso cref="T:iTextSharp.text.Gif" />
-/// <seealso cref="T:iTextSharp.text.Graphic" />
-/// <seealso cref="T:iTextSharp.text.Header" />
-/// <seealso cref="T:iTextSharp.text.Image" />
-/// <seealso cref="T:iTextSharp.text.Jpeg" />
-/// <seealso cref="T:iTextSharp.text.List" />
-/// <seealso cref="T:iTextSharp.text.ListItem" />
-/// <seealso cref="T:iTextSharp.text.Meta" />
-/// <seealso cref="T:iTextSharp.text.Paragraph" />
-/// <seealso cref="T:iTextSharp.text.Phrase" />
-/// <seealso cref="T:iTextSharp.text.Rectangle" />
-/// <seealso cref="T:iTextSharp.text.Row" />
-/// <seealso cref="T:iTextSharp.text.Section" />
-/// <seealso cref="T:iTextSharp.text.Table" />
 public interface IElement
 {
     /// <summary>

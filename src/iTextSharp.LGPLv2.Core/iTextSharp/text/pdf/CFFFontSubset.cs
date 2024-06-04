@@ -16,7 +16,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The Strings in this array represent Type1/Type2 escape operator names
     /// </summary>
-    internal static string[] SubrsEscapeFuncs =
+    internal static readonly string[] SubrsEscapeFuncs =
     {
         "RESERVED_0", "RESERVED_1", "RESERVED_2", "and", "or", "not",
         "RESERVED_6",
@@ -33,7 +33,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The Strings in this array represent Type1/Type2 operator names
     /// </summary>
-    internal static string[] SubrsFunctions =
+    internal static readonly string[] SubrsFunctions =
     {
         "RESERVED_0", "hstem", "RESERVED_2", "vstem", "vmoveto", "rlineto",
         "hlineto", "vlineto",
@@ -49,7 +49,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     A HashMap for keeping the FDArrays being used by the font
     /// </summary>
-    internal INullValueDictionary<int, object> FdArrayUsed = new NullValueDictionary<int, object>();
+    internal readonly INullValueDictionary<int, object> FdArrayUsed = new NullValueDictionary<int, object>();
 
     /// <summary>
     ///     The bias for the global subroutines
@@ -59,18 +59,18 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The GlyphsUsed keys as an ArrayList
     /// </summary>
-    internal List<int> GlyphsInList;
+    internal readonly List<int> GlyphsInList;
 
     /// <summary>
     ///     A HashMap containing the glyphs used in the text after being converted
     ///     to glyph number by the CMap
     /// </summary>
-    internal INullValueDictionary<int, int[]> GlyphsUsed;
+    internal readonly INullValueDictionary<int, int[]> GlyphsUsed;
 
     /// <summary>
     ///     A HashMap for keeping the Global subroutines used in the font
     /// </summary>
-    internal INullValueDictionary<int, int[]> HGSubrsUsed = new NullValueDictionary<int, int[]>();
+    internal readonly INullValueDictionary<int, int[]> HGSubrsUsed = new NullValueDictionary<int, int[]>();
 
     /// <summary>
     ///     A HashMaps array for keeping the subroutines used in each FontDict
@@ -80,12 +80,12 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     A HashMap for keeping the subroutines used in a non-cid font
     /// </summary>
-    internal INullValueDictionary<int, int[]> HSubrsUsedNonCid = new NullValueDictionary<int, int[]>();
+    internal readonly INullValueDictionary<int, int[]> HSubrsUsedNonCid = new NullValueDictionary<int, int[]>();
 
     /// <summary>
     ///     The Global SubroutinesUsed HashMaps as ArrayLists
     /// </summary>
-    internal List<int> LGSubrsUsed = new();
+    internal readonly List<int> LGSubrsUsed = new();
 
     /// <summary>
     ///     The SubroutinesUsed HashMaps as ArrayLists
@@ -95,7 +95,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     The SubroutinesUsed HashMap as ArrayList
     /// </summary>
-    internal List<int> LSubrsUsedNonCid = new();
+    internal readonly List<int> LSubrsUsedNonCid = new();
 
     /// <summary>
     ///     The new CharString of the font
@@ -135,7 +135,7 @@ public class CffFontSubset : CffFont
     public CffFontSubset(RandomAccessFileOrArray rf, INullValueDictionary<int, int[]> glyphsUsed) : base(rf)
     {
         // Use CFFFont c'tor in order to parse the font file.
-        GlyphsUsed = glyphsUsed;
+        GlyphsUsed = glyphsUsed ?? throw new ArgumentNullException(nameof(glyphsUsed));
         //Put the glyphs into a list
         GlyphsInList = new List<int>(glyphsUsed.Keys);
 
@@ -182,6 +182,11 @@ public class CffFontSubset : CffFont
     /// <returns>The new font stream</returns>
     public byte[] Process(string fontName)
     {
+        if (fontName == null)
+        {
+            throw new ArgumentNullException(nameof(fontName));
+        }
+
         try
         {
             // Verify that the file is open
@@ -190,7 +195,7 @@ public class CffFontSubset : CffFont
             int j;
             for (j = 0; j < Fonts.Length; j++)
             {
-                if (fontName.Equals(Fonts[j].Name))
+                if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
                 {
                     break;
                 }
@@ -407,8 +412,18 @@ public class CffFontSubset : CffFont
     /// <param name="newOffsets">the subsetted offset array</param>
     /// <param name="newObjects">the subsetted object array</param>
     /// <returns>the new index created</returns>
-    protected byte[] AssembleIndex(int[] newOffsets, byte[] newObjects)
+    protected static byte[] AssembleIndex(int[] newOffsets, byte[] newObjects)
     {
+        if (newOffsets == null)
+        {
+            throw new ArgumentNullException(nameof(newOffsets));
+        }
+
+        if (newObjects == null)
+        {
+            throw new ArgumentNullException(nameof(newObjects));
+        }
+
         // Calc the index' count field
         var count = (char)(newOffsets.Length - 1);
         // Calc the size of the object array
@@ -832,6 +847,16 @@ public class CffFontSubset : CffFont
     protected byte[] BuildNewIndex(int[] offsets, INullValueDictionary<int, int[]> used,
                                    byte operatorForUnusedEntries)
     {
+        if (offsets == null)
+        {
+            throw new ArgumentNullException(nameof(offsets));
+        }
+
+        if (used == null)
+        {
+            throw new ArgumentNullException(nameof(used));
+        }
+
         var unusedCount = 0;
         var offset = 0;
         var newOffsets = new int[offsets.Length];
@@ -969,6 +994,21 @@ public class CffFontSubset : CffFont
     protected void BuildSubrUsed(int font, int fd, int subrOffset, int[] subrsOffsets,
                                  INullValueDictionary<int, int[]> hSubr, IList<int> lSubr)
     {
+        if (subrsOffsets == null)
+        {
+            throw new ArgumentNullException(nameof(subrsOffsets));
+        }
+
+        if (hSubr == null)
+        {
+            throw new ArgumentNullException(nameof(hSubr));
+        }
+
+        if (lSubr == null)
+        {
+            throw new ArgumentNullException(nameof(lSubr));
+        }
+
         // Calc the Bias for the subr index
         var lBias = CalcBias(subrOffset, font);
 
@@ -1060,6 +1100,11 @@ public class CffFontSubset : CffFont
     /// <returns>The number of hints in the subroutine read.</returns>
     protected int CalcHints(int begin, int end, int lBias, int gBias, int[] lSubrsOffsets)
     {
+        if (lSubrsOffsets == null)
+        {
+            throw new ArgumentNullException(nameof(lSubrsOffsets));
+        }
+
         // Goto begining of the subr
         Seek(begin);
         while (GetPosition() < end)
@@ -1401,6 +1446,21 @@ public class CffFontSubset : CffFont
     protected void ReadASubr(int begin, int end, int gBias, int lBias,
                              INullValueDictionary<int, int[]> hSubr, IList<int> lSubr, int[] lSubrsOffsets)
     {
+        if (hSubr == null)
+        {
+            throw new ArgumentNullException(nameof(hSubr));
+        }
+
+        if (lSubr == null)
+        {
+            throw new ArgumentNullException(nameof(lSubr));
+        }
+
+        if (lSubrsOffsets == null)
+        {
+            throw new ArgumentNullException(nameof(lSubrsOffsets));
+        }
+
         // Clear the stack for the subrs
         EmptyStack();
         NumOfHints = 0;

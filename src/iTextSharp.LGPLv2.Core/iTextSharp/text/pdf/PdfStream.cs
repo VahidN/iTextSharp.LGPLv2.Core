@@ -76,7 +76,8 @@ public class PdfStream : PdfDictionary
     /// <summary>
     ///     constructors
     /// </summary>
-    static PdfStream() => Sizestream = Startstream.Length + Endstream.Length;
+    static PdfStream()
+        => Sizestream = Startstream.Length + Endstream.Length;
 
     /// <summary>
     ///     Constructs a  PdfStream -object.
@@ -85,7 +86,7 @@ public class PdfStream : PdfDictionary
     public PdfStream(byte[] bytes)
     {
         type = STREAM;
-        Bytes = bytes;
+        Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
         rawLength = bytes.Length;
         Put(PdfName.LENGTH, new PdfNumber(bytes.Length));
     }
@@ -106,7 +107,7 @@ public class PdfStream : PdfDictionary
     {
         type = STREAM;
         InputStream = inputStream;
-        Writer = writer;
+        Writer = writer ?? throw new ArgumentNullException(nameof(writer));
         Iref = writer.PdfIndirectReference;
         Put(PdfName.LENGTH, Iref);
     }
@@ -114,7 +115,8 @@ public class PdfStream : PdfDictionary
     /// <summary>
     ///     Constructs a  PdfStream -object.
     /// </summary>
-    protected PdfStream() => type = STREAM;
+    protected PdfStream()
+        => type = STREAM;
 
     /// <summary>
     ///     methods overriding some methods of PdfObject
@@ -126,9 +128,7 @@ public class PdfStream : PdfDictionary
     ///     Compresses the stream.
     /// </summary>
     public void FlateCompress()
-    {
-        FlateCompress(DEFAULT_COMPRESSION);
-    }
+        => FlateCompress(DEFAULT_COMPRESSION);
 
     /// <summary>
     ///     methods
@@ -152,14 +152,17 @@ public class PdfStream : PdfDictionary
         }
 
         CompressionLevel = compressionLevel;
+
         if (InputStream != null)
         {
             Compressed = true;
+
             return;
         }
 
         // check if a filter allready exists
         var filter = PdfReader.GetPdfObject(Get(PdfName.Filter));
+
         if (filter != null)
         {
             if (filter.IsName())
@@ -185,6 +188,7 @@ public class PdfStream : PdfDictionary
         // compress
         var stream = new MemoryStream();
         var zip = new ZDeflaterOutputStream(stream, compressionLevel);
+
         if (StreamBytes != null)
         {
             StreamBytes.WriteTo(zip);
@@ -196,10 +200,12 @@ public class PdfStream : PdfDictionary
 
         //zip.Close();
         zip.Finish();
+
         // update the object
         StreamBytes = stream;
         Bytes = null;
         Put(PdfName.LENGTH, new PdfNumber(StreamBytes.Length));
+
         if (filter == null)
         {
             Put(PdfName.Filter, PdfName.Flatedecode);
@@ -216,12 +222,18 @@ public class PdfStream : PdfDictionary
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (InputStream != null && Compressed)
         {
             Put(PdfName.Filter, PdfName.Flatedecode);
         }
 
         PdfEncryption crypto = null;
+
         if (writer != null)
         {
             crypto = writer.Encryption;
@@ -230,6 +242,7 @@ public class PdfStream : PdfDictionary
         if (crypto != null)
         {
             var filter = Get(PdfName.Filter);
+
             if (filter != null)
             {
                 if (PdfName.Crypt.Equals(filter))
@@ -239,6 +252,7 @@ public class PdfStream : PdfDictionary
                 else if (filter.IsArray())
                 {
                     var a = (PdfArray)filter;
+
                     if (a.Size > 0 && PdfName.Crypt.Equals(a[0]))
                     {
                         crypto = null;
@@ -248,6 +262,7 @@ public class PdfStream : PdfDictionary
         }
 
         var nn = Get(PdfName.LENGTH);
+
         if (crypto != null && nn != null && nn.IsNumber())
         {
             var sz = ((PdfNumber)nn).IntValue;
@@ -261,6 +276,7 @@ public class PdfStream : PdfDictionary
         }
 
         os.Write(Startstream, 0, Startstream.Length);
+
         if (InputStream != null)
         {
             rawLength = 0;
@@ -268,20 +284,25 @@ public class PdfStream : PdfDictionary
             var osc = new OutputStreamCounter(os);
             OutputStreamEncryption ose = null;
             Stream fout = osc;
+
             if (crypto != null && !crypto.IsEmbeddedFilesOnly())
             {
-                fout = ose = crypto.GetEncryptionStream(fout);
+                ose = crypto.GetEncryptionStream(fout);
+                fout = ose;
             }
 
             if (Compressed)
             {
-                fout = def = new ZDeflaterOutputStream(fout, CompressionLevel);
+                def = new ZDeflaterOutputStream(fout, CompressionLevel);
+                fout = def;
             }
 
             var buf = new byte[4192];
+
             while (true)
             {
                 var n = InputStream.Read(buf, 0, buf.Length);
+
                 if (n <= 0)
                 {
                     break;
@@ -308,6 +329,7 @@ public class PdfStream : PdfDictionary
             if (crypto != null && !crypto.IsEmbeddedFilesOnly())
             {
                 byte[] b;
+
                 if (StreamBytes != null)
                 {
                     b = crypto.EncryptByteArray(StreamBytes.ToArray());
@@ -355,6 +377,11 @@ public class PdfStream : PdfDictionary
     /// <param name="os">the destination to write to</param>
     public void WriteContent(Stream os)
     {
+        if (os == null)
+        {
+            throw new ArgumentNullException(nameof(os));
+        }
+
         if (StreamBytes != null)
         {
             StreamBytes.WriteTo(os);
@@ -376,8 +403,8 @@ public class PdfStream : PdfDictionary
     {
         if (InputStream == null)
         {
-            throw
-                new PdfException("WriteLength() can only be called in a contructed PdfStream(InputStream,PdfWriter).");
+            throw new PdfException(
+                "WriteLength() can only be called in a contructed PdfStream(InputStream,PdfWriter).");
         }
 
         if (InputStreamLength == -1)
@@ -389,7 +416,5 @@ public class PdfStream : PdfDictionary
     }
 
     protected virtual void SuperToPdf(PdfWriter writer, Stream os)
-    {
-        base.ToPdf(writer, os);
-    }
+        => base.ToPdf(writer, os);
 }

@@ -81,8 +81,15 @@ public class PdfAppearance : PdfTemplate
     /// <param name="width">the bounding box width</param>
     /// <param name="height">the bounding box height</param>
     /// <returns>the appearance created</returns>
-    public static PdfAppearance CreateAppearance(PdfWriter writer, float width, float height) =>
-        CreateAppearance(writer, width, height, null);
+    public static PdfAppearance CreateAppearance(PdfWriter writer, float width, float height)
+    {
+        if (writer == null)
+        {
+            throw new ArgumentNullException(nameof(writer));
+        }
+
+        return CreateAppearance(writer, width, height, null);
+    }
 
     /// <summary>
     ///     Set the font and the size for the subsequent text writing.
@@ -91,6 +98,11 @@ public class PdfAppearance : PdfTemplate
     /// <param name="size">the font size in points</param>
     public override void SetFontAndSize(BaseFont bf, float size)
     {
+        if (bf == null)
+        {
+            throw new ArgumentNullException(nameof(bf));
+        }
+
         CheckWriter();
         State.size = size;
         if (bf.FontType == BaseFont.FONT_TYPE_DOCUMENT)

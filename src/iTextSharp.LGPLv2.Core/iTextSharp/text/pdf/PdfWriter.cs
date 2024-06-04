@@ -16,15 +16,8 @@ namespace iTextSharp.text.pdf;
 ///     to a certain  PdfDocument , the PDF representation of every Element
 ///     added to this Document will be written to the outputstream.
 /// </summary>
-public class PdfWriter : DocWriter,
-                         IPdfViewerPreferences,
-                         IPdfEncryptionSettings,
-                         IPdfVersion,
-                         IPdfDocumentActions,
-                         IPdfPageActions,
-                         IPdfXConformance,
-                         IPdfRunDirection,
-                         IPdfAnnotations
+public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSettings, IPdfVersion, IPdfDocumentActions,
+    IPdfPageActions, IPdfXConformance, IPdfRunDirection, IPdfAnnotations
 {
     /// <summary>
     ///     The operation permitted when the document is opened with the user password
@@ -489,10 +482,25 @@ public class PdfWriter : DocWriter,
     /// </summary>
     public static PdfName WillSave = PdfName.Ws;
 
+    private static readonly float[] _gammaValues =
+    {
+        2.2f, 2.2f, 2.2f
+    };
+
+    private static readonly float[] _matrixValues =
+    {
+        0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
+    };
+
+    private static readonly float[] _whitepointValues =
+    {
+        0.9505f, 1f, 1.089f
+    };
+
     /// <summary>
     ///     This is the list with all the images in the document.
     /// </summary>
-    private readonly INullValueDictionary<long, PdfName> _images = new NullValueDictionary<long, PdfName>();
+    private readonly NullValueDictionary<long, PdfName> _images = new();
 
     /// <summary>
     ///     [C10] PDFX Conformance
@@ -614,8 +622,7 @@ public class PdfWriter : DocWriter,
     protected INullValueDictionary<PdfShadingPattern, object> DocumentShadingPatterns =
         new NullValueDictionary<PdfShadingPattern, object>();
 
-    protected INullValueDictionary<PdfShading, object> DocumentShadings =
-        new NullValueDictionary<PdfShading, object>();
+    protected INullValueDictionary<PdfShading, object> DocumentShadings = new NullValueDictionary<PdfShading, object>();
 
     protected INullValueDictionary<ColorDetails, ColorDetails> DocumentSpotPatterns =
         new NullValueDictionary<ColorDetails, ColorDetails>();
@@ -756,7 +763,8 @@ public class PdfWriter : DocWriter,
     /// <summary>
     ///     Constructs a  PdfWriter .
     /// </summary>
-    protected PdfWriter() => Root = new PdfPages(this);
+    protected PdfWriter()
+        => Root = new PdfPages(this);
 
     protected PdfWriter(PdfDocument document, Stream os) : base(document, os)
     {
@@ -852,7 +860,7 @@ public class PdfWriter : DocWriter,
         {
             if (!open)
             {
-                throw new Exception("The document is not open.");
+                throw new InvalidOperationException("The document is not open.");
             }
 
             return directContent;
@@ -871,7 +879,7 @@ public class PdfWriter : DocWriter,
         {
             if (!open)
             {
-                throw new Exception("The document is not open.");
+                throw new InvalidOperationException("The document is not open.");
             }
 
             return directContentUnder;
@@ -931,6 +939,7 @@ public class PdfWriter : DocWriter,
         get
         {
             FillOcProperties(true);
+
             return VOcProperties;
         }
     }
@@ -1218,9 +1227,7 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="annot">the  PdfAnnotation  or the  PdfFormField  to add</param>
     public virtual void AddAnnotation(PdfAnnotation annot)
-    {
-        Pdf.AddAnnotation(annot);
-    }
+        => Pdf.AddAnnotation(annot);
 
     /// <summary>
     ///     Adds the  PdfAnnotation  to the calculation order
@@ -1228,9 +1235,7 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="annot">the  PdfAnnotation  to be added</param>
     public virtual void AddCalculationOrder(PdfFormField annot)
-    {
-        Pdf.AddCalculationOrder(annot);
-    }
+        => Pdf.AddCalculationOrder(annot);
 
     /// <summary>
     ///     Additional-actions defining the actions to be taken in
@@ -1244,11 +1249,13 @@ public class PdfWriter : DocWriter,
     /// <param name="action">the action to execute in response to the trigger</param>
     public virtual void SetAdditionalAction(PdfName actionType, PdfAction action)
     {
-        if (!(actionType.Equals(DocumentClose) ||
-              actionType.Equals(WillSave) ||
-              actionType.Equals(DidSave) ||
-              actionType.Equals(WillPrint) ||
-              actionType.Equals(DidPrint)))
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
+        if (!(actionType.Equals(DocumentClose) || actionType.Equals(WillSave) || actionType.Equals(DidSave) ||
+              actionType.Equals(WillPrint) || actionType.Equals(DidPrint)))
         {
             throw new PdfException("Invalid additional action type: " + actionType);
         }
@@ -1262,9 +1269,7 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="name">the name of the destination to jump to</param>
     public virtual void SetOpenAction(string name)
-    {
-        Pdf.SetOpenAction(name);
-    }
+        => Pdf.SetOpenAction(name);
 
     /// <summary>
     ///     When the document opens this  action  will be
@@ -1272,9 +1277,7 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="action">the action to be invoked</param>
     public virtual void SetOpenAction(PdfAction action)
-    {
-        Pdf.SetOpenAction(action);
-    }
+        => Pdf.SetOpenAction(action);
 
     /// <summary>
     ///     Sets the encryption options for this document. The userPassword and the
@@ -1323,12 +1326,18 @@ public class PdfWriter : DocWriter,
     /// </param>
     public void SetEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
     {
+        if (permissions == null)
+        {
+            throw new ArgumentNullException(nameof(permissions));
+        }
+
         if (Pdf.IsOpen())
         {
             throw new DocumentException("Encryption can only be added before opening the document.");
         }
 
         Crypto = new PdfEncryption();
+
         if (certs != null)
         {
             for (var i = 0; i < certs.Length; i++)
@@ -1375,6 +1384,11 @@ public class PdfWriter : DocWriter,
     /// <param name="action">the action to perform</param>
     public virtual void SetPageAction(PdfName actionType, PdfAction action)
     {
+        if (actionType == null)
+        {
+            throw new ArgumentNullException(nameof(actionType));
+        }
+
         if (!actionType.Equals(PageOpen) && !actionType.Equals(PageClose))
         {
             throw new PdfException("Invalid page additional action type: " + actionType);
@@ -1393,7 +1407,7 @@ public class PdfWriter : DocWriter,
         {
             if (value < RUN_DIRECTION_NO_BIDI || value > RUN_DIRECTION_RTL)
             {
-                throw new Exception("Invalid run direction: " + value);
+                throw new InvalidOperationException("Invalid run direction: " + value);
             }
 
             runDirection = value;
@@ -1414,25 +1428,19 @@ public class PdfWriter : DocWriter,
     ///     @since   2.1.6
     /// </summary>
     public void AddDeveloperExtension(PdfDeveloperExtension de)
-    {
-        pdf_version.AddDeveloperExtension(de);
-    }
+        => pdf_version.AddDeveloperExtension(de);
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfVersion#setAtLeastPdfVersion(char)
     /// </summary>
     public void SetAtLeastPdfVersion(char version)
-    {
-        pdf_version.SetAtLeastPdfVersion(version);
-    }
+        => pdf_version.SetAtLeastPdfVersion(version);
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfVersion#setPdfVersion(com.lowagie.text.pdf.PdfName)
     /// </summary>
     public void SetPdfVersion(PdfName version)
-    {
-        pdf_version.SetPdfVersion(version);
-    }
+        => pdf_version.SetPdfVersion(version);
 
     /// <summary>
     ///     Sets the viewer preferences as the sum of several constants.
@@ -1448,9 +1456,7 @@ public class PdfWriter : DocWriter,
     ///     @see PdfViewerPreferences#addViewerPreference
     /// </summary>
     public virtual void AddViewerPreference(PdfName key, PdfObject value)
-    {
-        Pdf.AddViewerPreference(key, value);
-    }
+        => Pdf.AddViewerPreference(key, value);
 
     /// <summary>
     ///     Sets the PDFX conformance level. Allowed values are PDFX1A2001 and PDFX32002. It
@@ -1492,24 +1498,37 @@ public class PdfWriter : DocWriter,
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfXConformance#isPdfX()
     /// </summary>
-    public bool IsPdfX() => _pdfxConformance.IsPdfX();
+    public bool IsPdfX()
+        => _pdfxConformance.IsPdfX();
 
     public static PdfWriter GetInstance(Document document, Stream os)
     {
+        if (document == null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
+
         var pdf = new PdfDocument();
         document.AddDocListener(pdf);
         var writer = new PdfWriter(pdf, os);
         pdf.AddWriter(writer);
+
         return writer;
     }
 
     public static PdfWriter GetInstance(Document document, Stream os, IDocListener listener)
     {
+        if (document == null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
+
         var pdf = new PdfDocument();
         pdf.AddDocListener(listener);
         document.AddDocListener(pdf);
         var writer = new PdfWriter(pdf, os);
         pdf.AddWriter(writer);
+
         return writer;
     }
 
@@ -1521,7 +1540,8 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="image">the  Image  to add</param>
     /// <returns>the name of the image added</returns>
-    public PdfName AddDirectImageSimple(Image image) => AddDirectImageSimple(image, null);
+    public PdfName AddDirectImageSimple(Image image)
+        => AddDirectImageSimple(image, null);
 
     /// <summary>
     ///     Adds an image to the document but not to the page resources. It is used with
@@ -1535,37 +1555,47 @@ public class PdfWriter : DocWriter,
     /// <returns>the name of the image added</returns>
     public PdfName AddDirectImageSimple(Image image, PdfIndirectReference fixedRef)
     {
-        PdfName name;
-        // if the images is already added, just retrieve the name
-        if (_images.ContainsKey(image.MySerialId))
+        if (image == null)
         {
-            name = _images[image.MySerialId];
+            throw new ArgumentNullException(nameof(image));
         }
+
+        PdfName name;
+
+        // if the images is already added, just retrieve the name
+        if (_images.TryGetValue(image.MySerialId, out var image1))
+        {
+            name = image1;
+        }
+
         // if it's a new image, add it to the document
         else
         {
             if (image.IsImgTemplate())
             {
                 name = new PdfName("img" + _images.Count);
-                if (image is ImgWmf)
+
+                if (image is ImgWmf wmf)
                 {
-                    var wmf = (ImgWmf)image;
                     wmf.ReadWmf(PdfTemplate.CreateTemplate(this, 0, 0));
                 }
             }
             else
             {
                 var dref = image.DirectReference;
+
                 if (dref != null)
                 {
                     var rname = new PdfName("img" + _images.Count);
                     _images[image.MySerialId] = rname;
                     ImageDictionary.Put(rname, dref);
+
                     return rname;
                 }
 
                 var maskImage = image.ImageMask;
                 PdfIndirectReference maskRef = null;
+
                 if (maskImage != null)
                 {
                     var mname = _images[maskImage.MySerialId];
@@ -1573,9 +1603,11 @@ public class PdfWriter : DocWriter,
                 }
 
                 var i = new PdfImage(image, "img" + _images.Count, maskRef);
+
                 if (image is ImgJbig2)
                 {
                     var globals = ((ImgJbig2)image).GlobalBytes;
+
                     if (globals != null)
                     {
                         var decodeparms = new PdfDictionary();
@@ -1592,6 +1624,7 @@ public class PdfWriter : DocWriter,
                     iccArray.Add(PdfName.Iccbased);
                     iccArray.Add(iccRef);
                     var colorspace = i.GetAsArray(PdfName.Colorspace);
+
                     if (colorspace != null)
                     {
                         if (colorspace.Size > 1 && PdfName.Indexed.Equals(colorspace[0]))
@@ -1630,9 +1663,7 @@ public class PdfWriter : DocWriter,
     /// <param name="file">the path to the file. It will only be used if</param>
     /// <param name="fileDisplay">the actual file name stored in the pdf</param>
     public virtual void AddFileAttachment(string description, byte[] fileStore, string file, string fileDisplay)
-    {
-        AddFileAttachment(description, PdfFileSpecification.FileEmbedded(this, file, fileDisplay, fileStore));
-    }
+        => AddFileAttachment(description, PdfFileSpecification.FileEmbedded(this, file, fileDisplay, fileStore));
 
     /// <summary>
     ///     Adds a file attachment at the document level.
@@ -1641,6 +1672,11 @@ public class PdfWriter : DocWriter,
     /// <param name="fs">the file specification</param>
     public virtual void AddFileAttachment(string description, PdfFileSpecification fs)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         Pdf.AddFileAttachment(description, fs);
     }
 
@@ -1650,6 +1686,11 @@ public class PdfWriter : DocWriter,
     /// <param name="fs">the file specification</param>
     public void AddFileAttachment(PdfFileSpecification fs)
     {
+        if (fs == null)
+        {
+            throw new ArgumentNullException(nameof(fs));
+        }
+
         Pdf.AddFileAttachment(null, fs);
     }
 
@@ -1660,6 +1701,11 @@ public class PdfWriter : DocWriter,
     /// <param name="js">The JavaScript action</param>
     public virtual void AddJavaScript(PdfAction js)
     {
+        if (js == null)
+        {
+            throw new ArgumentNullException(nameof(js));
+        }
+
         Pdf.AddJavaScript(js);
     }
 
@@ -1678,9 +1724,7 @@ public class PdfWriter : DocWriter,
     /// <param name="code">the JavaScript code</param>
     /// <param name="unicode">select JavaScript unicode. Note that the internal</param>
     public virtual void AddJavaScript(string code, bool unicode)
-    {
-        AddJavaScript(PdfAction.JavaScript(code, this, unicode));
-    }
+        => AddJavaScript(PdfAction.JavaScript(code, this, unicode));
 
     /// <summary>
     ///     Adds a JavaScript action at the document level. When the document
@@ -1688,9 +1732,7 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="code">the JavaScript code</param>
     public virtual void AddJavaScript(string code)
-    {
-        AddJavaScript(code, false);
-    }
+        => AddJavaScript(code, false);
 
     /// <summary>
     ///     Use this method to add a JavaScript action at the document level.
@@ -1700,6 +1742,11 @@ public class PdfWriter : DocWriter,
     /// <param name="js">The JavaScript action</param>
     public void AddJavaScript(string name, PdfAction js)
     {
+        if (js == null)
+        {
+            throw new ArgumentNullException(nameof(js));
+        }
+
         Pdf.AddJavaScript(name, js);
     }
 
@@ -1713,9 +1760,7 @@ public class PdfWriter : DocWriter,
     /// <param name="code">the JavaScript code</param>
     /// <param name="unicode">select JavaScript unicode. Note that the internal</param>
     public void AddJavaScript(string name, string code, bool unicode)
-    {
-        AddJavaScript(name, PdfAction.JavaScript(code, this, unicode));
-    }
+        => AddJavaScript(name, PdfAction.JavaScript(code, this, unicode));
 
     /// <summary>
     ///     Use this method to adds a JavaScript action at the document level.
@@ -1724,9 +1769,7 @@ public class PdfWriter : DocWriter,
     /// <param name="name">The name of the JS Action in the name tree</param>
     /// <param name="code">the JavaScript code</param>
     public void AddJavaScript(string name, string code)
-    {
-        AddJavaScript(name, code, false);
-    }
+        => AddJavaScript(name, code, false);
 
     /// <summary>
     ///     Sets a collection of optional content groups whose states are intended to follow
@@ -1737,10 +1780,17 @@ public class PdfWriter : DocWriter,
     /// <param name="group">the radio group</param>
     public void AddOcgRadioGroup(IList<PdfLayer> group)
     {
+        if (group == null)
+        {
+            throw new ArgumentNullException(nameof(group));
+        }
+
         var ar = new PdfArray();
+
         for (var k = 0; k < group.Count; ++k)
         {
             var layer = group[k];
+
             if (layer.Title == null)
             {
                 ar.Add(layer.Ref);
@@ -1764,6 +1814,7 @@ public class PdfWriter : DocWriter,
     public PdfIndirectObject AddToBody(PdfObject objecta)
     {
         var iobj = Body.Add(objecta);
+
         return iobj;
     }
 
@@ -1777,6 +1828,7 @@ public class PdfWriter : DocWriter,
     public PdfIndirectObject AddToBody(PdfObject objecta, bool inObjStm)
     {
         var iobj = Body.Add(objecta, inObjStm);
+
         return iobj;
     }
 
@@ -1789,7 +1841,13 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, PdfIndirectReference refa)
     {
+        if (refa == null)
+        {
+            throw new ArgumentNullException(nameof(refa));
+        }
+
         var iobj = Body.Add(objecta, refa);
+
         return iobj;
     }
 
@@ -1803,7 +1861,13 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, PdfIndirectReference refa, bool inObjStm)
     {
+        if (refa == null)
+        {
+            throw new ArgumentNullException(nameof(refa));
+        }
+
         var iobj = Body.Add(objecta, refa, inObjStm);
+
         return iobj;
     }
 
@@ -1817,6 +1881,7 @@ public class PdfWriter : DocWriter,
     public PdfIndirectObject AddToBody(PdfObject objecta, int refNumber)
     {
         var iobj = Body.Add(objecta, refNumber);
+
         return iobj;
     }
 
@@ -1830,7 +1895,13 @@ public class PdfWriter : DocWriter,
     /// <returns>a PdfIndirectObject</returns>
     public PdfIndirectObject AddToBody(PdfObject objecta, int refNumber, bool inObjStm)
     {
+        if (objecta == null)
+        {
+            throw new ArgumentNullException(nameof(objecta));
+        }
+
         var iobj = Body.Add(objecta, refNumber, inObjStm);
+
         return iobj;
     }
 
@@ -1843,9 +1914,7 @@ public class PdfWriter : DocWriter,
     ///     @throws DocumentException
     /// </summary>
     public void ClearTextWrap()
-    {
-        Pdf.ClearTextWrap();
-    }
+        => Pdf.ClearTextWrap();
 
     /// <summary>
     ///     Signals that the  Document  was closed and that no other
@@ -1861,22 +1930,27 @@ public class PdfWriter : DocWriter,
         {
             if (currentPageNumber - 1 != PageReferences.Count)
             {
-                throw new Exception("The page " + PageReferences.Count +
-                                    " was requested but the document has only " + (currentPageNumber - 1) + " pages.");
+                throw new InvalidOperationException("The page " + PageReferences.Count +
+                                                    " was requested but the document has only " +
+                                                    (currentPageNumber - 1) + " pages.");
             }
 
             Pdf.Close();
             AddSharedObjectsToBody();
+
             // add the root to the body
             var rootRef = Root.WritePageTree();
+
             // make the catalog-object and add it to the body
             var catalog = GetCatalog(rootRef);
+
             // [C9] if there is XMP data to add: add it
             if (xmpMetadata != null)
             {
                 var xmp = new PdfStream(xmpMetadata);
                 xmp.Put(PdfName.TYPE, PdfName.Metadata);
                 xmp.Put(PdfName.Subtype, PdfName.Xml);
+
                 if (Crypto != null && !Crypto.IsMetadataEncrypted())
                 {
                     var ar = new PdfArray();
@@ -1904,6 +1978,7 @@ public class PdfWriter : DocWriter,
 
             // add the Catalog to the body
             var indirectCatalog = AddToBody(catalog, false);
+
             // add the info-object to the body
             var infoObj = AddToBody(Info, false);
 
@@ -1911,6 +1986,7 @@ public class PdfWriter : DocWriter,
             PdfIndirectReference encryption = null;
             PdfObject fileId = null;
             Body.FlushObjStm();
+
             if (Crypto != null)
             {
                 var encryptionObject = AddToBody(Crypto.GetEncryptionDictionary(), false);
@@ -1923,8 +1999,8 @@ public class PdfWriter : DocWriter,
             }
 
             // write the cross-reference table of the body
-            Body.WriteCrossReferenceTable(base.Os, indirectCatalog.IndirectReference,
-                                          infoObj.IndirectReference, encryption, fileId, Prevxref);
+            Body.WriteCrossReferenceTable(base.Os, indirectCatalog.IndirectReference, infoObj.IndirectReference,
+                encryption, fileId, Prevxref);
 
             // make the trailer
             // [F2] full compression
@@ -1932,19 +2008,16 @@ public class PdfWriter : DocWriter,
             {
                 var tmp = GetIsoBytes("startxref\n");
                 base.Os.Write(tmp, 0, tmp.Length);
-                tmp = GetIsoBytes(Body.Offset.ToString());
+                tmp = GetIsoBytes(Body.Offset.ToString(CultureInfo.InvariantCulture));
                 base.Os.Write(tmp, 0, tmp.Length);
                 tmp = GetIsoBytes("\n%%EOF\n");
                 base.Os.Write(tmp, 0, tmp.Length);
             }
             else
             {
-                var trailer = new PdfTrailer(Body.Size,
-                                             Body.Offset,
-                                             indirectCatalog.IndirectReference,
-                                             infoObj.IndirectReference,
-                                             encryption,
-                                             fileId, Prevxref);
+                var trailer = new PdfTrailer(Body.Size, Body.Offset, indirectCatalog.IndirectReference,
+                    infoObj.IndirectReference, encryption, fileId, Prevxref);
+
                 trailer.ToPdf(this, base.Os);
             }
 
@@ -1956,9 +2029,7 @@ public class PdfWriter : DocWriter,
     ///     Creates XMP Metadata based on the metadata in the PdfDocument.
     /// </summary>
     public void CreateXmpMetadata()
-    {
-        XmpMetadata = createXmpMetadataBytes();
-    }
+        => XmpMetadata = createXmpMetadataBytes();
 
     /// <summary>
     ///     Checks if a  Table  fits the current page of the  PdfDocument .
@@ -1966,7 +2037,8 @@ public class PdfWriter : DocWriter,
     /// <param name="table">the table that has to be checked</param>
     /// <param name="margin">a certain margin</param>
     /// <returns> true  if the  Table  fits the page,  false  otherwise.</returns>
-    public bool FitsPage(Table table, float margin) => Pdf.GetBottom(table) > Pdf.IndentBottom + margin;
+    public bool FitsPage(Table table, float margin)
+        => Pdf.GetBottom(table) > Pdf.IndentBottom + margin;
 
     /// <summary>
     ///     [M4] Old table functionality; do we still need it?
@@ -1976,7 +2048,8 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="table">the table that has to be checked</param>
     /// <returns> true  if the  Table  fits the page,  false  otherwise.</returns>
-    public bool FitsPage(Table table) => FitsPage(table, 0);
+    public bool FitsPage(Table table)
+        => FitsPage(table, 0);
 
     /// <summary>
     ///     Writes the reader to the document and frees the memory used by it.
@@ -1988,6 +2061,7 @@ public class PdfWriter : DocWriter,
     public virtual void FreeReader(PdfReader reader)
     {
         CurrentPdfReaderInstance = ImportedPages[reader];
+
         if (CurrentPdfReaderInstance == null)
         {
             return;
@@ -2002,7 +2076,8 @@ public class PdfWriter : DocWriter,
     ///     Gives the size of a trim, art, crop or bleed box, or null if not defined.
     /// </summary>
     /// <param name="boxName">crop, trim, art or bleed</param>
-    public Rectangle GetBoxSize(string boxName) => Pdf.GetBoxSize(boxName);
+    public Rectangle GetBoxSize(string boxName)
+        => Pdf.GetBoxSize(boxName);
 
     /// <summary>
     ///     [F5] adding pages imported form other PDF documents
@@ -2017,7 +2092,13 @@ public class PdfWriter : DocWriter,
     /// <returns>the template representing the imported page</returns>
     public virtual PdfImportedPage GetImportedPage(PdfReader reader, int pageNumber)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var inst = ImportedPages[reader];
+
         if (inst == null)
         {
             inst = reader.GetPdfReaderInstance(this);
@@ -2039,15 +2120,18 @@ public class PdfWriter : DocWriter,
     public virtual PdfIndirectReference GetPageReference(int page)
     {
         --page;
+
         if (page < 0)
         {
-            throw new ArgumentOutOfRangeException("The page numbers start at 1.");
+            throw new ArgumentOutOfRangeException(nameof(page), "The page numbers start at 1.");
         }
 
         PdfIndirectReference refa;
+
         if (page < PageReferences.Count)
         {
             refa = PageReferences[page];
+
             if (refa == null)
             {
                 refa = Body.PdfIndirectReference;
@@ -2057,6 +2141,7 @@ public class PdfWriter : DocWriter,
         else
         {
             var empty = page - PageReferences.Count;
+
             for (var k = 0; k < empty; ++k)
             {
                 PageReferences.Add(null);
@@ -2076,13 +2161,15 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="ensureNewLine">Tells whether a new line shall be enforced. This may cause side effects</param>
     /// <returns>The current vertical page position.</returns>
-    public float GetVerticalPosition(bool ensureNewLine) => Pdf.GetVerticalPosition(ensureNewLine);
+    public float GetVerticalPosition(bool ensureNewLine)
+        => Pdf.GetVerticalPosition(ensureNewLine);
 
     /// <summary>
     ///     Check if the document is marked for tagging.
     /// </summary>
     /// <returns> true  if the document is marked for tagging</returns>
-    public bool IsTagged() => Tagged;
+    public bool IsTagged()
+        => Tagged;
 
     /// <summary>
     ///     Use this method to lock an optional content group.
@@ -2094,6 +2181,11 @@ public class PdfWriter : DocWriter,
     /// <param name="layer">the layer that needs to be added to the array of locked OCGs</param>
     public void LockLayer(PdfLayer layer)
     {
+        if (layer == null)
+        {
+            throw new ArgumentNullException(nameof(layer));
+        }
+
         OcgLocked.Add(layer.Ref);
     }
 
@@ -2114,17 +2206,17 @@ public class PdfWriter : DocWriter,
         base.Open();
         pdf_version.WriteHeader(base.Os);
         Body = new PdfBody(this);
+
         if (_pdfxConformance.IsPdfX32002())
         {
             var sec = new PdfDictionary();
-            sec.Put(PdfName.Gamma, new PdfArray(new[] { 2.2f, 2.2f, 2.2f }));
-            sec.Put(PdfName.Matrix,
-                    new PdfArray(new[]
-                                 {
-                                     0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f,
-                                     0.9505f,
-                                 }));
-            sec.Put(PdfName.Whitepoint, new PdfArray(new[] { 0.9505f, 1f, 1.089f }));
+
+            sec.Put(PdfName.Gamma, new PdfArray(_gammaValues));
+
+            sec.Put(PdfName.Matrix, new PdfArray(_matrixValues));
+
+            sec.Put(PdfName.Whitepoint, new PdfArray(_whitepointValues));
+
             var arr = new PdfArray(PdfName.Calrgb);
             arr.Add(sec);
             SetDefaultColorspace(PdfName.Defaultrgb, AddToBody(arr).IndirectReference);
@@ -2140,14 +2232,21 @@ public class PdfWriter : DocWriter,
     /// <param name="tp">the template to release</param>
     public void ReleaseTemplate(PdfTemplate tp)
     {
+        if (tp == null)
+        {
+            throw new ArgumentNullException(nameof(tp));
+        }
+
         var refi = tp.IndirectReference;
         var objs = FormXObjects[refi];
+
         if (objs == null || objs[1] == null)
         {
             return;
         }
 
         var template = (PdfTemplate)objs[1];
+
         if (template.IndirectReference is PrIndirectReference)
         {
             return;
@@ -2169,7 +2268,8 @@ public class PdfWriter : DocWriter,
     /// </summary>
     /// <param name="order">an array with the new page sequence. It must have the</param>
     /// <returns>the total number of pages</returns>
-    public int ReorderPages(int[] order) => Root.ReorderPages(order);
+    public int ReorderPages(int[] order)
+        => Root.ReorderPages(order);
 
     /// <summary>
     ///     [U1] page size
@@ -2180,9 +2280,7 @@ public class PdfWriter : DocWriter,
     /// <param name="boxName">the box size</param>
     /// <param name="size">the size</param>
     public void SetBoxSize(string boxName, Rectangle size)
-    {
-        Pdf.SetBoxSize(boxName, size);
-    }
+        => Pdf.SetBoxSize(boxName, size);
 
     /// <summary>
     ///     Miscellaneous topics
@@ -2221,10 +2319,8 @@ public class PdfWriter : DocWriter,
     /// <param name="permissions">the user permissions</param>
     /// <param name="strength128Bits"> true  for 128 bit key length,  false  for 40 bit key length</param>
     public void SetEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, bool strength128Bits)
-    {
-        SetEncryption(userPassword, ownerPassword, permissions,
-                      strength128Bits ? STANDARD_ENCRYPTION_128 : STANDARD_ENCRYPTION_40);
-    }
+        => SetEncryption(userPassword, ownerPassword, permissions,
+            strength128Bits ? STANDARD_ENCRYPTION_128 : STANDARD_ENCRYPTION_40);
 
     /// <summary>
     ///     Sets the encryption options for this document. The userPassword and the
@@ -2240,9 +2336,7 @@ public class PdfWriter : DocWriter,
     /// <param name="ownerPassword">the owner password. Can be null or empty</param>
     /// <param name="permissions">the user permissions</param>
     public void SetEncryption(bool strength, string userPassword, string ownerPassword, int permissions)
-    {
-        SetEncryption(GetIsoBytes(userPassword), GetIsoBytes(ownerPassword), permissions, strength);
-    }
+        => SetEncryption(GetIsoBytes(userPassword), GetIsoBytes(ownerPassword), permissions, strength);
 
     /// <summary>
     ///     Sets the encryption options for this document. The userPassword and the
@@ -2262,9 +2356,7 @@ public class PdfWriter : DocWriter,
     /// <param name="ownerPassword">the owner password. Can be null or empty</param>
     /// <param name="permissions">the user permissions</param>
     public void SetEncryption(int encryptionType, string userPassword, string ownerPassword, int permissions)
-    {
-        SetEncryption(GetIsoBytes(userPassword), GetIsoBytes(ownerPassword), permissions, encryptionType);
-    }
+        => SetEncryption(GetIsoBytes(userPassword), GetIsoBytes(ownerPassword), permissions, encryptionType);
 
     /// <summary>
     ///     Sets the document's compression to the new 1.5 mode with object streams and xref
@@ -2286,20 +2378,22 @@ public class PdfWriter : DocWriter,
     ///     Use this method to allow page reordering with method reorderPages.
     /// </summary>
     public void SetLinearPageMode()
-    {
-        Root.SetLinearMode(null);
-    }
+        => Root.SetLinearMode(null);
 
     /// <summary>
     ///     Sets the values of the output intent dictionary. Null values are allowed to
     ///     suppress any key.
     ///     @throws IOException on error
     /// </summary>
-    public void SetOutputIntents(string outputConditionIdentifier, string outputCondition, string registryName,
-                                 string info, IccProfile colorProfile)
+    public void SetOutputIntents(string outputConditionIdentifier,
+        string outputCondition,
+        string registryName,
+        string info,
+        IccProfile colorProfile)
     {
         var outa = ExtraCatalog; //force the creation
         outa = new PdfDictionary(PdfName.Outputintent);
+
         if (outputCondition != null)
         {
             outa.Put(PdfName.Outputcondition, new PdfString(outputCondition, PdfObject.TEXT_UNICODE));
@@ -2308,7 +2402,7 @@ public class PdfWriter : DocWriter,
         if (outputConditionIdentifier != null)
         {
             outa.Put(PdfName.Outputconditionidentifier,
-                     new PdfString(outputConditionIdentifier, PdfObject.TEXT_UNICODE));
+                new PdfString(outputConditionIdentifier, PdfObject.TEXT_UNICODE));
         }
 
         if (registryName != null)
@@ -2328,7 +2422,8 @@ public class PdfWriter : DocWriter,
         }
 
         PdfName intentSubtype;
-        if (_pdfxConformance.IsPdfA1() || "PDFA/1".Equals(outputCondition))
+
+        if (_pdfxConformance.IsPdfA1() || "PDFA/1".Equals(outputCondition, StringComparison.Ordinal))
         {
             intentSubtype = PdfName.GtsPdfa1;
         }
@@ -2357,8 +2452,11 @@ public class PdfWriter : DocWriter,
     /// <param name="registryName">a value</param>
     /// <param name="info">a value</param>
     /// <param name="destOutputProfile">a value</param>
-    public void SetOutputIntents(string outputConditionIdentifier, string outputCondition, string registryName,
-                                 string info, byte[] destOutputProfile)
+    public void SetOutputIntents(string outputConditionIdentifier,
+        string outputCondition,
+        string registryName,
+        string info,
+        byte[] destOutputProfile)
     {
         var colorProfile = destOutputProfile == null ? null : IccProfile.GetInstance(destOutputProfile);
         SetOutputIntents(outputConditionIdentifier, outputCondition, registryName, info, colorProfile);
@@ -2375,14 +2473,21 @@ public class PdfWriter : DocWriter,
     /// <returns> true  if the output intent dictionary exists,  false </returns>
     public bool SetOutputIntents(PdfReader reader, bool checkExistence)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         var catalog = reader.Catalog;
         var outs = catalog.GetAsArray(PdfName.Outputintents);
+
         if (outs == null)
         {
             return false;
         }
 
         var arr = outs.ArrayList;
+
         if (outs.Size == 0)
         {
             return false;
@@ -2390,6 +2495,7 @@ public class PdfWriter : DocWriter,
 
         var outa = outs.GetAsDict(0);
         var obj = PdfReader.GetPdfObject(outa.Get(PdfName.S));
+
         if (obj == null || !PdfName.GtsPdfx.Equals(obj))
         {
             return false;
@@ -2402,14 +2508,16 @@ public class PdfWriter : DocWriter,
 
         var stream = (PrStream)PdfReader.GetPdfObject(outa.Get(PdfName.Destoutputprofile));
         byte[] destProfile = null;
+
         if (stream != null)
         {
             destProfile = PdfReader.GetStreamBytes(stream);
         }
 
         SetOutputIntents(getNameString(outa, PdfName.Outputconditionidentifier),
-                         getNameString(outa, PdfName.Outputcondition),
-                         getNameString(outa, PdfName.Registryname), getNameString(outa, PdfName.Info), destProfile);
+            getNameString(outa, PdfName.Outputcondition), getNameString(outa, PdfName.Registryname),
+            getNameString(outa, PdfName.Info), destProfile);
+
         return true;
     }
 
@@ -2448,6 +2556,7 @@ public class PdfWriter : DocWriter,
         PdfIndirectObject objecta;
         objecta = AddToBody(contents);
         page.Add(objecta.IndirectReference);
+
         if (group != null)
         {
             page.Put(PdfName.Group, group);
@@ -2464,6 +2573,7 @@ public class PdfWriter : DocWriter,
 
         Root.AddPage(page);
         currentPageNumber++;
+
         return null;
     }
 
@@ -2479,6 +2589,7 @@ public class PdfWriter : DocWriter,
         if (!ImageDictionary.Contains(pdfImage.Name))
         {
             PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_IMAGE, pdfImage);
+
             if (fixedRef is PrIndirectReference)
             {
                 var r2 = (PrIndirectReference)fixedRef;
@@ -2495,6 +2606,7 @@ public class PdfWriter : DocWriter,
             }
 
             ImageDictionary.Put(pdfImage.Name, fixedRef);
+
             return fixedRef;
         }
 
@@ -2502,9 +2614,7 @@ public class PdfWriter : DocWriter,
     }
 
     internal virtual void AddAnnotation(PdfAnnotation annot, int page)
-    {
-        AddAnnotation(annot);
-    }
+        => AddAnnotation(annot);
 
     /// <summary>
     ///     Adds a template to the document but not to the page resources.
@@ -2517,6 +2627,7 @@ public class PdfWriter : DocWriter,
         var refa = template.IndirectReference;
         var obj = FormXObjects[refa];
         PdfName name = null;
+
         if (obj == null)
         {
             if (forcedName == null)
@@ -2534,6 +2645,7 @@ public class PdfWriter : DocWriter,
                 // If we got here from PdfCopy we'll have to fill importedPages
                 var ip = (PdfImportedPage)template;
                 var r = ip.PdfReaderInstance.Reader;
+
                 if (!ImportedPages.ContainsKey(r))
                 {
                     ImportedPages[r] = ip.PdfReaderInstance;
@@ -2542,7 +2654,10 @@ public class PdfWriter : DocWriter,
                 template = null;
             }
 
-            FormXObjects[refa] = new object[] { name, template };
+            FormXObjects[refa] = new object[]
+            {
+                name, template
+            };
         }
         else
         {
@@ -2570,9 +2685,10 @@ public class PdfWriter : DocWriter,
         {
             var obj = (object[])dest[name];
             var destination = (PdfDestination)obj[2];
+
             if (destination == null)
             {
-                throw new Exception("The name '" + name + "' has no local destination.");
+                throw new InvalidOperationException("The name '" + name + "' has no local destination.");
             }
 
             if (obj[1] == null)
@@ -2599,6 +2715,7 @@ public class PdfWriter : DocWriter,
         }
 
         var ret = DocumentFonts[bf];
+
         if (ret == null)
         {
             PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_FONT, bf);
@@ -2618,6 +2735,7 @@ public class PdfWriter : DocWriter,
     internal ColorDetails AddSimple(PdfSpotColor spc)
     {
         var ret = DocumentColors[spc];
+
         if (ret == null)
         {
             ret = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, spc);
@@ -2632,19 +2750,27 @@ public class PdfWriter : DocWriter,
     /// </summary>
     internal PdfObject[] AddSimpleExtGState(PdfDictionary gstate)
     {
-        if (!DocumentExtGState.ContainsKey(gstate))
+        if (DocumentExtGState.TryGetValue(gstate, out var value))
         {
-            PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_GSTATE, gstate);
-            DocumentExtGState[gstate] = new PdfObject[]
-                                        { new PdfName("GS" + (DocumentExtGState.Count + 1)), PdfIndirectReference };
+            return value;
         }
 
-        return DocumentExtGState[gstate];
+        PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_GSTATE, gstate);
+
+        value = new PdfObject[]
+        {
+            new PdfName("GS" + (DocumentExtGState.Count + 1)), PdfIndirectReference
+        };
+
+        DocumentExtGState[gstate] = value;
+
+        return value;
     }
 
     internal PdfName AddSimplePattern(PdfPatternPainter painter)
     {
         var name = DocumentPatterns[painter];
+
         if (name == null)
         {
             name = new PdfName("P" + PatternNumber);
@@ -2658,9 +2784,11 @@ public class PdfWriter : DocWriter,
     internal ColorDetails AddSimplePatternColorspace(BaseColor color)
     {
         var type = ExtendedColor.GetType(color);
+
         if (type == ExtendedColor.TYPE_PATTERN || type == ExtendedColor.TYPE_SHADING)
         {
-            throw new Exception("An uncolored tile pattern can not have another pattern or shading as color.");
+            throw new InvalidOperationException(
+                "An uncolored tile pattern can not have another pattern or shading as color.");
         }
 
         switch (type)
@@ -2699,6 +2827,7 @@ public class PdfWriter : DocWriter,
             {
                 var details = AddSimple(((SpotColor)color).PdfSpotColor);
                 var patternDetails = DocumentSpotPatterns[details];
+
                 if (patternDetails == null)
                 {
                     patternDetails = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, null);
@@ -2711,7 +2840,7 @@ public class PdfWriter : DocWriter,
                 return patternDetails;
             }
             default:
-                throw new Exception("Invalid color type in PdfWriter.AddSimplePatternColorspace().");
+                throw new InvalidOperationException("Invalid color type in PdfWriter.AddSimplePatternColorspace().");
         }
     }
 
@@ -2720,17 +2849,24 @@ public class PdfWriter : DocWriter,
     /// </summary>
     internal PdfObject[] AddSimpleProperty(object prop, PdfIndirectReference refi)
     {
-        if (!DocumentProperties.ContainsKey(prop))
+        if (DocumentProperties.TryGetValue(prop, out var value))
         {
-            if (prop is IPdfOcg)
-            {
-                PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, null);
-            }
-
-            DocumentProperties[prop] = new PdfObject[] { new PdfName("Pr" + (DocumentProperties.Count + 1)), refi };
+            return value;
         }
 
-        return DocumentProperties[prop];
+        if (prop is IPdfOcg)
+        {
+            PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, null);
+        }
+
+        value = new PdfObject[]
+        {
+            new PdfName("Pr" + (DocumentProperties.Count + 1)), refi
+        };
+
+        DocumentProperties[prop] = value;
+
+        return value;
     }
 
     /// <summary>
@@ -2773,28 +2909,33 @@ public class PdfWriter : DocWriter,
     /// <summary>
     ///     [F6] spot colors
     /// </summary>
-    internal PdfName GetColorspaceName() => new("CS" + ColorNumber++);
+    internal PdfName GetColorspaceName()
+        => new("CS" + ColorNumber++);
 
     /// <summary>
     ///     return the  PdfIndirectReference  to the image with a given name.
     /// </summary>
     /// <param name="name">the name of the image</param>
     /// <returns>a  PdfIndirectReference </returns>
-    internal virtual PdfIndirectReference GetImageReference(PdfName name) =>
-        (PdfIndirectReference)ImageDictionary.Get(name);
+    internal virtual PdfIndirectReference GetImageReference(PdfName name)
+        => (PdfIndirectReference)ImageDictionary.Get(name);
 
     /// <summary>
     ///     Returns the version information.
     /// </summary>
-    internal PdfVersionImp GetPdfVersion() => pdf_version;
+    internal PdfVersionImp GetPdfVersion()
+        => pdf_version;
 
-    internal virtual RandomAccessFileOrArray GetReaderFile(PdfReader reader) => CurrentPdfReaderInstance.ReaderFile;
+    internal virtual RandomAccessFileOrArray GetReaderFile(PdfReader reader)
+        => CurrentPdfReaderInstance.ReaderFile;
 
-    internal bool PropertyExists(object prop) => DocumentProperties.ContainsKey(prop);
+    internal bool PropertyExists(object prop)
+        => DocumentProperties.ContainsKey(prop);
 
     internal void RegisterLayer(IPdfOcg layer)
     {
         PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, null);
+
         if (layer is PdfLayer la)
         {
             if (la.Title == null)
@@ -2828,6 +2969,11 @@ public class PdfWriter : DocWriter,
 
     protected internal virtual int GetNewObjectNumber(PdfReader reader, int number, int generation)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
         if (CurrentPdfReaderInstance == null)
         {
             CurrentPdfReaderInstance = reader.GetPdfReaderInstance(this);
@@ -2859,6 +3005,7 @@ public class PdfWriter : DocWriter,
 
         var stream = new PdfStream(content);
         PdfIndirectObject refi;
+
         try
         {
             refi = AddToBody(stream);
@@ -2869,6 +3016,7 @@ public class PdfWriter : DocWriter,
         }
 
         Jbig2Globals[stream] = refi.IndirectReference;
+
         return refi.IndirectReference;
     }
 
@@ -2877,6 +3025,11 @@ public class PdfWriter : DocWriter,
     /// </summary>
     protected internal void WriteOutlines(PdfDictionary catalog, bool namedAsNames)
     {
+        if (catalog == null)
+        {
+            throw new ArgumentNullException(nameof(catalog));
+        }
+
         if (NewBookmarks == null || NewBookmarks.Count == 0)
         {
             return;
@@ -2896,6 +3049,7 @@ public class PdfWriter : DocWriter,
     {
         PdfIndirectObject objecta;
         objecta = AddToBody(icc);
+
         return objecta.IndirectReference;
     }
 
@@ -2911,6 +3065,7 @@ public class PdfWriter : DocWriter,
         foreach (var objs in FormXObjects.Values)
         {
             var template = (PdfTemplate)objs[1];
+
             if (template != null && template.IndirectReference is PrIndirectReference)
             {
                 continue;
@@ -2930,6 +3085,7 @@ public class PdfWriter : DocWriter,
         }
 
         CurrentPdfReaderInstance = null;
+
         // add the color
         foreach (var color in DocumentColors.Values)
         {
@@ -2967,6 +3123,7 @@ public class PdfWriter : DocWriter,
         {
             var prop = entry.Key;
             var obj = entry.Value;
+
             if (prop is PdfLayerMembership)
             {
                 var layer = (PdfLayerMembership)prop;
@@ -3000,6 +3157,7 @@ public class PdfWriter : DocWriter,
         if (VOcProperties.Get(PdfName.Ocgs) == null)
         {
             var gr = new PdfArray();
+
             foreach (var layer in DocumentOcg.Keys)
             {
                 gr.Add(layer.Ref);
@@ -3014,9 +3172,11 @@ public class PdfWriter : DocWriter,
         }
 
         List<IPdfOcg> docOrder = new(DocumentOcGorder);
+
         for (var it = new ListIterator<IPdfOcg>(docOrder); it.HasNext();)
         {
             var layer = (PdfLayer)it.Next();
+
             if (layer.Parent != null)
             {
                 it.Remove();
@@ -3024,6 +3184,7 @@ public class PdfWriter : DocWriter,
         }
 
         var order = new PdfArray();
+
         foreach (PdfLayer layer in docOrder)
         {
             getOcgOrder(order, layer);
@@ -3033,6 +3194,7 @@ public class PdfWriter : DocWriter,
         VOcProperties.Put(PdfName.D, d);
         d.Put(PdfName.Order, order);
         var grx = new PdfArray();
+
         foreach (PdfLayer layer in DocumentOcg.Keys)
         {
             if (!layer.On)
@@ -3066,6 +3228,7 @@ public class PdfWriter : DocWriter,
     protected virtual PdfDictionary GetCatalog(PdfIndirectReference rootObj)
     {
         PdfDictionary catalog = Pdf.GetCatalog(rootObj);
+
         // [F12] tagged PDF
         if (Tagged)
         {
@@ -3073,6 +3236,7 @@ public class PdfWriter : DocWriter,
             catalog.Put(PdfName.Structtreeroot, structureTreeRoot.Reference);
             var mi = new PdfDictionary();
             mi.Put(PdfName.Marked, PdfBoolean.Pdftrue);
+
             if (_userProperties)
             {
                 mi.Put(PdfName.Userproperties, PdfBoolean.Pdftrue);
@@ -3094,6 +3258,7 @@ public class PdfWriter : DocWriter,
     private static string getNameString(PdfDictionary dic, PdfName key)
     {
         var obj = PdfReader.GetPdfObject(dic.Get(key));
+
         if (obj == null || !obj.IsString())
         {
             return null;
@@ -3115,12 +3280,14 @@ public class PdfWriter : DocWriter,
         }
 
         var children = layer.Children;
+
         if (children == null)
         {
             return;
         }
 
         var kids = new PdfArray();
+
         if (layer.Title != null)
         {
             kids.Add(new PdfString(layer.Title, PdfObject.TEXT_UNICODE));
@@ -3140,9 +3307,11 @@ public class PdfWriter : DocWriter,
     private void addAsEvent(PdfName eventa, PdfName category)
     {
         var arr = new PdfArray();
+
         foreach (PdfLayer layer in DocumentOcg.Keys)
         {
             var usage = layer.GetAsDict(PdfName.Usage);
+
             if (usage != null && usage.Get(category) != null)
             {
                 arr.Add(layer.Ref);
@@ -3156,6 +3325,7 @@ public class PdfWriter : DocWriter,
 
         var d = (PdfDictionary)VOcProperties.Get(PdfName.D);
         var arras = (PdfArray)d.Get(PdfName.As);
+
         if (arras == null)
         {
             arras = new PdfArray();
@@ -3185,6 +3355,7 @@ public class PdfWriter : DocWriter,
     private byte[] createXmpMetadataBytes()
     {
         var baos = new MemoryStream();
+
         try
         {
             var xmp = new XmpWriter(baos, Pdf.Info, _pdfxConformance.PdfxConformance);
@@ -3255,6 +3426,7 @@ public class PdfWriter : DocWriter,
             {
                 var n = _refnum++;
                 _xrefs[new PdfCrossReference(n, 0, GENERATION_MAX)] = null;
+
                 return n;
             }
         }
@@ -3273,7 +3445,8 @@ public class PdfWriter : DocWriter,
 
         internal int Size => Math.Max(((PdfCrossReference)_xrefs.GetMaxKey()).Refnum + 1, _refnum);
 
-        internal PdfIndirectObject Add(PdfObject objecta) => Add(objecta, IndirectReferenceNumber);
+        internal PdfIndirectObject Add(PdfObject objecta)
+            => Add(objecta, IndirectReferenceNumber);
 
         /// <summary>
         ///     Adds a  PdfObject  to the body.
@@ -3285,10 +3458,11 @@ public class PdfWriter : DocWriter,
         ///     @throws IOException
         /// </summary>
         /// <returns>a  PdfIndirectObject </returns>
-        internal PdfIndirectObject Add(PdfObject objecta, bool inObjStm) =>
-            Add(objecta, IndirectReferenceNumber, inObjStm);
+        internal PdfIndirectObject Add(PdfObject objecta, bool inObjStm)
+            => Add(objecta, IndirectReferenceNumber, inObjStm);
 
-        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa) => Add(objecta, refa.Number);
+        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa)
+            => Add(objecta, refa.Number);
 
         /// <summary>
         ///     Gets a PdfIndirectReference for an object that will be created in the future.
@@ -3305,10 +3479,11 @@ public class PdfWriter : DocWriter,
         ///     @throws IOException
         /// </summary>
         /// <returns>a  PdfIndirectObject </returns>
-        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa, bool inObjStm) =>
-            Add(objecta, refa.Number, inObjStm);
+        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa, bool inObjStm)
+            => Add(objecta, refa.Number, inObjStm);
 
-        internal PdfIndirectObject Add(PdfObject objecta, int refNumber) => Add(objecta, refNumber, true); // to false
+        internal PdfIndirectObject Add(PdfObject objecta, int refNumber)
+            => Add(objecta, refNumber, true); // to false
 
         internal PdfIndirectObject Add(PdfObject objecta, int refNumber, bool inObjStm)
         {
@@ -3318,6 +3493,7 @@ public class PdfWriter : DocWriter,
                 var indirect = new PdfIndirectObject(refNumber, objecta, _writer);
                 _xrefs.Remove(pxref);
                 _xrefs[pxref] = null;
+
                 return indirect;
             }
             else
@@ -3328,6 +3504,7 @@ public class PdfWriter : DocWriter,
                 _xrefs[pxref] = null;
                 indirect.WriteTo(_writer.Os);
                 Offset = _writer.Os.Counter;
+
                 return indirect;
             }
         }
@@ -3352,10 +3529,15 @@ public class PdfWriter : DocWriter,
             _numObj = 0;
         }
 
-        internal void WriteCrossReferenceTable(Stream os, PdfIndirectReference root, PdfIndirectReference info,
-                                               PdfIndirectReference encryption, PdfObject fileId, int prevxref)
+        internal void WriteCrossReferenceTable(Stream os,
+            PdfIndirectReference root,
+            PdfIndirectReference info,
+            PdfIndirectReference encryption,
+            PdfObject fileId,
+            int prevxref)
         {
             var refNumber = 0;
+
             if (_writer.FullCompression)
             {
                 FlushObjStm();
@@ -3366,6 +3548,7 @@ public class PdfWriter : DocWriter,
             var first = ((PdfCrossReference)_xrefs.GetMinKey()).Refnum;
             var len = 0;
             var sections = new List<int>();
+
             foreach (PdfCrossReference entry in _xrefs.Keys)
             {
                 if (first + len == entry.Refnum)
@@ -3383,10 +3566,12 @@ public class PdfWriter : DocWriter,
 
             sections.Add(first);
             sections.Add(len);
+
             if (_writer.FullCompression)
             {
                 var mid = 4;
                 var mask = 0xff000000;
+
                 for (; mid > 1; --mid)
                 {
                     if ((mask & Offset) != 0)
@@ -3409,6 +3594,7 @@ public class PdfWriter : DocWriter,
                 xr.FlateCompress(_writer.CompressionLevel);
                 xr.Put(PdfName.Size, new PdfNumber(Size));
                 xr.Put(PdfName.Root, root);
+
                 if (info != null)
                 {
                     xr.Put(PdfName.Info, info);
@@ -3424,15 +3610,21 @@ public class PdfWriter : DocWriter,
                     xr.Put(PdfName.Id, fileId);
                 }
 
-                xr.Put(PdfName.W, new PdfArray(new[] { 1, mid, 2 }));
+                xr.Put(PdfName.W, new PdfArray(new[]
+                {
+                    1, mid, 2
+                }));
+
                 xr.Put(PdfName.TYPE, PdfName.Xref);
                 var idx = new PdfArray();
+
                 for (var k = 0; k < sections.Count; ++k)
                 {
                     idx.Add(new PdfNumber(sections[k]));
                 }
 
                 xr.Put(PdfName.Index, idx);
+
                 if (prevxref > 0)
                 {
                     xr.Put(PdfName.Prev, new PdfNumber(prevxref));
@@ -3448,18 +3640,20 @@ public class PdfWriter : DocWriter,
             {
                 var tmp = GetIsoBytes("xref\n");
                 os.Write(tmp, 0, tmp.Length);
-                IEnumerator<object> i = _xrefs.Keys;
+                var i = _xrefs.Keys;
                 i.MoveNext();
+
                 for (var k = 0; k < sections.Count; k += 2)
                 {
                     first = sections[k];
                     len = sections[k + 1];
-                    tmp = GetIsoBytes(first.ToString());
+                    tmp = GetIsoBytes(first.ToString(CultureInfo.InvariantCulture));
                     os.Write(tmp, 0, tmp.Length);
                     os.WriteByte((byte)' ');
-                    tmp = GetIsoBytes(len.ToString());
+                    tmp = GetIsoBytes(len.ToString(CultureInfo.InvariantCulture));
                     os.Write(tmp, 0, tmp.Length);
                     os.WriteByte((byte)'\n');
+
                     while (len-- > 0)
                     {
                         ((PdfCrossReference)i.Current).ToPdf(os);
@@ -3498,6 +3692,7 @@ public class PdfWriter : DocWriter,
             _writer.Crypto = enc;
             _streamObjects.Append(' ');
             _index.Append(nObj).Append(' ').Append(p).Append(' ');
+
             return new PdfCrossReference(2, nObj, _currentObjNum, idx);
         }
 
@@ -3561,7 +3756,9 @@ public class PdfWriter : DocWriter,
             public int CompareTo(object o)
             {
                 var other = (PdfCrossReference)o;
-                return Refnum < other.Refnum ? -1 : Refnum == other.Refnum ? 0 : 1;
+
+                return Refnum < other.Refnum ? -1 :
+                    Refnum == other.Refnum ? 0 : 1;
             }
 
             /// <summary>
@@ -3572,19 +3769,22 @@ public class PdfWriter : DocWriter,
                 if (obj is PdfCrossReference)
                 {
                     var other = (PdfCrossReference)obj;
+
                     return Refnum == other.Refnum;
                 }
 
                 return false;
             }
 
-            public override int GetHashCode() => Refnum;
+            public override int GetHashCode()
+                => Refnum;
 
             public void ToPdf(Stream os)
             {
-                var s1 = _offset.ToString().PadLeft(10, '0');
-                var s2 = _generation.ToString().PadLeft(5, '0');
+                var s1 = _offset.ToString(CultureInfo.InvariantCulture).PadLeft(10, '0');
+                var s2 = _generation.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
                 var buf = new ByteBuffer(40);
+
                 if (_generation == GENERATION_MAX)
                 {
                     buf.Append(s1).Append(' ').Append(s2).Append(" f \n");
@@ -3606,6 +3806,7 @@ public class PdfWriter : DocWriter,
             public void ToPdf(int midSize, Stream os)
             {
                 os.WriteByte((byte)_type);
+
                 while (--midSize >= 0)
                 {
                     os.WriteByte((byte)((_offset >> (8 * midSize)) & 0xff));
@@ -3627,7 +3828,7 @@ public class PdfWriter : DocWriter,
         /// <summary>
         ///     membervariables
         /// </summary>
-        internal int Offset;
+        internal readonly int Offset;
 
         /// <summary>
         ///     constructors
@@ -3642,12 +3843,18 @@ public class PdfWriter : DocWriter,
         /// <param name="encryption"></param>
         /// <param name="fileId"></param>
         /// <param name="prevxref"></param>
-        internal PdfTrailer(int size, int offset, PdfIndirectReference root, PdfIndirectReference info,
-                            PdfIndirectReference encryption, PdfObject fileId, int prevxref)
+        internal PdfTrailer(int size,
+            int offset,
+            PdfIndirectReference root,
+            PdfIndirectReference info,
+            PdfIndirectReference encryption,
+            PdfObject fileId,
+            int prevxref)
         {
             Offset = offset;
             Put(PdfName.Size, new PdfNumber(size));
             Put(PdfName.Root, root);
+
             if (info != null)
             {
                 Put(PdfName.Info, info);
@@ -3682,7 +3889,7 @@ public class PdfWriter : DocWriter,
             base.ToPdf(null, os);
             tmp = GetIsoBytes("\nstartxref\n");
             os.Write(tmp, 0, tmp.Length);
-            tmp = GetIsoBytes(Offset.ToString());
+            tmp = GetIsoBytes(Offset.ToString(CultureInfo.InvariantCulture));
             os.Write(tmp, 0, tmp.Length);
             tmp = GetIsoBytes("\n%%EOF\n");
             os.Write(tmp, 0, tmp.Length);

@@ -53,6 +53,11 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     /// </summary>
     public void AddClass(string chargroup)
     {
+        if (chargroup == null)
+        {
+            throw new ArgumentNullException(nameof(chargroup));
+        }
+
         if (chargroup.Length > 0)
         {
             var equivChar = chargroup[0];
@@ -75,14 +80,14 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     ///     (i.e. '0' to '9').
     /// </summary>
     /// <param name="pattern">the hyphenation pattern</param>
-    /// <param name="ivalue">interletter weight values indicating the</param>
-    public void AddPattern(string pattern, string ivalue)
+    /// <param name="values">interletter weight values indicating the</param>
+    public void AddPattern(string pattern, string values)
     {
-        var k = _ivalues.Find(ivalue);
+        var k = _ivalues.Find(values);
         if (k <= 0)
         {
-            k = PackValues(ivalue);
-            _ivalues.Insert(ivalue, (char)k);
+            k = PackValues(values);
+            _ivalues.Insert(values, (char)k);
         }
 
         Insert(pattern, (char)k);
@@ -112,6 +117,11 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     /// <returns>the index into the vspace array where the packed values</returns>
     protected int PackValues(string values)
     {
+        if (values == null)
+        {
+            throw new ArgumentNullException(nameof(values));
+        }
+
         int i, n = values.Length;
         var m = (n & 1) == 1 ? (n >> 1) + 2 : (n >> 1) + 1;
         var offset = Vspace.Alloc(m);
@@ -189,8 +199,18 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     ///     String compare, returns 0 if equal or
     ///     t is a substring of s
     /// </summary>
-    protected int Hstrcmp(char[] s, int si, char[] t, int ti)
+    protected static int Hstrcmp(char[] s, int si, char[] t, int ti)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
+        if (t == null)
+        {
+            throw new ArgumentNullException(nameof(t));
+        }
+
         for (; s[si] == t[ti]; si++, ti++)
         {
             if (s[si] == 0)
@@ -254,6 +274,16 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     /// <param name="il">interletter values array to update</param>
     protected void SearchPatterns(char[] word, int index, byte[] il)
     {
+        if (word == null)
+        {
+            throw new ArgumentNullException(nameof(word));
+        }
+
+        if (il == null)
+        {
+            throw new ArgumentNullException(nameof(il));
+        }
+
         byte[] values;
         var i = index;
         char p, q;
@@ -350,6 +380,11 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     public Hyphenation Hyphenate(string word, int remainCharCount,
                                  int pushCharCount)
     {
+        if (word == null)
+        {
+            throw new ArgumentNullException(nameof(word));
+        }
+
         var w = word.ToCharArray();
         return Hyphenate(w, 0, w.Length, remainCharCount, pushCharCount);
     }
@@ -391,6 +426,11 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
     public Hyphenation Hyphenate(char[] w, int offset, int len,
                                  int remainCharCount, int pushCharCount)
     {
+        if (w == null)
+        {
+            throw new ArgumentNullException(nameof(w));
+        }
+
         int i;
         var word = new char[len + 3];
 
@@ -444,10 +484,9 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
 
         // check exception list first
         var sw = new string(word, 1, len);
-        if (Stoplist.ContainsKey(sw))
+        if (Stoplist.TryGetValue(sw, out var hw))
         {
             // assume only simple hyphens (Hyphen.pre="-", Hyphen.post = Hyphen.no = null)
-            var hw = Stoplist[sw];
             var j = 0;
             for (i = 0; i < hw.Count; i++)
             {

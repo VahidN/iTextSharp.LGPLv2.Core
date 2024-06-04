@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Text;
+using System.util;
 using iTextSharp.LGPLv2.Core.System.Drawing;
 using SkiaSharp;
 
@@ -81,7 +82,7 @@ public class Barcode128 : Barcode
 
     public const char STARTC = '\u00cd';
 
-    private static readonly IntHashtable _ais = new();
+    private static readonly NullValueDictionary<int, int> _ais = new();
 
     /// <summary>
     ///     The bars to generate the code.
@@ -354,7 +355,7 @@ public class Barcode128 : Barcode
             }
 
             var len = fullCode.Length;
-            var fullWidth = (len + 2) * 11 * x + 2 * x;
+            var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
             fullWidth = Math.Max(fullWidth, fontX);
             var fullHeight = barHeight + fontY;
             return new Rectangle(fullWidth, fullHeight);
@@ -370,8 +371,13 @@ public class Barcode128 : Barcode
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             var localCode = value;
-            if (CodeType == CODE128_UCC && localCode.StartsWith("("))
+            if (CodeType == CODE128_UCC && localCode.StartsWith("(", StringComparison.Ordinal))
             {
                 var idx = 0;
                 var ret = "";
@@ -396,7 +402,7 @@ public class Barcode128 : Barcode
                         throw new ArgumentException("AI not found: (" + sai + ")");
                     }
 
-                    sai = ai.ToString();
+                    sai = ai.ToString(CultureInfo.InvariantCulture);
                     if (sai.Length == 1)
                     {
                         sai = "0" + sai;
@@ -435,6 +441,11 @@ public class Barcode128 : Barcode
     /// <returns>the bars</returns>
     public static byte[] GetBarsCode128Raw(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         int k;
         var idx = text.IndexOf("\uffff", StringComparison.Ordinal);
         if (idx >= 0)
@@ -467,13 +478,18 @@ public class Barcode128 : Barcode
     /// <returns>the human readable text</returns>
     public static string GetHumanReadableUccean(string code)
     {
+        if (code == null)
+        {
+            throw new ArgumentNullException(nameof(code));
+        }
+
         var buf = new StringBuilder();
         var fnc1 = FNC1.ToString();
         try
         {
             while (true)
             {
-                if (code.StartsWith(fnc1))
+                if (code.StartsWith(fnc1, StringComparison.Ordinal))
                 {
                     code = code.Substring(1);
                     continue;
@@ -545,6 +561,11 @@ public class Barcode128 : Barcode
     /// <returns>the code ready to be fed to GetBarsCode128Raw()</returns>
     public static string GetRawText(string text, bool ucc)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         var outs = "";
         var tLen = text.Length;
         if (tLen == 0)
@@ -727,6 +748,11 @@ public class Barcode128 : Barcode
     /// <returns>the cleaned text</returns>
     public static string RemoveFnc1(string code)
     {
+        if (code == null)
+        {
+            throw new ArgumentNullException(nameof(code));
+        }
+
         var len = code.Length;
         var buf = new StringBuilder(len);
         for (var k = 0; k < len; ++k)
@@ -817,6 +843,11 @@ public class Barcode128 : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         string fullCode;
         if (codeType == CODE128_RAW)
         {
@@ -864,7 +895,7 @@ public class Barcode128 : Barcode
         }
 
         var len = bCode.Length;
-        var fullWidth = (len + 2) * 11 * x + 2 * x;
+        var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
         float barStartX = 0;
         float textStartX = 0;
         switch (textAlignment)

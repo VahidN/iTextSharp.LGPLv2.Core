@@ -88,6 +88,11 @@ public class RtfDocument : RtfElement
     /// <param name="element">The element to add</param>
     public void Add(IRtfBasicElement element)
     {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+
         try
         {
             if (element is RtfInfoElement)
@@ -182,7 +187,7 @@ public class RtfDocument : RtfElement
                     {
                         //encode as decimal, signed short value
                         outp.Write(_fscUniPrefix, 0, _fscUniPrefix.Length);
-                        var s = ((short)c).ToString();
+                        var s = ((short)c).ToString(CultureInfo.InvariantCulture);
                         for (var x = 0; x < s.Length; x++)
                         {
                             outp.WriteByte((byte)s[x]);
@@ -286,6 +291,11 @@ public class RtfDocument : RtfElement
     /// <param name="result">the OutputStream to write the linebreak to.</param>
     public void OutputDebugLinebreak(Stream result)
     {
+        if (result == null)
+        {
+            throw new ArgumentNullException(nameof(result));
+        }
+
         if (GetDocumentSettings().IsOutputDebugLineBreaks())
         {
             result.WriteByte((byte)'\n');
@@ -315,6 +325,11 @@ public class RtfDocument : RtfElement
     /// <param name="outs">The  Stream  to write the RTF document to.</param>
     public void WriteDocument(Stream outs)
     {
+        if (outs == null)
+        {
+            throw new ArgumentNullException(nameof(outs));
+        }
+
         try
         {
             outs.Write(OpenGroup, 0, OpenGroup.Length);

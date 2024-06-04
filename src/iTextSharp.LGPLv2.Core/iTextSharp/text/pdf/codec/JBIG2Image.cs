@@ -5,7 +5,7 @@ namespace iTextSharp.text.pdf.codec;
 ///     This class assumes that we are always embedding into a pdf.
 ///     @since 2.1.5
 /// </summary>
-public class Jbig2Image
+public static class Jbig2Image
 {
     /// <summary>
     ///     Gets a byte array that can be used as a /JBIG2Globals,

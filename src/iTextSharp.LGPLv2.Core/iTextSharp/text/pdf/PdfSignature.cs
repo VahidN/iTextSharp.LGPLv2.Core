@@ -19,6 +19,11 @@ public class PdfSignature : PdfDictionary
     {
         set
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             var array = new PdfArray();
             for (var k = 0; k < value.Length; ++k)
             {

@@ -6,7 +6,7 @@ namespace iTextSharp.text.xml.simpleparser;
 /// <summary>
 ///     This class contains entities that can be used in an entity tag.
 /// </summary>
-public class EntitiesToUnicode
+public static class EntitiesToUnicode
 {
     /// <summary>
     ///     This is a map that contains the names of entities and their unicode value.
@@ -320,7 +320,12 @@ public class EntitiesToUnicode
     /// <returns>the corresponding unicode character</returns>
     public static char DecodeEntity(string name)
     {
-        if (name.StartsWith("#x"))
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
+        if (name.StartsWith("#x", StringComparison.Ordinal))
         {
             try
             {
@@ -332,7 +337,7 @@ public class EntitiesToUnicode
             }
         }
 
-        if (name.StartsWith("#"))
+        if (name.StartsWith("#", StringComparison.Ordinal))
         {
             try
             {
@@ -359,6 +364,11 @@ public class EntitiesToUnicode
     /// </summary>
     public static string DecodeString(string s)
     {
+        if (s == null)
+        {
+            throw new ArgumentNullException(nameof(s));
+        }
+
         var posAmp = s.IndexOf("&", StringComparison.Ordinal);
         if (posAmp == -1)
         {

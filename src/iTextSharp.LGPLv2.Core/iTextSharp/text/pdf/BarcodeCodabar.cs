@@ -131,6 +131,11 @@ public class BarcodeCodabar : Barcode
 
     public static string CalculateChecksum(string code)
     {
+        if (code == null)
+        {
+            throw new ArgumentNullException(nameof(code));
+        }
+
         if (code.Length < 2)
         {
             return code;
@@ -155,6 +160,11 @@ public class BarcodeCodabar : Barcode
     /// <returns>the bars</returns>
     public static byte[] GetBarsCodabar(string text)
     {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
         text = text.ToUpper(CultureInfo.InvariantCulture);
         var len = text.Length;
         if (len < 2)
@@ -263,6 +273,11 @@ public class BarcodeCodabar : Barcode
     /// <returns>the dimensions the barcode occupies</returns>
     public override Rectangle PlaceBarcode(PdfContentByte cb, BaseColor barColor, BaseColor textColor)
     {
+        if (cb == null)
+        {
+            throw new ArgumentNullException(nameof(cb));
+        }
+
         var fullCode = code;
         if (generateChecksum && checksumText)
         {

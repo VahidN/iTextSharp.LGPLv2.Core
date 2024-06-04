@@ -51,8 +51,13 @@ public class DefaultSplitCharacter : ISplitCharacter
     /// <param name="cc">array that has to be checked</param>
     /// <param name="ck">chunk array</param>
     /// <returns>current character</returns>
-    protected char GetCurrentCharacter(int current, char[] cc, PdfChunk[] ck)
+    protected static char GetCurrentCharacter(int current, char[] cc, PdfChunk[] ck)
     {
+        if (cc == null)
+        {
+            throw new ArgumentNullException(nameof(cc));
+        }
+
         if (ck == null)
         {
             return cc[current];

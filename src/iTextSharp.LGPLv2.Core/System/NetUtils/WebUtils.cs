@@ -7,6 +7,11 @@ public static class WebUtils
 {
     public static Stream GetResponseStream(this Uri url)
     {
+        if (url == null)
+        {
+            throw new ArgumentNullException(nameof(url));
+        }
+
         //CoreFx doesn't support file: or ftp: schemes for WebRequest classes.
         if (url.IsFile)
         {
