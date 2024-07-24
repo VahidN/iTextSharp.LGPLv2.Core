@@ -4142,7 +4142,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                         var refi = (PrIndirectReference)obj;
                         var num = refi.Number;
 
-                        if (!hits[num])
+                        if (num > 0 && !hits[num])
                         {
                             hits[num] = true;
                             state.Push(GetPdfObjectRelease(refi));
@@ -4180,7 +4180,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                     {
                         var num = ((PrIndirectReference)v).Number;
 
-                        if (num >= _xrefObj.Count || (!_partial && _xrefObj[num] == null))
+                        if (num > 0 && (num >= _xrefObj.Count || (!_partial && _xrefObj[num] == null)))
                         {
                             ar[k] = PdfNull.Pdfnull;
 
@@ -4217,7 +4217,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                     {
                         var num = ((PrIndirectReference)v).Number;
 
-                        if (num >= _xrefObj.Count || (!_partial && _xrefObj[num] == null))
+                        if (num > 0 && (num >= _xrefObj.Count || (!_partial && _xrefObj[num] == null)))
                         {
                             dic.Put(key, PdfNull.Pdfnull);
 
