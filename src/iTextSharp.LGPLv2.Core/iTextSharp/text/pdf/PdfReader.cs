@@ -3279,9 +3279,12 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
     {
         var type = _rootPages.Get(PdfName.TYPE);
         var types = _rootPages.Get(PdfName.TYPES);
-
-        return PdfName.Pages.Equals(type) || PdfName.Pages.Equals(types);
+        
+        return PdfName.Pages.Equals(type) || PdfName.Pages.Equals(types) || IsSimplifiedPageDictionaryRootPage();
     }
+
+    private bool IsSimplifiedPageDictionaryRootPage() =>
+        _rootPages.Get(PdfName.Kids) != null;
 
     protected internal virtual void ReadPdf()
     {
