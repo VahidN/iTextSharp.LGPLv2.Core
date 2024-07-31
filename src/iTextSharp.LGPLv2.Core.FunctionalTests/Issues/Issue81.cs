@@ -19,4 +19,14 @@ public class Issue81
         Assert.AreEqual(1, pdfReader.NumberOfPages,
                         "PdfReader fails to report the correct number of pages");
     }
+    
+    [TestMethod]
+    [ExpectedException(typeof(InvalidPdfException))]
+    public void Test_Issue81_2_ReadPageCount()
+    {
+        var resource = TestUtils.GetPdfsPath("issue81_2.pdf");
+        using var pdfReader = new PdfReader(resource);
+        Assert.AreEqual(1, pdfReader.NumberOfPages,
+            "PdfReader fails to report the correct number of pages");
+    }
 }
