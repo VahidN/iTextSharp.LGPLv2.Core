@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
         <VersionPrefix>3.4.21</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
-        <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net462;net9.0</TargetFrameworks>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
@@ -54,7 +54,11 @@
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.1"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462'">
+		<PackageReference Include="Backport.System.Threading.Lock" Version="1.0.2"/>
+	</ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="Backport.System.Threading.Lock" Version="1.0.2"/>
         <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0"/>
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

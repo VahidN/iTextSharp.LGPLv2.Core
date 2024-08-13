@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.util;
 using iTextSharp.text.html;
 using iTextSharp.text.pdf;
@@ -26,7 +26,7 @@ public sealed class FontFactoryImp
 
     private static readonly ConcurrentDictionary<string, List<string>> _fontFamilies = new();
     private static readonly Properties _trueTypeFonts = new();
-    private static readonly object _syncLock = new();
+    private static readonly Lock _syncLock = new();
 
     private FontFactoryImp()
     {

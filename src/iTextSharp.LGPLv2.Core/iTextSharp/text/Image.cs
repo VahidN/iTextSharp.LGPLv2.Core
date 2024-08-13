@@ -1,4 +1,4 @@
-using iTextSharp.LGPLv2.Core.System.Drawing;
+﻿using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.NetUtils;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
@@ -108,7 +108,7 @@ public abstract class Image : Rectangle
     /// </summary>
     private static object _serialId = 0L;
 
-    private static readonly object _mutex = new();
+    private static readonly Lock _mutex = new();
 
     /// <summary>
     ///     Holds value of property initialRotation.
