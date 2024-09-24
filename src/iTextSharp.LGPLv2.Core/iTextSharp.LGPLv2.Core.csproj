@@ -29,6 +29,8 @@
         <Deterministic>true</Deterministic>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>D:\HostingSpaces\iTextSharp.LGPLv2.Core.git\strongname.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
@@ -37,25 +39,25 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt"/>
-        <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)"/>
-        <None Include="../../README.md" Link="README.md" Pack="true" PackagePath="/" Visible="false"/>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt" />
+        <EmbeddedResource Include="iTextSharp\text\pdf\fonts\*.*;iTextSharp\text\pdf\fonts\cmaps\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+        <None Include="../../README.md" Link="README.md" Pack="true" PackagePath="/" Visible="false" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>anycpu</PlatformTarget>
     </PropertyGroup>
     <ItemGroup>
-        <Using Include="System.Globalization"/>
-        <Using Include="System.IO"/>
-        <Using Remove="System.Net.Http"/> <!-- for .NET Framework 4.x -->
+        <Using Include="System.Globalization" />
+        <Using Include="System.IO" />
+        <Using Remove="System.Net.Http" /> <!-- for .NET Framework 4.x -->
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="2.88.8"/>
-        <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.1"/>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+        <PackageReference Include="SkiaSharp" Version="2.88.8" />
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.1" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0"/>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <DefineConstants>NETSTANDARD2_0</DefineConstants>
