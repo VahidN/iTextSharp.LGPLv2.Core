@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.4.21</VersionPrefix>
+        <VersionPrefix>3.4.22</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
         <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
@@ -29,6 +29,24 @@
         <Deterministic>true</Deterministic>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)iTextSharp.LGPLv2.Core.snk</AssemblyOriginatorKeyFile>
+        <PublicKey>0024000004800000940000000602000000240000525341310004000001000100f5d8ed1edc2f97
+                   cb50bd0a1ddc15afef2e68558cdb361b17865d39ecd220f41e3f05ad9521fa4510ff7e5a92fed6
+                   d769f05cfe6c15502423ab8243e28de86a45d5d2fe4670e3455b6f02eb6afe5c84b5c07f1e4324
+                   147612969aeb481497e7663f2d83b4160b8d806d5bfc1ddef8c90fa0d4460c6f73045b3077e3bf
+                   11c1deb8
+        </PublicKey>
+    </PropertyGroup>
+    <PropertyGroup>
+        <NuGetAudit>true</NuGetAudit>
+        <NuGetAuditMode>all</NuGetAuditMode>
+        <NuGetAuditLevel>low</NuGetAuditLevel>
+        <WarningsNotAsErrors Condition="'$(Configuration)' != 'Release'">
+            $(WarningsNotAsErrors);NU1900;NU1901;NU1902;NU1903;NU1904
+        </WarningsNotAsErrors>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
