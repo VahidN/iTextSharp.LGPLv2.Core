@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.4.22</VersionPrefix>
+        <VersionPrefix>3.4.23</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
         <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
@@ -63,12 +63,12 @@
         <Using Remove="System.Net.Http"/> <!-- for .NET Framework 4.x -->
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="2.88.8"/>
+        <PackageReference Include="SkiaSharp" Version="2.88.9"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0"/>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.0"/>
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <DefineConstants>NETSTANDARD2_0</DefineConstants>
