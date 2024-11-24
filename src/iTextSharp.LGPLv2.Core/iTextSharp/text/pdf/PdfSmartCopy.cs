@@ -15,13 +15,13 @@ public class PdfSmartCopy : PdfCopy
     /// <summary>
     ///     the cache with the streams and references.
     /// </summary>
-    private readonly INullValueDictionary<ByteStore, PdfIndirectReference> _streamMap;
+    private readonly NullValueDictionary<ByteStore, PdfIndirectReference> _streamMap;
 
     /// <summary>
     ///     Creates a PdfSmartCopy instance.
     /// </summary>
-    public PdfSmartCopy(Document document, Stream os) : base(document, os) =>
-        _streamMap = new NullValueDictionary<ByteStore, PdfIndirectReference>();
+    public PdfSmartCopy(Document document, Stream os) : base(document, os)
+        => _streamMap = new NullValueDictionary<ByteStore, PdfIndirectReference>();
 
     /// <summary>
     ///     Translate a PRIndirectReference to a PdfIndirectReference
@@ -42,6 +42,7 @@ public class PdfSmartCopy : PdfCopy
         }
 
         var srcObj = PdfReader.GetPdfObjectRelease(inp);
+
         if (srcObj == null)
         {
             return null;
@@ -50,9 +51,11 @@ public class PdfSmartCopy : PdfCopy
         PdfIndirectReference theRef;
         var key = new RefKey(inp);
         var iRef = Indirects[key];
+
         if (iRef != null)
         {
             theRef = iRef.Ref;
+
             if (iRef.Copied)
             {
                 return theRef;
@@ -61,20 +64,22 @@ public class PdfSmartCopy : PdfCopy
         else
         {
             ByteStore streamKey = null;
+
             if (srcObj.IsStream() || srcObj.IsDictionary())
             {
                 streamKey = new ByteStore(srcObj);
                 var streamRef = _streamMap[streamKey];
+
                 if (streamRef != null)
                 {
                     return streamRef;
                 }
             }
-            
+
             theRef = Body.PdfIndirectReference;
             iRef = new IndirectReferences(theRef);
             Indirects[key] = iRef;
-            
+
             if (streamKey != null)
             {
                 _streamMap[streamKey] = theRef;
@@ -84,6 +89,7 @@ public class PdfSmartCopy : PdfCopy
         if (srcObj.IsDictionary())
         {
             var type = PdfReader.GetPdfObjectRelease(((PdfDictionary)srcObj).Get(PdfName.TYPE));
+
             if (type != null && PdfName.Page.Equals(type))
             {
                 return theRef;
@@ -94,13 +100,14 @@ public class PdfSmartCopy : PdfCopy
 
         var obj = CopyObject(srcObj);
         AddToBody(obj, theRef);
+
         return theRef;
     }
 
     internal class ByteStore
     {
         private readonly byte[] _b;
-        private List<RefKey> _references;
+        private readonly List<RefKey> _references;
 
         internal ByteStore(PdfObject str)
         {
@@ -124,12 +131,14 @@ public class PdfSmartCopy : PdfCopy
             }
 
             var b2 = store._b;
+
             if (b2.Length != _b.Length)
             {
                 return false;
             }
 
             var len = _b.Length;
+
             for (var k = 0; k < len; ++k)
             {
                 if (_b[k] != b2[k])
@@ -145,6 +154,7 @@ public class PdfSmartCopy : PdfCopy
         {
             var hash = 0;
             var len = _b.Length;
+
             for (var k = 0; k < len; ++k)
             {
                 hash = hash * 31 + _b[k];
@@ -155,7 +165,8 @@ public class PdfSmartCopy : PdfCopy
 
         private void serArray(PdfArray array, int level, ByteBuffer bb)
         {
-            bb.Append("$A");
+            bb.Append(str: "$A");
+
             if (level <= 0)
             {
                 return;
@@ -169,15 +180,17 @@ public class PdfSmartCopy : PdfCopy
 
         private void serDic(PdfDictionary dic, int level, ByteBuffer bb)
         {
-            bb.Append("$D");
+            bb.Append(str: "$D");
+
             if (level <= 0)
             {
                 return;
             }
 
             var keys = new PdfName[dic.Size];
-            dic.Keys.CopyTo(keys, 0);
+            dic.Keys.CopyTo(keys, arrayIndex: 0);
             Array.Sort(keys);
+
             for (var k = 0; k < keys.Length; ++k)
             {
                 serObject(keys[k], level, bb);
@@ -194,7 +207,8 @@ public class PdfSmartCopy : PdfCopy
 
             if (obj == null)
             {
-                bb.Append("$Lnull");
+                bb.Append(str: "$Lnull");
+
                 return;
             }
 
@@ -202,10 +216,12 @@ public class PdfSmartCopy : PdfCopy
             {
                 var refKey = new RefKey((PdfIndirectReference)obj);
                 var refIdx = _references.IndexOf(refKey);
+
                 if (refIdx >= 0)
                 {
                     // Already seen, print relative reference label only
                     bb.Append($"$R{refIdx}");
+
                     return;
                 }
 
@@ -215,9 +231,10 @@ public class PdfSmartCopy : PdfCopy
             }
 
             obj = PdfReader.GetPdfObject(obj);
+
             if (obj.IsStream())
             {
-                bb.Append("$B");
+                bb.Append(str: "$B");
                 serDic((PdfDictionary)obj, level - 1, bb);
                 using var md5 = MD5BouncyCastle.Create();
                 bb.Append(md5.ComputeHash(PdfReader.GetStreamBytesRaw((PrStream)obj)));
@@ -232,15 +249,15 @@ public class PdfSmartCopy : PdfCopy
             }
             else if (obj.IsString())
             {
-                bb.Append("$S").Append(obj.ToString());
+                bb.Append(str: "$S").Append(obj.ToString());
             }
             else if (obj.IsName())
             {
-                bb.Append("$N").Append(obj.ToString());
+                bb.Append(str: "$N").Append(obj.ToString());
             }
             else
             {
-                bb.Append("$L").Append(obj.ToString());
+                bb.Append(str: "$L").Append(obj.ToString());
             }
         }
     }

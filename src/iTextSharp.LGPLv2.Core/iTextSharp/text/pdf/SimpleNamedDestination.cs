@@ -10,7 +10,7 @@ namespace iTextSharp.text.pdf;
 public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 {
     private NullValueDictionary<string, string> _xmlLast;
-    private INullValueDictionary<string, string> _xmlNames;
+    private NullValueDictionary<string, string> _xmlNames;
 
     private SimpleNamedDestination()
     {
@@ -27,32 +27,32 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentNullException(nameof(tag));
         }
 
-        if (tag.Equals("Destination", StringComparison.Ordinal))
+        if (tag.Equals(value: "Destination", StringComparison.Ordinal))
         {
             if (_xmlLast == null && _xmlNames != null)
             {
                 return;
             }
 
-            throw new ArgumentException("Destination end tag out of place.");
+            throw new ArgumentException(message: "Destination end tag out of place.");
         }
 
-        if (!tag.Equals("Name", StringComparison.Ordinal))
+        if (!tag.Equals(value: "Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Invalid end tag - " + tag);
         }
 
         if (_xmlLast == null || _xmlNames == null)
         {
-            throw new ArgumentException("Name end tag out of place.");
+            throw new ArgumentException(message: "Name end tag out of place.");
         }
 
-        if (!_xmlLast.TryGetValue("Page", out var pageValue))
+        if (!_xmlLast.TryGetValue(key: "Page", out var pageValue))
         {
-            throw new ArgumentException("Page attribute missing.");
+            throw new ArgumentException(message: "Page attribute missing.");
         }
 
-        _xmlNames[UnEscapeBinaryString(_xmlLast["Name"])] = pageValue;
+        _xmlNames[UnEscapeBinaryString(_xmlLast[key: "Name"])] = pageValue;
         _xmlLast = null;
     }
 
@@ -67,9 +67,9 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             return;
         }
 
-        var name = _xmlLast["Name"];
+        var name = _xmlLast[key: "Name"];
         name += str;
-        _xmlLast["Name"] = name;
+        _xmlLast[key: "Name"] = name;
     }
 
     public void StartElement(string tag, INullValueDictionary<string, string> h)
@@ -81,28 +81,28 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
         if (_xmlNames == null)
         {
-            if (tag.Equals("Destination", StringComparison.Ordinal))
+            if (tag.Equals(value: "Destination", StringComparison.Ordinal))
             {
                 _xmlNames = new NullValueDictionary<string, string>();
 
                 return;
             }
 
-            throw new ArgumentException("Root element is not Destination.");
+            throw new ArgumentException(message: "Root element is not Destination.");
         }
 
-        if (!tag.Equals("Name", StringComparison.Ordinal))
+        if (!tag.Equals(value: "Name", StringComparison.Ordinal))
         {
             throw new ArgumentException("Tag " + tag + " not allowed.");
         }
 
         if (_xmlLast != null)
         {
-            throw new ArgumentException("Nested tags are not allowed.");
+            throw new ArgumentException(message: "Nested tags are not allowed.");
         }
 
         _xmlLast = new NullValueDictionary<string, string>(h);
-        _xmlLast["Name"] = "";
+        _xmlLast[key: "Name"] = "";
     }
 
     public static string EscapeBinaryString(string s)
@@ -122,14 +122,14 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
             if (c < ' ')
             {
-                buf.Append('\\');
-                ((int)c).ToString("", CultureInfo.InvariantCulture);
-                var octal = "00" + Convert.ToString(c, 8);
+                buf.Append(value: '\\');
+                ((int)c).ToString(format: "", CultureInfo.InvariantCulture);
+                var octal = "00" + Convert.ToString(c, toBase: 8);
                 buf.Append(octal.Substring(octal.Length - 3));
             }
             else if (c == '\\')
             {
-                buf.Append("\\\\");
+                buf.Append(value: "\\\\");
             }
             else
             {
@@ -188,21 +188,21 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             throw new ArgumentNullException(nameof(wrt));
         }
 
-        wrt.Write("<?xml version=\"1.0\" encoding=\"");
+        wrt.Write(value: "<?xml version=\"1.0\" encoding=\"");
         wrt.Write(SimpleXmlParser.EscapeXml(encoding, onlyAscii));
-        wrt.Write("\"?>\n<Destination>\n");
+        wrt.Write(value: "\"?>\n<Destination>\n");
 
         foreach (var key in names.Keys)
         {
             var value = names[key];
-            wrt.Write("  <Name Page=\"");
+            wrt.Write(value: "  <Name Page=\"");
             wrt.Write(SimpleXmlParser.EscapeXml(value, onlyAscii));
-            wrt.Write("\">");
+            wrt.Write(value: "\">");
             wrt.Write(SimpleXmlParser.EscapeXml(EscapeBinaryString(key), onlyAscii));
-            wrt.Write("</Name>\n");
+            wrt.Write(value: "</Name>\n");
         }
 
-        wrt.Write("</Destination>\n");
+        wrt.Write(value: "</Destination>\n");
         wrt.Flush();
     }
 
@@ -224,7 +224,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         var names = fromNames ? reader.GetNamedDestinationFromNames() : reader.GetNamedDestinationFromStrings();
         var n2 = new NullValueDictionary<string, string>(names.Count);
         var keys = new string[names.Count];
-        names.Keys.CopyTo(keys, 0);
+        names.Keys.CopyTo(keys, arrayIndex: 0);
 
         foreach (var name in keys)
         {
@@ -233,12 +233,12 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
 
             try
             {
-                s.Append(pages[arr.GetAsIndirectObject(0).Number]);
-                s.Append(' ').Append(arr[1].ToString().Substring(1));
+                s.Append(pages[arr.GetAsIndirectObject(idx: 0).Number]);
+                s.Append(value: ' ').Append(arr[idx: 1].ToString().Substring(startIndex: 1));
 
                 for (var k = 2; k < arr.Size; ++k)
                 {
-                    s.Append(' ').Append(arr[k]);
+                    s.Append(value: ' ').Append(arr[k]);
                 }
 
                 n2[name] = s.ToString();
@@ -363,7 +363,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             {
                 if (++k >= len)
                 {
-                    buf.Append('\\');
+                    buf.Append(value: '\\');
 
                     break;
                 }
@@ -427,9 +427,9 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         {
             var fn = tk.NextToken();
 
-            if (fn.StartsWith("/", StringComparison.Ordinal))
+            if (fn.StartsWith(value: "/", StringComparison.Ordinal))
             {
-                fn = fn.Substring(1);
+                fn = fn.Substring(startIndex: 1);
             }
 
             ar.Add(new PdfName(fn));
@@ -438,7 +438,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             {
                 fn = tk.NextToken();
 
-                if (fn.Equals("null", StringComparison.Ordinal))
+                if (fn.Equals(value: "null", StringComparison.Ordinal))
                 {
                     ar.Add(PdfNull.Pdfnull);
                 }

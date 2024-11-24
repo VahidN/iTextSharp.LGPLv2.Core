@@ -17,7 +17,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <summary>
     ///     keeps the indextag with the pagenumber
     /// </summary>
-    private readonly INullValueDictionary<string, int> _indextag = new NullValueDictionary<string, int>();
+    private readonly NullValueDictionary<string, int> _indextag = new();
 
     /// <summary>
     ///     Comparator for sorting the index
@@ -40,8 +40,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <param name="in2">The second level.</param>
     /// <param name="in3">The third level.</param>
     /// <returns>Returns the Chunk.</returns>
-    public Chunk Create(string text, string in1, string in2,
-                        string in3)
+    public Chunk Create(string text, string in1, string in2, string in3)
     {
         var chunk = new Chunk(text);
         var tag = $"idx_{_indexcounter++}";
@@ -49,6 +48,7 @@ public class IndexEvents : PdfPageEventHelper
         chunk.SetLocalDestination(tag);
         var entry = new Entry(in1, in2, in3, tag, this);
         _indexentry.Add(entry);
+
         return chunk;
     }
 
@@ -58,7 +58,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <param name="text">The text for the Chunk.</param>
     /// <param name="in1">The first level.</param>
     /// <returns>Returns the Chunk.</returns>
-    public Chunk Create(string text, string in1) => Create(text, in1, "", "");
+    public Chunk Create(string text, string in1) => Create(text, in1, in2: "", in3: "");
 
     /// <summary>
     ///     Create an index entry.
@@ -67,7 +67,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <param name="in1">The first level.</param>
     /// <param name="in2">The second level.</param>
     /// <returns>Returns the Chunk.</returns>
-    public Chunk Create(string text, string in1, string in2) => Create(text, in1, in2, "");
+    public Chunk Create(string text, string in1, string in2) => Create(text, in1, in2, in3: "");
 
     /// <summary>
     ///     Create an index entry.
@@ -76,8 +76,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <param name="in1">The first level.</param>
     /// <param name="in2">The second level.</param>
     /// <param name="in3">The third level.</param>
-    public void Create(Chunk text, string in1, string in2,
-                       string in3)
+    public void Create(Chunk text, string in1, string in2, string in3)
     {
         if (text == null)
         {
@@ -96,10 +95,7 @@ public class IndexEvents : PdfPageEventHelper
     /// </summary>
     /// <param name="text">The text.</param>
     /// <param name="in1">The first level.</param>
-    public void Create(Chunk text, string in1)
-    {
-        Create(text, in1, "", "");
-    }
+    public void Create(Chunk text, string in1) => Create(text, in1, in2: "", in3: "");
 
     /// <summary>
     ///     Create an index entry.
@@ -107,10 +103,7 @@ public class IndexEvents : PdfPageEventHelper
     /// <param name="text">The text.</param>
     /// <param name="in1">The first level.</param>
     /// <param name="in2">The second level.</param>
-    public void Create(Chunk text, string in1, string in2)
-    {
-        Create(text, in1, in2, "");
-    }
+    public void Create(Chunk text, string in1, string in2) => Create(text, in1, in2, in3: "");
 
     /// <summary>
     ///     Returns the sorted list with the entries and the collected page numbers.
@@ -126,6 +119,7 @@ public class IndexEvents : PdfPageEventHelper
             var key = e.GetKey();
 
             var master = grouped[key];
+
             if (master != null)
             {
                 master.AddPageNumberAndTag(e.GetPageNumber(), e.GetTag());
@@ -139,7 +133,8 @@ public class IndexEvents : PdfPageEventHelper
 
         // copy to a list and sort it
         var sorted = new List<Entry>(grouped.Values);
-        sorted.Sort(0, sorted.Count, _comparator);
+        sorted.Sort(index: 0, sorted.Count, _comparator);
+
         return sorted;
     }
 
@@ -149,8 +144,7 @@ public class IndexEvents : PdfPageEventHelper
     ///     com.lowagie.text.pdf.PdfWriter, com.lowagie.text.Document,
     ///     com.lowagie.text.Rectangle, java.lang.String)
     /// </summary>
-    public override void OnGenericTag(PdfWriter writer, Document document,
-                                      Rectangle rect, string text)
+    public override void OnGenericTag(PdfWriter writer, Document document, Rectangle rect, string text)
     {
         if (writer == null)
         {
@@ -164,10 +158,7 @@ public class IndexEvents : PdfPageEventHelper
     ///     Set the comparator.
     /// </summary>
     /// <param name="aComparator">The comparator to set.</param>
-    public void SetComparator(IComparer<Entry> aComparator)
-    {
-        _comparator = aComparator;
-    }
+    public void SetComparator(IComparer<Entry> aComparator) => _comparator = aComparator;
 
     /// <summary>
     ///     --------------------------------------------------------------------
@@ -219,8 +210,7 @@ public class IndexEvents : PdfPageEventHelper
         /// <param name="aIn3">The third level.</param>
         /// <param name="aTag">The tag.</param>
         /// <param name="parent"></param>
-        public Entry(string aIn1, string aIn2, string aIn3,
-                     string aTag, IndexEvents parent)
+        public Entry(string aIn1, string aIn2, string aIn3, string aTag, IndexEvents parent)
         {
             _in1 = aIn1;
             _in2 = aIn2;
@@ -273,6 +263,7 @@ public class IndexEvents : PdfPageEventHelper
             var rt = -1;
             object i = _parent._indextag[_tag];
             rt = (int)i;
+
             return rt;
         }
 
@@ -301,12 +292,13 @@ public class IndexEvents : PdfPageEventHelper
         public override string ToString()
         {
             var buf = new StringBuilder();
-            buf.Append(_in1).Append(' ');
-            buf.Append(_in2).Append(' ');
-            buf.Append(_in3).Append(' ');
+            buf.Append(_in1).Append(value: ' ');
+            buf.Append(_in2).Append(value: ' ');
+            buf.Append(_in3).Append(value: ' ');
+
             for (var i = 0; i < _pagenumbers.Count; i++)
             {
-                buf.Append(_pagenumbers[i]).Append(' ');
+                buf.Append(_pagenumbers[i]).Append(value: ' ');
             }
 
             return buf.ToString();
@@ -321,6 +313,7 @@ public class IndexEvents : PdfPageEventHelper
             var en2 = arg1;
 
             var rt = 0;
+
             if (en1.GetIn1() != null && en2.GetIn1() != null)
             {
                 if ((rt = Util.CompareToIgnoreCase(en1.GetIn1(), en2.GetIn1())) == 0)

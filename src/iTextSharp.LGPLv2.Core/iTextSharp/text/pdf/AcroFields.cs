@@ -59,12 +59,11 @@ public class AcroFields
         PdfName.Mk, PdfName.F, PdfName.Ff, PdfName.Q, PdfName.Bs, PdfName.Border
     };
 
-    private static readonly INullValueDictionary<string, string[]> _stdFieldFontNames =
-        new NullValueDictionary<string, string[]>();
+    private static readonly NullValueDictionary<string, string[]> _stdFieldFontNames = new();
 
     private readonly bool _append;
     private readonly NullValueDictionary<int, BaseFont> _extensionFonts = new();
-    private readonly INullValueDictionary<string, BaseFont> _localFonts = new NullValueDictionary<string, BaseFont>();
+    private readonly NullValueDictionary<string, BaseFont> _localFonts = new();
     internal readonly PdfReader Reader;
     internal readonly PdfWriter Writer;
     private float _extraMarginLeft;
@@ -89,107 +88,107 @@ public class AcroFields
 
     static AcroFields()
     {
-        _stdFieldFontNames["CoBO"] = new[]
+        _stdFieldFontNames[key: "CoBO"] = new[]
         {
             "Courier-BoldOblique"
         };
 
-        _stdFieldFontNames["CoBo"] = new[]
+        _stdFieldFontNames[key: "CoBo"] = new[]
         {
             "Courier-Bold"
         };
 
-        _stdFieldFontNames["CoOb"] = new[]
+        _stdFieldFontNames[key: "CoOb"] = new[]
         {
             "Courier-Oblique"
         };
 
-        _stdFieldFontNames["Cour"] = new[]
+        _stdFieldFontNames[key: "Cour"] = new[]
         {
             "Courier"
         };
 
-        _stdFieldFontNames["HeBO"] = new[]
+        _stdFieldFontNames[key: "HeBO"] = new[]
         {
             "Helvetica-BoldOblique"
         };
 
-        _stdFieldFontNames["HeBo"] = new[]
+        _stdFieldFontNames[key: "HeBo"] = new[]
         {
             "Helvetica-Bold"
         };
 
-        _stdFieldFontNames["HeOb"] = new[]
+        _stdFieldFontNames[key: "HeOb"] = new[]
         {
             "Helvetica-Oblique"
         };
 
-        _stdFieldFontNames["Helv"] = new[]
+        _stdFieldFontNames[key: "Helv"] = new[]
         {
             "Helvetica"
         };
 
-        _stdFieldFontNames["Symb"] = new[]
+        _stdFieldFontNames[key: "Symb"] = new[]
         {
             "Symbol"
         };
 
-        _stdFieldFontNames["TiBI"] = new[]
+        _stdFieldFontNames[key: "TiBI"] = new[]
         {
             "Times-BoldItalic"
         };
 
-        _stdFieldFontNames["TiBo"] = new[]
+        _stdFieldFontNames[key: "TiBo"] = new[]
         {
             "Times-Bold"
         };
 
-        _stdFieldFontNames["TiIt"] = new[]
+        _stdFieldFontNames[key: "TiIt"] = new[]
         {
             "Times-Italic"
         };
 
-        _stdFieldFontNames["TiRo"] = new[]
+        _stdFieldFontNames[key: "TiRo"] = new[]
         {
             "Times-Roman"
         };
 
-        _stdFieldFontNames["ZaDb"] = new[]
+        _stdFieldFontNames[key: "ZaDb"] = new[]
         {
             "ZapfDingbats"
         };
 
-        _stdFieldFontNames["HySm"] = new[]
+        _stdFieldFontNames[key: "HySm"] = new[]
         {
             "HYSMyeongJo-Medium", "UniKS-UCS2-H"
         };
 
-        _stdFieldFontNames["HyGo"] = new[]
+        _stdFieldFontNames[key: "HyGo"] = new[]
         {
             "HYGoThic-Medium", "UniKS-UCS2-H"
         };
 
-        _stdFieldFontNames["KaGo"] = new[]
+        _stdFieldFontNames[key: "KaGo"] = new[]
         {
             "HeiseiKakuGo-W5", "UniKS-UCS2-H"
         };
 
-        _stdFieldFontNames["KaMi"] = new[]
+        _stdFieldFontNames[key: "KaMi"] = new[]
         {
             "HeiseiMin-W3", "UniJIS-UCS2-H"
         };
 
-        _stdFieldFontNames["MHei"] = new[]
+        _stdFieldFontNames[key: "MHei"] = new[]
         {
             "MHei-Medium", "UniCNS-UCS2-H"
         };
 
-        _stdFieldFontNames["MSun"] = new[]
+        _stdFieldFontNames[key: "MSun"] = new[]
         {
             "MSung-Light", "UniCNS-UCS2-H"
         };
 
-        _stdFieldFontNames["STSo"] = new[]
+        _stdFieldFontNames[key: "STSo"] = new[]
         {
             "STSong-Light", "UniGB-UCS2-H"
         };
@@ -296,7 +295,7 @@ public class AcroFields
 
     public static object[] SplitDAelements(string da)
     {
-        var tk = new PrTokeniser(PdfEncodings.ConvertToBytes(da, null));
+        var tk = new PrTokeniser(PdfEncodings.ConvertToBytes(da, encoding: null));
         var stack = new List<string>();
         var ret = new object[3];
 
@@ -311,7 +310,7 @@ public class AcroFields
             {
                 var oper = tk.StringValue;
 
-                if (oper.Equals("Tf", StringComparison.Ordinal))
+                if (oper.Equals(value: "Tf", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 2)
                     {
@@ -319,19 +318,19 @@ public class AcroFields
                         ret[DA_SIZE] = float.Parse(stack[stack.Count - 1], NumberFormatInfo.InvariantInfo);
                     }
                 }
-                else if (oper.Equals("g", StringComparison.Ordinal))
+                else if (oper.Equals(value: "g", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 1)
                     {
                         var gray = float.Parse(stack[stack.Count - 1], NumberFormatInfo.InvariantInfo);
 
-                        if (gray.ApproxNotEqual(0))
+                        if (gray.ApproxNotEqual(b: 0))
                         {
                             ret[DA_COLOR] = new GrayColor(gray);
                         }
                     }
                 }
-                else if (oper.Equals("rg", StringComparison.Ordinal))
+                else if (oper.Equals(value: "rg", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 3)
                     {
@@ -341,7 +340,7 @@ public class AcroFields
                         ret[DA_COLOR] = new BaseColor(red, green, blue);
                     }
                 }
-                else if (oper.Equals("k", StringComparison.Ordinal))
+                else if (oper.Equals(value: "k", StringComparison.Ordinal))
                 {
                     if (stack.Count >= 4)
                     {
@@ -454,8 +453,9 @@ public class AcroFields
                                         {
                                             try
                                             {
-                                                porf = BaseFont.CreateFont("font.ttf", BaseFont.IDENTITY_H, true, false,
-                                                    PdfReader.GetStreamBytes(prs), null);
+                                                porf = BaseFont.CreateFont(name: "font.ttf", BaseFont.IDENTITY_H,
+                                                    embedded: true, cached: false, PdfReader.GetStreamBytes(prs),
+                                                    pfb: null);
                                             }
                                             catch
                                             {
@@ -491,7 +491,7 @@ public class AcroFields
                                             enc = fn[1];
                                         }
 
-                                        bf = BaseFont.CreateFont(fn[0], enc, false);
+                                        bf = BaseFont.CreateFont(fn[0], enc, embedded: false);
                                         tx.Font = bf;
                                     }
                                     catch
@@ -635,7 +635,7 @@ public class AcroFields
             {
                 if (bd.Size >= 3)
                 {
-                    tx.BorderWidth = bd.GetAsNumber(2).FloatValue;
+                    tx.BorderWidth = bd.GetAsNumber(idx: 2).FloatValue;
                 }
 
                 if (bd.Size >= 4)
@@ -661,7 +661,7 @@ public class AcroFields
         {
             var item = entry.Value;
             var name = entry.Key;
-            var v = item.GetMerged(0).Get(PdfName.V);
+            var v = item.GetMerged(idx: 0).Get(PdfName.V);
 
             if (v == null)
             {
@@ -701,7 +701,7 @@ public class AcroFields
         var length = value[0];
         var raf = Reader.SafeFile;
         raf.ReOpen();
-        raf.Seek(0);
+        raf.Seek(pos: 0);
 
         return new RevisionStream(raf, length);
     }
@@ -724,7 +724,7 @@ public class AcroFields
         }
 
         var names = new NullValueDictionary<string, object>();
-        var vals = fd.GetValue(0);
+        var vals = fd.GetValue(idx: 0);
         var stringOpt = vals.GetAsString(PdfName.Opt);
 
         if (stringOpt != null)
@@ -774,7 +774,7 @@ public class AcroFields
         }
 
         var outs = new string[names.Count];
-        names.Keys.CopyTo(outs, 0);
+        names.Keys.CopyTo(outs, index: 0);
 
         return outs;
     }
@@ -791,7 +791,7 @@ public class AcroFields
         foreach (var entry in fields)
         {
             var item = entry.Value;
-            var merged = item.GetMerged(0);
+            var merged = item.GetMerged(idx: 0);
 
             if (!PdfName.Sig.Equals(merged.GetAsName(PdfName.Ft)))
             {
@@ -838,7 +838,7 @@ public class AcroFields
         }
 
         _lastWasString = false;
-        var mergedDict = item.GetMerged(0);
+        var mergedDict = item.GetMerged(idx: 0);
 
         // Jose A. Rodriguez posted a fix to the mailing list (May 11, 2009)
         // explaining that the value can also be a stream value
@@ -885,7 +885,7 @@ public class AcroFields
                 value = ((PdfString)v).ToUnicodeString();
             }
 
-            var opts = item.GetValue(0).GetAsArray(PdfName.Opt);
+            var opts = item.GetValue(idx: 0).GetAsArray(PdfName.Opt);
 
             if (opts != null)
             {
@@ -1016,7 +1016,7 @@ public class AcroFields
         if (ptr < ret.Length)
         {
             var ret2 = new float[ptr];
-            Array.Copy(ret, 0, ret2, 0, ptr);
+            Array.Copy(ret, sourceIndex: 0, ret2, destinationIndex: 0, ptr);
 
             return ret2;
         }
@@ -1043,7 +1043,7 @@ public class AcroFields
             return FIELD_TYPE_NONE;
         }
 
-        var merged = fd.GetMerged(0);
+        var merged = fd.GetMerged(idx: 0);
         var type = merged.GetAsName(PdfName.Ft);
 
         if (type == null)
@@ -1104,8 +1104,7 @@ public class AcroFields
     /// </summary>
     /// <param name="fieldName">the field name</param>
     /// <returns>the list of export option values from fields of type list or combo</returns>
-    public string[] GetListOptionDisplay(string fieldName)
-        => getListOption(fieldName, 1);
+    public string[] GetListOptionDisplay(string fieldName) => getListOption(fieldName, idx: 1);
 
     /// <summary>
     ///     Gets the list of export option values from fields of type list or combo.
@@ -1114,8 +1113,7 @@ public class AcroFields
     /// </summary>
     /// <param name="fieldName">the field name</param>
     /// <returns>the list of export option values from fields of type list or combo</returns>
-    public string[] GetListOptionExport(string fieldName)
-        => getListOption(fieldName, 0);
+    public string[] GetListOptionExport(string fieldName) => getListOption(fieldName, idx: 0);
 
     /// <summary>
     ///     Gets the field values of a Choice field.
@@ -1141,7 +1139,7 @@ public class AcroFields
             return ret;
         }
 
-        var values = item.GetMerged(0).GetAsArray(PdfName.I);
+        var values = item.GetMerged(idx: 0).GetAsArray(PdfName.I);
 
         if (values == null)
         {
@@ -1169,8 +1167,7 @@ public class AcroFields
     /// </summary>
     /// <param name="field">the field name that should be a pushbutton</param>
     /// <returns>a new pushbutton or  null  if the field is not a pushbutton</returns>
-    public PushbuttonField GetNewPushbuttonFromField(string field)
-        => GetNewPushbuttonFromField(field, 0);
+    public PushbuttonField GetNewPushbuttonFromField(string field) => GetNewPushbuttonFromField(field, order: 0);
 
     /// <summary>
     ///     Creates a new pushbutton from an existing field. This pushbutton can be changed and be used to replace
@@ -1198,7 +1195,7 @@ public class AcroFields
         var posi = order * 5;
         var pos = GetFieldPositions(field);
         var box = new Rectangle(pos[posi + 1], pos[posi + 2], pos[posi + 3], pos[posi + 4]);
-        var newButton = new PushbuttonField(Writer, box, null);
+        var newButton = new PushbuttonField(Writer, box, fieldName: null);
         var dic = item.GetMerged(order);
         DecodeGenericDictionary(dic, newButton);
         var mk = dic.GetAsDict(PdfName.Mk);
@@ -1259,8 +1256,8 @@ public class AcroFields
 
                 if (aj != null && aj.Size == 2)
                 {
-                    var left = aj.GetAsNumber(0).FloatValue;
-                    var bottom = aj.GetAsNumber(1).FloatValue;
+                    var left = aj.GetAsNumber(idx: 0).FloatValue;
+                    var bottom = aj.GetAsNumber(idx: 1).FloatValue;
                     newButton.IconHorizontalAdjustment = left;
                     newButton.IconVerticalAdjustment = bottom;
                 }
@@ -1319,7 +1316,7 @@ public class AcroFields
         }
 
         var item = fields[name];
-        var merged = item.GetMerged(0);
+        var merged = item.GetMerged(idx: 0);
 
         return merged.GetAsDict(PdfName.V);
     }
@@ -1508,8 +1505,7 @@ public class AcroFields
     /// </summary>
     /// <param name="name">the field name</param>
     /// <returns> true  if the field exists,  false otherwise </returns>
-    public bool RemoveField(string name)
-        => RemoveField(name, -1);
+    public bool RemoveField(string name) => RemoveField(name, page: -1);
 
     /// <summary>
     ///     Removes all the fields from  page .
@@ -1524,7 +1520,7 @@ public class AcroFields
         }
 
         var names = new string[fields.Count];
-        fields.Keys.CopyTo(names, 0);
+        fields.Keys.CopyTo(names, arrayIndex: 0);
         var found = false;
 
         for (var k = 0; k < names.Length; ++k)
@@ -1556,15 +1552,16 @@ public class AcroFields
             throw new ArgumentNullException(nameof(newName));
         }
 
-        var idx1 = oldName.LastIndexOf(".", StringComparison.Ordinal) + 1;
-        var idx2 = newName.LastIndexOf(".", StringComparison.Ordinal) + 1;
+        var idx1 = oldName.LastIndexOf(value: ".", StringComparison.Ordinal) + 1;
+        var idx2 = newName.LastIndexOf(value: ".", StringComparison.Ordinal) + 1;
 
         if (idx1 != idx2)
         {
             return false;
         }
 
-        if (!oldName.Substring(0, idx1).Equals(newName.Substring(0, idx2), StringComparison.Ordinal))
+        if (!oldName.Substring(startIndex: 0, idx1)
+                .Equals(newName.Substring(startIndex: 0, idx2), StringComparison.Ordinal))
         {
             return false;
         }
@@ -1601,7 +1598,7 @@ public class AcroFields
     /// <param name="button">the  PdfFormField  representing the pushbutton</param>
     /// <returns> true  if the field was replaced,  false  if the field</returns>
     public bool ReplacePushbuttonField(string field, PdfFormField button)
-        => ReplacePushbuttonField(field, button, 0);
+        => ReplacePushbuttonField(field, button, order: 0);
 
     /// <summary>
     ///     Replaces the designated field with a new pushbutton. The pushbutton can be created with
@@ -1685,8 +1682,7 @@ public class AcroFields
     /// <param name="name">the fully qualified field name or the partial name in the case of XFA forms</param>
     /// <param name="value">the field value</param>
     /// <returns> true  if the field was found and changed,</returns>
-    public bool SetField(string name, string value)
-        => SetField(name, value, null);
+    public bool SetField(string name, string value) => SetField(name, value, display: null);
 
     /// <summary>
     ///     Sets the field value and the display string. The display string
@@ -1711,7 +1707,7 @@ public class AcroFields
 
         if (Writer == null)
         {
-            throw new DocumentException("This AcroFields instance is read-only.");
+            throw new DocumentException(message: "This AcroFields instance is read-only.");
         }
 
         if (Xfa.XfaPresent)
@@ -1741,7 +1737,7 @@ public class AcroFields
             return false;
         }
 
-        var merged = item.GetMerged(0);
+        var merged = item.GetMerged(idx: 0);
         var type = merged.GetAsName(PdfName.Ft);
 
         if (PdfName.Tx.Equals(type))
@@ -1756,7 +1752,7 @@ public class AcroFields
 
             if (len > 0)
             {
-                value = value.Substring(0, Math.Min(len, value.Length));
+                value = value.Substring(startIndex: 0, Math.Min(len, value.Length));
             }
         }
 
@@ -1817,7 +1813,7 @@ public class AcroFields
 
         if (PdfName.Btn.Equals(type))
         {
-            var ff = item.GetMerged(0).GetAsNumber(PdfName.Ff);
+            var ff = item.GetMerged(idx: 0).GetAsNumber(PdfName.Ff);
             var flags = 0;
 
             if (ff != null)
@@ -1848,7 +1844,7 @@ public class AcroFields
 
             var v = new PdfName(value);
             var lopt = new List<string>();
-            var opts = item.GetValue(0).GetAsArray(PdfName.Opt);
+            var opts = item.GetValue(idx: 0).GetAsArray(PdfName.Opt);
 
             if (opts != null)
             {
@@ -1862,7 +1858,7 @@ public class AcroFields
                     }
                     else
                     {
-                        lopt.Add(null);
+                        lopt.Add(item: null);
                     }
                 }
             }
@@ -1939,7 +1935,7 @@ public class AcroFields
     {
         if (Writer == null)
         {
-            throw new InvalidOperationException("This AcroFields instance is read-only.");
+            throw new InvalidOperationException(message: "This AcroFields instance is read-only.");
         }
 
         var item = fields[field];
@@ -1953,7 +1949,7 @@ public class AcroFields
         PdfDictionary merged;
         PdfString da;
 
-        if (Util.EqualsIgnoreCase(name, "textfont"))
+        if (Util.EqualsIgnoreCase(name, s2: "textfont"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2027,13 +2023,13 @@ public class AcroFields
 
                                 if (bf.FontType == BaseFont.FONT_TYPE_DOCUMENT)
                                 {
-                                    fd = new FontDetails(null, ((DocumentFont)bf).IndirectReference, bf);
+                                    fd = new FontDetails(fontName: null, ((DocumentFont)bf).IndirectReference, bf);
                                 }
                                 else
                                 {
                                     bf.Subset = false;
                                     fd = Writer.AddSimple(bf);
-                                    _localFonts[psn.ToString().Substring(1)] = bf;
+                                    _localFonts[psn.ToString().Substring(startIndex: 1)] = bf;
                                 }
 
                                 fontsTop.Put(psn, fd.IndirectReference);
@@ -2041,7 +2037,7 @@ public class AcroFields
                             }
 
                             var buf = cb.InternalBuffer;
-                            buf.Append(psn.GetBytes()).Append(' ').Append((float)dao[DA_SIZE]).Append(" Tf ");
+                            buf.Append(psn.GetBytes()).Append(c: ' ').Append((float)dao[DA_SIZE]).Append(str: " Tf ");
 
                             if (dao[DA_COLOR] != null)
                             {
@@ -2057,7 +2053,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "textcolor"))
+        else if (Util.EqualsIgnoreCase(name, s2: "textcolor"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2075,8 +2071,10 @@ public class AcroFields
                         {
                             var buf = cb.InternalBuffer;
 
-                            buf.Append(new PdfName((string)dao[DA_FONT]).GetBytes()).Append(' ')
-                                .Append((float)dao[DA_SIZE]).Append(" Tf ");
+                            buf.Append(new PdfName((string)dao[DA_FONT]).GetBytes())
+                                .Append(c: ' ')
+                                .Append((float)dao[DA_SIZE])
+                                .Append(str: " Tf ");
 
                             cb.SetColorFill((BaseColor)value);
                             var s = new PdfString(cb.ToString());
@@ -2088,7 +2086,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "textsize"))
+        else if (Util.EqualsIgnoreCase(name, s2: "textsize"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2106,8 +2104,10 @@ public class AcroFields
                         {
                             var buf = cb.InternalBuffer;
 
-                            buf.Append(new PdfName((string)dao[DA_FONT]).GetBytes()).Append(' ').Append((float)value)
-                                .Append(" Tf ");
+                            buf.Append(new PdfName((string)dao[DA_FONT]).GetBytes())
+                                .Append(c: ' ')
+                                .Append((float)value)
+                                .Append(str: " Tf ");
 
                             if (dao[DA_COLOR] != null)
                             {
@@ -2123,9 +2123,9 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "bgcolor") || Util.EqualsIgnoreCase(name, "bordercolor"))
+        else if (Util.EqualsIgnoreCase(name, s2: "bgcolor") || Util.EqualsIgnoreCase(name, s2: "bordercolor"))
         {
-            var dname = Util.EqualsIgnoreCase(name, "bgcolor") ? PdfName.Bg : PdfName.Bc;
+            var dname = Util.EqualsIgnoreCase(name, s2: "bgcolor") ? PdfName.Bg : PdfName.Bc;
 
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2197,7 +2197,7 @@ public class AcroFields
     {
         if (Writer == null)
         {
-            throw new InvalidOperationException("This AcroFields instance is read-only.");
+            throw new InvalidOperationException(message: "This AcroFields instance is read-only.");
         }
 
         var item = fields[field];
@@ -2209,7 +2209,7 @@ public class AcroFields
 
         var hit = new InstHit(inst);
 
-        if (Util.EqualsIgnoreCase(name, "flags"))
+        if (Util.EqualsIgnoreCase(name, s2: "flags"))
         {
             var num = new PdfNumber(value);
 
@@ -2223,7 +2223,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "setflags"))
+        else if (Util.EqualsIgnoreCase(name, s2: "setflags"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2244,7 +2244,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "clrflags"))
+        else if (Util.EqualsIgnoreCase(name, s2: "clrflags"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2266,7 +2266,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "fflags"))
+        else if (Util.EqualsIgnoreCase(name, s2: "fflags"))
         {
             var num = new PdfNumber(value);
 
@@ -2280,7 +2280,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "setfflags"))
+        else if (Util.EqualsIgnoreCase(name, s2: "setfflags"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2302,7 +2302,7 @@ public class AcroFields
                 }
             }
         }
-        else if (Util.EqualsIgnoreCase(name, "clrfflags"))
+        else if (Util.EqualsIgnoreCase(name, s2: "clrfflags"))
         {
             for (var k = 0; k < item.Size; ++k)
             {
@@ -2412,7 +2412,7 @@ public class AcroFields
 
         if (exportValues != null && displayValues != null && exportValues.Length != displayValues.Length)
         {
-            throw new ArgumentException("The export and the display array must have the same size.");
+            throw new ArgumentException(message: "The export and the display array must have the same size.");
         }
 
         var ftype = GetFieldType(fieldName);
@@ -2484,7 +2484,7 @@ public class AcroFields
             return false;
         }
 
-        var type = item.GetMerged(0).GetAsName(PdfName.Ft);
+        var type = item.GetMerged(idx: 0).GetAsName(PdfName.Ft);
 
         if (!PdfName.Ch.Equals(type))
         {
@@ -2506,8 +2506,8 @@ public class AcroFields
         }
 
         item.WriteToAll(PdfName.I, array, Item.WRITE_MERGED | Item.WRITE_VALUE);
-        item.WriteToAll(PdfName.V, null, Item.WRITE_MERGED | Item.WRITE_VALUE);
-        item.WriteToAll(PdfName.Ap, null, Item.WRITE_MERGED | Item.WRITE_WIDGET);
+        item.WriteToAll(PdfName.V, value: null, Item.WRITE_MERGED | Item.WRITE_VALUE);
+        item.WriteToAll(PdfName.Ap, value: null, Item.WRITE_MERGED | Item.WRITE_WIDGET);
         item.MarkUsed(this, Item.WRITE_VALUE | Item.WRITE_WIDGET);
 
         return true;
@@ -2695,7 +2695,7 @@ public class AcroFields
 
                 if (name.Length > 0)
                 {
-                    name = name.Substring(0, name.Length - 1);
+                    name = name.Substring(startIndex: 0, name.Length - 1);
                 }
 
                 var item = fields[name];
@@ -2780,8 +2780,8 @@ public class AcroFields
             item.AddWidget(dic);
             item.AddWidgetRef(arrfds.GetAsIndirectObject(j)); // must be a reference
             item.AddMerged(dic);
-            item.AddPage(-1);
-            item.AddTabOrder(-1);
+            item.AddPage(pg: -1);
+            item.AddTabOrder(order: -1);
         }
     }
 
@@ -2797,7 +2797,7 @@ public class AcroFields
 
         if (_fieldCache == null || !_fieldCache.TryGetValue(fieldName, out var fcValue))
         {
-            tx = new TextField(Writer, null, null);
+            tx = new TextField(Writer, box: null, fieldName: null);
             tx.SetExtraMargin(_extraMarginLeft, _extraMarginTop);
             tx.BorderWidth = 0;
             tx.SubstitutionFonts = SubstitutionFonts;
@@ -2836,7 +2836,7 @@ public class AcroFields
 
         if (!PdfName.Ch.Equals(fieldType))
         {
-            throw new DocumentException("An appearance was requested without a variable text field.");
+            throw new DocumentException(message: "An appearance was requested without a variable text field.");
         }
 
         var opt = merged.GetAsArray(PdfName.Opt);
@@ -2871,8 +2871,8 @@ public class AcroFields
                 else
                 {
                     var a = (PdfArray)obj;
-                    choicesExp[k] = a.GetAsString(0).ToUnicodeString();
-                    choices[k] = a.GetAsString(1).ToUnicodeString();
+                    choicesExp[k] = a.GetAsString(idx: 0).ToUnicodeString();
+                    choices[k] = a.GetAsString(idx: 1).ToUnicodeString();
                 }
             }
 
@@ -2926,14 +2926,14 @@ public class AcroFields
         switch (ar.Size)
         {
             case 1:
-                return new GrayColor(ar.GetAsNumber(0).FloatValue);
+                return new GrayColor(ar.GetAsNumber(idx: 0).FloatValue);
             case 3:
-                return new BaseColor(ExtendedColor.Normalize(ar.GetAsNumber(0).FloatValue),
-                    ExtendedColor.Normalize(ar.GetAsNumber(1).FloatValue),
-                    ExtendedColor.Normalize(ar.GetAsNumber(2).FloatValue));
+                return new BaseColor(ExtendedColor.Normalize(ar.GetAsNumber(idx: 0).FloatValue),
+                    ExtendedColor.Normalize(ar.GetAsNumber(idx: 1).FloatValue),
+                    ExtendedColor.Normalize(ar.GetAsNumber(idx: 2).FloatValue));
             case 4:
-                return new CmykColor(ar.GetAsNumber(0).FloatValue, ar.GetAsNumber(1).FloatValue,
-                    ar.GetAsNumber(2).FloatValue, ar.GetAsNumber(3).FloatValue);
+                return new CmykColor(ar.GetAsNumber(idx: 0).FloatValue, ar.GetAsNumber(idx: 1).FloatValue,
+                    ar.GetAsNumber(idx: 2).FloatValue, ar.GetAsNumber(idx: 3).FloatValue);
             default:
                 return null;
         }
@@ -2966,7 +2966,7 @@ public class AcroFields
         foreach (var entry in fields)
         {
             var item = entry.Value;
-            var merged = item.GetMerged(0);
+            var merged = item.GetMerged(idx: 0);
 
             if (!PdfName.Sig.Equals(merged.Get(PdfName.Ft)))
             {
@@ -3045,7 +3045,7 @@ public class AcroFields
             return null;
         }
 
-        var ar = fd.GetMerged(0).GetAsArray(PdfName.Opt);
+        var ar = fd.GetMerged(idx: 0).GetAsArray(PdfName.Opt);
 
         if (ar == null)
         {
@@ -3138,7 +3138,7 @@ public class AcroFields
 
                 while (length > 0)
                 {
-                    var rd = rf.Read(buf, 0, Math.Min(length, buf.Length));
+                    var rd = rf.Read(buf, off: 0, Math.Min(length, buf.Length));
 
                     if (rd <= 0)
                     {
@@ -3146,7 +3146,7 @@ public class AcroFields
                     }
 
                     length -= rd;
-                    pkcs7.Update(buf, 0, rd);
+                    pkcs7.Update(buf, off: 0, rd);
                 }
             }
         }
@@ -3241,8 +3241,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx">instance index</param>
         /// <returns>the merged dictionary for the given instance</returns>
-        public PdfDictionary GetMerged(int idx)
-            => Merged[idx];
+        public PdfDictionary GetMerged(int idx) => Merged[idx];
 
         /// <summary>
         ///     Retrieve the page number of the given instance
@@ -3250,8 +3249,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx"></param>
         /// <returns>remember, pages are "1-indexed", not "0-indexed" like field instances.</returns>
-        public int GetPage(int idx)
-            => Page[idx];
+        public int GetPage(int idx) => Page[idx];
 
         /// <summary>
         ///     Gets the tabOrder.
@@ -3259,8 +3257,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx"></param>
         /// <returns>tab index of the given field instance</returns>
-        public int GetTabOrder(int idx)
-            => TabOrder[idx];
+        public int GetTabOrder(int idx) => TabOrder[idx];
 
         /// <summary>
         ///     Retrieve the value dictionary of the given instance
@@ -3268,8 +3265,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx">instance index</param>
         /// <returns>dictionary storing this instance's value. It may be shared across instances.</returns>
-        public PdfDictionary GetValue(int idx)
-            => Values[idx];
+        public PdfDictionary GetValue(int idx) => Values[idx];
 
         /// <summary>
         ///     Retrieve the widget dictionary of the given instance
@@ -3277,8 +3273,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx">instance index</param>
         /// <returns>The dictionary found in the appropriate page's Annot array.</returns>
-        public PdfDictionary GetWidget(int idx)
-            => Widgets[idx];
+        public PdfDictionary GetWidget(int idx) => Widgets[idx];
 
         /// <summary>
         ///     Retrieve the reference to the given instance
@@ -3286,8 +3281,7 @@ public class AcroFields
         /// </summary>
         /// <param name="idx">instance index</param>
         /// <returns>reference to the given field instance</returns>
-        public PdfIndirectReference GetWidgetRef(int idx)
-            => WidgetRefs[idx];
+        public PdfIndirectReference GetWidgetRef(int idx) => WidgetRefs[idx];
 
         /// <summary>
         ///     Mark all the item dictionaries used matching the given flags
@@ -3365,55 +3359,48 @@ public class AcroFields
         ///     @since 2.1.5
         /// </summary>
         /// <param name="mergeDict"></param>
-        internal void AddMerged(PdfDictionary mergeDict)
-            => Merged.Add(mergeDict);
+        internal void AddMerged(PdfDictionary mergeDict) => Merged.Add(mergeDict);
 
         /// <summary>
         ///     Adds a page to the current Item.
         ///     @since 2.1.5
         /// </summary>
         /// <param name="pg"></param>
-        internal void AddPage(int pg)
-            => Page.Add(pg);
+        internal void AddPage(int pg) => Page.Add(pg);
 
         /// <summary>
         ///     Adds a tab order value to this Item.
         ///     @since 2.1.5
         /// </summary>
         /// <param name="order"></param>
-        internal void AddTabOrder(int order)
-            => TabOrder.Add(order);
+        internal void AddTabOrder(int order) => TabOrder.Add(order);
 
         /// <summary>
         ///     Add a value dict to this Item
         ///     @since 2.1.5
         /// </summary>
         /// <param name="value">new value dictionary</param>
-        internal void AddValue(PdfDictionary value)
-            => Values.Add(value);
+        internal void AddValue(PdfDictionary value) => Values.Add(value);
 
         /// <summary>
         ///     Add a widget dict to this Item
         ///     @since 2.1.5
         /// </summary>
         /// <param name="widget"></param>
-        internal void AddWidget(PdfDictionary widget)
-            => Widgets.Add(widget);
+        internal void AddWidget(PdfDictionary widget) => Widgets.Add(widget);
 
         /// <summary>
         ///     Add a widget ref to this Item
         ///     @since 2.1.5
         /// </summary>
         /// <param name="widgRef"></param>
-        internal void AddWidgetRef(PdfIndirectReference widgRef)
-            => WidgetRefs.Add(widgRef);
+        internal void AddWidgetRef(PdfIndirectReference widgRef) => WidgetRefs.Add(widgRef);
 
         /// <summary>
         ///     forces a page value into the Item.
         ///     @since 2.1.5
         /// </summary>
-        internal void ForcePage(int idx, int pg)
-            => Page[idx] = pg;
+        internal void ForcePage(int idx, int pg) => Page[idx] = pg;
 
         /// <summary>
         ///     Remove the given instance from this item.  It is possible to
@@ -3511,7 +3498,7 @@ public class AcroFields
 
         public override int ReadByte()
         {
-            var n = Read(_b, 0, 1);
+            var n = Read(_b, offset: 0, count: 1);
 
             if (n != 1)
             {
@@ -3521,8 +3508,7 @@ public class AcroFields
             return _b[0] & 0xff;
         }
 
-        public override long Seek(long offset, SeekOrigin origin)
-            => 0;
+        public override long Seek(long offset, SeekOrigin origin) => 0;
 
         public override void SetLength(long value)
         {

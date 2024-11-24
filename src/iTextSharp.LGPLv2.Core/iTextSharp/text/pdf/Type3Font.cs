@@ -7,7 +7,7 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class Type3Font : BaseFont
 {
-    private readonly INullValueDictionary<char, Type3Glyph> _char2Glyph = new NullValueDictionary<char, Type3Glyph>();
+    private readonly NullValueDictionary<char, Type3Glyph> _char2Glyph = new();
     private readonly bool _colorized;
     private readonly PageResources _pageResources = new();
     private readonly bool[] _usedSlot;
@@ -57,17 +57,23 @@ public class Type3Font : BaseFont
         _usedSlot = new bool[256];
     }
 
-    public override string[][] AllNameEntries
+    public override string[][] AllNameEntries => new[]
     {
-        get { return new[] { new[] { "4", "", "", "", "" } }; }
-    }
+        new[]
+        {
+            "4", "", "", "", ""
+        }
+    };
 
     public override string[][] FamilyFontName => FullFontName;
 
-    public override string[][] FullFontName
+    public override string[][] FullFontName => new[]
     {
-        get { return new[] { new[] { "", "", "", "" } }; }
-    }
+        new[]
+        {
+            "", "", "", ""
+        }
+    };
 
     public override string PostscriptFontName
     {
@@ -108,12 +114,14 @@ public class Type3Font : BaseFont
 
         _usedSlot[c] = true;
         var glyph = _char2Glyph[c];
+
         if (glyph != null)
         {
             return glyph;
         }
 
         _widths3[c] = (int)wx;
+
         if (!_colorized)
         {
             if (float.IsNaN(_llx))
@@ -134,6 +142,7 @@ public class Type3Font : BaseFont
 
         glyph = new Type3Glyph(_writer, _pageResources, wx, llx, lly, urx, ury, _colorized);
         _char2Glyph[c] = glyph;
+
         return glyph;
     }
 
@@ -169,6 +178,7 @@ public class Type3Font : BaseFont
 
         var c = text.ToCharArray();
         var total = 0;
+
         for (var k = 0; k < c.Length; ++k)
         {
             total += GetWidth(c[k]);
@@ -188,9 +198,11 @@ public class Type3Font : BaseFont
         var cc = text.ToCharArray();
         var b = new byte[cc.Length];
         var p = 0;
+
         for (var k = 0; k < cc.Length; ++k)
         {
             var c = cc[k];
+
             if (CharExists(c))
             {
                 b[p++] = (byte)c;
@@ -203,7 +215,8 @@ public class Type3Font : BaseFont
         }
 
         var b2 = new byte[p];
-        Array.Copy(b, 0, b2, 0, p);
+        Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, p);
+
         return b2;
     }
 
@@ -211,7 +224,10 @@ public class Type3Font : BaseFont
     {
         if (CharExists(char1))
         {
-            return new[] { (byte)char1 };
+            return new[]
+            {
+                (byte)char1
+            };
         }
 
         return Array.Empty<byte>();
@@ -223,11 +239,12 @@ public class Type3Font : BaseFont
     {
         if (_writer != writer)
         {
-            throw new ArgumentException("Type3 font used with the wrong PdfWriter");
+            throw new ArgumentException(message: "Type3 font used with the wrong PdfWriter");
         }
 
         // Get first & lastchar ...
         var firstChar = 0;
+
         while (firstChar < _usedSlot.Length && !_usedSlot[firstChar])
         {
             firstChar++;
@@ -235,10 +252,11 @@ public class Type3Font : BaseFont
 
         if (firstChar == _usedSlot.Length)
         {
-            throw new DocumentException("No glyphs defined for Type3 font");
+            throw new DocumentException(message: "No glyphs defined for Type3 font");
         }
 
         var lastChar = _usedSlot.Length - 1;
+
         while (lastChar >= firstChar && !_usedSlot[lastChar])
         {
             lastChar--;
@@ -248,6 +266,7 @@ public class Type3Font : BaseFont
         var invOrd = new int[lastChar - firstChar + 1];
 
         int invOrdIndx = 0, w = 0;
+
         for (var u = firstChar; u <= lastChar; u++, w++)
         {
             if (_usedSlot[u])
@@ -260,9 +279,11 @@ public class Type3Font : BaseFont
         var diffs = new PdfArray();
         var charprocs = new PdfDictionary();
         var last = -1;
+
         for (var k = 0; k < invOrdIndx; ++k)
         {
             var c = invOrd[k];
+
             if (c > last)
             {
                 last = c;
@@ -272,6 +293,7 @@ public class Type3Font : BaseFont
             ++last;
             var c2 = invOrd[k];
             var s = GlyphList.UnicodeToName(c2);
+
             if (s == null)
             {
                 s = "a" + c2;
@@ -280,7 +302,7 @@ public class Type3Font : BaseFont
             var n = new PdfName(s);
             diffs.Add(n);
             var glyph = _char2Glyph[(char)c2];
-            var stream = new PdfStream(glyph.ToPdf(null));
+            var stream = new PdfStream(glyph.ToPdf(writer: null));
             stream.FlateCompress(compressionLevel);
             var refp = writer.AddToBody(stream).IndirectReference;
             charprocs.Put(n, refp);
@@ -288,16 +310,21 @@ public class Type3Font : BaseFont
 
         var font = new PdfDictionary(PdfName.Font);
         font.Put(PdfName.Subtype, PdfName.Type3);
+
         if (_colorized)
         {
-            font.Put(PdfName.Fontbbox, new PdfRectangle(0, 0, 0, 0));
+            font.Put(PdfName.Fontbbox, new PdfRectangle(llx: 0, lly: 0, urx: 0, ury: 0));
         }
         else
         {
             font.Put(PdfName.Fontbbox, new PdfRectangle(_llx, _lly, _urx, _ury));
         }
 
-        font.Put(PdfName.Fontmatrix, new PdfArray(new[] { 0.001f, 0, 0, 0.001f, 0, 0 }));
+        font.Put(PdfName.Fontmatrix, new PdfArray(new[]
+        {
+            0.001f, 0, 0, 0.001f, 0, 0
+        }));
+
         font.Put(PdfName.Charprocs, writer.AddToBody(charprocs).IndirectReference);
         var localEncoding = new PdfDictionary();
         localEncoding.Put(PdfName.Differences, diffs);
@@ -305,6 +332,7 @@ public class Type3Font : BaseFont
         font.Put(PdfName.Firstchar, new PdfNumber(firstChar));
         font.Put(PdfName.Lastchar, new PdfNumber(lastChar));
         font.Put(PdfName.Widths, writer.AddToBody(new PdfArray(localWidths)).IndirectReference);
+
         if (_pageResources.HasResources())
         {
             font.Put(PdfName.Resources, writer.AddToBody(_pageResources.Resources).IndirectReference);

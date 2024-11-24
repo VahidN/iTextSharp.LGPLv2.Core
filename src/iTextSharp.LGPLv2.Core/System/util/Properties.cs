@@ -26,10 +26,7 @@ public class Properties
         set => _col[key] = value;
     }
 
-    public virtual void Add(string key, string value)
-    {
-        _col[key] = value;
-    }
+    public virtual void Add(string key, string value) => _col[key] = value;
 
     public void AddAll(Properties col)
     {
@@ -44,10 +41,7 @@ public class Properties
         }
     }
 
-    public void Clear()
-    {
-        _col.Clear();
-    }
+    public void Clear() => _col.Clear();
 
     public bool ContainsKey(string key) => _col.ContainsKey(key);
 
@@ -55,11 +49,13 @@ public class Properties
 
     public void Load(Stream inStream)
     {
-        using var inp = new StreamReader(inStream, EncodingsRegistry.GetEncoding(1252));
+        using var inp = new StreamReader(inStream, EncodingsRegistry.GetEncoding(codepage: 1252));
+
         while (true)
         {
             // Get next line
             var line = inp.ReadLine();
+
             if (line == null)
             {
                 return;
@@ -70,6 +66,7 @@ public class Properties
                 // Find start of key
                 var len = line.Length;
                 int keyStart;
+
                 for (keyStart = 0; keyStart < len; keyStart++)
                 {
                     if (WhiteSpaceChars.IndexOf(line[keyStart].ToString(), StringComparison.Ordinal) == -1)
@@ -86,19 +83,23 @@ public class Properties
 
                 // Continue lines that end in slashes if they are not comments
                 var firstChar = line[keyStart];
+
                 if (firstChar != '#' && firstChar != '!')
                 {
                     while (continueLine(line))
                     {
                         var nextLine = inp.ReadLine();
+
                         if (nextLine == null)
                         {
                             nextLine = "";
                         }
 
-                        var loppedLine = line.Substring(0, len - 1);
+                        var loppedLine = line.Substring(startIndex: 0, len - 1);
+
                         // Advance beyond whitespace on new line
                         int startIndex;
+
                         for (startIndex = 0; startIndex < nextLine.Length; startIndex++)
                         {
                             if (WhiteSpaceChars.IndexOf(nextLine[startIndex].ToString(), StringComparison.Ordinal) ==
@@ -108,16 +109,18 @@ public class Properties
                             }
                         }
 
-                        nextLine = nextLine.Substring(startIndex, nextLine.Length - startIndex);
+                        nextLine = nextLine.Substring(startIndex);
                         line = loppedLine + nextLine;
                         len = line.Length;
                     }
 
                     // Find separation between key and value
                     int separatorIndex;
+
                     for (separatorIndex = keyStart; separatorIndex < len; separatorIndex++)
                     {
                         var currentChar = line[separatorIndex];
+
                         if (currentChar == '\\')
                         {
                             separatorIndex++;
@@ -130,6 +133,7 @@ public class Properties
 
                     // Skip over whitespace after key if any
                     int valueIndex;
+
                     for (valueIndex = separatorIndex; valueIndex < len; valueIndex++)
                     {
                         if (WhiteSpaceChars.IndexOf(line[valueIndex].ToString(), StringComparison.Ordinal) == -1)
@@ -175,6 +179,7 @@ public class Properties
     {
         var retval = _col[key];
         _col.Remove(key);
+
         return retval;
     }
 
@@ -182,6 +187,7 @@ public class Properties
     {
         var slashCount = 0;
         var index = line.Length - 1;
+
         while (index >= 0 && line[index--] == '\\')
         {
             slashCount++;
@@ -203,16 +209,20 @@ public class Properties
         for (var x = 0; x < len;)
         {
             aChar = theString[x++];
+
             if (aChar == '\\')
             {
                 aChar = theString[x++];
+
                 if (aChar == 'u')
                 {
                     // Read the xxxx
                     var value = 0;
+
                     for (var i = 0; i < 4; i++)
                     {
                         aChar = theString[x++];
+
                         switch (aChar)
                         {
                             case '0':
@@ -226,6 +236,7 @@ public class Properties
                             case '8':
                             case '9':
                                 value = (value << 4) + aChar - '0';
+
                                 break;
                             case 'a':
                             case 'b':
@@ -234,6 +245,7 @@ public class Properties
                             case 'e':
                             case 'f':
                                 value = (value << 4) + 10 + aChar - 'a';
+
                                 break;
                             case 'A':
                             case 'B':
@@ -242,10 +254,10 @@ public class Properties
                             case 'E':
                             case 'F':
                                 value = (value << 4) + 10 + aChar - 'A';
+
                                 break;
                             default:
-                                throw new ArgumentException(
-                                                            "Malformed \\uxxxx encoding.");
+                                throw new ArgumentException(message: "Malformed \\uxxxx encoding.");
                         }
                     }
 

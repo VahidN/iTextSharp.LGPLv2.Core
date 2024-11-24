@@ -8,7 +8,7 @@ namespace iTextSharp.text.html.simpleparser;
 /// </summary>
 public class IncTable : IElement
 {
-    private readonly INullValueDictionary<string, string> _props = new NullValueDictionary<string, string>();
+    private readonly NullValueDictionary<string, string> _props = new();
     private List<PdfPCell> _cols;
 
     /// <summary>
@@ -65,12 +65,13 @@ public class IncTable : IElement
     {
         if (Rows.Count == 0)
         {
-            return new PdfPTable(1);
+            return new PdfPTable(numColumns: 1);
         }
 
         var ncol = 0;
 
-        var c0 = Rows[0];
+        var c0 = Rows[index: 0];
+
         for (var k = 0; k < c0.Count; ++k)
         {
             ncol += c0[k].Colspan;
@@ -78,10 +79,12 @@ public class IncTable : IElement
 
         var table = new PdfPTable(ncol);
 
-        var widths = _props["widths"];
+        var widths = _props[key: "widths"];
+
         if (widths != null)
         {
             var intWidths = new List<int>();
+
             foreach (var widthElement in widths.Split(','))
             {
                 intWidths.Add(int.Parse(widthElement, CultureInfo.InvariantCulture));
@@ -90,17 +93,18 @@ public class IncTable : IElement
             table.SetWidths(intWidths.ToArray());
         }
 
-        var width = _props["width"];
+        var width = _props[key: "width"];
+
         if (width == null)
         {
             table.WidthPercentage = 100;
         }
         else
         {
-            if (width.EndsWith("%", StringComparison.OrdinalIgnoreCase))
+            if (width.EndsWith(value: "%", StringComparison.OrdinalIgnoreCase))
             {
-                table.WidthPercentage =
-                    float.Parse(width.Substring(0, width.Length - 1), NumberFormatInfo.InvariantInfo);
+                table.WidthPercentage = float.Parse(width.Substring(startIndex: 0, width.Length - 1),
+                    NumberFormatInfo.InvariantInfo);
             }
             else
             {
@@ -112,6 +116,7 @@ public class IncTable : IElement
         for (var row = 0; row < Rows.Count; ++row)
         {
             var col = Rows[row];
+
             for (var k = 0; k < col.Count; ++k)
             {
                 table.AddCell(col[k]);

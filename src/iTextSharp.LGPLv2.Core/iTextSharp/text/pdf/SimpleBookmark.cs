@@ -55,36 +55,36 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             throw new ArgumentNullException(nameof(tag));
         }
 
-        if (tag.Equals("Bookmark", StringComparison.Ordinal))
+        if (tag.Equals(value: "Bookmark", StringComparison.Ordinal))
         {
             if (_attr.Count == 0)
             {
                 return;
             }
 
-            throw new InvalidOperationException("Bookmark end tag out of place.");
+            throw new InvalidOperationException(message: "Bookmark end tag out of place.");
         }
 
-        if (!tag.Equals("Title", StringComparison.Ordinal))
+        if (!tag.Equals(value: "Title", StringComparison.Ordinal))
         {
             throw new InvalidOperationException("Invalid end tag - " + tag);
         }
 
         var attributes = _attr.Pop();
-        var title = (string)attributes["Title"];
-        attributes["Title"] = title.Trim();
-        var named = (string)attributes["Named"];
+        var title = (string)attributes[key: "Title"];
+        attributes[key: "Title"] = title.Trim();
+        var named = (string)attributes[key: "Named"];
 
         if (named != null)
         {
-            attributes["Named"] = UnEscapeBinaryString(named);
+            attributes[key: "Named"] = UnEscapeBinaryString(named);
         }
 
-        named = (string)attributes["NamedN"];
+        named = (string)attributes[key: "NamedN"];
 
         if (named != null)
         {
-            attributes["NamedN"] = UnEscapeBinaryString(named);
+            attributes[key: "NamedN"] = UnEscapeBinaryString(named);
         }
 
         if (_attr.Count == 0)
@@ -94,12 +94,12 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         else
         {
             var parent = _attr.Peek();
-            var kids = (IList<INullValueDictionary<string, object>>)parent["Kids"];
+            var kids = (IList<INullValueDictionary<string, object>>)parent[key: "Kids"];
 
             if (kids == null)
             {
                 kids = new List<INullValueDictionary<string, object>>();
-                parent["Kids"] = kids;
+                parent[key: "Kids"] = kids;
             }
 
             kids.Add(attributes);
@@ -118,9 +118,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         }
 
         var attributes = _attr.Peek();
-        var title = (string)attributes["Title"];
+        var title = (string)attributes[key: "Title"];
         title += str;
-        attributes["Title"] = title;
+        attributes[key: "Title"] = title;
     }
 
     public void StartElement(string tag, INullValueDictionary<string, string> h)
@@ -137,7 +137,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
         if (_topList == null)
         {
-            if (tag.Equals("Bookmark", StringComparison.Ordinal))
+            if (tag.Equals(value: "Bookmark", StringComparison.Ordinal))
             {
                 _topList = new List<INullValueDictionary<string, object>>();
 
@@ -147,7 +147,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             throw new InvalidOperationException("Root element is not Bookmark: " + tag);
         }
 
-        if (!tag.Equals("Title", StringComparison.Ordinal))
+        if (!tag.Equals(value: "Title", StringComparison.Ordinal))
         {
             throw new InvalidOperationException("Tag " + tag + " not allowed.");
         }
@@ -159,8 +159,8 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             attributes[kv.Key] = kv.Value;
         }
 
-        attributes["Title"] = "";
-        attributes.Remove("Kids");
+        attributes[key: "Title"] = "";
+        attributes.Remove(key: "Kids");
         _attr.Push(attributes);
     }
 
@@ -188,14 +188,14 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             var map = it.Next();
             var hit = false;
 
-            if ("GoTo".Equals(map["Action"]))
+            if ("GoTo".Equals(map[key: "Action"]))
             {
-                var page = (string)map["Page"];
+                var page = (string)map[key: "Page"];
 
                 if (page != null)
                 {
                     page = page.Trim();
-                    var idx = page.IndexOf(" ", StringComparison.Ordinal);
+                    var idx = page.IndexOf(value: " ", StringComparison.Ordinal);
                     int pageNum;
 
                     if (idx < 0)
@@ -204,7 +204,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     }
                     else
                     {
-                        pageNum = int.Parse(page.Substring(0, idx), CultureInfo.InvariantCulture);
+                        pageNum = int.Parse(page.Substring(startIndex: 0, idx), CultureInfo.InvariantCulture);
                     }
 
                     var len = pageRange.Length & 0x7ffffffe;
@@ -221,7 +221,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 }
             }
 
-            var kids = (IList<INullValueDictionary<string, object>>)map["Kids"];
+            var kids = (IList<INullValueDictionary<string, object>>)map[key: "Kids"];
 
             if (kids != null)
             {
@@ -229,7 +229,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
                 if (kids.Count == 0)
                 {
-                    map.Remove("Kids");
+                    map.Remove(key: "Kids");
                     kids = null;
                 }
             }
@@ -242,9 +242,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 }
                 else
                 {
-                    map.Remove("Action");
-                    map.Remove("Page");
-                    map.Remove("Named");
+                    map.Remove(key: "Action");
+                    map.Remove(key: "Page");
+                    map.Remove(key: "Named");
                 }
             }
         }
@@ -267,7 +267,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
             if (c < ' ')
             {
-                buf.Append('\\');
+                buf.Append(value: '\\');
                 int v = c;
                 var octal = "";
 
@@ -279,11 +279,11 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 }
                 while (v > 0);
 
-                buf.Append(octal.PadLeft(3, '0'));
+                buf.Append(octal.PadLeft(totalWidth: 3, paddingChar: '0'));
             }
             else if (c == '\\')
             {
-                buf.Append("\\\\");
+                buf.Append(value: "\\\\");
             }
             else
             {
@@ -346,11 +346,11 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             throw new ArgumentNullException(nameof(wrt));
         }
 
-        wrt.Write("<?xml version=\"1.0\" encoding=\"");
+        wrt.Write(value: "<?xml version=\"1.0\" encoding=\"");
         wrt.Write(SimpleXmlParser.EscapeXml(encoding, onlyAscii));
-        wrt.Write("\"?>\n<Bookmark>\n");
-        ExportToXmlNode(list, wrt, 1, onlyAscii);
-        wrt.Write("</Bookmark>\n");
+        wrt.Write(value: "\"?>\n<Bookmark>\n");
+        ExportToXmlNode(list, wrt, indent: 1, onlyAscii);
+        wrt.Write(value: "</Bookmark>\n");
         wrt.Flush();
     }
 
@@ -390,21 +390,21 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         {
             string title = null;
             outp.Write(dep);
-            outp.Write("<Title ");
+            outp.Write(value: "<Title ");
             IList<INullValueDictionary<string, object>> kids = null;
 
             foreach (var entry in map)
             {
                 var key = entry.Key;
 
-                if (key.Equals("Title", StringComparison.Ordinal))
+                if (key.Equals(value: "Title", StringComparison.Ordinal))
                 {
                     title = (string)entry.Value;
 
                     continue;
                 }
 
-                if (key.Equals("Kids", StringComparison.Ordinal))
+                if (key.Equals(value: "Kids", StringComparison.Ordinal))
                 {
                     kids = (IList<INullValueDictionary<string, object>>)entry.Value;
 
@@ -412,19 +412,20 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 }
 
                 outp.Write(key);
-                outp.Write("=\"");
+                outp.Write(value: "=\"");
                 var value = (string)entry.Value;
 
-                if (key.Equals("Named", StringComparison.Ordinal) || key.Equals("NamedN", StringComparison.Ordinal))
+                if (key.Equals(value: "Named", StringComparison.Ordinal) ||
+                    key.Equals(value: "NamedN", StringComparison.Ordinal))
                 {
                     value = EscapeBinaryString(value);
                 }
 
                 outp.Write(SimpleXmlParser.EscapeXml(value, onlyAscii));
-                outp.Write("\" ");
+                outp.Write(value: "\" ");
             }
 
-            outp.Write(">");
+            outp.Write(value: ">");
 
             if (title == null)
             {
@@ -435,12 +436,12 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
             if (kids != null)
             {
-                outp.Write("\n");
+                outp.Write(value: "\n");
                 ExportToXmlNode(kids, outp, indent + 1, onlyAscii);
                 outp.Write(dep);
             }
 
-            outp.Write("</Title>\n");
+            outp.Write(value: "</Title>\n");
         }
     }
 
@@ -535,7 +536,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         foreach (var map in kids)
         {
             object[] lower = null;
-            var subKid = (IList<INullValueDictionary<string, object>>)map["Kids"];
+            var subKid = (IList<INullValueDictionary<string, object>>)map[key: "Kids"];
 
             if (subKid != null && subKid.Count > 0)
             {
@@ -551,7 +552,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 outline.Put(PdfName.Last, (PdfIndirectReference)lower[1]);
                 var n = (int)lower[2];
 
-                if ("false".Equals(map["Open"]))
+                if ("false".Equals(map[key: "Open"]))
                 {
                     outline.Put(PdfName.Count, new PdfNumber(-n));
                 }
@@ -574,8 +575,8 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 outline.Put(PdfName.Next, refs[ptr + 1]);
             }
 
-            outline.Put(PdfName.Title, new PdfString((string)map["Title"], PdfObject.TEXT_UNICODE));
-            var color = (string)map["Color"];
+            outline.Put(PdfName.Title, new PdfString((string)map[key: "Title"], PdfObject.TEXT_UNICODE));
+            var color = (string)map[key: "Color"];
 
             if (color != null)
             {
@@ -608,18 +609,18 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 } //in case it's malformed
             }
 
-            var style = (string)map["Style"];
+            var style = (string)map[key: "Style"];
 
             if (style != null)
             {
                 var bits = 0;
 
-                if (style.IndexOf("italic", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (style.IndexOf(value: "italic", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     bits |= 1;
                 }
 
-                if (style.IndexOf("bold", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (style.IndexOf(value: "bold", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     bits |= 2;
                 }
@@ -662,14 +663,14 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
         foreach (var map in list)
         {
-            if ("GoTo".Equals(map["Action"]))
+            if ("GoTo".Equals(map[key: "Action"]))
             {
-                var page = (string)map["Page"];
+                var page = (string)map[key: "Page"];
 
                 if (page != null)
                 {
                     page = page.Trim();
-                    var idx = page.IndexOf(" ", StringComparison.Ordinal);
+                    var idx = page.IndexOf(value: " ", StringComparison.Ordinal);
                     int pageNum;
 
                     if (idx < 0)
@@ -678,7 +679,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     }
                     else
                     {
-                        pageNum = int.Parse(page.Substring(0, idx), CultureInfo.InvariantCulture);
+                        pageNum = int.Parse(page.Substring(startIndex: 0, idx), CultureInfo.InvariantCulture);
                     }
 
                     var hit = false;
@@ -714,11 +715,11 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                         }
                     }
 
-                    map["Page"] = page;
+                    map[key: "Page"] = page;
                 }
             }
 
-            var kids = (IList<INullValueDictionary<string, object>>)map["Kids"];
+            var kids = (IList<INullValueDictionary<string, object>>)map[key: "Kids"];
 
             if (kids != null)
             {
@@ -746,7 +747,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             {
                 if (++k >= len)
                 {
-                    buf.Append('\\');
+                    buf.Append(value: '\\');
 
                     break;
                 }
@@ -797,13 +798,13 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     {
         try
         {
-            var action = (string)map["Action"];
+            var action = (string)map[key: "Action"];
 
             if ("GoTo".Equals(action, StringComparison.Ordinal))
             {
                 string p;
 
-                if ((p = (string)map["Named"]) != null)
+                if ((p = (string)map[key: "Named"]) != null)
                 {
                     if (namedAsNames)
                     {
@@ -811,10 +812,10 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     }
                     else
                     {
-                        outline.Put(PdfName.Dest, new PdfString(p, null));
+                        outline.Put(PdfName.Dest, new PdfString(p, encoding: null));
                     }
                 }
-                else if ((p = (string)map["Page"]) != null)
+                else if ((p = (string)map[key: "Page"]) != null)
                 {
                     var ar = new PdfArray();
                     var tk = new StringTokenizer(p);
@@ -834,9 +835,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     {
                         var fn = tk.NextToken();
 
-                        if (fn.StartsWith("/", StringComparison.Ordinal))
+                        if (fn.StartsWith(value: "/", StringComparison.Ordinal))
                         {
-                            fn = fn.Substring(1);
+                            fn = fn.Substring(startIndex: 1);
                         }
 
                         ar.Add(new PdfName(fn));
@@ -845,7 +846,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                         {
                             fn = tk.NextToken();
 
-                            if (fn.Equals("null", StringComparison.Ordinal))
+                            if (fn.Equals(value: "null", StringComparison.Ordinal))
                             {
                                 ar.Add(PdfNull.Pdfnull);
                             }
@@ -864,15 +865,15 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                 string p;
                 var dic = new PdfDictionary();
 
-                if ((p = (string)map["Named"]) != null)
+                if ((p = (string)map[key: "Named"]) != null)
                 {
-                    dic.Put(PdfName.D, new PdfString(p, null));
+                    dic.Put(PdfName.D, new PdfString(p, encoding: null));
                 }
-                else if ((p = (string)map["NamedN"]) != null)
+                else if ((p = (string)map[key: "NamedN"]) != null)
                 {
                     dic.Put(PdfName.D, new PdfName(p));
                 }
-                else if ((p = (string)map["Page"]) != null)
+                else if ((p = (string)map[key: "Page"]) != null)
                 {
                     var ar = new PdfArray();
                     var tk = new StringTokenizer(p);
@@ -891,9 +892,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     {
                         var fn = tk.NextToken();
 
-                        if (fn.StartsWith("/", StringComparison.Ordinal))
+                        if (fn.StartsWith(value: "/", StringComparison.Ordinal))
                         {
-                            fn = fn.Substring(1);
+                            fn = fn.Substring(startIndex: 1);
                         }
 
                         ar.Add(new PdfName(fn));
@@ -902,7 +903,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                         {
                             fn = tk.NextToken();
 
-                            if (fn.Equals("null", StringComparison.Ordinal))
+                            if (fn.Equals(value: "null", StringComparison.Ordinal))
                             {
                                 ar.Add(PdfNull.Pdfnull);
                             }
@@ -916,21 +917,21 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                     dic.Put(PdfName.D, ar);
                 }
 
-                var file = (string)map["File"];
+                var file = (string)map[key: "File"];
 
                 if (dic.Size > 0 && file != null)
                 {
                     dic.Put(PdfName.S, PdfName.Gotor);
                     dic.Put(PdfName.F, new PdfString(file));
-                    var nw = (string)map["NewWindow"];
+                    var nw = (string)map[key: "NewWindow"];
 
                     if (nw != null)
                     {
-                        if (nw.Equals("true", StringComparison.Ordinal))
+                        if (nw.Equals(value: "true", StringComparison.Ordinal))
                         {
                             dic.Put(PdfName.Newwindow, PdfBoolean.Pdftrue);
                         }
-                        else if (nw.Equals("false", StringComparison.Ordinal))
+                        else if (nw.Equals(value: "false", StringComparison.Ordinal))
                         {
                             dic.Put(PdfName.Newwindow, PdfBoolean.Pdffalse);
                         }
@@ -941,7 +942,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             }
             else if ("URI".Equals(action, StringComparison.Ordinal))
             {
-                var uri = (string)map["URI"];
+                var uri = (string)map[key: "URI"];
 
                 if (uri != null)
                 {
@@ -953,7 +954,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             }
             else if ("Launch".Equals(action, StringComparison.Ordinal))
             {
-                var file = (string)map["File"];
+                var file = (string)map[key: "File"];
 
                 if (file != null)
                 {
@@ -980,16 +981,16 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
         {
             var map = new NullValueDictionary<string, object>();
             var title = (PdfString)PdfReader.GetPdfObjectRelease(outline.Get(PdfName.Title));
-            map["Title"] = title.ToUnicodeString();
+            map[key: "Title"] = title.ToUnicodeString();
             var color = (PdfArray)PdfReader.GetPdfObjectRelease(outline.Get(PdfName.C));
 
             if (color != null && color.Size == 3)
             {
                 var outp = new ByteBuffer();
-                outp.Append(color.GetAsNumber(0).FloatValue).Append(' ');
-                outp.Append(color.GetAsNumber(1).FloatValue).Append(' ');
-                outp.Append(color.GetAsNumber(2).FloatValue);
-                map["Color"] = PdfEncodings.ConvertToString(outp.ToByteArray(), null);
+                outp.Append(color.GetAsNumber(idx: 0).FloatValue).Append(c: ' ');
+                outp.Append(color.GetAsNumber(idx: 1).FloatValue).Append(c: ' ');
+                outp.Append(color.GetAsNumber(idx: 2).FloatValue);
+                map[key: "Color"] = PdfEncodings.ConvertToString(outp.ToByteArray(), encoding: null);
             }
 
             var style = (PdfNumber)PdfReader.GetPdfObjectRelease(outline.Get(PdfName.F));
@@ -1013,7 +1014,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
                 if (s.Length != 0)
                 {
-                    map["Style"] = s;
+                    map[key: "Style"] = s;
                 }
             }
 
@@ -1021,7 +1022,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
             if (count != null && count.IntValue < 0)
             {
-                map["Open"] = "false";
+                map[key: "Open"] = "false";
             }
 
             try
@@ -1049,9 +1050,9 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                         }
                         else if (PdfName.Uri.Equals(PdfReader.GetPdfObjectRelease(action.Get(PdfName.S))))
                         {
-                            map["Action"] = "URI";
+                            map[key: "Action"] = "URI";
 
-                            map["URI"] = ((PdfString)PdfReader.GetPdfObjectRelease(action.Get(PdfName.Uri)))
+                            map[key: "URI"] = ((PdfString)PdfReader.GetPdfObjectRelease(action.Get(PdfName.Uri)))
                                 .ToUnicodeString();
                         }
                         else if (PdfName.Gotor.Equals(PdfReader.GetPdfObjectRelease(action.Get(PdfName.S))))
@@ -1062,36 +1063,36 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                             {
                                 if (dest.IsString())
                                 {
-                                    map["Named"] = dest.ToString();
+                                    map[key: "Named"] = dest.ToString();
                                 }
                                 else if (dest.IsName())
                                 {
-                                    map["NamedN"] = PdfName.DecodeName(dest.ToString());
+                                    map[key: "NamedN"] = PdfName.DecodeName(dest.ToString());
                                 }
                                 else if (dest.IsArray())
                                 {
                                     var arr = (PdfArray)dest;
                                     var s = new StringBuilder();
-                                    s.Append(arr[0]);
-                                    s.Append(' ').Append(arr[1]);
+                                    s.Append(arr[idx: 0]);
+                                    s.Append(value: ' ').Append(arr[idx: 1]);
 
                                     for (var k = 2; k < arr.Size; ++k)
                                     {
-                                        s.Append(' ').Append(arr[k]);
+                                        s.Append(value: ' ').Append(arr[k]);
                                     }
 
-                                    map["Page"] = s.ToString();
+                                    map[key: "Page"] = s.ToString();
                                 }
                             }
 
-                            map["Action"] = "GoToR";
+                            map[key: "Action"] = "GoToR";
                             var file = PdfReader.GetPdfObjectRelease(action.Get(PdfName.F));
 
                             if (file != null)
                             {
                                 if (file.IsString())
                                 {
-                                    map["File"] = ((PdfString)file).ToUnicodeString();
+                                    map[key: "File"] = ((PdfString)file).ToUnicodeString();
                                 }
                                 else if (file.IsDictionary())
                                 {
@@ -1099,7 +1100,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
                                     if (file.IsString())
                                     {
-                                        map["File"] = ((PdfString)file).ToUnicodeString();
+                                        map[key: "File"] = ((PdfString)file).ToUnicodeString();
                                     }
                                 }
                             }
@@ -1108,12 +1109,12 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
                             if (newWindow != null)
                             {
-                                map["NewWindow"] = newWindow.ToString();
+                                map[key: "NewWindow"] = newWindow.ToString();
                             }
                         }
                         else if (PdfName.Launch.Equals(PdfReader.GetPdfObjectRelease(action.Get(PdfName.S))))
                         {
-                            map["Action"] = "Launch";
+                            map[key: "Action"] = "Launch";
                             var file = PdfReader.GetPdfObjectRelease(action.Get(PdfName.F));
 
                             if (file == null)
@@ -1125,7 +1126,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
                             {
                                 if (file.IsString())
                                 {
-                                    map["File"] = ((PdfString)file).ToUnicodeString();
+                                    map[key: "File"] = ((PdfString)file).ToUnicodeString();
                                 }
                                 else if (file.IsDictionary())
                                 {
@@ -1133,7 +1134,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
                                     if (file.IsString())
                                     {
-                                        map["File"] = ((PdfString)file).ToUnicodeString();
+                                        map[key: "File"] = ((PdfString)file).ToUnicodeString();
                                     }
                                 }
                             }
@@ -1150,7 +1151,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
 
             if (first != null)
             {
-                map["Kids"] = bookmarkDepth(reader, first, pages);
+                map[key: "Kids"] = bookmarkDepth(reader, first, pages);
             }
 
             list.Add(map);
@@ -1174,7 +1175,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             pdfObj.Contains(PdfName.Kids))
         {
             var kids = (PdfArray)pdfObj.Get(PdfName.Kids);
-            indirect = (PdfIndirectReference)kids[0];
+            indirect = (PdfIndirectReference)kids[idx: 0];
         }
 
         return indirect.Number;
@@ -1183,7 +1184,7 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
     private static string makeBookmarkParam(PdfArray dest, NullValueDictionary<int, int> pages)
     {
         var s = new StringBuilder();
-        var obj = dest[0];
+        var obj = dest[idx: 0];
 
         if (obj.IsNumber())
         {
@@ -1194,33 +1195,33 @@ public sealed class SimpleBookmark : ISimpleXmlDocHandler
             s.Append(pages[getNumber((PdfIndirectReference)obj)]); //changed by ujihara 2004-06-13
         }
 
-        s.Append(' ').Append(dest[1].ToString().Substring(1));
+        s.Append(value: ' ').Append(dest[idx: 1].ToString().Substring(startIndex: 1));
 
         for (var k = 2; k < dest.Size; ++k)
         {
-            s.Append(' ').Append(dest[k]);
+            s.Append(value: ' ').Append(dest[k]);
         }
 
         return s.ToString();
     }
 
-    private static void mapGotoBookmark(INullValueDictionary<string, object> map,
+    private static void mapGotoBookmark(NullValueDictionary<string, object> map,
         PdfObject dest,
         NullValueDictionary<int, int> pages)
     {
         if (dest.IsString())
         {
-            map["Named"] = dest.ToString();
+            map[key: "Named"] = dest.ToString();
         }
         else if (dest.IsName())
         {
-            map["Named"] = PdfName.DecodeName(dest.ToString());
+            map[key: "Named"] = PdfName.DecodeName(dest.ToString());
         }
         else if (dest.IsArray())
         {
-            map["Page"] = makeBookmarkParam((PdfArray)dest, pages); //changed by ujihara 2004-06-13
+            map[key: "Page"] = makeBookmarkParam((PdfArray)dest, pages); //changed by ujihara 2004-06-13
         }
 
-        map["Action"] = "GoTo";
+        map[key: "Action"] = "GoTo";
     }
 }

@@ -85,36 +85,40 @@ public class BarcodeDatamatrix
 
     private static readonly DmParams[] _dmSizes =
     {
-        new(10, 10, 10, 10, 3, 3, 5),
-        new(12, 12, 12, 12, 5, 5, 7),
-        new(8, 18, 8, 18, 5, 5, 7),
-        new(14, 14, 14, 14, 8, 8, 10),
-        new(8, 32, 8, 16, 10, 10, 11),
-        new(16, 16, 16, 16, 12, 12, 12),
-        new(12, 26, 12, 26, 16, 16, 14),
-        new(18, 18, 18, 18, 18, 18, 14),
-        new(20, 20, 20, 20, 22, 22, 18),
-        new(12, 36, 12, 18, 22, 22, 18),
-        new(22, 22, 22, 22, 30, 30, 20),
-        new(16, 36, 16, 18, 32, 32, 24),
-        new(24, 24, 24, 24, 36, 36, 24),
-        new(26, 26, 26, 26, 44, 44, 28),
-        new(16, 48, 16, 24, 49, 49, 28),
-        new(32, 32, 16, 16, 62, 62, 36),
-        new(36, 36, 18, 18, 86, 86, 42),
-        new(40, 40, 20, 20, 114, 114, 48),
-        new(44, 44, 22, 22, 144, 144, 56),
-        new(48, 48, 24, 24, 174, 174, 68),
-        new(52, 52, 26, 26, 204, 102, 42),
-        new(64, 64, 16, 16, 280, 140, 56),
-        new(72, 72, 18, 18, 368, 92, 36),
-        new(80, 80, 20, 20, 456, 114, 48),
-        new(88, 88, 22, 22, 576, 144, 56),
-        new(96, 96, 24, 24, 696, 174, 68),
-        new(104, 104, 26, 26, 816, 136, 56),
-        new(120, 120, 20, 20, 1050, 175, 68),
-        new(132, 132, 22, 22, 1304, 163, 62),
-        new(144, 144, 24, 24, 1558, 156, 62),
+        new(height: 10, width: 10, heightSection: 10, widthSection: 10, dataSize: 3, dataBlock: 3, errorBlock: 5),
+        new(height: 12, width: 12, heightSection: 12, widthSection: 12, dataSize: 5, dataBlock: 5, errorBlock: 7),
+        new(height: 8, width: 18, heightSection: 8, widthSection: 18, dataSize: 5, dataBlock: 5, errorBlock: 7),
+        new(height: 14, width: 14, heightSection: 14, widthSection: 14, dataSize: 8, dataBlock: 8, errorBlock: 10),
+        new(height: 8, width: 32, heightSection: 8, widthSection: 16, dataSize: 10, dataBlock: 10, errorBlock: 11),
+        new(height: 16, width: 16, heightSection: 16, widthSection: 16, dataSize: 12, dataBlock: 12, errorBlock: 12),
+        new(height: 12, width: 26, heightSection: 12, widthSection: 26, dataSize: 16, dataBlock: 16, errorBlock: 14),
+        new(height: 18, width: 18, heightSection: 18, widthSection: 18, dataSize: 18, dataBlock: 18, errorBlock: 14),
+        new(height: 20, width: 20, heightSection: 20, widthSection: 20, dataSize: 22, dataBlock: 22, errorBlock: 18),
+        new(height: 12, width: 36, heightSection: 12, widthSection: 18, dataSize: 22, dataBlock: 22, errorBlock: 18),
+        new(height: 22, width: 22, heightSection: 22, widthSection: 22, dataSize: 30, dataBlock: 30, errorBlock: 20),
+        new(height: 16, width: 36, heightSection: 16, widthSection: 18, dataSize: 32, dataBlock: 32, errorBlock: 24),
+        new(height: 24, width: 24, heightSection: 24, widthSection: 24, dataSize: 36, dataBlock: 36, errorBlock: 24),
+        new(height: 26, width: 26, heightSection: 26, widthSection: 26, dataSize: 44, dataBlock: 44, errorBlock: 28),
+        new(height: 16, width: 48, heightSection: 16, widthSection: 24, dataSize: 49, dataBlock: 49, errorBlock: 28),
+        new(height: 32, width: 32, heightSection: 16, widthSection: 16, dataSize: 62, dataBlock: 62, errorBlock: 36),
+        new(height: 36, width: 36, heightSection: 18, widthSection: 18, dataSize: 86, dataBlock: 86, errorBlock: 42),
+        new(height: 40, width: 40, heightSection: 20, widthSection: 20, dataSize: 114, dataBlock: 114, errorBlock: 48),
+        new(height: 44, width: 44, heightSection: 22, widthSection: 22, dataSize: 144, dataBlock: 144, errorBlock: 56),
+        new(height: 48, width: 48, heightSection: 24, widthSection: 24, dataSize: 174, dataBlock: 174, errorBlock: 68),
+        new(height: 52, width: 52, heightSection: 26, widthSection: 26, dataSize: 204, dataBlock: 102, errorBlock: 42),
+        new(height: 64, width: 64, heightSection: 16, widthSection: 16, dataSize: 280, dataBlock: 140, errorBlock: 56),
+        new(height: 72, width: 72, heightSection: 18, widthSection: 18, dataSize: 368, dataBlock: 92, errorBlock: 36),
+        new(height: 80, width: 80, heightSection: 20, widthSection: 20, dataSize: 456, dataBlock: 114, errorBlock: 48),
+        new(height: 88, width: 88, heightSection: 22, widthSection: 22, dataSize: 576, dataBlock: 144, errorBlock: 56),
+        new(height: 96, width: 96, heightSection: 24, widthSection: 24, dataSize: 696, dataBlock: 174, errorBlock: 68),
+        new(height: 104, width: 104, heightSection: 26, widthSection: 26, dataSize: 816, dataBlock: 136,
+            errorBlock: 56),
+        new(height: 120, width: 120, heightSection: 20, widthSection: 20, dataSize: 1050, dataBlock: 175,
+            errorBlock: 68),
+        new(height: 132, width: 132, heightSection: 22, widthSection: 22, dataSize: 1304, dataBlock: 163,
+            errorBlock: 62),
+        new(height: 144, width: 144, heightSection: 24, widthSection: 24, dataSize: 1558, dataBlock: 156,
+            errorBlock: 62)
     };
 
     private int _extOut;
@@ -255,9 +259,11 @@ public class BarcodeDatamatrix
         var w = Width + 2 * Ws;
         var stride = (w + 7) / 8;
         var bmp = new SKBitmap(w, h);
+
         for (var k = 0; k < h; ++k)
         {
             var p = k * stride;
+
             for (var j = 0; j < w; ++j)
             {
                 var b = BitImage[p + j / 8] & 0xff;
@@ -283,7 +289,9 @@ public class BarcodeDatamatrix
         }
 
         var g4 = Ccittg4Encoder.Compress(BitImage, Width + 2 * Ws, Height + 2 * Ws);
-        return Image.GetInstance(Width + 2 * Ws, Height + 2 * Ws, false, Element.CCITTG4, 0, g4, null);
+
+        return Image.GetInstance(Width + 2 * Ws, Height + 2 * Ws, reverseBits: false, Element.CCITTG4, parameters: 0,
+            g4, transparency: null);
     }
 
     /// <summary>
@@ -298,8 +306,9 @@ public class BarcodeDatamatrix
     /// <returns>the status of the generation. It can be one of this values:</returns>
     public int Generate(string text)
     {
-        var t = EncodingsRegistry.GetEncoding(1252).GetBytes(text);
-        return Generate(t, 0, t.Length);
+        var t = EncodingsRegistry.GetEncoding(codepage: 1252).GetBytes(text);
+
+        return Generate(t, textOffset: 0, t.Length);
     }
 
     /// <summary>
@@ -325,23 +334,28 @@ public class BarcodeDatamatrix
         var data = new byte[2500];
         _extOut = 0;
         extCount = processExtensions(text, textOffset, textSize, data);
+
         if (extCount < 0)
         {
             return DM_ERROR_EXTENSION;
         }
 
         e = -1;
+
         if (Height == 0 || Width == 0)
         {
             last = _dmSizes[_dmSizes.Length - 1];
+
             e = getEncodation(text, textOffset + _extOut, textSize - _extOut, data, extCount, last.DataSize - extCount,
-                              Options, false);
+                Options, firstMatch: false);
+
             if (e < 0)
             {
                 return DM_ERROR_TEXT_TOO_BIG;
             }
 
             e += extCount;
+
             for (k = 0; k < _dmSizes.Length; ++k)
             {
                 if (_dmSizes[k].DataSize >= e)
@@ -370,8 +384,10 @@ public class BarcodeDatamatrix
             }
 
             dm = _dmSizes[k];
+
             e = getEncodation(text, textOffset + _extOut, textSize - _extOut, data, extCount, dm.DataSize - extCount,
-                              Options, true);
+                Options, firstMatch: true);
+
             if (e < 0)
             {
                 return DM_ERROR_TEXT_TOO_BIG;
@@ -387,22 +403,30 @@ public class BarcodeDatamatrix
 
         BitImage = new byte[(dm.width + 2 * Ws + 7) / 8 * (dm.height + 2 * Ws)];
         makePadding(data, e, dm.DataSize - e);
+
         _place = Placement.DoPlacement(dm.height - dm.height / dm.HeightSection * 2,
-                                       dm.width - dm.width / dm.WidthSection * 2);
+            dm.width - dm.width / dm.WidthSection * 2);
+
         full = dm.DataSize + (dm.DataSize + 2) / dm.DataBlock * dm.ErrorBlock;
         ReedSolomon.GenerateEcc(data, dm.DataSize, dm.DataBlock, dm.ErrorBlock);
         draw(data, full, dm);
+
         return DM_NO_ERROR;
     }
 
-    private static int asciiEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset,
-                                       int dataLength)
+    private static int asciiEncodation(byte[] text,
+        int textOffset,
+        int textLength,
+        byte[] data,
+        int dataOffset,
+        int dataLength)
     {
         int ptrIn, ptrOut, c;
         ptrIn = textOffset;
         ptrOut = dataOffset;
         textLength += textOffset;
         dataLength += dataOffset;
+
         while (ptrIn < textLength)
         {
             if (ptrOut >= dataLength)
@@ -411,6 +435,7 @@ public class BarcodeDatamatrix
             }
 
             c = text[ptrIn++] & 0xff;
+
             if (isDigit(c) && ptrIn < textLength && isDigit(text[ptrIn] & 0xff))
             {
                 data[ptrOut++] = (byte)((c - '0') * 10 + (text[ptrIn++] & 0xff) - '0' + 130);
@@ -434,10 +459,15 @@ public class BarcodeDatamatrix
         return ptrOut - dataOffset;
     }
 
-    private static int b256Encodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset,
-                                      int dataLength)
+    private static int b256Encodation(byte[] text,
+        int textOffset,
+        int textLength,
+        byte[] data,
+        int dataOffset,
+        int dataLength)
     {
         int k, j, prn, tv, c;
+
         if (textLength == 0)
         {
             return 0;
@@ -454,6 +484,7 @@ public class BarcodeDatamatrix
         }
 
         data[dataOffset] = 231;
+
         if (textLength < 250)
         {
             data[dataOffset + 1] = (byte)textLength;
@@ -468,11 +499,13 @@ public class BarcodeDatamatrix
 
         Array.Copy(text, textOffset, data, k + dataOffset, textLength);
         k += textLength + dataOffset;
+
         for (j = dataOffset + 1; j < k; ++j)
         {
             c = data[j] & 0xff;
             prn = 149 * (j + 1) % 255 + 1;
             tv = c + prn;
+
             if (tv > 255)
             {
                 tv -= 256;
@@ -484,11 +517,17 @@ public class BarcodeDatamatrix
         return k - dataOffset;
     }
 
-    private static int c40OrTextEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset,
-                                           int dataLength, bool c40)
+    private static int c40OrTextEncodation(byte[] text,
+        int textOffset,
+        int textLength,
+        byte[] data,
+        int dataOffset,
+        int dataLength,
+        bool c40)
     {
         int ptrIn, ptrOut, encPtr, last0, last1, i, a, c;
         string basic, shift2, shift3;
+
         if (textLength == 0)
         {
             return 0;
@@ -496,6 +535,7 @@ public class BarcodeDatamatrix
 
         ptrIn = 0;
         ptrOut = 0;
+
         if (c40)
         {
             data[dataOffset + ptrOut++] = 230;
@@ -506,6 +546,7 @@ public class BarcodeDatamatrix
         }
 
         shift2 = "!\"#$%&'()*+,-./:;<=>?@[\\]^_";
+
         if (c40)
         {
             basic = " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -521,6 +562,7 @@ public class BarcodeDatamatrix
         encPtr = 0;
         last0 = 0;
         last1 = 0;
+
         while (ptrIn < textLength)
         {
             if (encPtr % 3 == 0)
@@ -530,6 +572,7 @@ public class BarcodeDatamatrix
             }
 
             c = text[textOffset + ptrIn++] & 0xff;
+
             if (c > 127)
             {
                 c -= 128;
@@ -538,6 +581,7 @@ public class BarcodeDatamatrix
             }
 
             var idx = basic.IndexOf(((char)c).ToString(), StringComparison.Ordinal);
+
             if (idx >= 0)
             {
                 enc[encPtr++] = idx + 3;
@@ -571,6 +615,7 @@ public class BarcodeDatamatrix
         }
 
         i = 0;
+
         for (; i < encPtr; i += 3)
         {
             a = 1600 * enc[i] + 40 * enc[i + 1] + enc[i + 2] + 1;
@@ -580,6 +625,7 @@ public class BarcodeDatamatrix
 
         data[ptrOut++] = 254;
         i = asciiEncodation(text, ptrIn, textLength - ptrIn, data, ptrOut, dataLength - ptrOut);
+
         if (i < 0)
         {
             return i;
@@ -588,10 +634,15 @@ public class BarcodeDatamatrix
         return ptrOut + i;
     }
 
-    private static int edifactEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset,
-                                         int dataLength)
+    private static int edifactEncodation(byte[] text,
+        int textOffset,
+        int textLength,
+        byte[] data,
+        int dataOffset,
+        int dataLength)
     {
         int ptrIn, ptrOut, edi, pedi, c;
+
         if (textLength == 0)
         {
             return 0;
@@ -602,9 +653,11 @@ public class BarcodeDatamatrix
         edi = 0;
         pedi = 18;
         var ascii = true;
+
         for (; ptrIn < textLength; ++ptrIn)
         {
             c = text[ptrIn + textOffset] & 0xff;
+
             if (((c & 0xe0) == 0x40 || (c & 0xe0) == 0x20) && c != '_')
             {
                 if (ascii)
@@ -620,6 +673,7 @@ public class BarcodeDatamatrix
 
                 c &= 0x3f;
                 edi |= c << pedi;
+
                 if (pedi == 0)
                 {
                     if (ptrOut + 3 > dataLength)
@@ -643,12 +697,14 @@ public class BarcodeDatamatrix
                 if (!ascii)
                 {
                     edi |= ('_' & 0x3f) << pedi;
+
                     if (ptrOut + (3 - pedi / 8) > dataLength)
                     {
                         break;
                     }
 
                     data[dataOffset + ptrOut++] = (byte)(edi >> 16);
+
                     if (pedi <= 12)
                     {
                         data[dataOffset + ptrOut++] = (byte)(edi >> 8);
@@ -692,12 +748,14 @@ public class BarcodeDatamatrix
         if (!ascii)
         {
             edi |= ('_' & 0x3f) << pedi;
+
             if (ptrOut + (3 - pedi / 8) > dataLength)
             {
                 return -1;
             }
 
             data[dataOffset + ptrOut++] = (byte)(edi >> 16);
+
             if (pedi <= 12)
             {
                 data[dataOffset + ptrOut++] = (byte)(edi >> 8);
@@ -712,11 +770,18 @@ public class BarcodeDatamatrix
         return ptrOut;
     }
 
-    private static int getEncodation(byte[] text, int textOffset, int textSize, byte[] data, int dataOffset,
-                                     int dataSize, int options, bool firstMatch)
+    private static int getEncodation(byte[] text,
+        int textOffset,
+        int textSize,
+        byte[] data,
+        int dataOffset,
+        int dataSize,
+        int options,
+        bool firstMatch)
     {
         int e, j, k;
         var e1 = new int[6];
+
         if (dataSize < 0)
         {
             return -1;
@@ -724,39 +789,46 @@ public class BarcodeDatamatrix
 
         e = -1;
         options &= 7;
+
         if (options == 0)
         {
             e1[0] = asciiEncodation(text, textOffset, textSize, data, dataOffset, dataSize);
+
             if (firstMatch && e1[0] >= 0)
             {
                 return e1[0];
             }
 
-            e1[1] = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
+            e1[1] = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: false);
+
             if (firstMatch && e1[1] >= 0)
             {
                 return e1[1];
             }
 
-            e1[2] = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
+            e1[2] = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: true);
+
             if (firstMatch && e1[2] >= 0)
             {
                 return e1[2];
             }
 
             e1[3] = b256Encodation(text, textOffset, textSize, data, dataOffset, dataSize);
+
             if (firstMatch && e1[3] >= 0)
             {
                 return e1[3];
             }
 
             e1[4] = x12Encodation(text, textOffset, textSize, data, dataOffset, dataSize);
+
             if (firstMatch && e1[4] >= 0)
             {
                 return e1[4];
             }
 
             e1[5] = edifactEncodation(text, textOffset, textSize, data, dataOffset, dataSize);
+
             if (firstMatch && e1[5] >= 0)
             {
                 return e1[5];
@@ -769,6 +841,7 @@ public class BarcodeDatamatrix
 
             j = 0;
             e = 99999;
+
             for (k = 0; k < 6; ++k)
             {
                 if (e1[k] >= 0 && e1[k] < e)
@@ -784,11 +857,11 @@ public class BarcodeDatamatrix
             }
             else if (j == 1)
             {
-                e = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
+                e = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: false);
             }
             else if (j == 2)
             {
-                e = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
+                e = c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: true);
             }
             else if (j == 3)
             {
@@ -807,9 +880,9 @@ public class BarcodeDatamatrix
             case DM_ASCII:
                 return asciiEncodation(text, textOffset, textSize, data, dataOffset, dataSize);
             case DM_C40:
-                return c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
+                return c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: true);
             case DM_TEXT:
-                return c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
+                return c40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, c40: false);
             case DM_B256:
                 return b256Encodation(text, textOffset, textSize, data, dataOffset, dataSize);
             case DM_X21:
@@ -823,6 +896,7 @@ public class BarcodeDatamatrix
                 }
 
                 Array.Copy(text, textOffset, data, dataOffset, textSize);
+
                 return textSize;
         }
 
@@ -833,9 +907,11 @@ public class BarcodeDatamatrix
     {
         int v, j, c;
         v = 0;
+
         for (j = 0; j < n; ++j)
         {
             c = text[ptrIn++] & 0xff;
+
             if (c < '0' || c > '9')
             {
                 return -1;
@@ -858,9 +934,11 @@ public class BarcodeDatamatrix
         }
 
         data[position++] = 129;
+
         while (--count > 0)
         {
             var t = 129 + (position + 1) * 149 % 253 + 1;
+
             if (t > 254)
             {
                 t -= 254;
@@ -870,11 +948,16 @@ public class BarcodeDatamatrix
         }
     }
 
-    private static int x12Encodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset,
-                                     int dataLength)
+    private static int x12Encodation(byte[] text,
+        int textOffset,
+        int textLength,
+        byte[] data,
+        int dataOffset,
+        int dataLength)
     {
         int ptrIn, ptrOut, count, k, n, ci;
         byte c;
+
         if (textLength == 0)
         {
             return 0;
@@ -884,9 +967,11 @@ public class BarcodeDatamatrix
         ptrOut = 0;
         var x = new byte[textLength];
         count = 0;
+
         for (; ptrIn < textLength; ++ptrIn)
         {
             var i = X12.IndexOf(((char)text[ptrIn + textOffset]).ToString(), StringComparison.Ordinal);
+
             if (i >= 0)
             {
                 x[ptrIn] = (byte)i;
@@ -895,6 +980,7 @@ public class BarcodeDatamatrix
             else
             {
                 x[ptrIn] = 100;
+
                 if (count >= 6)
                 {
                     count -= count / 3 * 3;
@@ -921,9 +1007,11 @@ public class BarcodeDatamatrix
 
         ptrIn = 0;
         c = 0;
+
         for (; ptrIn < textLength; ++ptrIn)
         {
             c = x[ptrIn];
+
             if (ptrOut >= dataLength)
             {
                 break;
@@ -954,6 +1042,7 @@ public class BarcodeDatamatrix
                 }
 
                 ci = text[ptrIn + textOffset] & 0xff;
+
                 if (ci > 127)
                 {
                     data[dataOffset + ptrOut++] = 235;
@@ -970,6 +1059,7 @@ public class BarcodeDatamatrix
         }
 
         c = 100;
+
         if (textLength > 0)
         {
             c = x[textLength - 1];
@@ -992,6 +1082,7 @@ public class BarcodeDatamatrix
     {
         int i, j, p, x, y, xs, ys, z;
         var xByte = (dm.width + Ws * 2 + 7) / 8;
+
         for (var k = 0; k < BitImage.Length; ++k)
         {
             BitImage[k] = 0;
@@ -1035,6 +1126,7 @@ public class BarcodeDatamatrix
         }
 
         p = 0;
+
         for (ys = 0; ys < dm.height; ys += dm.HeightSection)
         {
             for (y = 1; y < dm.HeightSection - 1; ++y)
@@ -1044,6 +1136,7 @@ public class BarcodeDatamatrix
                     for (x = 1; x < dm.WidthSection - 1; ++x)
                     {
                         z = _place[p++];
+
                         if (z == 1 || (z > 1 && (data[z / 8 - 1] & 0xff & (128 >> (z % 8))) != 0))
                         {
                             setBit(x + xs + Ws, y + ys + Ws, xByte);
@@ -1057,6 +1150,7 @@ public class BarcodeDatamatrix
     private int processExtensions(byte[] text, int textOffset, int textSize, byte[] data)
     {
         int order, ptrIn, ptrOut, eci, fn, ft, fi, c;
+
         if ((Options & DM_EXTENSION) == 0)
         {
             return 0;
@@ -1065,6 +1159,7 @@ public class BarcodeDatamatrix
         order = 0;
         ptrIn = 0;
         ptrOut = 0;
+
         while (ptrIn < textSize)
         {
             if (order > 20)
@@ -1074,10 +1169,12 @@ public class BarcodeDatamatrix
 
             c = text[textOffset + ptrIn++] & 0xff;
             ++order;
+
             switch (c)
             {
                 case '.':
                     _extOut = ptrIn;
+
                     return ptrOut;
                 case 'e':
                     if (ptrIn + 6 > textSize)
@@ -1085,7 +1182,8 @@ public class BarcodeDatamatrix
                         return -1;
                     }
 
-                    eci = getNumber(text, textOffset + ptrIn, 6);
+                    eci = getNumber(text, textOffset + ptrIn, n: 6);
+
                     if (eci < 0)
                     {
                         return -1;
@@ -1093,6 +1191,7 @@ public class BarcodeDatamatrix
 
                     ptrIn += 6;
                     data[ptrOut++] = 241;
+
                     if (eci < 127)
                     {
                         data[ptrOut++] = (byte)(eci + 1);
@@ -1121,21 +1220,24 @@ public class BarcodeDatamatrix
                         return -1;
                     }
 
-                    fn = getNumber(text, textOffset + ptrIn, 2);
+                    fn = getNumber(text, textOffset + ptrIn, n: 2);
+
                     if (fn <= 0 || fn > 16)
                     {
                         return -1;
                     }
 
                     ptrIn += 2;
-                    ft = getNumber(text, textOffset + ptrIn, 2);
+                    ft = getNumber(text, textOffset + ptrIn, n: 2);
+
                     if (ft <= 1 || ft > 16)
                     {
                         return -1;
                     }
 
                     ptrIn += 2;
-                    fi = getNumber(text, textOffset + ptrIn, 5);
+                    fi = getNumber(text, textOffset + ptrIn, n: 5);
+
                     if (fi < 0 || fn >= 64516)
                     {
                         return -1;
@@ -1146,6 +1248,7 @@ public class BarcodeDatamatrix
                     data[ptrOut++] = (byte)(((fn - 1) << 4) | (17 - ft));
                     data[ptrOut++] = (byte)(fi / 254 + 1);
                     data[ptrOut++] = (byte)(fi % 254 + 1);
+
                     break;
                 case 'p':
                     if (order != 1)
@@ -1154,6 +1257,7 @@ public class BarcodeDatamatrix
                     }
 
                     data[ptrOut++] = 234;
+
                     break;
                 case 'm':
                     if (order != 1)
@@ -1167,6 +1271,7 @@ public class BarcodeDatamatrix
                     }
 
                     c = text[textOffset + ptrIn++] & 0xff;
+
                     if (c != '5' && c != '5')
                     {
                         return -1;
@@ -1174,6 +1279,7 @@ public class BarcodeDatamatrix
 
                     data[ptrOut++] = 234;
                     data[ptrOut++] = 236;
+
                     break;
                 case 'f':
                     if (order != 1 && (order != 2 || (text[textOffset] != 's' && text[textOffset] != 'm')))
@@ -1182,6 +1288,7 @@ public class BarcodeDatamatrix
                     }
 
                     data[ptrOut++] = 232;
+
                     break;
             }
         }
@@ -1189,14 +1296,11 @@ public class BarcodeDatamatrix
         return -1;
     }
 
-    private void setBit(int x, int y, int xByte)
-    {
-        BitImage[y * xByte + x / 8] |= (byte)(128 >> (x & 7));
-    }
+    private void setBit(int x, int y, int xByte) => BitImage[y * xByte + x / 8] |= (byte)(128 >> (x & 7));
 
     internal class Placement
     {
-        private static readonly INullValueDictionary<int, short[]> _cache = new NullValueDictionary<int, short[]>();
+        private static readonly NullValueDictionary<int, short[]> _cache = new();
         private short[] _array;
         private int _ncol;
         private int _nrow;
@@ -1209,6 +1313,7 @@ public class BarcodeDatamatrix
         {
             var key = nrow * 1000 + ncol;
             var pc = _cache[key];
+
             if (pc != null)
             {
                 return pc;
@@ -1220,6 +1325,7 @@ public class BarcodeDatamatrix
             p._array = new short[nrow * ncol];
             p.ecc200();
             _cache[key] = p._array;
+
             return p._array;
         }
 
@@ -1228,50 +1334,50 @@ public class BarcodeDatamatrix
         /// </summary>
         private void corner1(int chr)
         {
-            module(_nrow - 1, 0, chr, 0);
-            module(_nrow - 1, 1, chr, 1);
-            module(_nrow - 1, 2, chr, 2);
-            module(0, _ncol - 2, chr, 3);
-            module(0, _ncol - 1, chr, 4);
-            module(1, _ncol - 1, chr, 5);
-            module(2, _ncol - 1, chr, 6);
-            module(3, _ncol - 1, chr, 7);
+            module(_nrow - 1, col: 0, chr, bit: 0);
+            module(_nrow - 1, col: 1, chr, bit: 1);
+            module(_nrow - 1, col: 2, chr, bit: 2);
+            module(row: 0, _ncol - 2, chr, bit: 3);
+            module(row: 0, _ncol - 1, chr, bit: 4);
+            module(row: 1, _ncol - 1, chr, bit: 5);
+            module(row: 2, _ncol - 1, chr, bit: 6);
+            module(row: 3, _ncol - 1, chr, bit: 7);
         }
 
         private void corner2(int chr)
         {
-            module(_nrow - 3, 0, chr, 0);
-            module(_nrow - 2, 0, chr, 1);
-            module(_nrow - 1, 0, chr, 2);
-            module(0, _ncol - 4, chr, 3);
-            module(0, _ncol - 3, chr, 4);
-            module(0, _ncol - 2, chr, 5);
-            module(0, _ncol - 1, chr, 6);
-            module(1, _ncol - 1, chr, 7);
+            module(_nrow - 3, col: 0, chr, bit: 0);
+            module(_nrow - 2, col: 0, chr, bit: 1);
+            module(_nrow - 1, col: 0, chr, bit: 2);
+            module(row: 0, _ncol - 4, chr, bit: 3);
+            module(row: 0, _ncol - 3, chr, bit: 4);
+            module(row: 0, _ncol - 2, chr, bit: 5);
+            module(row: 0, _ncol - 1, chr, bit: 6);
+            module(row: 1, _ncol - 1, chr, bit: 7);
         }
 
         private void corner3(int chr)
         {
-            module(_nrow - 3, 0, chr, 0);
-            module(_nrow - 2, 0, chr, 1);
-            module(_nrow - 1, 0, chr, 2);
-            module(0, _ncol - 2, chr, 3);
-            module(0, _ncol - 1, chr, 4);
-            module(1, _ncol - 1, chr, 5);
-            module(2, _ncol - 1, chr, 6);
-            module(3, _ncol - 1, chr, 7);
+            module(_nrow - 3, col: 0, chr, bit: 0);
+            module(_nrow - 2, col: 0, chr, bit: 1);
+            module(_nrow - 1, col: 0, chr, bit: 2);
+            module(row: 0, _ncol - 2, chr, bit: 3);
+            module(row: 0, _ncol - 1, chr, bit: 4);
+            module(row: 1, _ncol - 1, chr, bit: 5);
+            module(row: 2, _ncol - 1, chr, bit: 6);
+            module(row: 3, _ncol - 1, chr, bit: 7);
         }
 
         private void corner4(int chr)
         {
-            module(_nrow - 1, 0, chr, 0);
-            module(_nrow - 1, _ncol - 1, chr, 1);
-            module(0, _ncol - 3, chr, 2);
-            module(0, _ncol - 2, chr, 3);
-            module(0, _ncol - 1, chr, 4);
-            module(1, _ncol - 3, chr, 5);
-            module(1, _ncol - 2, chr, 6);
-            module(1, _ncol - 1, chr, 7);
+            module(_nrow - 1, col: 0, chr, bit: 0);
+            module(_nrow - 1, _ncol - 1, chr, bit: 1);
+            module(row: 0, _ncol - 3, chr, bit: 2);
+            module(row: 0, _ncol - 2, chr, bit: 3);
+            module(row: 0, _ncol - 1, chr, bit: 4);
+            module(row: 1, _ncol - 3, chr, bit: 5);
+            module(row: 1, _ncol - 2, chr, bit: 6);
+            module(row: 1, _ncol - 1, chr, bit: 7);
         }
 
         /// <summary>
@@ -1280,6 +1386,7 @@ public class BarcodeDatamatrix
         private void ecc200()
         {
             int row, col, chr;
+
             /* First, fill the array[] with invalid entries */
             for (var k = 0; k < _array.Length; ++k)
             {
@@ -1290,6 +1397,7 @@ public class BarcodeDatamatrix
             chr = 1;
             row = 4;
             col = 0;
+
             do
             {
                 /* repeatedly first check for one of the special corner cases, then... */
@@ -1323,7 +1431,8 @@ public class BarcodeDatamatrix
 
                     row -= 2;
                     col += 2;
-                } while (row >= 0 && col < _ncol);
+                }
+                while (row >= 0 && col < _ncol);
 
                 row += 1;
                 col += 3;
@@ -1338,12 +1447,14 @@ public class BarcodeDatamatrix
 
                     row += 2;
                     col -= 2;
-                } while (row < _nrow && col >= 0);
+                }
+                while (row < _nrow && col >= 0);
 
                 row += 3;
                 col += 1;
                 /* ... until the entire array is scanned */
-            } while (row < _nrow || col < _ncol);
+            }
+            while (row < _nrow || col < _ncol);
 
             /* Lastly, if the lower righthand corner is untouched, fill in fixed pattern */
             if (_array[_nrow * _ncol - 1] == 0)
@@ -1377,14 +1488,14 @@ public class BarcodeDatamatrix
         /// </summary>
         private void utah(int row, int col, int chr)
         {
-            module(row - 2, col - 2, chr, 0);
-            module(row - 2, col - 1, chr, 1);
-            module(row - 1, col - 2, chr, 2);
-            module(row - 1, col - 1, chr, 3);
-            module(row - 1, col, chr, 4);
-            module(row, col - 2, chr, 5);
-            module(row, col - 1, chr, 6);
-            module(row, col, chr, 7);
+            module(row - 2, col - 2, chr, bit: 0);
+            module(row - 2, col - 1, chr, bit: 1);
+            module(row - 1, col - 2, chr, bit: 2);
+            module(row - 1, col - 1, chr, bit: 3);
+            module(row - 1, col, chr, bit: 4);
+            module(row, col - 2, chr, bit: 5);
+            module(row, col - 1, chr, bit: 6);
+            module(row, col, chr, bit: 7);
         }
     }
 
@@ -1392,184 +1503,123 @@ public class BarcodeDatamatrix
     {
         private static readonly int[] _alog =
         {
-            1, 2, 4, 8, 16, 32, 64, 128, 45, 90, 180, 69, 138, 57, 114, 228,
-            229, 231, 227, 235, 251, 219, 155, 27, 54, 108, 216, 157, 23, 46, 92,
-            184,
-            93, 186, 89, 178, 73, 146, 9, 18, 36, 72, 144, 13, 26, 52, 104, 208,
-            141, 55, 110, 220, 149, 7, 14, 28, 56, 112, 224, 237, 247, 195, 171,
-            123,
-            246, 193, 175, 115, 230, 225, 239, 243, 203, 187, 91, 182, 65, 130,
-            41, 82,
-            164, 101, 202, 185, 95, 190, 81, 162, 105, 210, 137, 63, 126, 252,
-            213, 135,
-            35, 70, 140, 53, 106, 212, 133, 39, 78, 156, 21, 42, 84, 168, 125,
-            250,
-            217, 159, 19, 38, 76, 152, 29, 58, 116, 232, 253, 215, 131, 43, 86,
-            172,
-            117, 234, 249, 223, 147, 11, 22, 44, 88, 176, 77, 154, 25, 50, 100,
-            200,
-            189, 87, 174, 113, 226, 233, 255, 211, 139, 59, 118, 236, 245, 199,
-            163, 107,
-            214, 129, 47, 94, 188, 85, 170, 121, 242, 201, 191, 83, 166, 97, 194,
-            169,
-            127, 254, 209, 143, 51, 102, 204, 181, 71, 142, 49, 98, 196, 165, 103,
-            206,
-            177, 79, 158, 17, 34, 68, 136, 61, 122, 244, 197, 167, 99, 198, 161,
-            111,
-            222, 145, 15, 30, 60, 120, 240, 205, 183, 67, 134, 33, 66, 132, 37,
-            74,
-            148, 5, 10, 20, 40, 80, 160, 109, 218, 153, 31, 62, 124, 248, 221,
-            151,
-            3, 6, 12, 24, 48, 96, 192, 173, 119, 238, 241, 207, 179, 75, 150, 1,
+            1, 2, 4, 8, 16, 32, 64, 128, 45, 90, 180, 69, 138, 57, 114, 228, 229, 231, 227, 235, 251, 219, 155, 27, 54,
+            108, 216, 157, 23, 46, 92, 184, 93, 186, 89, 178, 73, 146, 9, 18, 36, 72, 144, 13, 26, 52, 104, 208, 141,
+            55, 110, 220, 149, 7, 14, 28, 56, 112, 224, 237, 247, 195, 171, 123, 246, 193, 175, 115, 230, 225, 239, 243,
+            203, 187, 91, 182, 65, 130, 41, 82, 164, 101, 202, 185, 95, 190, 81, 162, 105, 210, 137, 63, 126, 252, 213,
+            135, 35, 70, 140, 53, 106, 212, 133, 39, 78, 156, 21, 42, 84, 168, 125, 250, 217, 159, 19, 38, 76, 152, 29,
+            58, 116, 232, 253, 215, 131, 43, 86, 172, 117, 234, 249, 223, 147, 11, 22, 44, 88, 176, 77, 154, 25, 50,
+            100, 200, 189, 87, 174, 113, 226, 233, 255, 211, 139, 59, 118, 236, 245, 199, 163, 107, 214, 129, 47, 94,
+            188, 85, 170, 121, 242, 201, 191, 83, 166, 97, 194, 169, 127, 254, 209, 143, 51, 102, 204, 181, 71, 142, 49,
+            98, 196, 165, 103, 206, 177, 79, 158, 17, 34, 68, 136, 61, 122, 244, 197, 167, 99, 198, 161, 111, 222, 145,
+            15, 30, 60, 120, 240, 205, 183, 67, 134, 33, 66, 132, 37, 74, 148, 5, 10, 20, 40, 80, 160, 109, 218, 153,
+            31, 62, 124, 248, 221, 151, 3, 6, 12, 24, 48, 96, 192, 173, 119, 238, 241, 207, 179, 75, 150, 1
         };
 
         private static readonly int[] _log =
         {
-            0, 255, 1, 240, 2, 225, 241, 53, 3, 38, 226, 133, 242, 43, 54, 210,
-            4, 195, 39, 114, 227, 106, 134, 28, 243, 140, 44, 23, 55, 118, 211,
-            234,
-            5, 219, 196, 96, 40, 222, 115, 103, 228, 78, 107, 125, 135, 8, 29, 162,
-            244, 186, 141, 180, 45, 99, 24, 49, 56, 13, 119, 153, 212, 199, 235,
-            91,
-            6, 76, 220, 217, 197, 11, 97, 184, 41, 36, 223, 253, 116, 138, 104,
-            193,
-            229, 86, 79, 171, 108, 165, 126, 145, 136, 34, 9, 74, 30, 32, 163, 84,
-            245, 173, 187, 204, 142, 81, 181, 190, 46, 88, 100, 159, 25, 231, 50,
-            207,
-            57, 147, 14, 67, 120, 128, 154, 248, 213, 167, 200, 63, 236, 110, 92,
-            176,
-            7, 161, 77, 124, 221, 102, 218, 95, 198, 90, 12, 152, 98, 48, 185, 179,
-            42, 209, 37, 132, 224, 52, 254, 239, 117, 233, 139, 22, 105, 27, 194,
-            113,
-            230, 206, 87, 158, 80, 189, 172, 203, 109, 175, 166, 62, 127, 247, 146,
-            66,
-            137, 192, 35, 252, 10, 183, 75, 216, 31, 83, 33, 73, 164, 144, 85, 170,
-            246, 65, 174, 61, 188, 202, 205, 157, 143, 169, 82, 72, 182, 215, 191,
-            251,
-            47, 178, 89, 151, 101, 94, 160, 123, 26, 112, 232, 21, 51, 238, 208,
-            131,
-            58, 69, 148, 18, 15, 16, 68, 17, 121, 149, 129, 19, 155, 59, 249, 70,
-            214, 250, 168, 71, 201, 156, 64, 60, 237, 130, 111, 20, 93, 122, 177,
-            150,
+            0, 255, 1, 240, 2, 225, 241, 53, 3, 38, 226, 133, 242, 43, 54, 210, 4, 195, 39, 114, 227, 106, 134, 28, 243,
+            140, 44, 23, 55, 118, 211, 234, 5, 219, 196, 96, 40, 222, 115, 103, 228, 78, 107, 125, 135, 8, 29, 162, 244,
+            186, 141, 180, 45, 99, 24, 49, 56, 13, 119, 153, 212, 199, 235, 91, 6, 76, 220, 217, 197, 11, 97, 184, 41,
+            36, 223, 253, 116, 138, 104, 193, 229, 86, 79, 171, 108, 165, 126, 145, 136, 34, 9, 74, 30, 32, 163, 84,
+            245, 173, 187, 204, 142, 81, 181, 190, 46, 88, 100, 159, 25, 231, 50, 207, 57, 147, 14, 67, 120, 128, 154,
+            248, 213, 167, 200, 63, 236, 110, 92, 176, 7, 161, 77, 124, 221, 102, 218, 95, 198, 90, 12, 152, 98, 48,
+            185, 179, 42, 209, 37, 132, 224, 52, 254, 239, 117, 233, 139, 22, 105, 27, 194, 113, 230, 206, 87, 158, 80,
+            189, 172, 203, 109, 175, 166, 62, 127, 247, 146, 66, 137, 192, 35, 252, 10, 183, 75, 216, 31, 83, 33, 73,
+            164, 144, 85, 170, 246, 65, 174, 61, 188, 202, 205, 157, 143, 169, 82, 72, 182, 215, 191, 251, 47, 178, 89,
+            151, 101, 94, 160, 123, 26, 112, 232, 21, 51, 238, 208, 131, 58, 69, 148, 18, 15, 16, 68, 17, 121, 149, 129,
+            19, 155, 59, 249, 70, 214, 250, 168, 71, 201, 156, 64, 60, 237, 130, 111, 20, 93, 122, 177, 150
         };
 
         private static readonly int[] _poly10 =
         {
-            28, 24, 185, 166, 223, 248, 116, 255, 110, 61,
+            28, 24, 185, 166, 223, 248, 116, 255, 110, 61
         };
 
         private static readonly int[] _poly11 =
         {
-            175, 138, 205, 12, 194, 168, 39, 245, 60, 97, 120,
+            175, 138, 205, 12, 194, 168, 39, 245, 60, 97, 120
         };
 
         private static readonly int[] _poly12 =
         {
-            41, 153, 158, 91, 61, 42, 142, 213, 97, 178, 100, 242,
+            41, 153, 158, 91, 61, 42, 142, 213, 97, 178, 100, 242
         };
 
         private static readonly int[] _poly14 =
         {
-            156, 97, 192, 252, 95, 9, 157, 119, 138, 45, 18, 186, 83, 185,
+            156, 97, 192, 252, 95, 9, 157, 119, 138, 45, 18, 186, 83, 185
         };
 
         private static readonly int[] _poly18 =
         {
-            83, 195, 100, 39, 188, 75, 66, 61, 241, 213, 109, 129, 94, 254, 225,
-            48,
-            90, 188,
+            83, 195, 100, 39, 188, 75, 66, 61, 241, 213, 109, 129, 94, 254, 225, 48, 90, 188
         };
 
         private static readonly int[] _poly20 =
         {
-            15, 195, 244, 9, 233, 71, 168, 2, 188, 160, 153, 145, 253, 79, 108,
-            82,
-            27, 174, 186, 172,
+            15, 195, 244, 9, 233, 71, 168, 2, 188, 160, 153, 145, 253, 79, 108, 82, 27, 174, 186, 172
         };
 
         private static readonly int[] _poly24 =
         {
-            52, 190, 88, 205, 109, 39, 176, 21, 155, 197, 251, 223, 155, 21, 5,
-            172,
-            254, 124, 12, 181, 184, 96, 50, 193,
+            52, 190, 88, 205, 109, 39, 176, 21, 155, 197, 251, 223, 155, 21, 5, 172, 254, 124, 12, 181, 184, 96, 50, 193
         };
 
         private static readonly int[] _poly28 =
         {
-            211, 231, 43, 97, 71, 96, 103, 174, 37, 151, 170, 53, 75, 34, 249,
-            121,
-            17, 138, 110, 213, 141, 136, 120, 151, 233, 168, 93, 255,
+            211, 231, 43, 97, 71, 96, 103, 174, 37, 151, 170, 53, 75, 34, 249, 121, 17, 138, 110, 213, 141, 136, 120,
+            151, 233, 168, 93, 255
         };
 
         private static readonly int[] _poly36 =
         {
-            245, 127, 242, 218, 130, 250, 162, 181, 102, 120, 84, 179, 220, 251,
-            80, 182,
-            229, 18, 2, 4, 68, 33, 101, 137, 95, 119, 115, 44, 175, 184, 59, 25,
-            225, 98, 81, 112,
+            245, 127, 242, 218, 130, 250, 162, 181, 102, 120, 84, 179, 220, 251, 80, 182, 229, 18, 2, 4, 68, 33, 101,
+            137, 95, 119, 115, 44, 175, 184, 59, 25, 225, 98, 81, 112
         };
 
         private static readonly int[] _poly42 =
         {
-            77, 193, 137, 31, 19, 38, 22, 153, 247, 105, 122, 2, 245, 133, 242,
-            8,
-            175, 95, 100, 9, 167, 105, 214, 111, 57, 121, 21, 1, 253, 57, 54,
-            101,
-            248, 202, 69, 50, 150, 177, 226, 5, 9, 5,
+            77, 193, 137, 31, 19, 38, 22, 153, 247, 105, 122, 2, 245, 133, 242, 8, 175, 95, 100, 9, 167, 105, 214, 111,
+            57, 121, 21, 1, 253, 57, 54, 101, 248, 202, 69, 50, 150, 177, 226, 5, 9, 5
         };
 
         private static readonly int[] _poly48 =
         {
-            245, 132, 172, 223, 96, 32, 117, 22, 238, 133, 238, 231, 205, 188,
-            237, 87,
-            191, 106, 16, 147, 118, 23, 37, 90, 170, 205, 131, 88, 120, 100, 66,
-            138,
-            186, 240, 82, 44, 176, 87, 187, 147, 160, 175, 69, 213, 92, 253,
-            225, 19,
+            245, 132, 172, 223, 96, 32, 117, 22, 238, 133, 238, 231, 205, 188, 237, 87, 191, 106, 16, 147, 118, 23, 37,
+            90, 170, 205, 131, 88, 120, 100, 66, 138, 186, 240, 82, 44, 176, 87, 187, 147, 160, 175, 69, 213, 92, 253,
+            225, 19
         };
 
         private static readonly int[] _poly5 =
         {
-            228, 48, 15, 111, 62,
+            228, 48, 15, 111, 62
         };
 
         private static readonly int[] _poly56 =
         {
-            175, 9, 223, 238, 12, 17, 220, 208, 100, 29, 175, 170, 230, 192,
-            215, 235,
-            150, 159, 36, 223, 38, 200, 132, 54, 228, 146, 218, 234, 117, 203,
-            29, 232,
-            144, 238, 22, 150, 201, 117, 62, 207, 164, 13, 137, 245, 127, 67,
-            247, 28,
-            155, 43, 203, 107, 233, 53, 143, 46,
+            175, 9, 223, 238, 12, 17, 220, 208, 100, 29, 175, 170, 230, 192, 215, 235, 150, 159, 36, 223, 38, 200, 132,
+            54, 228, 146, 218, 234, 117, 203, 29, 232, 144, 238, 22, 150, 201, 117, 62, 207, 164, 13, 137, 245, 127, 67,
+            247, 28, 155, 43, 203, 107, 233, 53, 143, 46
         };
 
         private static readonly int[] _poly62 =
         {
-            242, 93, 169, 50, 144, 210, 39, 118, 202, 188, 201, 189, 143, 108,
-            196, 37,
-            185, 112, 134, 230, 245, 63, 197, 190, 250, 106, 185, 221, 175, 64,
-            114, 71,
-            161, 44, 147, 6, 27, 218, 51, 63, 87, 10, 40, 130, 188, 17, 163, 31,
-            176, 170, 4, 107, 232, 7, 94, 166, 224, 124, 86, 47, 11, 204,
+            242, 93, 169, 50, 144, 210, 39, 118, 202, 188, 201, 189, 143, 108, 196, 37, 185, 112, 134, 230, 245, 63,
+            197, 190, 250, 106, 185, 221, 175, 64, 114, 71, 161, 44, 147, 6, 27, 218, 51, 63, 87, 10, 40, 130, 188, 17,
+            163, 31, 176, 170, 4, 107, 232, 7, 94, 166, 224, 124, 86, 47, 11, 204
         };
 
         private static readonly int[] _poly68 =
         {
-            220, 228, 173, 89, 251, 149, 159, 56, 89, 33, 147, 244, 154, 36, 73,
-            127,
-            213, 136, 248, 180, 234, 197, 158, 177, 68, 122, 93, 213, 15, 160,
-            227, 236,
-            66, 139, 153, 185, 202, 167, 179, 25, 220, 232, 96, 210, 231, 136,
-            223, 239,
-            181, 241, 59, 52, 172, 25, 49, 232, 211, 189, 64, 54, 108, 153, 132,
-            63,
-            96, 103, 82, 186,
+            220, 228, 173, 89, 251, 149, 159, 56, 89, 33, 147, 244, 154, 36, 73, 127, 213, 136, 248, 180, 234, 197, 158,
+            177, 68, 122, 93, 213, 15, 160, 227, 236, 66, 139, 153, 185, 202, 167, 179, 25, 220, 232, 96, 210, 231, 136,
+            223, 239, 181, 241, 59, 52, 172, 25, 49, 232, 211, 189, 64, 54, 108, 153, 132, 63, 96, 103, 82, 186
         };
 
         private static readonly int[] _poly7 =
         {
-            23, 68, 144, 134, 240, 92, 254,
+            23, 68, 144, 134, 240, 92, 254
         };
 
         internal static void GenerateEcc(byte[] wd, int nd, int datablock, int nc)
@@ -1579,9 +1629,11 @@ public class BarcodeDatamatrix
             var buf = new byte[256];
             var ecc = new byte[256];
             var c = getPoly(nc);
+
             for (b = 0; b < blocks; b++)
             {
                 int n, p = 0;
+
                 for (n = b; n < nd; n += blocks)
                 {
                     buf[p++] = wd[n];
@@ -1589,6 +1641,7 @@ public class BarcodeDatamatrix
 
                 reedSolomonBlock(buf, p, ecc, nc, c);
                 p = 0;
+
                 for (n = b; n < nc * blocks; n += blocks)
                 {
                     wd[nd + n] = ecc[p++];
@@ -1649,6 +1702,7 @@ public class BarcodeDatamatrix
             for (i = 0; i < nd; i++)
             {
                 k = (ncout[0] ^ wd[i]) & 0xff;
+
                 for (j = 0; j < nc; j++)
                 {
                     ncout[j] = (byte)(ncout[j + 1] ^ (k == 0 ? 0 : (byte)_alog[(_log[k] + _log[c[nc - j - 1]]) % 255]));
@@ -1673,8 +1727,13 @@ public class BarcodeDatamatrix
 
         internal readonly int WidthSection;
 
-        internal DmParams(int height, int width, int heightSection, int widthSection, int dataSize, int dataBlock,
-                          int errorBlock)
+        internal DmParams(int height,
+            int width,
+            int heightSection,
+            int widthSection,
+            int dataSize,
+            int dataBlock,
+            int errorBlock)
         {
             this.height = height;
             this.width = width;

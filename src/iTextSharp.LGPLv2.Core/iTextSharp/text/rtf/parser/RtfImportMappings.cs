@@ -18,22 +18,22 @@ public class RtfImportMappings
     /// <summary>
     ///     The colorNr to Color mappings.
     /// </summary>
-    private readonly INullValueDictionary<string, BaseColor> _colorMappings;
+    private readonly NullValueDictionary<string, BaseColor> _colorMappings;
 
     /// <summary>
     ///     The fontNr to fontName mappings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _fontMappings;
+    private readonly NullValueDictionary<string, string> _fontMappings;
 
     /// <summary>
     ///     The listNr to List mappings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _listMappings;
+    private readonly NullValueDictionary<string, string> _listMappings;
 
     /// <summary>
     ///     The sytlesheetListNr to Stylesheet mappings.
     /// </summary>
-    private readonly INullValueDictionary<string, string> _stylesheetListMappings;
+    private readonly NullValueDictionary<string, string> _stylesheetListMappings;
 
     /// <summary>
     ///     Constructs a new RtfImportMappings initialising the mappings.
@@ -51,30 +51,21 @@ public class RtfImportMappings
     /// </summary>
     /// <param name="colorNr">The color number.</param>
     /// <param name="color">The Color.</param>
-    public void AddColor(string colorNr, BaseColor color)
-    {
-        _colorMappings[colorNr] = color;
-    }
+    public void AddColor(string colorNr, BaseColor color) => _colorMappings[colorNr] = color;
 
     /// <summary>
     ///     Add a font to the list of mappings.
     /// </summary>
     /// <param name="fontNr">The font number.</param>
     /// <param name="fontName">The font name.</param>
-    public void AddFont(string fontNr, string fontName)
-    {
-        _fontMappings[fontNr] = fontName;
-    }
+    public void AddFont(string fontNr, string fontName) => _fontMappings[fontNr] = fontName;
 
     /// <summary>
     ///     Add a List to the list of mappings.
     /// </summary>
     /// <param name="listNr">The List number.</param>
     /// <param name="list">The List.</param>
-    public void AddList(string listNr, string list)
-    {
-        _listMappings[listNr] = list;
-    }
+    public void AddList(string listNr, string list) => _listMappings[listNr] = list;
 
     /// <summary>
     ///     Add a Stylesheet List to the list of mappings.
@@ -82,9 +73,7 @@ public class RtfImportMappings
     /// <param name="stylesheetListNr">The Stylesheet List number.</param>
     /// <param name="list">The StylesheetList.</param>
     public void AddStylesheetList(string stylesheetListNr, string list)
-    {
-        _stylesheetListMappings[stylesheetListNr] = list;
-    }
+        => _stylesheetListMappings[stylesheetListNr] = list;
 
     /// <summary>
     ///     Gets the list of color mappings. String to Color.
