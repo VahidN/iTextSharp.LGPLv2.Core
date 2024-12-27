@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.4.25</VersionPrefix>
+        <VersionPrefix>3.4.26</VersionPrefix>
         <LangVersion>latest</LangVersion>
         <Authors>Vahid Nasiri</Authors>
-        <TargetFrameworks>netstandard2.0;net462;</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;netstandard2.0;net462;</TargetFrameworks>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
@@ -67,13 +67,39 @@
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
+
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.0"/>
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <DefineConstants>NETSTANDARD2_0</DefineConstants>
     </PropertyGroup>
+
     <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
         <DefineConstants>NET40</DefineConstants>
     </PropertyGroup>
+
+    <PropertyGroup Condition="('$(TargetFramework)' == 'net6.0')">
+        <DefineConstants>NET_6</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="('$(TargetFramework)' == 'net6.0')">
+    </ItemGroup>
+
+    <PropertyGroup Condition="('$(TargetFramework)' == 'net7.0')">
+        <DefineConstants>NET_7</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="('$(TargetFramework)' == 'net7.0')">
+    </ItemGroup>
+
+    <PropertyGroup Condition="('$(TargetFramework)' == 'net8.0')">
+        <DefineConstants>NET_8</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="('$(TargetFramework)' == 'net8.0')">
+    </ItemGroup>
+
+    <PropertyGroup Condition="('$(TargetFramework)' == 'net9.0')">
+        <DefineConstants>NET_9</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="('$(TargetFramework)' == 'net9.0')">
+    </ItemGroup>
 </Project>

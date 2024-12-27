@@ -28,6 +28,15 @@ dotnet_diagnostic.CA1310.severity = error
 # CA1311: Specify a culture or use an invariant version
 dotnet_diagnostic.CA1311.severity = error
 
+# CA1510: Use 'ArgumentNullException. ThrowIfNull' instead of explicitly throwing a new exception instance
+dotnet_diagnostic.CA1510.severity = suggestion
+
+# CA1512: Use 'ArgumentOutOfRangeException. ThrowIfNegativeOrZero' instead of explicitly throwing a new exception instance
+dotnet_diagnostic.CA1512.severity = suggestion
+
+# CA1513: Use 'ObjectDisposedException. ThrowIf' instead of explicitly throwing a new exception instance
+dotnet_diagnostic.CA1513.severity = suggestion
+
 # CA1820: Test for empty strings using string length
 dotnet_diagnostic.CA1820.severity = error
 
@@ -79,6 +88,9 @@ dotnet_diagnostic.CA1044.severity = suggestion
 # CA1805: Member X is explicitly initialized to its default value
 dotnet_diagnostic.CA1805.severity = suggestion
 
+# CA1845: Use span-based 'string. Concat' and 'AsSpan' instead of 'Substring'
+dotnet_diagnostic.CA1845.severity = suggestion
+
 # CA1708: Names of 'Members' should differ by more than case
 dotnet_diagnostic.CA1708.severity = suggestion
 
@@ -88,6 +100,9 @@ dotnet_diagnostic.CA1001.severity = suggestion
 # CA1823: Unused field X
 dotnet_diagnostic.CA1823.severity = suggestion
 
+# CA1846: Prefer 'AsSpan' over 'Substring' when span-based overloads are available
+dotnet_diagnostic.CA1846.severity = suggestion
+
 # CA1024: Use properties where appropriate
 dotnet_diagnostic.CA1024.severity = suggestion
 
@@ -96,6 +111,9 @@ dotnet_diagnostic.CA1036.severity = suggestion
 
 # CA1814: initialize uses a multidimensional array of int[*,*]. Replace it with a jagged array if possible.
 dotnet_diagnostic.CA1814.severity = suggestion
+
+# CA1850: Prefer static 'System. Security. Cryptography. SHA1.HashData' method over 'ComputeHash'
+dotnet_diagnostic.CA1850.severity = suggestion
 
 # CA2000: Use recommended dispose pattern to ensure that object created
 dotnet_diagnostic.CA2000.severity = suggestion
@@ -139,6 +157,9 @@ dotnet_diagnostic.CA1508.severity = suggestion
 # CA1040: Avoid empty interfaces
 dotnet_diagnostic.CA1040.severity = suggestion
 
+# CA2249: Use 'string. Contains' instead of 'string. IndexOf' to improve readability
+dotnet_diagnostic.CA2249.severity = suggestion
+
 # CA5351: Create uses a broken cryptographic algorithm MD5
 dotnet_diagnostic.CA5351.severity = suggestion
 
@@ -174,6 +195,9 @@ dotnet_diagnostic.IDE0004.severity = warning
 
 # Use readonly Modifier
 dotnet_diagnostic.IDE0044.severity = warning
+
+# SYSLIB0014: Method 'System.Net.WebRequest.Create(Uri)' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.'
+dotnet_diagnostic.SYSLIB0014.severity = suggestion
 
 # force file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:error
