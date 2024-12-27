@@ -17,7 +17,7 @@ public class PdfSignatureAppearance
     {
         Description,
         NameAndDescription,
-        GraphicAndDescription,
+        GraphicAndDescription
     }
 
     public const int CERTIFIED_FORM_FILLING = 2;
@@ -31,49 +31,19 @@ public class PdfSignatureAppearance
     /// <summary>
     ///     Commands to draw a yellow question mark in a stream content
     /// </summary>
-    public const string questionMark =
-        "% DSUnknown\n" +
-        "q\n" +
-        "1 G\n" +
-        "1 g\n" +
-        "0.1 0 0 0.1 9 0 cm\n" +
-        "0 J 0 j 4 M []0 d\n" +
-        "1 i \n" +
-        "0 g\n" +
-        "313 292 m\n" +
-        "313 404 325 453 432 529 c\n" +
-        "478 561 504 597 504 645 c\n" +
-        "504 736 440 760 391 760 c\n" +
-        "286 760 271 681 265 626 c\n" +
-        "265 625 l\n" +
-        "100 625 l\n" +
-        "100 828 253 898 381 898 c\n" +
-        "451 898 679 878 679 650 c\n" +
-        "679 555 628 499 538 435 c\n" +
-        "488 399 467 376 467 292 c\n" +
-        "313 292 l\n" +
-        "h\n" +
-        "308 214 170 -164 re\n" +
-        "f\n" +
-        "0.44 G\n" +
-        "1.2 w\n" +
-        "1 1 0.4 rg\n" +
-        "287 318 m\n" +
-        "287 430 299 479 406 555 c\n" +
-        "451 587 478 623 478 671 c\n" +
-        "478 762 414 786 365 786 c\n" +
-        "260 786 245 707 239 652 c\n" +
-        "239 651 l\n" +
-        "74 651 l\n" +
-        "74 854 227 924 355 924 c\n" +
-        "425 924 653 904 653 676 c\n" +
-        "653 581 602 525 512 461 c\n" +
-        "462 425 441 402 441 318 c\n" +
-        "287 318 l\n" +
-        "h\n" +
-        "282 240 170 -164 re\n" +
-        "B\n" +
-        "Q\n";
+    public const string questionMark = "% DSUnknown\n" + "q\n" + "1 G\n" + "1 g\n" + "0.1 0 0 0.1 9 0 cm\n" +
+                                       "0 J 0 j 4 M []0 d\n" + "1 i \n" + "0 g\n" + "313 292 m\n" +
+                                       "313 404 325 453 432 529 c\n" + "478 561 504 597 504 645 c\n" +
+                                       "504 736 440 760 391 760 c\n" + "286 760 271 681 265 626 c\n" + "265 625 l\n" +
+                                       "100 625 l\n" + "100 828 253 898 381 898 c\n" + "451 898 679 878 679 650 c\n" +
+                                       "679 555 628 499 538 435 c\n" + "488 399 467 376 467 292 c\n" + "313 292 l\n" +
+                                       "h\n" + "308 214 170 -164 re\n" + "f\n" + "0.44 G\n" + "1.2 w\n" +
+                                       "1 1 0.4 rg\n" + "287 318 m\n" + "287 430 299 479 406 555 c\n" +
+                                       "451 587 478 623 478 671 c\n" + "478 762 414 786 365 786 c\n" +
+                                       "260 786 245 707 239 652 c\n" + "239 651 l\n" + "74 651 l\n" +
+                                       "74 854 227 924 355 924 c\n" + "425 924 653 904 653 676 c\n" +
+                                       "653 581 602 525 512 461 c\n" + "462 425 441 402 441 318 c\n" + "287 318 l\n" +
+                                       "h\n" + "282 240 170 -164 re\n" + "B\n" + "Q\n";
 
     private const float Margin = 2;
 
@@ -405,11 +375,13 @@ public class PdfSignatureAppearance
 
         ColumnText ct = null;
         var status = 0;
+
         if (maxFontSize <= 0)
         {
             var cr = 0;
             var lf = 0;
             var t = text.ToCharArray();
+
             for (var k = 0; k < t.Length; ++k)
             {
                 if (t[k] == '\n')
@@ -428,10 +400,11 @@ public class PdfSignatureAppearance
 
         font.Size = maxFontSize;
         var ph = new Phrase(text, font);
-        ct = new ColumnText(null);
+        ct = new ColumnText(canvas: null);
         ct.SetSimpleColumn(ph, rect.Left, rect.Bottom, rect.Right, rect.Top, maxFontSize, Element.ALIGN_LEFT);
         ct.RunDirection = runDirection;
-        status = ct.Go(true);
+        status = ct.Go(simulate: true);
+
         if ((status & ColumnText.NO_MORE_TEXT) != 0)
         {
             return maxFontSize;
@@ -441,16 +414,20 @@ public class PdfSignatureAppearance
         float min = 0;
         var max = maxFontSize;
         var size = maxFontSize;
+
         for (var k = 0; k < 50; ++k)
         {
             //just in case it doesn't converge
             size = (min + max) / 2;
-            ct = new ColumnText(null);
+            ct = new ColumnText(canvas: null);
             font.Size = size;
+
             ct.SetSimpleColumn(new Phrase(text, font), rect.Left, rect.Bottom, rect.Right, rect.Top, size,
-                               Element.ALIGN_LEFT);
+                Element.ALIGN_LEFT);
+
             ct.RunDirection = runDirection;
-            status = ct.Go(true);
+            status = ct.Go(simulate: true);
+
             if ((status & ColumnText.NO_MORE_TEXT) != 0)
             {
                 if (max - min < size * precision)
@@ -490,21 +467,24 @@ public class PdfSignatureAppearance
         {
             if (!_preClosed)
             {
-                throw new DocumentException("preClose() must be called first.");
+                throw new DocumentException(message: "preClose() must be called first.");
             }
 
             var bf = new ByteBuffer();
+
             foreach (var key in update.Keys)
             {
                 var obj = update.Get(key);
                 var lit = _exclusionLocations[key];
+
                 if (lit == null)
                 {
                     throw new ArgumentException("The key " + key + " didn't reserve space in PreClose().");
                 }
 
                 bf.Reset();
-                obj.ToPdf(null, bf);
+                obj.ToPdf(writer: null, bf);
+
                 if (bf.Size > lit.PosLength)
                 {
                     throw new ArgumentException("The key " + key + " is too big. Is " + bf.Size + ", reserved " +
@@ -513,40 +493,42 @@ public class PdfSignatureAppearance
 
                 if (TempFile == null)
                 {
-                    Array.Copy(bf.Buffer, 0, _bout, lit.Position, bf.Size);
+                    Array.Copy(bf.Buffer, sourceIndex: 0, _bout, lit.Position, bf.Size);
                 }
                 else
                 {
                     _raf.Seek(lit.Position, SeekOrigin.Begin);
-                    _raf.Write(bf.Buffer, 0, bf.Size);
+                    _raf.Write(bf.Buffer, offset: 0, bf.Size);
                 }
             }
 
             if (update.Size != _exclusionLocations.Count)
             {
-                throw new ArgumentException("The update dictionary has less keys than required.");
+                throw new ArgumentException(message: "The update dictionary has less keys than required.");
             }
 
             if (TempFile == null)
             {
-                Originalout.Write(_bout, 0, _boutLen);
+                Originalout.Write(_bout, offset: 0, _boutLen);
             }
             else
             {
                 if (Originalout != null)
                 {
-                    _raf.Seek(0, SeekOrigin.Begin);
+                    _raf.Seek(offset: 0, SeekOrigin.Begin);
                     var length = (int)_raf.Length;
                     var buf = new byte[8192];
+
                     while (length > 0)
                     {
-                        var r = _raf.Read(buf, 0, Math.Min(buf.Length, length));
+                        var r = _raf.Read(buf, offset: 0, Math.Min(buf.Length, length));
+
                         if (r < 0)
                         {
-                            throw new EndOfStreamException("Unexpected EOF");
+                            throw new EndOfStreamException(message: "Unexpected EOF");
                         }
 
-                        Originalout.Write(buf, 0, r);
+                        Originalout.Write(buf, offset: 0, r);
                         length -= r;
                     }
                 }
@@ -576,7 +558,7 @@ public class PdfSignatureAppearance
                 }
             }
 
-            Originalout?.Seek(0, SeekOrigin.Begin);
+            Originalout?.Seek(offset: 0, SeekOrigin.Begin);
         }
     }
 
@@ -593,44 +575,51 @@ public class PdfSignatureAppearance
         if (IsInvisible())
         {
             var t = new PdfTemplate(_writer);
-            t.BoundingBox = new Rectangle(0, 0);
-            _writer.AddDirectTemplateSimple(t, null);
+            t.BoundingBox = new Rectangle(urx: 0, ury: 0);
+            _writer.AddDirectTemplateSimple(t, forcedName: null);
+
             return t;
         }
 
         if (_app[0] == null)
         {
             var t = _app[0] = new PdfTemplate(_writer);
-            t.BoundingBox = new Rectangle(100, 100);
-            _writer.AddDirectTemplateSimple(t, new PdfName("n0"));
-            t.SetLiteral("% DSBlank\n");
+            t.BoundingBox = new Rectangle(urx: 100, ury: 100);
+            _writer.AddDirectTemplateSimple(t, new PdfName(name: "n0"));
+            t.SetLiteral(s: "% DSBlank\n");
         }
 
         if (_app[1] == null && !_acro6Layers)
         {
             var t = _app[1] = new PdfTemplate(_writer);
-            t.BoundingBox = new Rectangle(100, 100);
-            _writer.AddDirectTemplateSimple(t, new PdfName("n1"));
+            t.BoundingBox = new Rectangle(urx: 100, ury: 100);
+            _writer.AddDirectTemplateSimple(t, new PdfName(name: "n1"));
             t.SetLiteral(questionMark);
         }
 
         if (_app[2] == null)
         {
             string text;
+
             if (Layer2Text == null)
             {
                 var buf = new StringBuilder();
-                buf.Append("Digitally signed by ").Append(PdfPkcs7.GetSubjectFields(CertChain[0]).GetField("CN"))
-                   .Append('\n');
-                buf.Append("Date: ").Append(SignDate.ToString("yyyy.MM.dd HH:mm:ss zzz", CultureInfo.InvariantCulture));
+
+                buf.Append(value: "Digitally signed by ")
+                    .Append(PdfPkcs7.GetSubjectFields(CertChain[0]).GetField(name: "CN"))
+                    .Append(value: '\n');
+
+                buf.Append(value: "Date: ")
+                    .Append(SignDate.ToString(format: "yyyy.MM.dd HH:mm:ss zzz", CultureInfo.InvariantCulture));
+
                 if (Reason != null)
                 {
-                    buf.Append('\n').Append("Reason: ").Append(Reason);
+                    buf.Append(value: '\n').Append(value: "Reason: ").Append(Reason);
                 }
 
                 if (Location != null)
                 {
-                    buf.Append('\n').Append("Location: ").Append(Location);
+                    buf.Append(value: '\n').Append(value: "Location: ").Append(Location);
                 }
 
                 text = buf.ToString();
@@ -642,16 +631,18 @@ public class PdfSignatureAppearance
 
             var t = _app[2] = new PdfTemplate(_writer);
             t.BoundingBox = Rect;
-            _writer.AddDirectTemplateSimple(t, new PdfName("n2"));
+            _writer.AddDirectTemplateSimple(t, new PdfName(name: "n2"));
+
             if (_image != null)
             {
-                if (_imageScale.ApproxEquals(0))
+                if (_imageScale.ApproxEquals(d2: 0))
                 {
-                    t.AddImage(_image, Rect.Width, 0, 0, Rect.Height, 0, 0);
+                    t.AddImage(_image, Rect.Width, b: 0, c: 0, Rect.Height, e: 0, f: 0);
                 }
                 else
                 {
                     var usableScale = _imageScale;
+
                     if (_imageScale < 0)
                     {
                         usableScale = Math.Min(Rect.Width / _image.Width, Rect.Height / _image.Height);
@@ -661,11 +652,12 @@ public class PdfSignatureAppearance
                     var h = _image.Height * usableScale;
                     var x = (Rect.Width - w) / 2;
                     var y = (Rect.Height - h) / 2;
-                    t.AddImage(_image, w, 0, 0, h, x, y);
+                    t.AddImage(_image, w, b: 0, c: 0, h, x, y);
                 }
             }
 
             Font font;
+
             if (_layer2Font == null)
             {
                 font = new Font();
@@ -684,50 +676,33 @@ public class PdfSignatureAppearance
                 (Render == SignatureRender.GraphicAndDescription && SignatureGraphic != null))
             {
                 // origin is the bottom-left
-                signatureRect = new Rectangle(
-                                              Margin,
-                                              Margin,
-                                              Rect.Width / 2 - Margin,
-                                              Rect.Height - Margin);
-                dataRect = new Rectangle(
-                                         Rect.Width / 2 + Margin / 2,
-                                         Margin,
-                                         Rect.Width - Margin / 2,
-                                         Rect.Height - Margin);
+                signatureRect = new Rectangle(Margin, Margin, Rect.Width / 2 - Margin, Rect.Height - Margin);
+
+                dataRect = new Rectangle(Rect.Width / 2 + Margin / 2, Margin, Rect.Width - Margin / 2,
+                    Rect.Height - Margin);
 
                 if (Rect.Height > Rect.Width)
                 {
-                    signatureRect = new Rectangle(
-                                                  Margin,
-                                                  Rect.Height / 2,
-                                                  Rect.Width - Margin,
-                                                  Rect.Height);
-                    dataRect = new Rectangle(
-                                             Margin,
-                                             Margin,
-                                             Rect.Width - Margin,
-                                             Rect.Height / 2 - Margin);
+                    signatureRect = new Rectangle(Margin, Rect.Height / 2, Rect.Width - Margin, Rect.Height);
+                    dataRect = new Rectangle(Margin, Margin, Rect.Width - Margin, Rect.Height / 2 - Margin);
                 }
             }
             else
             {
-                dataRect = new Rectangle(
-                                         Margin,
-                                         Margin,
-                                         Rect.Width - Margin,
-                                         Rect.Height * (1 - TopSection) - Margin);
+                dataRect = new Rectangle(Margin, Margin, Rect.Width - Margin, Rect.Height * (1 - TopSection) - Margin);
             }
 
             if (Render == SignatureRender.NameAndDescription)
             {
-                var signedBy = PdfPkcs7.GetSubjectFields(CertChain[0]).GetField("CN");
+                var signedBy = PdfPkcs7.GetSubjectFields(CertChain[0]).GetField(name: "CN");
                 var sr2 = new Rectangle(signatureRect.Width - Margin, signatureRect.Height - Margin);
-                var signedSize = FitText(font, signedBy, sr2, -1, _runDirection);
+                var signedSize = FitText(font, signedBy, sr2, maxFontSize: -1, _runDirection);
 
                 var ct2 = new ColumnText(t);
                 ct2.RunDirection = _runDirection;
+
                 ct2.SetSimpleColumn(new Phrase(signedBy, font), signatureRect.Left, signatureRect.Bottom,
-                                    signatureRect.Right, signatureRect.Top, signedSize, Element.ALIGN_LEFT);
+                    signatureRect.Right, signatureRect.Top, signedSize, Element.ALIGN_LEFT);
 
                 ct2.Go();
             }
@@ -735,22 +710,25 @@ public class PdfSignatureAppearance
             {
                 var ct2 = new ColumnText(t);
                 ct2.RunDirection = _runDirection;
-                ct2.SetSimpleColumn(signatureRect.Left, signatureRect.Bottom, signatureRect.Right, signatureRect.Top, 0,
-                                    Element.ALIGN_RIGHT);
+
+                ct2.SetSimpleColumn(signatureRect.Left, signatureRect.Bottom, signatureRect.Right, signatureRect.Top,
+                    leading: 0, Element.ALIGN_RIGHT);
 
                 var im = Image.GetInstance(SignatureGraphic);
                 im.ScaleToFit(signatureRect.Width, signatureRect.Height);
 
                 var p = new Paragraph();
+
                 // must calculate the point to draw from to make image appear in middle of column
                 float x = 0;
+
                 // experimentation found this magic number to counteract Adobe's signature graphic, which
                 // offsets the y co-ordinate by 15 units
                 var y = -im.ScaledHeight + 15;
 
                 x = x + (signatureRect.Width - im.ScaledWidth) / 2;
                 y = y - (signatureRect.Height - im.ScaledHeight) / 2;
-                p.Add(new Chunk(im, x + (signatureRect.Width - im.ScaledWidth) / 2, y, false));
+                p.Add(new Chunk(im, x + (signatureRect.Width - im.ScaledWidth) / 2, y, changeLeading: false));
                 ct2.AddElement(p);
                 ct2.Go();
             }
@@ -758,30 +736,33 @@ public class PdfSignatureAppearance
             if (size <= 0)
             {
                 var sr = new Rectangle(dataRect.Width, dataRect.Height);
-                size = FitText(font, text, sr, 12, _runDirection);
+                size = FitText(font, text, sr, maxFontSize: 12, _runDirection);
             }
 
             var ct = new ColumnText(t);
             ct.RunDirection = _runDirection;
+
             ct.SetSimpleColumn(new Phrase(text, font), dataRect.Left, dataRect.Bottom, dataRect.Right, dataRect.Top,
-                               size, Element.ALIGN_LEFT);
+                size, Element.ALIGN_LEFT);
+
             ct.Go();
         }
 
         if (_app[3] == null && !_acro6Layers)
         {
             var t = _app[3] = new PdfTemplate(_writer);
-            t.BoundingBox = new Rectangle(100, 100);
-            _writer.AddDirectTemplateSimple(t, new PdfName("n3"));
-            t.SetLiteral("% DSBlank\n");
+            t.BoundingBox = new Rectangle(urx: 100, ury: 100);
+            _writer.AddDirectTemplateSimple(t, new PdfName(name: "n3"));
+            t.SetLiteral(s: "% DSBlank\n");
         }
 
         if (_app[4] == null && !_acro6Layers)
         {
             var t = _app[4] = new PdfTemplate(_writer);
-            t.BoundingBox = new Rectangle(0, Rect.Height * (1 - TopSection), Rect.Right, Rect.Top);
-            _writer.AddDirectTemplateSimple(t, new PdfName("n4"));
+            t.BoundingBox = new Rectangle(llx: 0, Rect.Height * (1 - TopSection), Rect.Right, Rect.Top);
+            _writer.AddDirectTemplateSimple(t, new PdfName(name: "n4"));
             Font font;
+
             if (_layer2Font == null)
             {
                 font = new Font();
@@ -793,23 +774,27 @@ public class PdfSignatureAppearance
 
             var size = font.Size;
             var text = "Signature Not Verified";
+
             if (_layer4Text != null)
             {
                 text = _layer4Text;
             }
 
             var sr = new Rectangle(Rect.Width - 2 * Margin, Rect.Height * TopSection - 2 * Margin);
-            size = FitText(font, text, sr, 15, _runDirection);
+            size = FitText(font, text, sr, maxFontSize: 15, _runDirection);
             var ct = new ColumnText(t);
             ct.RunDirection = _runDirection;
-            ct.SetSimpleColumn(new Phrase(text, font), Margin, 0, Rect.Width - Margin, Rect.Height - Margin, size,
-                               Element.ALIGN_LEFT);
+
+            ct.SetSimpleColumn(new Phrase(text, font), Margin, lly: 0, Rect.Width - Margin, Rect.Height - Margin, size,
+                Element.ALIGN_LEFT);
+
             ct.Go();
         }
 
         var rotation = _writer.Reader.GetPageRotation(Page);
         var rotated = new Rectangle(Rect);
         var n = rotation;
+
         while (n > 0)
         {
             rotated = rotated.Rotate();
@@ -820,42 +805,46 @@ public class PdfSignatureAppearance
         {
             _frm = new PdfTemplate(_writer);
             _frm.BoundingBox = rotated;
-            _writer.AddDirectTemplateSimple(_frm, new PdfName("FRM"));
+            _writer.AddDirectTemplateSimple(_frm, new PdfName(name: "FRM"));
             var scale = Math.Min(Rect.Width, Rect.Height) * 0.9f;
             var x = (Rect.Width - scale) / 2;
             var y = (Rect.Height - scale) / 2;
             scale /= 100;
+
             if (rotation == 90)
             {
-                _frm.ConcatCtm(0, 1, -1, 0, Rect.Height, 0);
+                _frm.ConcatCtm(a: 0, b: 1, c: -1, d: 0, Rect.Height, f: 0);
             }
             else if (rotation == 180)
             {
-                _frm.ConcatCtm(-1, 0, 0, -1, Rect.Width, Rect.Height);
+                _frm.ConcatCtm(a: -1, b: 0, c: 0, d: -1, Rect.Width, Rect.Height);
             }
             else if (rotation == 270)
             {
-                _frm.ConcatCtm(0, -1, 1, 0, 0, Rect.Width);
+                _frm.ConcatCtm(a: 0, b: -1, c: 1, d: 0, e: 0, Rect.Width);
             }
 
-            _frm.AddTemplate(_app[0], 0, 0);
+            _frm.AddTemplate(_app[0], x: 0, y: 0);
+
             if (!_acro6Layers)
             {
-                _frm.AddTemplate(_app[1], scale, 0, 0, scale, x, y);
+                _frm.AddTemplate(_app[1], scale, b: 0, c: 0, scale, x, y);
             }
 
-            _frm.AddTemplate(_app[2], 0, 0);
+            _frm.AddTemplate(_app[2], x: 0, y: 0);
+
             if (!_acro6Layers)
             {
-                _frm.AddTemplate(_app[3], scale, 0, 0, scale, x, y);
-                _frm.AddTemplate(_app[4], 0, 0);
+                _frm.AddTemplate(_app[3], scale, b: 0, c: 0, scale, x, y);
+                _frm.AddTemplate(_app[4], x: 0, y: 0);
             }
         }
 
         var napp = new PdfTemplate(_writer);
         napp.BoundingBox = rotated;
-        _writer.AddDirectTemplateSimple(napp, null);
-        napp.AddTemplate(_frm, 0, 0);
+        _writer.AddDirectTemplateSimple(napp, forcedName: null);
+        napp.AddTemplate(_frm, x: 0, y: 0);
+
         return napp;
     }
 
@@ -880,6 +869,7 @@ public class PdfSignatureAppearance
         }
 
         var t = _app[layer];
+
         if (t == null)
         {
             t = _app[layer] = new PdfTemplate(_writer);
@@ -900,10 +890,12 @@ public class PdfSignatureAppearance
         var name = "Signature";
         var step = 0;
         var found = false;
+
         while (!found)
         {
             ++step;
             var n1 = name + step;
+
             if (af.GetFieldItem(n1) != null)
             {
                 continue;
@@ -911,17 +903,20 @@ public class PdfSignatureAppearance
 
             n1 += ".";
             found = true;
+
             foreach (var fn in af.Fields.Keys)
             {
                 if (fn.StartsWith(n1, StringComparison.Ordinal))
                 {
                     found = false;
+
                     break;
                 }
             }
         }
 
         name += step;
+
         return name;
     }
 
@@ -937,7 +932,7 @@ public class PdfSignatureAppearance
         {
             _frm = new PdfTemplate(_writer);
             _frm.BoundingBox = Rect;
-            _writer.AddDirectTemplateSimple(_frm, new PdfName("FRM"));
+            _writer.AddDirectTemplateSimple(_frm, new PdfName(name: "FRM"));
         }
 
         return _frm;
@@ -947,7 +942,7 @@ public class PdfSignatureAppearance
     ///     Gets the visibility status of the signature.
     /// </summary>
     /// <returns>the visibility status of the signature</returns>
-    public bool IsInvisible() => Rect == null || Rect.Width.ApproxEquals(0) || Rect.Height.ApproxEquals(0);
+    public bool IsInvisible() => Rect == null || Rect.Width.ApproxEquals(d2: 0) || Rect.Height.ApproxEquals(d2: 0);
 
     /// <summary>
     ///     Checks if a new field was created.
@@ -971,10 +966,7 @@ public class PdfSignatureAppearance
     ///     @throws IOException on error
     ///     @throws DocumentException on error
     /// </summary>
-    public void PreClose()
-    {
-        PreClose(new NullValueDictionary<PdfName, int>());
-    }
+    public void PreClose() => PreClose(new NullValueDictionary<PdfName, int>());
 
     /// <summary>
     ///     This is the first method to be called when using external signatures. The general sequence is:
@@ -999,7 +991,7 @@ public class PdfSignatureAppearance
 
         if (_preClosed)
         {
-            throw new DocumentException("Document already pre closed.");
+            throw new DocumentException(message: "Document already pre closed.");
         }
 
         _preClosed = true;
@@ -1008,14 +1000,16 @@ public class PdfSignatureAppearance
         var fieldExists = !(IsInvisible() || IsNewField());
         var refSig = _writer.PdfIndirectReference;
         _writer.SigFlags = 3;
+
         if (fieldExists)
         {
-            var widget = af.GetFieldItem(name).GetWidget(0);
+            var widget = af.GetFieldItem(name).GetWidget(idx: 0);
             _writer.MarkUsed(widget);
             widget.Put(PdfName.P, _writer.GetPageReference(Page));
             widget.Put(PdfName.V, refSig);
             var obj = PdfReader.GetPdfObjectRelease(widget.Get(PdfName.F));
             var flags = 0;
+
             if (obj != null && obj.IsNumber())
             {
                 flags = ((PdfNumber)obj).IntValue;
@@ -1035,13 +1029,14 @@ public class PdfSignatureAppearance
             sigField.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_LOCKED;
 
             var pagen = Page;
+
             if (!IsInvisible())
             {
-                sigField.SetWidget(PageRect, null);
+                sigField.SetWidget(PageRect, highlight: null);
             }
             else
             {
-                sigField.SetWidget(new Rectangle(0, 0), null);
+                sigField.SetWidget(new Rectangle(urx: 0, ury: 0), highlight: null);
             }
 
             sigField.SetAppearance(PdfAnnotation.AppearanceNormal, GetAppearance());
@@ -1050,6 +1045,7 @@ public class PdfSignatureAppearance
         }
 
         _exclusionLocations = new NullValueDictionary<PdfName, PdfLiteral>();
+
         if (CryptoDictionary == null)
         {
             if (PdfName.AdobePpklite.Equals(Filter))
@@ -1070,6 +1066,7 @@ public class PdfSignatureAppearance
             }
 
             SigStandard.SetExternalDigest(_externalDigest, _externalRsAdata, _digestEncryptionAlgorithm);
+
             if (Reason != null)
             {
                 SigStandard.Reason = Reason;
@@ -1088,13 +1085,16 @@ public class PdfSignatureAppearance
             SigStandard.Put(PdfName.M, new PdfDate(SignDate));
             SigStandard.SetSignInfo(PrivKey, CertChain, CrlList);
             var contents = (PdfString)SigStandard.Get(PdfName.Contents);
+
             var lit = new PdfLiteral((contents.ToString().Length + (PdfName.AdobePpklite.Equals(Filter) ? 0 : 64)) * 2 +
                                      2);
+
             _exclusionLocations[PdfName.Contents] = lit;
             SigStandard.Put(PdfName.Contents, lit);
-            lit = new PdfLiteral(80);
+            lit = new PdfLiteral(size: 80);
             _exclusionLocations[PdfName.Byterange] = lit;
             SigStandard.Put(PdfName.Byterange, lit);
+
             if (CertificationLevel > 0)
             {
                 addDocMdp(SigStandard);
@@ -1105,13 +1105,14 @@ public class PdfSignatureAppearance
                 _signatureEvent.GetSignatureDictionary(SigStandard);
             }
 
-            _writer.AddToBody(SigStandard, refSig, false);
+            _writer.AddToBody(SigStandard, refSig, inObjStm: false);
         }
         else
         {
-            var lit = new PdfLiteral(80);
+            var lit = new PdfLiteral(size: 80);
             _exclusionLocations[PdfName.Byterange] = lit;
             CryptoDictionary.Put(PdfName.Byterange, lit);
+
             foreach (var entry in exclusionSizes)
             {
                 var key = entry.Key;
@@ -1131,15 +1132,15 @@ public class PdfSignatureAppearance
                 _signatureEvent.GetSignatureDictionary(CryptoDictionary);
             }
 
-            _writer.AddToBody(CryptoDictionary, refSig, false);
+            _writer.AddToBody(CryptoDictionary, refSig, inObjStm: false);
         }
 
         if (CertificationLevel > 0)
         {
             // add DocMDP entry to root
             var docmdp = new PdfDictionary();
-            docmdp.Put(new PdfName("DocMDP"), refSig);
-            _writer.Reader.Catalog.Put(new PdfName("Perms"), docmdp);
+            docmdp.Put(new PdfName(name: "DocMDP"), refSig);
+            _writer.Reader.Catalog.Put(new PdfName(name: "Perms"), docmdp);
         }
 
         _writer.Close(Stamper.MoreInfo);
@@ -1148,6 +1149,7 @@ public class PdfSignatureAppearance
         var byteRangePosition = _exclusionLocations[PdfName.Byterange].Position;
         _exclusionLocations.Remove(PdfName.Byterange);
         var idx = 1;
+
         foreach (var lit in _exclusionLocations.Values)
         {
             var n = lit.Position;
@@ -1155,7 +1157,8 @@ public class PdfSignatureAppearance
             _range[idx++] = lit.PosLength + n;
         }
 
-        Array.Sort(_range, 1, _range.Length - 2);
+        Array.Sort(_range, index: 1, _range.Length - 2);
+
         for (var k = 3; k < _range.Length - 2; k += 2)
         {
             _range[k] -= _range[k - 1];
@@ -1167,14 +1170,15 @@ public class PdfSignatureAppearance
             _boutLen = Sigout.Size;
             _range[_range.Length - 1] = _boutLen - _range[_range.Length - 2];
             var bf = new ByteBuffer();
-            bf.Append('[');
+            bf.Append(c: '[');
+
             for (var k = 0; k < _range.Length; ++k)
             {
-                bf.Append(_range[k]).Append(' ');
+                bf.Append(_range[k]).Append(c: ' ');
             }
 
-            bf.Append(']');
-            Array.Copy(bf.Buffer, 0, _bout, byteRangePosition, bf.Size);
+            bf.Append(c: ']');
+            Array.Copy(bf.Buffer, sourceIndex: 0, _bout, byteRangePosition, bf.Size);
         }
         else
         {
@@ -1184,15 +1188,16 @@ public class PdfSignatureAppearance
                 var boutLen = (int)_raf.Length;
                 _range[_range.Length - 1] = boutLen - _range[_range.Length - 2];
                 var bf = new ByteBuffer();
-                bf.Append('[');
+                bf.Append(c: '[');
+
                 for (var k = 0; k < _range.Length; ++k)
                 {
-                    bf.Append(_range[k]).Append(' ');
+                    bf.Append(_range[k]).Append(c: ' ');
                 }
 
-                bf.Append(']');
+                bf.Append(c: ']');
                 _raf.Seek(byteRangePosition, SeekOrigin.Begin);
-                _raf.Write(bf.Buffer, 0, bf.Size);
+                _raf.Write(bf.Buffer, offset: 0, bf.Size);
             }
             catch (IOException)
             {
@@ -1257,13 +1262,14 @@ public class PdfSignatureAppearance
     {
         if (fieldName != null)
         {
-            if (fieldName.IndexOf(".", StringComparison.Ordinal) >= 0)
+            if (fieldName.IndexOf(value: '.', StringComparison.Ordinal) >= 0)
             {
-                throw new ArgumentException("Field names cannot contain a dot.");
+                throw new ArgumentException(message: "Field names cannot contain a dot.");
             }
 
             var af = _writer.AcroFields;
             var item = af.GetFieldItem(fieldName);
+
             if (item != null)
             {
                 throw new ArgumentException("The field " + fieldName + " already exists.");
@@ -1292,12 +1298,14 @@ public class PdfSignatureAppearance
     {
         var af = _writer.AcroFields;
         var item = af.GetFieldItem(fieldName);
+
         if (item == null)
         {
             throw new ArgumentException("The field " + fieldName + " does not exist.");
         }
 
-        var merged = item.GetMerged(0);
+        var merged = item.GetMerged(idx: 0);
+
         if (!PdfName.Sig.Equals(PdfReader.GetPdfObject(merged.Get(PdfName.Ft))))
         {
             throw new ArgumentException("The field " + fieldName + " is not a signature field.");
@@ -1305,37 +1313,32 @@ public class PdfSignatureAppearance
 
         FieldName = fieldName;
         var r = merged.GetAsArray(PdfName.Rect);
-        var llx = r.GetAsNumber(0).FloatValue;
-        var lly = r.GetAsNumber(1).FloatValue;
-        var urx = r.GetAsNumber(2).FloatValue;
-        var ury = r.GetAsNumber(3).FloatValue;
+        var llx = r.GetAsNumber(idx: 0).FloatValue;
+        var lly = r.GetAsNumber(idx: 1).FloatValue;
+        var urx = r.GetAsNumber(idx: 2).FloatValue;
+        var ury = r.GetAsNumber(idx: 3).FloatValue;
         PageRect = new Rectangle(llx, lly, urx, ury);
         PageRect.Normalize();
-        Page = item.GetPage(0);
+        Page = item.GetPage(idx: 0);
         var rotation = _writer.Reader.GetPageRotation(Page);
         var pageSize = _writer.Reader.GetPageSizeWithRotation(Page);
+
         switch (rotation)
         {
             case 90:
-                PageRect = new Rectangle(
-                                         PageRect.Bottom,
-                                         pageSize.Top - PageRect.Left,
-                                         PageRect.Top,
-                                         pageSize.Top - PageRect.Right);
+                PageRect = new Rectangle(PageRect.Bottom, pageSize.Top - PageRect.Left, PageRect.Top,
+                    pageSize.Top - PageRect.Right);
+
                 break;
             case 180:
-                PageRect = new Rectangle(
-                                         pageSize.Right - PageRect.Left,
-                                         pageSize.Top - PageRect.Bottom,
-                                         pageSize.Right - PageRect.Right,
-                                         pageSize.Top - PageRect.Top);
+                PageRect = new Rectangle(pageSize.Right - PageRect.Left, pageSize.Top - PageRect.Bottom,
+                    pageSize.Right - PageRect.Right, pageSize.Top - PageRect.Top);
+
                 break;
             case 270:
-                PageRect = new Rectangle(
-                                         pageSize.Right - PageRect.Bottom,
-                                         PageRect.Left,
-                                         pageSize.Right - PageRect.Top,
-                                         PageRect.Right);
+                PageRect = new Rectangle(pageSize.Right - PageRect.Bottom, PageRect.Left, pageSize.Right - PageRect.Top,
+                    PageRect.Right);
+
                 break;
         }
 
@@ -1347,32 +1350,26 @@ public class PdfSignatureAppearance
         Rect = new Rectangle(PageRect.Width, PageRect.Height);
     }
 
-    internal void SetStamper(PdfStamper stamper)
-    {
-        Stamper = stamper;
-    }
+    internal void SetStamper(PdfStamper stamper) => Stamper = stamper;
 
-    internal void SetTempFile(string tempFile)
-    {
-        TempFile = tempFile;
-    }
+    internal void SetTempFile(string tempFile) => TempFile = tempFile;
 
     private void addDocMdp(PdfDictionary crypto)
     {
         var reference = new PdfDictionary();
         var transformParams = new PdfDictionary();
         transformParams.Put(PdfName.P, new PdfNumber(CertificationLevel));
-        transformParams.Put(PdfName.V, new PdfName("1.2"));
+        transformParams.Put(PdfName.V, new PdfName(name: "1.2"));
         transformParams.Put(PdfName.TYPE, PdfName.Transformparams);
         reference.Put(PdfName.Transformmethod, PdfName.Docmdp);
         reference.Put(PdfName.TYPE, PdfName.Sigref);
         reference.Put(PdfName.Transformparams, transformParams);
-        reference.Put(new PdfName("DigestValue"), new PdfString("aa"));
+        reference.Put(new PdfName(name: "DigestValue"), new PdfString(value: "aa"));
         var loc = new PdfArray();
-        loc.Add(new PdfNumber(0));
-        loc.Add(new PdfNumber(0));
-        reference.Put(new PdfName("DigestLocation"), loc);
-        reference.Put(new PdfName("DigestMethod"), new PdfName("MD5"));
+        loc.Add(new PdfNumber(value: 0));
+        loc.Add(new PdfNumber(value: 0));
+        reference.Put(new PdfName(name: "DigestLocation"), loc);
+        reference.Put(new PdfName(name: "DigestMethod"), new PdfName(name: "MD5"));
         reference.Put(PdfName.Data, _writer.Reader.Trailer.Get(PdfName.Root));
         var types = new PdfArray();
         types.Add(reference);
@@ -1436,8 +1433,8 @@ public class PdfSignatureAppearance
                 throw new ArgumentNullException(nameof(buffer));
             }
 
-            if (offset < 0 || offset > buffer.Length || count < 0 ||
-                offset + count > buffer.Length || offset + count < 0)
+            if (offset < 0 || offset > buffer.Length || count < 0 || offset + count > buffer.Length ||
+                offset + count < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(offset));
             }
@@ -1456,6 +1453,7 @@ public class PdfSignatureAppearance
             {
                 var start = _range[k];
                 var end = start + _range[k + 1];
+
                 if (_rangePosition < start)
                 {
                     _rangePosition = start;
@@ -1464,6 +1462,7 @@ public class PdfSignatureAppearance
                 if (_rangePosition >= start && _rangePosition < end)
                 {
                     var lenf = Math.Min(count, end - _rangePosition);
+
                     if (_raf == null)
                     {
                         Array.Copy(_bout, _rangePosition, buffer, offset, lenf);
@@ -1475,6 +1474,7 @@ public class PdfSignatureAppearance
                     }
 
                     _rangePosition += lenf;
+
                     return lenf;
                 }
             }
@@ -1487,7 +1487,8 @@ public class PdfSignatureAppearance
         /// </summary>
         public override int ReadByte()
         {
-            var n = Read(_b, 0, 1);
+            var n = Read(_b, offset: 0, count: 1);
+
             if (n != 1)
             {
                 return -1;
@@ -1515,9 +1516,10 @@ public class PdfSignatureAppearance
             while (count > 0)
             {
                 var n = _raf.Read(b, offset, count);
+
                 if (n <= 0)
                 {
-                    throw new IOException("Insufficient data.");
+                    throw new IOException(message: "Insufficient data.");
                 }
 
                 count -= n;

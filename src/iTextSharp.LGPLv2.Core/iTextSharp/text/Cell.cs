@@ -117,7 +117,7 @@ public class Cell : Rectangle, ITextElementArray
     /// <overloads>
     ///     Has five overloads.
     /// </overloads>
-    public Cell() : base(0, 0, 0, 0)
+    public Cell() : base(llx: 0, lly: 0, urx: 0, ury: 0)
     {
         // creates a Rectangle with BY DEFAULT a border of 0.5
 
@@ -135,10 +135,7 @@ public class Cell : Rectangle, ITextElementArray
     ///     Constructs an empty Cell (for internal use only).
     /// </summary>
     /// <param name="dummy">a dummy value</param>
-    public Cell(bool dummy) : this()
-    {
-        ArrayList.Add(new Paragraph(0));
-    }
+    public Cell(bool dummy) : this() => ArrayList.Add(new Paragraph(leading: 0));
 
     /// <summary>
     ///     Constructs a Cell with a certain content.
@@ -147,10 +144,7 @@ public class Cell : Rectangle, ITextElementArray
     ///     The string will be converted into a Paragraph.
     /// </remarks>
     /// <param name="content">a string</param>
-    public Cell(string content) : this()
-    {
-        AddElement(new Paragraph(content));
-    }
+    public Cell(string content) : this() => AddElement(new Paragraph(content));
 
     /// <summary>
     ///     Constructs a Cell with a certain Element.
@@ -174,9 +168,10 @@ public class Cell : Rectangle, ITextElementArray
     {
         get
         {
-            var cell = new Cell(true);
+            var cell = new Cell(dummy: true);
             cell.Colspan = 3;
             cell.Border = NO_BORDER;
+
             return cell;
         }
     }
@@ -190,9 +185,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Bottom
     {
-        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -273,9 +268,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Left
     {
-        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -309,9 +304,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Right
     {
-        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -347,9 +342,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <value>none</value>
     public override float Top
     {
-        get => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        get => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
-        set => throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+        set => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
     }
 
     /// <summary>
@@ -412,6 +407,7 @@ public class Cell : Rectangle, ITextElementArray
         get
         {
             var tmp = new List<Chunk>();
+
             foreach (var ele in ArrayList)
             {
                 tmp.AddRange(ele.Chunks);
@@ -460,6 +456,7 @@ public class Cell : Rectangle, ITextElementArray
         try
         {
             AddElement(o);
+
             return true;
         }
         catch (BadElementException bee)
@@ -468,7 +465,8 @@ public class Cell : Rectangle, ITextElementArray
         }
         catch
         {
-            throw new InvalidOperationException("You can only add objects that implement the Element interface.");
+            throw new InvalidOperationException(
+                message: "You can only add objects that implement the Element interface.");
         }
     }
 
@@ -496,11 +494,12 @@ public class Cell : Rectangle, ITextElementArray
 
         if (IsTable())
         {
-            var table = (Table)ArrayList[0];
+            var table = (Table)ArrayList[index: 0];
             var tmp = new Cell(element);
             tmp.Border = NO_BORDER;
             tmp.Colspan = table.Columns;
             table.AddCell(tmp);
+
             return;
         }
 
@@ -509,11 +508,12 @@ public class Cell : Rectangle, ITextElementArray
             case LISTITEM:
             case ROW:
             case CELL:
-                throw new BadElementException("You can't add listitems, rows or cells to a cell.");
+                throw new BadElementException(message: "You can't add listitems, rows or cells to a cell.");
             case JPEG:
             case IMGRAW:
             case IMGTEMPLATE:
                 ArrayList.Add(element);
+
                 break;
             case LIST:
                 if (float.IsNaN(Leading))
@@ -527,6 +527,7 @@ public class Cell : Rectangle, ITextElementArray
                 }
 
                 ArrayList.Add(element);
+
                 return;
             case ANCHOR:
             case PARAGRAPH:
@@ -542,6 +543,7 @@ public class Cell : Rectangle, ITextElementArray
                 }
 
                 ArrayList.Add(element);
+
                 return;
             case CHUNK:
                 if (((Chunk)element).IsEmpty())
@@ -550,9 +552,10 @@ public class Cell : Rectangle, ITextElementArray
                 }
 
                 ArrayList.Add(element);
+
                 return;
             case TABLE:
-                var table = new Table(3);
+                var table = new Table(columns: 3);
                 var widths = new float[3];
                 widths[1] = ((Table)element).Width;
 
@@ -561,19 +564,23 @@ public class Cell : Rectangle, ITextElementArray
                     case ALIGN_LEFT:
                         widths[0] = 0f;
                         widths[2] = 100f - widths[1];
+
                         break;
                     case ALIGN_CENTER:
                         widths[0] = (100f - widths[1]) / 2f;
                         widths[2] = widths[0];
+
                         break;
                     case ALIGN_RIGHT:
                         widths[0] = 100f - widths[1];
                         widths[2] = 0f;
+
                         break;
                 }
 
                 table.Widths = widths;
                 Cell tmp;
+
                 if (ArrayList.Count == 0)
                 {
                     table.AddCell(DummyCell);
@@ -583,6 +590,7 @@ public class Cell : Rectangle, ITextElementArray
                     tmp = new Cell();
                     tmp.Border = NO_BORDER;
                     tmp.Colspan = 3;
+
                     foreach (var ele in ArrayList)
                     {
                         tmp.Add(ele);
@@ -601,9 +609,11 @@ public class Cell : Rectangle, ITextElementArray
                 table.AddCell(DummyCell);
                 Clear();
                 ArrayList.Add(table);
+
                 return;
             default:
                 ArrayList.Add(element);
+
                 break;
         }
     }
@@ -611,10 +621,7 @@ public class Cell : Rectangle, ITextElementArray
     /// <summary>
     ///     Clears all the Elements of this Cell.
     /// </summary>
-    public void Clear()
-    {
-        ArrayList.Clear();
-    }
+    public void Clear() => ArrayList.Clear();
 
     /// <summary>
     ///     Creates a PdfPCell based on this Cell object.
@@ -625,12 +632,12 @@ public class Cell : Rectangle, ITextElementArray
     {
         if (rowspan > 1)
         {
-            throw new BadElementException("PdfPCells can't have a rowspan > 1");
+            throw new BadElementException(message: "PdfPCells can't have a rowspan > 1");
         }
 
         if (IsTable())
         {
-            return new PdfPCell(((Table)ArrayList[0]).CreatePdfPTable());
+            return new PdfPCell(((Table)ArrayList[index: 0]).CreatePdfPTable());
         }
 
         var cell = new PdfPCell();
@@ -639,9 +646,10 @@ public class Cell : Rectangle, ITextElementArray
         cell.Colspan = colspan;
         cell.UseBorderPadding = useBorderPadding;
         cell.UseDescender = useDescender;
-        cell.SetLeading(Leading, 0);
+        cell.SetLeading(Leading, multipliedLeading: 0);
         cell.CloneNonPositionParameters(this);
         cell.NoWrap = noWrap;
+
         foreach (var i in Elements)
         {
             if (i.Type == PHRASE || i.Type == PARAGRAPH)
@@ -664,32 +672,32 @@ public class Cell : Rectangle, ITextElementArray
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public static float GetBottom(int margin) =>
-        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetBottom(int margin)
+        => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public static float GetLeft(int margin) =>
-        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetLeft(int margin)
+        => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public static float GetRight(int margin) =>
-        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetRight(int margin)
+        => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     This method throws an Exception.
     /// </summary>
     /// <param name="margin">new value</param>
     /// <returns>none</returns>
-    public static float GetTop(int margin) =>
-        throw new InvalidOperationException("Dimensions of a Cell can't be calculated. See the FAQ.");
+    public static float GetTop(int margin)
+        => throw new InvalidOperationException(message: "Dimensions of a Cell can't be calculated. See the FAQ.");
 
     /// <summary>
     ///     Gets the width as a String.
@@ -698,9 +706,10 @@ public class Cell : Rectangle, ITextElementArray
     public string GetWidthAsString()
     {
         var w = width.ToString(CultureInfo.InvariantCulture);
-        if (w.EndsWith(".0", StringComparison.Ordinal))
+
+        if (w.EndsWith(value: ".0", StringComparison.Ordinal))
         {
-            w = w.Substring(0, w.Length - 2);
+            w = w.Substring(startIndex: 0, w.Length - 2);
         }
 
         if (Percentage)
@@ -725,7 +734,8 @@ public class Cell : Rectangle, ITextElementArray
             case 0:
                 return true;
             case 1:
-                var element = ArrayList[0];
+                var element = ArrayList[index: 0];
+
                 switch (element.Type)
                 {
                     case CHUNK:
@@ -748,7 +758,7 @@ public class Cell : Rectangle, ITextElementArray
     ///     Checks if the Cell is empty.
     /// </summary>
     /// <returns>false if there are non-empty Elements in the Cell.</returns>
-    public bool IsTable() => Size == 1 && ArrayList[0].Type == TABLE;
+    public bool IsTable() => Size == 1 && ArrayList[index: 0].Type == TABLE;
 
     /// <summary>
     ///     methods to set the membervariables
@@ -762,24 +772,28 @@ public class Cell : Rectangle, ITextElementArray
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_CENTER))
         {
             HorizontalAlignment = ALIGN_CENTER;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_RIGHT))
         {
             HorizontalAlignment = ALIGN_RIGHT;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_JUSTIFIED))
         {
             HorizontalAlignment = ALIGN_JUSTIFIED;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_JUSTIFIED_ALL))
         {
             HorizontalAlignment = ALIGN_JUSTIFIED_ALL;
+
             return;
         }
 
@@ -795,18 +809,21 @@ public class Cell : Rectangle, ITextElementArray
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_MIDDLE))
         {
             VerticalAlignment = ALIGN_MIDDLE;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_BOTTOM))
         {
             VerticalAlignment = ALIGN_BOTTOM;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_BASELINE))
         {
             VerticalAlignment = ALIGN_BASELINE;
+
             return;
         }
 
@@ -825,9 +842,9 @@ public class Cell : Rectangle, ITextElementArray
             throw new ArgumentNullException(nameof(value));
         }
 
-        if (value.EndsWith("%", StringComparison.Ordinal))
+        if (value.EndsWith(value: '%'))
         {
-            value = value.Substring(0, value.Length - 1);
+            value = value.Substring(startIndex: 0, value.Length - 1);
             Percentage = true;
         }
 
@@ -842,7 +859,7 @@ public class Cell : Rectangle, ITextElementArray
     {
         if (Size == 0)
         {
-            ArrayList.Add(new Paragraph(0));
+            ArrayList.Add(new Paragraph(leading: 0));
         }
     }
 }

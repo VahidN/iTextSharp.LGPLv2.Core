@@ -427,7 +427,7 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
         {
             var fn = tk.NextToken();
 
-            if (fn.StartsWith(value: "/", StringComparison.Ordinal))
+            if (fn.StartsWith(value: '/'))
             {
                 fn = fn.Substring(startIndex: 1);
             }

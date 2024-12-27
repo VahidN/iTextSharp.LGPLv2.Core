@@ -130,7 +130,7 @@ public class TextField : BaseField
             throw new ArgumentNullException(nameof(text));
         }
 
-        return new string('*', text.Length);
+        return new string(c: '*', text.Length);
     }
 
     public static string RemoveCrlf(string text)
@@ -140,20 +140,24 @@ public class TextField : BaseField
             throw new ArgumentNullException(nameof(text));
         }
 
-        if (text.IndexOf("\n", StringComparison.Ordinal) >= 0 || text.IndexOf("\r", StringComparison.Ordinal) >= 0)
+        if (text.IndexOf(value: '\n', StringComparison.Ordinal) >= 0 ||
+            text.IndexOf(value: '\r', StringComparison.Ordinal) >= 0)
         {
             var p = text.ToCharArray();
             var sb = new StringBuilder(p.Length);
+
             for (var k = 0; k < p.Length; ++k)
             {
                 var c = p[k];
+
                 if (c == '\n')
                 {
-                    sb.Append(' ');
+                    sb.Append(value: ' ');
                 }
                 else if (c == '\r')
                 {
-                    sb.Append(' ');
+                    sb.Append(value: ' ');
+
                     if (k < p.Length - 1 && p[k + 1] == '\n')
                     {
                         ++k;
@@ -181,29 +185,34 @@ public class TextField : BaseField
     {
         var app = GetBorderAppearance();
         app.BeginVariableText();
+
         if (string.IsNullOrEmpty(text))
         {
             app.EndVariableText();
+
             return app;
         }
 
         var borderExtra = borderStyle == PdfBorderDictionary.STYLE_BEVELED ||
                           borderStyle == PdfBorderDictionary.STYLE_INSET;
+
         var h = box.Height - borderWidth * 2 - _extraMarginTop;
         var bw2 = borderWidth;
+
         if (borderExtra)
         {
             h -= borderWidth * 2;
             bw2 *= 2;
         }
 
-        var offsetX = Math.Max(bw2, 1);
+        var offsetX = Math.Max(bw2, val2: 1);
         var offX = Math.Min(bw2, offsetX);
         app.SaveState();
         app.Rectangle(offX, offX, box.Width - 2 * offX, box.Height - 2 * offX);
         app.Clip();
         app.NewPath();
         string ptext;
+
         if ((options & PASSWORD) != 0)
         {
             ptext = ObfuscatePassword(text);
@@ -222,14 +231,20 @@ public class TextField : BaseField
         var rtl = checkRtl(ptext) ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_NO_BIDI;
         var usize = fontSize;
         var phrase = composePhrase(ptext, ufont, fcolor, usize);
+
         if ((options & MULTILINE) != 0)
         {
             var width = box.Width - 4 * offsetX - _extraMarginLeft;
-            var factor = ufont.GetFontDescriptor(BaseFont.BBOXURY, 1) - ufont.GetFontDescriptor(BaseFont.BBOXLLY, 1);
-            var ct = new ColumnText(null);
-            if (usize.ApproxEquals(0))
+
+            var factor = ufont.GetFontDescriptor(BaseFont.BBOXURY, fontSize: 1) -
+                         ufont.GetFontDescriptor(BaseFont.BBOXLLY, fontSize: 1);
+
+            var ct = new ColumnText(canvas: null);
+
+            if (usize.ApproxEquals(d2: 0))
             {
                 usize = h / factor;
+
                 if (usize > 4)
                 {
                     if (usize > 12)
@@ -237,17 +252,19 @@ public class TextField : BaseField
                         usize = 12;
                     }
 
-                    var step = Math.Max((usize - 4) / 10, 0.2f);
-                    ct.SetSimpleColumn(0, -h, width, 0);
+                    var step = Math.Max((usize - 4) / 10, val2: 0.2f);
+                    ct.SetSimpleColumn(llx: 0, -h, width, ury: 0);
                     ct.Alignment = alignment;
                     ct.RunDirection = rtl;
+
                     for (; usize > 4; usize -= step)
                     {
                         ct.YLine = 0;
                         changeFontSize(phrase, usize);
                         ct.SetText(phrase);
                         ct.Leading = factor * usize;
-                        var status = ct.Go(true);
+                        var status = ct.Go(simulate: true);
+
                         if ((status & ColumnText.NO_MORE_COLUMN) == 0)
                         {
                             break;
@@ -265,7 +282,7 @@ public class TextField : BaseField
             ct.Canvas = app;
             var leading = usize * factor;
             var offsetY = offsetX + h - ufont.GetFontDescriptor(BaseFont.BBOXURY, usize);
-            ct.SetSimpleColumn(_extraMarginLeft + 2 * offsetX, -20000, box.Width - 2 * offsetX, offsetY + leading);
+            ct.SetSimpleColumn(_extraMarginLeft + 2 * offsetX, lly: -20000, box.Width - 2 * offsetX, offsetY + leading);
             ct.Leading = leading;
             ct.Alignment = alignment;
             ct.RunDirection = rtl;
@@ -274,13 +291,15 @@ public class TextField : BaseField
         }
         else
         {
-            if (usize.ApproxEquals(0))
+            if (usize.ApproxEquals(d2: 0))
             {
-                var maxCalculatedSize = h / (ufont.GetFontDescriptor(BaseFont.BBOXURX, 1) -
-                                             ufont.GetFontDescriptor(BaseFont.BBOXLLY, 1));
-                changeFontSize(phrase, 1);
-                var wd = ColumnText.GetWidth(phrase, rtl, 0);
-                if (wd.ApproxEquals(0))
+                var maxCalculatedSize = h / (ufont.GetFontDescriptor(BaseFont.BBOXURX, fontSize: 1) -
+                                             ufont.GetFontDescriptor(BaseFont.BBOXLLY, fontSize: 1));
+
+                changeFontSize(phrase, size: 1);
+                var wd = ColumnText.GetWidth(phrase, rtl, arabicOptions: 0);
+
+                if (wd.ApproxEquals(d2: 0))
                 {
                     usize = maxCalculatedSize;
                 }
@@ -297,6 +316,7 @@ public class TextField : BaseField
 
             changeFontSize(phrase, usize);
             var offsetY = offX + (box.Height - 2 * offX - ufont.GetFontDescriptor(BaseFont.ASCENT, usize)) / 2;
+
             if (offsetY < offX)
             {
                 offsetY = offX;
@@ -313,6 +333,7 @@ public class TextField : BaseField
             {
                 var textLen = Math.Min(maxCharacterLength, ptext.Length);
                 var position = 0;
+
                 if (alignment == Element.ALIGN_RIGHT)
                 {
                     position = maxCharacterLength - textLen;
@@ -324,9 +345,10 @@ public class TextField : BaseField
 
                 var step = (box.Width - _extraMarginLeft) / maxCharacterLength;
                 var start = step / 2 + position * step;
+
                 if (textColor == null)
                 {
-                    app.SetGrayFill(0);
+                    app.SetGrayFill(value: 0);
                 }
                 else
                 {
@@ -334,14 +356,16 @@ public class TextField : BaseField
                 }
 
                 app.BeginText();
+
                 foreach (Chunk ck in phrase)
                 {
                     var bf = ck.Font.BaseFont;
                     app.SetFontAndSize(bf, usize);
-                    var sb = ck.Append("");
+                    var sb = ck.Append(str: "");
+
                     for (var j = 0; j < sb.Length; ++j)
                     {
-                        var c = sb.ToString(j, 1);
+                        var c = sb.ToString(j, length: 1);
                         var wd = bf.GetWidthPoint(c, usize);
                         app.SetTextMatrix(_extraMarginLeft + start - wd / 2, offsetY - _extraMarginTop);
                         app.ShowText(c);
@@ -354,25 +378,31 @@ public class TextField : BaseField
             else
             {
                 float x;
+
                 switch (alignment)
                 {
                     case Element.ALIGN_RIGHT:
                         x = _extraMarginLeft + box.Width - 2 * offsetX;
+
                         break;
                     case Element.ALIGN_CENTER:
                         x = _extraMarginLeft + box.Width / 2;
+
                         break;
                     default:
                         x = _extraMarginLeft + 2 * offsetX;
+
                         break;
                 }
 
-                ColumnText.ShowTextAligned(app, alignment, phrase, x, offsetY - _extraMarginTop, 0, rtl, 0);
+                ColumnText.ShowTextAligned(app, alignment, phrase, x, offsetY - _extraMarginTop, rotation: 0, rtl,
+                    arabicOptions: 0);
             }
         }
 
         app.RestoreState();
         app.EndVariableText();
+
         return app;
     }
 
@@ -382,7 +412,7 @@ public class TextField : BaseField
     ///     @throws DocumentException on error
     /// </summary>
     /// <returns>a new combo field</returns>
-    public PdfFormField GetComboField() => GetChoiceField(false);
+    public PdfFormField GetComboField() => GetChoiceField(isList: false);
 
     /// <summary>
     ///     Gets a new list field.
@@ -390,7 +420,7 @@ public class TextField : BaseField
     ///     @throws DocumentException on error
     /// </summary>
     /// <returns>a new list field</returns>
-    public PdfFormField GetListField() => GetChoiceField(true);
+    public PdfFormField GetListField() => GetChoiceField(isList: true);
 
     /// <summary>
     ///     Gets a new text field.
@@ -410,15 +440,18 @@ public class TextField : BaseField
             options &= ~MULTILINE;
         }
 
-        var field = PdfFormField.CreateTextField(writer, false, false, maxCharacterLength);
+        var field = PdfFormField.CreateTextField(writer, multiline: false, password: false, maxCharacterLength);
         field.SetWidget(box, PdfAnnotation.HighlightInvert);
+
         switch (alignment)
         {
             case Element.ALIGN_CENTER:
                 field.Quadding = PdfFormField.Q_CENTER;
+
                 break;
             case Element.ALIGN_RIGHT:
                 field.Quadding = PdfFormField.Q_RIGHT;
+
                 break;
         }
 
@@ -430,6 +463,7 @@ public class TextField : BaseField
         if (fieldName != null)
         {
             field.FieldName = fieldName;
+
             if (!"".Equals(text, StringComparison.Ordinal))
             {
                 field.ValueAsString = text;
@@ -481,14 +515,15 @@ public class TextField : BaseField
             }
         }
 
-        field.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(3));
+        field.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(dash: 3));
         var tp = GetAppearance();
         field.SetAppearance(PdfAnnotation.AppearanceNormal, tp);
         var da = (PdfAppearance)tp.Duplicate;
         da.SetFontAndSize(RealFont, fontSize);
+
         if (textColor == null)
         {
-            da.SetGrayFill(0);
+            da.SetGrayFill(value: 0);
         }
         else
         {
@@ -496,6 +531,7 @@ public class TextField : BaseField
         }
 
         field.DefaultAppearanceString = da;
+
         if (borderColor != null)
         {
             field.MkBorderColor = borderColor;
@@ -510,14 +546,17 @@ public class TextField : BaseField
         {
             case HIDDEN:
                 field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_HIDDEN;
+
                 break;
             case VISIBLE_BUT_DOES_NOT_PRINT:
                 break;
             case HIDDEN_BUT_PRINTABLE:
                 field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_NOVIEW;
+
                 break;
             default:
                 field.Flags = PdfAnnotation.FLAGS_PRINT;
+
                 break;
         }
 
@@ -545,13 +584,16 @@ public class TextField : BaseField
     {
         var app = GetBorderAppearance();
         app.BeginVariableText();
+
         if (_choices == null || _choices.Length == 0)
         {
             app.EndVariableText();
+
             return app;
         }
 
         var topChoice = _choiceSelection;
+
         if (topChoice >= _choices.Length)
         {
             topChoice = _choices.Length - 1;
@@ -564,15 +606,18 @@ public class TextField : BaseField
 
         var ufont = RealFont;
         var usize = fontSize;
-        if (usize.ApproxEquals(0))
+
+        if (usize.ApproxEquals(d2: 0))
         {
             usize = 12;
         }
 
         var borderExtra = borderStyle == PdfBorderDictionary.STYLE_BEVELED ||
                           borderStyle == PdfBorderDictionary.STYLE_INSET;
+
         var h = box.Height - borderWidth * 2;
         var offsetX = borderWidth;
+
         if (borderExtra)
         {
             h -= borderWidth * 2;
@@ -581,11 +626,13 @@ public class TextField : BaseField
 
         var leading = ufont.GetFontDescriptor(BaseFont.BBOXURY, usize) -
                       ufont.GetFontDescriptor(BaseFont.BBOXLLY, usize);
+
         var maxFit = (int)(h / leading) + 1;
         var first = 0;
         var last = 0;
         last = topChoice + maxFit / 2 + 1;
         first = last - maxFit;
+
         if (first < 0)
         {
             last += first;
@@ -594,6 +641,7 @@ public class TextField : BaseField
 
         //        first = topChoice;
         last = first + maxFit;
+
         if (last > _choices.Length)
         {
             last = _choices.Length;
@@ -605,22 +653,24 @@ public class TextField : BaseField
         app.Clip();
         app.NewPath();
         var fcolor = textColor == null ? GrayColor.Grayblack : textColor;
-        app.SetColorFill(new BaseColor(10, 36, 106));
+        app.SetColorFill(new BaseColor(red: 10, green: 36, blue: 106));
         app.Rectangle(offsetX, offsetX + h - (topChoice - first + 1) * leading, box.Width - 2 * offsetX, leading);
         app.Fill();
         var xp = offsetX * 2;
         var yp = offsetX + h - ufont.GetFontDescriptor(BaseFont.BBOXURY, usize);
+
         for (var idx = first; idx < last; ++idx, yp -= leading)
         {
             var ptext = _choices[idx];
             var rtl = checkRtl(ptext) ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_NO_BIDI;
             ptext = RemoveCrlf(ptext);
             var phrase = composePhrase(ptext, ufont, idx == topChoice ? GrayColor.Graywhite : fcolor, usize);
-            ColumnText.ShowTextAligned(app, Element.ALIGN_LEFT, phrase, xp, yp, 0, rtl, 0);
+            ColumnText.ShowTextAligned(app, Element.ALIGN_LEFT, phrase, xp, yp, rotation: 0, rtl, arabicOptions: 0);
         }
 
         app.RestoreState();
         app.EndVariableText();
+
         return app;
     }
 
@@ -628,12 +678,14 @@ public class TextField : BaseField
     {
         options &= ~MULTILINE & ~COMB;
         var uchoices = _choices;
+
         if (uchoices == null)
         {
             uchoices = Array.Empty<string>();
         }
 
         var topChoice = _choiceSelection;
+
         if (topChoice >= uchoices.Length)
         {
             topChoice = uchoices.Length - 1;
@@ -656,6 +708,7 @@ public class TextField : BaseField
 
         PdfFormField field = null;
         string[,] mix = null;
+
         if (_choiceExports == null)
         {
             if (isList)
@@ -670,12 +723,14 @@ public class TextField : BaseField
         else
         {
             mix = new string[uchoices.Length, 2];
-            for (var k = 0; k < mix.GetLength(0); ++k)
+
+            for (var k = 0; k < mix.GetLength(dimension: 0); ++k)
             {
                 mix[k, 0] = mix[k, 1] = uchoices[k];
             }
 
             var top = Math.Min(uchoices.Length, _choiceExports.Length);
+
             for (var k = 0; k < top; ++k)
             {
                 if (_choiceExports[k] != null)
@@ -695,6 +750,7 @@ public class TextField : BaseField
         }
 
         field.SetWidget(box, PdfAnnotation.HighlightInvert);
+
         if (rotation != 0)
         {
             field.MkRotation = rotation;
@@ -703,6 +759,7 @@ public class TextField : BaseField
         if (fieldName != null)
         {
             field.FieldName = fieldName;
+
             if (uchoices.Length > 0)
             {
                 if (mix != null)
@@ -733,11 +790,13 @@ public class TextField : BaseField
             }
         }
 
-        field.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(3));
+        field.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(dash: 3));
         PdfAppearance tp;
+
         if (isList)
         {
             tp = GetListAppearance();
+
             if (TopFirst > 0)
             {
                 field.Put(PdfName.Ti, new PdfNumber(TopFirst));
@@ -751,9 +810,10 @@ public class TextField : BaseField
         field.SetAppearance(PdfAnnotation.AppearanceNormal, tp);
         var da = (PdfAppearance)tp.Duplicate;
         da.SetFontAndSize(RealFont, fontSize);
+
         if (textColor == null)
         {
-            da.SetGrayFill(0);
+            da.SetGrayFill(value: 0);
         }
         else
         {
@@ -761,6 +821,7 @@ public class TextField : BaseField
         }
 
         field.DefaultAppearanceString = da;
+
         if (borderColor != null)
         {
             field.MkBorderColor = borderColor;
@@ -775,14 +836,17 @@ public class TextField : BaseField
         {
             case HIDDEN:
                 field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_HIDDEN;
+
                 break;
             case VISIBLE_BUT_DOES_NOT_PRINT:
                 break;
             case HIDDEN_BUT_PRINTABLE:
                 field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_NOVIEW;
+
                 break;
             default:
                 field.Flags = PdfAnnotation.FLAGS_PRINT;
+
                 break;
         }
 
@@ -805,9 +869,11 @@ public class TextField : BaseField
         }
 
         var cc = text.ToCharArray();
+
         for (var k = 0; k < cc.Length; ++k)
         {
             int c = cc[k];
+
             if (c >= 0x590 && c < 0x0780)
             {
                 return true;
@@ -820,24 +886,26 @@ public class TextField : BaseField
     private Phrase composePhrase(string text, BaseFont ufont, BaseColor color, float fontSize)
     {
         Phrase phrase = null;
+
         if (_extensionFont == null && (_substitutionFonts == null || _substitutionFonts.Count == 0))
         {
-            phrase = new Phrase(new Chunk(text, new Font(ufont, fontSize, 0, color)));
+            phrase = new Phrase(new Chunk(text, new Font(ufont, fontSize, style: 0, color)));
         }
         else
         {
             var fs = new FontSelector();
-            fs.AddFont(new Font(ufont, fontSize, 0, color));
+            fs.AddFont(new Font(ufont, fontSize, style: 0, color));
+
             if (_extensionFont != null)
             {
-                fs.AddFont(new Font(_extensionFont, fontSize, 0, color));
+                fs.AddFont(new Font(_extensionFont, fontSize, style: 0, color));
             }
 
             if (_substitutionFonts != null)
             {
                 foreach (var bf in _substitutionFonts)
                 {
-                    fs.AddFont(new Font(bf, fontSize, 0, color));
+                    fs.AddFont(new Font(bf, fontSize, style: 0, color));
                 }
             }
 

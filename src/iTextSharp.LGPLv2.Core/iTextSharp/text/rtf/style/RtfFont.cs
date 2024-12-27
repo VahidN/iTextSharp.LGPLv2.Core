@@ -75,67 +75,67 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <summary>
     ///     Constant for the font size
     /// </summary>
-    public static readonly byte[] FontSize = DocWriter.GetIsoBytes("\\fs");
+    public static readonly byte[] FontSize = DocWriter.GetIsoBytes(text: "\\fs");
 
     /// <summary>
     ///     Constant for the bold flag
     /// </summary>
-    private static readonly byte[] _fontBold = DocWriter.GetIsoBytes("\\b");
+    private static readonly byte[] _fontBold = DocWriter.GetIsoBytes(text: "\\b");
 
     /// <summary>
     ///     Constant for the charset
     /// </summary>
-    private static readonly byte[] _fontCharset = DocWriter.GetIsoBytes("\\fcharset");
+    private static readonly byte[] _fontCharset = DocWriter.GetIsoBytes(text: "\\fcharset");
 
     /// <summary>
     ///     Constant for the double strikethrough flag
     /// </summary>
-    private static readonly byte[] _fontDoubleStrikethrough = DocWriter.GetIsoBytes("\\striked");
+    private static readonly byte[] _fontDoubleStrikethrough = DocWriter.GetIsoBytes(text: "\\striked");
 
     /// <summary>
     ///     Constant for the embossed flag
     /// </summary>
-    private static readonly byte[] _fontEmbossed = DocWriter.GetIsoBytes("\\embo");
+    private static readonly byte[] _fontEmbossed = DocWriter.GetIsoBytes(text: "\\embo");
 
     /// <summary>
     ///     Constant for the engraved flag
     /// </summary>
-    private static readonly byte[] _fontEngraved = DocWriter.GetIsoBytes("\\impr");
+    private static readonly byte[] _fontEngraved = DocWriter.GetIsoBytes(text: "\\impr");
 
     /// <summary>
     ///     Constant for the font family to use ("froman")
     /// </summary>
-    private static readonly byte[] _fontFamily = DocWriter.GetIsoBytes("\\froman");
+    private static readonly byte[] _fontFamily = DocWriter.GetIsoBytes(text: "\\froman");
 
     /// <summary>
     ///     Constant for hidden text flag
     /// </summary>
-    private static readonly byte[] _fontHidden = DocWriter.GetIsoBytes("\\v");
+    private static readonly byte[] _fontHidden = DocWriter.GetIsoBytes(text: "\\v");
 
     /// <summary>
     ///     Constant for the italic flag
     /// </summary>
-    private static readonly byte[] _fontItalic = DocWriter.GetIsoBytes("\\i");
+    private static readonly byte[] _fontItalic = DocWriter.GetIsoBytes(text: "\\i");
 
     /// <summary>
     ///     Constant for the outline flag
     /// </summary>
-    private static readonly byte[] _fontOutline = DocWriter.GetIsoBytes("\\outl");
+    private static readonly byte[] _fontOutline = DocWriter.GetIsoBytes(text: "\\outl");
 
     /// <summary>
     ///     Constant for the shadow flag
     /// </summary>
-    private static readonly byte[] _fontShadow = DocWriter.GetIsoBytes("\\shad");
+    private static readonly byte[] _fontShadow = DocWriter.GetIsoBytes(text: "\\shad");
 
     /// <summary>
     ///     Constant for the strikethrough flag
     /// </summary>
-    private static readonly byte[] _fontStrikethrough = DocWriter.GetIsoBytes("\\strike");
+    private static readonly byte[] _fontStrikethrough = DocWriter.GetIsoBytes(text: "\\strike");
 
     /// <summary>
     ///     Constant for the underline flag
     /// </summary>
-    private static readonly byte[] _fontUnderline = DocWriter.GetIsoBytes("\\ul");
+    private static readonly byte[] _fontUnderline = DocWriter.GetIsoBytes(text: "\\ul");
 
     /// <summary>
     ///     The character set to use for this font
@@ -177,7 +177,7 @@ public class RtfFont : Font, IRtfExtendedElement
     ///     at their default values.
     /// </summary>
     /// <param name="fontName">The font name to use</param>
-    public RtfFont(string fontName) : base(UNDEFINED, UNDEFINED, UNDEFINED, null) => _fontName = fontName;
+    public RtfFont(string fontName) : base(UNDEFINED, UNDEFINED, UNDEFINED, color: null) => _fontName = fontName;
 
     /// <summary>
     ///     Constructs a RtfFont with the given font name and font size and all other
@@ -185,7 +185,7 @@ public class RtfFont : Font, IRtfExtendedElement
     /// </summary>
     /// <param name="fontName">The font name to use</param>
     /// <param name="size">The font size to use</param>
-    public RtfFont(string fontName, float size) : base(UNDEFINED, size, UNDEFINED, null) => _fontName = fontName;
+    public RtfFont(string fontName, float size) : base(UNDEFINED, size, UNDEFINED, color: null) => _fontName = fontName;
 
     /// <summary>
     ///     Constructs a RtfFont with the given font name, font size and font style and the
@@ -194,7 +194,8 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <param name="fontName">The font name to use</param>
     /// <param name="size">The font size to use</param>
     /// <param name="style">The font style to use</param>
-    public RtfFont(string fontName, float size, int style) : base(UNDEFINED, size, style, null) => _fontName = fontName;
+    public RtfFont(string fontName, float size, int style) : base(UNDEFINED, size, style, color: null)
+        => _fontName = fontName;
 
     /// <summary>
     ///     Constructs a RtfFont with the given font name, font size, font style and
@@ -204,8 +205,8 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <param name="size">the font size to use</param>
     /// <param name="style">The font style to use</param>
     /// <param name="color">The font color to use</param>
-    public RtfFont(string fontName, float size, int style, BaseColor color) : base(UNDEFINED, size, style, color) =>
-        _fontName = fontName;
+    public RtfFont(string fontName, float size, int style, BaseColor color) : base(UNDEFINED, size, style, color)
+        => _fontName = fontName;
 
     /// <summary>
     ///     Constructs a RtfFont with the given font name, font size, font style, colour
@@ -216,8 +217,9 @@ public class RtfFont : Font, IRtfExtendedElement
     /// <param name="style">The font style to use</param>
     /// <param name="color">The font color to use</param>
     /// <param name="charset">The charset of the font content</param>
-    public RtfFont(string fontName, float size, int style, BaseColor color, int charset) :
-        this(fontName, size, style, color) => _charset = charset;
+    public RtfFont(string fontName, float size, int style, BaseColor color, int charset) : this(fontName, size, style,
+        color)
+        => _charset = charset;
 
     /// <summary>
     ///     Constructs a RtfFont from a com.lowagie.text.Font
@@ -227,6 +229,7 @@ public class RtfFont : Font, IRtfExtendedElement
     public RtfFont(RtfDocument doc, Font font)
     {
         Document = doc;
+
         if (font != null)
         {
             if (font is RtfFont)
@@ -242,15 +245,17 @@ public class RtfFont : Font, IRtfExtendedElement
             if (font.BaseFont != null)
             {
                 var fontNames = font.BaseFont.FullFontName;
+
                 for (var i = 0; i < fontNames.Length; i++)
                 {
-                    if (fontNames[i][2].Equals("0", StringComparison.Ordinal))
+                    if (fontNames[i][2].Equals(value: "0", StringComparison.Ordinal))
                     {
                         _fontName = fontNames[i][3];
+
                         break;
                     }
 
-                    if (fontNames[i][2].Equals("1033", StringComparison.Ordinal) ||
+                    if (fontNames[i][2].Equals(value: "1033", StringComparison.Ordinal) ||
                         string.IsNullOrEmpty(fontNames[i][2]))
                     {
                         _fontName = fontNames[i][3];
@@ -261,13 +266,14 @@ public class RtfFont : Font, IRtfExtendedElement
             Size = font.Size;
             SetStyle(font.Style);
             Color = font.Color;
+
             if (Document != null)
             {
                 _fontNumber = Document.GetDocumentHeader().GetFontNumber(this);
             }
         }
 
-        if (Util.EqualsIgnoreCase(_fontName, "unknown"))
+        if (Util.EqualsIgnoreCase(_fontName, s2: "unknown"))
         {
             return;
         }
@@ -283,11 +289,11 @@ public class RtfFont : Font, IRtfExtendedElement
     /// </summary>
     /// <param name="doc">The RtfDocument this font appears in</param>
     /// <param name="fontNumber">The id of this font</param>
-    protected internal RtfFont(RtfDocument doc, int fontNumber)
+    internal protected RtfFont(RtfDocument doc, int fontNumber)
     {
         Document = doc;
         _fontNumber = fontNumber;
-        _color = new RtfColor(doc, 0, 0, 0);
+        _color = new RtfColor(doc, red: 0, green: 0, blue: 0);
     }
 
     /// <summary>
@@ -298,6 +304,7 @@ public class RtfFont : Font, IRtfExtendedElement
         set
         {
             base.Color = value;
+
             if (value != null)
             {
                 _color = new RtfColor(Document, value);
@@ -349,6 +356,7 @@ public class RtfFont : Font, IRtfExtendedElement
     public void SetRtfDocument(RtfDocument doc)
     {
         Document = doc;
+
         if (Document != null)
         {
             _fontNumber = Document.GetDocumentHeader().GetFontNumber(this);
@@ -378,11 +386,11 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         byte[] t;
-        outp.Write(_fontFamily, 0, _fontFamily.Length);
-        outp.Write(_fontCharset, 0, _fontCharset.Length);
-        outp.Write(t = IntToByteArray(_charset), 0, t.Length);
-        outp.Write(RtfElement.Delimiter, 0, RtfElement.Delimiter.Length);
-        Document.FilterSpecialChar(outp, _fontName, true, false);
+        outp.Write(_fontFamily, offset: 0, _fontFamily.Length);
+        outp.Write(_fontCharset, offset: 0, _fontCharset.Length);
+        outp.Write(t = IntToByteArray(_charset), offset: 0, t.Length);
+        outp.Write(RtfElement.Delimiter, offset: 0, RtfElement.Delimiter.Length);
+        Document.FilterSpecialChar(outp, _fontName, useHex: true, softLineBreaks: false);
     }
 
     /// <summary>
@@ -429,19 +437,22 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         var dFamilyname = font.Familyname;
+
         if (dFamilyname == null || string.IsNullOrEmpty(dFamilyname.Trim()) ||
-            Util.EqualsIgnoreCase(dFamilyname.Trim(), "unknown"))
+            Util.EqualsIgnoreCase(dFamilyname.Trim(), s2: "unknown"))
         {
             dFamilyname = _fontName;
         }
 
         var dSize = font.Size;
+
         if (dSize.ApproxEquals(UNDEFINED))
         {
             dSize = Size;
         }
 
         var dStyle = UNDEFINED;
+
         if (Style != UNDEFINED && font.Style != UNDEFINED)
         {
             dStyle = Style | font.Style;
@@ -456,12 +467,14 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         var dColor = font.Color;
+
         if (dColor == null)
         {
             dColor = Color;
         }
 
         var dCharset = _charset;
+
         if (font is RtfFont)
         {
             dCharset = ((RtfFont)font).GetCharset();
@@ -484,6 +497,7 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         var font = (RtfFont)obj;
+
         return _fontName.Equals(font.GetFontName(), StringComparison.Ordinal);
     }
 
@@ -523,7 +537,8 @@ public class RtfFont : Font, IRtfExtendedElement
     ///     font super/supscript value.
     /// </summary>
     /// <returns>The hash code of this RtfFont</returns>
-    public override int GetHashCode() => (_fontName + _fontSize + "-" + _fontStyle).GetHashCode();
+    public override int GetHashCode()
+        => (_fontName + _fontSize + "-" + _fontStyle).GetHashCode(StringComparison.Ordinal);
 
     /// <summary>
     ///     The  RtfFont  is never a standard font.
@@ -535,10 +550,7 @@ public class RtfFont : Font, IRtfExtendedElement
     ///     Sets the charset used for constructing this RtfFont.
     /// </summary>
     /// <param name="charset">The charset to use.</param>
-    public void SetCharset(int charset)
-    {
-        _charset = charset;
-    }
+    public void SetCharset(int charset) => _charset = charset;
 
     /// <summary>
     ///     @see com.lowagie.text.Font#setColor(int, int, int)
@@ -565,6 +577,7 @@ public class RtfFont : Font, IRtfExtendedElement
     public virtual void SetFontName(string fontName)
     {
         _fontName = fontName;
+
         if (Document != null)
         {
             _fontNumber = Document.GetDocumentHeader().GetFontNumber(this);
@@ -601,69 +614,70 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         byte[] t;
+
         if (_fontNumber != UNDEFINED)
         {
-            result.Write(RtfFontList.FontNumber, 0, RtfFontList.FontNumber.Length);
-            result.Write(t = IntToByteArray(_fontNumber), 0, t.Length);
+            result.Write(RtfFontList.FontNumber, offset: 0, RtfFontList.FontNumber.Length);
+            result.Write(t = IntToByteArray(_fontNumber), offset: 0, t.Length);
         }
 
         if (_fontSize != UNDEFINED)
         {
-            result.Write(FontSize, 0, FontSize.Length);
-            result.Write(t = IntToByteArray(_fontSize * 2), 0, t.Length);
+            result.Write(FontSize, offset: 0, FontSize.Length);
+            result.Write(t = IntToByteArray(_fontSize * 2), offset: 0, t.Length);
         }
 
         if (_fontStyle != UNDEFINED)
         {
             if ((_fontStyle & STYLE_BOLD) == STYLE_BOLD)
             {
-                result.Write(_fontBold, 0, _fontBold.Length);
+                result.Write(_fontBold, offset: 0, _fontBold.Length);
             }
 
             if ((_fontStyle & STYLE_ITALIC) == STYLE_ITALIC)
             {
-                result.Write(_fontItalic, 0, _fontItalic.Length);
+                result.Write(_fontItalic, offset: 0, _fontItalic.Length);
             }
 
             if ((_fontStyle & STYLE_UNDERLINE) == STYLE_UNDERLINE)
             {
-                result.Write(_fontUnderline, 0, _fontUnderline.Length);
+                result.Write(_fontUnderline, offset: 0, _fontUnderline.Length);
             }
 
             if ((_fontStyle & STYLE_STRIKETHROUGH) == STYLE_STRIKETHROUGH)
             {
-                result.Write(_fontStrikethrough, 0, _fontStrikethrough.Length);
+                result.Write(_fontStrikethrough, offset: 0, _fontStrikethrough.Length);
             }
 
             if ((_fontStyle & STYLE_HIDDEN) == STYLE_HIDDEN)
             {
-                result.Write(_fontHidden, 0, _fontHidden.Length);
+                result.Write(_fontHidden, offset: 0, _fontHidden.Length);
             }
 
             if ((_fontStyle & STYLE_DOUBLE_STRIKETHROUGH) == STYLE_DOUBLE_STRIKETHROUGH)
             {
-                result.Write(_fontDoubleStrikethrough, 0, _fontDoubleStrikethrough.Length);
-                result.Write(t = IntToByteArray(1), 0, t.Length);
+                result.Write(_fontDoubleStrikethrough, offset: 0, _fontDoubleStrikethrough.Length);
+                result.Write(t = IntToByteArray(i: 1), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_SHADOW) == STYLE_SHADOW)
             {
-                result.Write(_fontShadow, 0, _fontShadow.Length);
+                result.Write(_fontShadow, offset: 0, _fontShadow.Length);
             }
 
             if ((_fontStyle & STYLE_OUTLINE) == STYLE_OUTLINE)
             {
-                result.Write(_fontOutline, 0, _fontOutline.Length);
+                result.Write(_fontOutline, offset: 0, _fontOutline.Length);
             }
 
             if ((_fontStyle & STYLE_EMBOSSED) == STYLE_EMBOSSED)
             {
-                result.Write(_fontEmbossed, 0, _fontEmbossed.Length);
+                result.Write(_fontEmbossed, offset: 0, _fontEmbossed.Length);
             }
 
             if ((_fontStyle & STYLE_ENGRAVED) == STYLE_ENGRAVED)
             {
-                result.Write(_fontEngraved, 0, _fontEngraved.Length);
+                result.Write(_fontEngraved, offset: 0, _fontEngraved.Length);
             }
         }
 
@@ -684,66 +698,67 @@ public class RtfFont : Font, IRtfExtendedElement
         }
 
         byte[] t;
+
         if (_fontStyle != UNDEFINED)
         {
             if ((_fontStyle & STYLE_BOLD) == STYLE_BOLD)
             {
-                result.Write(_fontBold, 0, _fontBold.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontBold, offset: 0, _fontBold.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_ITALIC) == STYLE_ITALIC)
             {
-                result.Write(_fontItalic, 0, _fontItalic.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontItalic, offset: 0, _fontItalic.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_UNDERLINE) == STYLE_UNDERLINE)
             {
-                result.Write(_fontUnderline, 0, _fontUnderline.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontUnderline, offset: 0, _fontUnderline.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_STRIKETHROUGH) == STYLE_STRIKETHROUGH)
             {
-                result.Write(_fontStrikethrough, 0, _fontStrikethrough.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontStrikethrough, offset: 0, _fontStrikethrough.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_HIDDEN) == STYLE_HIDDEN)
             {
-                result.Write(_fontHidden, 0, _fontHidden.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontHidden, offset: 0, _fontHidden.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_DOUBLE_STRIKETHROUGH) == STYLE_DOUBLE_STRIKETHROUGH)
             {
-                result.Write(_fontDoubleStrikethrough, 0, _fontDoubleStrikethrough.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontDoubleStrikethrough, offset: 0, _fontDoubleStrikethrough.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_SHADOW) == STYLE_SHADOW)
             {
-                result.Write(_fontShadow, 0, _fontShadow.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontShadow, offset: 0, _fontShadow.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_OUTLINE) == STYLE_OUTLINE)
             {
-                result.Write(_fontOutline, 0, _fontOutline.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontOutline, offset: 0, _fontOutline.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_EMBOSSED) == STYLE_EMBOSSED)
             {
-                result.Write(_fontEmbossed, 0, _fontEmbossed.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontEmbossed, offset: 0, _fontEmbossed.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
 
             if ((_fontStyle & STYLE_ENGRAVED) == STYLE_ENGRAVED)
             {
-                result.Write(_fontEngraved, 0, _fontEngraved.Length);
-                result.Write(t = IntToByteArray(0), 0, t.Length);
+                result.Write(_fontEngraved, offset: 0, _fontEngraved.Length);
+                result.Write(t = IntToByteArray(i: 0), offset: 0, t.Length);
             }
         }
     }
@@ -766,22 +781,28 @@ public class RtfFont : Font, IRtfExtendedElement
         {
             case COURIER:
                 _fontName = "Courier";
+
                 break;
             case HELVETICA:
                 _fontName = "Arial";
+
                 break;
             case SYMBOL:
                 _fontName = "Symbol";
                 _charset = 2;
+
                 break;
             case TIMES_ROMAN:
                 _fontName = "Times New Roman";
+
                 break;
             case ZAPFDINGBATS:
                 _fontName = "Windings";
+
                 break;
             default:
                 _fontName = familyname;
+
                 break;
         }
     }

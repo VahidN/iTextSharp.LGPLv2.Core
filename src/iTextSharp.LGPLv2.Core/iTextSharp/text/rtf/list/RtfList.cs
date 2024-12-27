@@ -37,7 +37,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     Constant for the list id
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] ListId = DocWriter.GetIsoBytes("\\listid");
+    public static readonly byte[] ListId = DocWriter.GetIsoBytes(text: "\\listid");
 
     /// <summary>
     ///     character properties
@@ -46,71 +46,71 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     Constant for the list level value
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] ListLevelNumber = DocWriter.GetIsoBytes("\\ilvl");
+    public static readonly byte[] ListLevelNumber = DocWriter.GetIsoBytes(text: "\\ilvl");
 
     /// <summary>
     ///     Constant for the list number
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] ListNumber = DocWriter.GetIsoBytes("\\ls");
+    public static readonly byte[] ListNumber = DocWriter.GetIsoBytes(text: "\\ls");
 
     /// <summary>
     ///     Constant for the old list number end
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] ListNumberEnd = DocWriter.GetIsoBytes(".");
+    public static readonly byte[] ListNumberEnd = DocWriter.GetIsoBytes(text: ".");
 
     /// <summary>
     ///     Constant for the old list text
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] ListText = DocWriter.GetIsoBytes("\\listtext");
+    public static readonly byte[] ListText = DocWriter.GetIsoBytes(text: "\\listtext");
 
     /// <summary>
     ///     Constant for a tab character
     ///     @since 2.1.3
     /// </summary>
-    public static readonly byte[] Tab = DocWriter.GetIsoBytes("\\tab");
+    public static readonly byte[] Tab = DocWriter.GetIsoBytes(text: "\\tab");
 
     /// <summary>
     ///     Constant for the list
     /// </summary>
-    private static readonly byte[] _list = DocWriter.GetIsoBytes("\\list");
+    private static readonly byte[] _list = DocWriter.GetIsoBytes(text: "\\list");
 
     /// <summary>
     ///     Constant for the hybrid list
     /// </summary>
-    private static readonly byte[] _listHybrid = DocWriter.GetIsoBytes("\\listhybrid");
+    private static readonly byte[] _listHybrid = DocWriter.GetIsoBytes(text: "\\listhybrid");
 
     /// <summary>
     ///     Constant for the name of this list
     /// </summary>
-    private static readonly byte[] _listName = DocWriter.GetIsoBytes("\\listname");
+    private static readonly byte[] _listName = DocWriter.GetIsoBytes(text: "\\listname");
 
     /// <summary>
     ///     Constant to indicate if the list restarts at each section. Word 7 compatiblity
     /// </summary>
-    private static readonly byte[] _listRestarthdn = DocWriter.GetIsoBytes("\\listrestarthdn");
+    private static readonly byte[] _listRestarthdn = DocWriter.GetIsoBytes(text: "\\listrestarthdn");
 
     /// <summary>
     ///     Constant for the simple list
     /// </summary>
-    private static readonly byte[] _listSimple = DocWriter.GetIsoBytes("\\listsimple");
+    private static readonly byte[] _listSimple = DocWriter.GetIsoBytes(text: "\\listsimple");
 
     /// <summary>
     ///     Constant for the identifier of the style of this list. Mutually exclusive with \\liststylename
     /// </summary>
-    private static readonly byte[] _listStyleid = DocWriter.GetIsoBytes("\\liststyleid");
+    private static readonly byte[] _listStyleid = DocWriter.GetIsoBytes(text: "\\liststyleid");
 
     /// <summary>
     ///     Constant for the identifier of the style of this list. Mutually exclusive with \\liststyleid
     /// </summary>
-    private static readonly byte[] _listStylename = DocWriter.GetIsoBytes("\\liststylename");
+    private static readonly byte[] _listStylename = DocWriter.GetIsoBytes(text: "\\liststylename");
 
     /// <summary>
     ///     Constant for the list template id
     /// </summary>
-    private static readonly byte[] _listTemplateId = DocWriter.GetIsoBytes("\\listtemplateid");
+    private static readonly byte[] _listTemplateId = DocWriter.GetIsoBytes(text: "\\listtemplateid");
 
     /// <summary>
     ///     The subitems of this RtfList
@@ -155,10 +155,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     Constructs an empty RtfList object.
     ///     @since 2.1.3
     /// </summary>
-    public RtfList() : base(null)
-    {
-        CreateDefaultLevels();
-    }
+    public RtfList() : base(doc: null) => CreateDefaultLevels();
 
     /// <summary>
     ///     Constructs an empty RtfList object.
@@ -168,6 +165,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     public RtfList(RtfDocument doc) : base(doc)
     {
         CreateDefaultLevels();
+
         // get the list number or create a new one adding it to the table
         _listNumber = Document.GetDocumentHeader().GetListNumber(this);
     }
@@ -189,6 +187,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
         {
             throw new ArgumentNullException(nameof(list));
         }
+
         // setup the listlevels
         // Then, setup the list data below
 
@@ -198,7 +197,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
         CreateDefaultLevels();
 
         _items = new List<IRtfBasicElement>(); // list content
-        var ll = _listLevels[0];
+        var ll = _listLevels[index: 0];
 
         // get the list number or create a new one adding it to the table
         _listNumber = Document.GetDocumentHeader().GetListNumber(this);
@@ -215,19 +214,19 @@ public class RtfList : RtfElement, IRtfExtendedElement
         }
         else if (list.IndentationLeft > 0)
         {
-            ll.SetFirstIndent(0);
+            ll.SetFirstIndent(firstIndent: 0);
             ll.SetLeftIndent((int)(list.IndentationLeft * TWIPS_FACTOR));
         }
         else
         {
-            ll.SetFirstIndent(0);
-            ll.SetLeftIndent(0);
+            ll.SetFirstIndent(firstIndent: 0);
+            ll.SetLeftIndent(leftIndent: 0);
         }
 
         ll.SetRightIndent((int)(list.IndentationRight * TWIPS_FACTOR));
         ll.SetSymbolIndent((int)((list.SymbolIndent + list.IndentationLeft) * TWIPS_FACTOR));
         ll.CorrectIndentation();
-        ll.SetTentative(false);
+        ll.SetTentative(isTentative: false);
 
         if (list is RomanList)
         {
@@ -284,9 +283,11 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 }
 
                 var rtfElements = doc.GetMapper().MapElement(element);
+
                 for (var j = 0; j < rtfElements.Length; j++)
                 {
                     var rtfElement = rtfElements[j];
+
                     if (rtfElement is RtfList)
                     {
                         ((RtfList)rtfElement).SetParentList(this);
@@ -297,14 +298,14 @@ public class RtfList : RtfElement, IRtfExtendedElement
                     }
 
                     ll.SetFontNumber(new RtfFont(Document,
-                                                 new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, new BaseColor(0, 0, 0))));
+                        new Font(Font.TIMES_ROMAN, size: 10, Font.NORMAL, new BaseColor(red: 0, green: 0, blue: 0))));
+
                     if (list.Symbol != null && list.Symbol.Font != null &&
-                        !list.Symbol.Content.StartsWith("-", StringComparison.Ordinal) &&
-                        list.Symbol.Content.Length > 0)
+                        !list.Symbol.Content.StartsWith(value: '-') && list.Symbol.Content.Length > 0)
                     {
                         // only set this to bullet symbol is not default
                         ll.SetBulletFont(list.Symbol.Font);
-                        ll.SetBulletCharacter(list.Symbol.Content.Substring(0, 1));
+                        ll.SetBulletCharacter(list.Symbol.Content.Substring(startIndex: 0, length: 1));
                     }
                     else if (list.Symbol != null && list.Symbol.Font != null)
                     {
@@ -312,7 +313,8 @@ public class RtfList : RtfElement, IRtfExtendedElement
                     }
                     else
                     {
-                        ll.SetBulletFont(new Font(Font.SYMBOL, 10, Font.NORMAL, new BaseColor(0, 0, 0)));
+                        ll.SetBulletFont(new Font(Font.SYMBOL, size: 10, Font.NORMAL,
+                            new BaseColor(red: 0, green: 0, blue: 0)));
                     }
 
                     _items.Add(rtfElement);
@@ -333,6 +335,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     public override void SetInHeader(bool inHeader)
     {
         base.SetInHeader(inHeader);
+
         for (var i = 0; i < _items.Count; i++)
         {
             _items[i].SetInHeader(inHeader);
@@ -348,6 +351,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     public override void SetInTable(bool inTable)
     {
         base.SetInTable(inTable);
+
         for (var i = 0; i < _items.Count; i++)
         {
             _items[i].SetInTable(inTable);
@@ -372,21 +376,24 @@ public class RtfList : RtfElement, IRtfExtendedElement
 
         if (!InTable)
         {
-            outp.Write(OpenGroup, 0, OpenGroup.Length);
+            outp.Write(OpenGroup, offset: 0, OpenGroup.Length);
         }
 
         var itemNr = 0;
+
         if (_items != null)
         {
             for (var i = 0; i < _items.Count; i++)
             {
                 var thisRtfElement = (RtfElement)_items[i];
+
                 //thisRtfElement.WriteContent(result);
                 if (thisRtfElement is RtfListItem)
                 {
                     itemNr++;
                     var rtfElement = (RtfListItem)thisRtfElement;
                     var listLevel = rtfElement.GetParent();
+
                     if (listLevel.GetListLevel() == 0)
                     {
                         CorrectIndentation();
@@ -405,7 +412,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
                     if (i < _items.Count - 1 || !InTable || listLevel.GetListType() > 0)
                     {
                         // TODO Fix no paragraph on last list item in tables
-                        outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+                        outp.Write(RtfParagraph.Paragraph, offset: 0, RtfParagraph.Paragraph.Length);
                     }
 
                     Document.OutputDebugLinebreak(outp);
@@ -413,6 +420,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 else if (thisRtfElement is RtfList)
                 {
                     ((RtfList)thisRtfElement).WriteContent(outp);
+
                     //              ((RtfList)thisRtfElement).WriteListBeginning(result);
                     WriteListNumbers(outp);
                     Document.OutputDebugLinebreak(outp);
@@ -422,8 +430,8 @@ public class RtfList : RtfElement, IRtfExtendedElement
 
         if (!InTable)
         {
-            outp.Write(CloseGroup, 0, CloseGroup.Length);
-            outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+            outp.Write(CloseGroup, offset: 0, CloseGroup.Length);
+            outp.Write(RtfPhrase.ParagraphDefaults, offset: 0, RtfPhrase.ParagraphDefaults.Length);
         }
     }
 
@@ -441,10 +449,10 @@ public class RtfList : RtfElement, IRtfExtendedElement
         }
 
         byte[] t;
-        outp.Write(OpenGroup, 0, OpenGroup.Length);
-        outp.Write(_list, 0, _list.Length);
-        outp.Write(_listTemplateId, 0, _listTemplateId.Length);
-        outp.Write(t = IntToByteArray(Document.GetRandomInt()), 0, t.Length);
+        outp.Write(OpenGroup, offset: 0, OpenGroup.Length);
+        outp.Write(_list, offset: 0, _list.Length);
+        outp.Write(_listTemplateId, offset: 0, _listTemplateId.Length);
+        outp.Write(t = IntToByteArray(Document.GetRandomInt()), offset: 0, t.Length);
 
         var levelsToWrite = -1;
 
@@ -452,15 +460,18 @@ public class RtfList : RtfElement, IRtfExtendedElement
         {
             case LIST_TYPE_NORMAL:
                 levelsToWrite = _listLevels.Count;
+
                 break;
             case LIST_TYPE_SIMPLE:
-                outp.Write(_listSimple, 0, _listSimple.Length);
-                outp.Write(t = IntToByteArray(1), 0, t.Length);
+                outp.Write(_listSimple, offset: 0, _listSimple.Length);
+                outp.Write(t = IntToByteArray(i: 1), offset: 0, t.Length);
                 levelsToWrite = 1;
+
                 break;
             case LIST_TYPE_HYBRID:
-                outp.Write(_listHybrid, 0, _listHybrid.Length);
+                outp.Write(_listHybrid, offset: 0, _listHybrid.Length);
                 levelsToWrite = _listLevels.Count;
+
                 break;
         }
 
@@ -484,25 +495,29 @@ public class RtfList : RtfElement, IRtfExtendedElement
             Document.OutputDebugLinebreak(outp);
         }
 
-        outp.Write(ListId, 0, ListId.Length);
-        outp.Write(t = IntToByteArray(_listId), 0, t.Length);
-        outp.Write(CloseGroup, 0, CloseGroup.Length);
+        outp.Write(ListId, offset: 0, ListId.Length);
+        outp.Write(t = IntToByteArray(_listId), offset: 0, t.Length);
+        outp.Write(CloseGroup, offset: 0, CloseGroup.Length);
         Document.OutputDebugLinebreak(outp);
+
         if (_items != null)
         {
             for (var i = 0; i < _items.Count; i++)
             {
                 var rtfElement = (RtfElement)_items[i];
+
                 if (rtfElement is RtfList)
                 {
                     var rl = (RtfList)rtfElement;
                     rl.WriteDefinition(outp);
+
                     break;
                 }
 
                 if (rtfElement is RtfListItem)
                 {
                     var rli = (RtfListItem)rtfElement;
+
                     if (rli.WriteDefinition(outp))
                     {
                         break;
@@ -569,6 +584,7 @@ public class RtfList : RtfElement, IRtfExtendedElement
     public void SetDocument(RtfDocument doc)
     {
         Document = doc;
+
         // get the list number or create a new one adding it to the table
         _listNumber = Document.GetDocumentHeader().GetListNumber(this);
     }
@@ -578,20 +594,14 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     @since 2.1.3
     /// </summary>
     /// <param name="id"></param>
-    public void SetId(int id)
-    {
-        _listId = id;
-    }
+    public void SetId(int id) => _listId = id;
 
     /// <summary>
     ///     Sets the id of this list
     ///     @since 2.1.3
     /// </summary>
     /// <param name="listNumber">The list number to set.</param>
-    public void SetListNumber(int listNumber)
-    {
-        _listNumber = listNumber;
-    }
+    public void SetListNumber(int listNumber) => _listNumber = listNumber;
 
     /// <summary>
     ///     @see RtfList#LIST_TYPE_NORMAL
@@ -602,15 +612,13 @@ public class RtfList : RtfElement, IRtfExtendedElement
     /// <param name="listType">the listType to set</param>
     public void SetListType(int listType)
     {
-        if (listType == LIST_TYPE_NORMAL ||
-            listType == LIST_TYPE_SIMPLE ||
-            listType == LIST_TYPE_HYBRID)
+        if (listType == LIST_TYPE_NORMAL || listType == LIST_TYPE_SIMPLE || listType == LIST_TYPE_HYBRID)
         {
             _listType = listType;
         }
         else
         {
-            throw new ArgumentException("Invalid listType value.");
+            throw new ArgumentException(message: "Invalid listType value.");
         }
     }
 
@@ -618,26 +626,20 @@ public class RtfList : RtfElement, IRtfExtendedElement
     ///     @since 2.1.3
     /// </summary>
     /// <param name="name">the name to set</param>
-    public void SetName(string name)
-    {
-        _name = name;
-    }
+    public void SetName(string name) => _name = name;
 
     /// <summary>
     ///     @since 2.1.3
     /// </summary>
     /// <param name="parentList">the parentList to set</param>
-    public void SetParentList(RtfList parentList)
-    {
-        _parentList = parentList;
-    }
+    public void SetParentList(RtfList parentList) => _parentList = parentList;
 
     /// <summary>
     ///     Correct the indentation of this RtfList by adding left/first line indentation
     ///     from the parent RtfList. Also calls correctIndentation on all child RtfLists.
     ///     @since 2.1.3
     /// </summary>
-    protected internal void CorrectIndentation()
+    internal protected void CorrectIndentation()
     {
         // TODO: Fix
         //        if (this.parentList != null) {
@@ -663,15 +665,16 @@ public class RtfList : RtfElement, IRtfExtendedElement
     protected void CreateDefaultLevels()
     {
         _listLevels = new List<RtfListLevel>(); // listlevels
+
         for (var i = 0; i <= 8; i++)
         {
             // create a list level
             var ll = new RtfListLevel(Document);
             ll.SetListType(RtfListLevel.LIST_TYPE_NUMBERED);
-            ll.SetFirstIndent(0);
-            ll.SetLeftIndent(0);
+            ll.SetFirstIndent(firstIndent: 0);
+            ll.SetLeftIndent(leftIndent: 0);
             ll.SetLevelTextNumber(i);
-            ll.SetTentative(true);
+            ll.SetTentative(isTentative: true);
             ll.CorrectIndentation();
             _listLevels.Add(ll);
         }
@@ -691,8 +694,8 @@ public class RtfList : RtfElement, IRtfExtendedElement
         }
 
         byte[] t;
-        result.Write(ListNumber, 0, ListNumber.Length);
-        result.Write(t = IntToByteArray(_listNumber), 0, t.Length);
+        result.Write(ListNumber, offset: 0, ListNumber.Length);
+        result.Write(t = IntToByteArray(_listNumber), offset: 0, t.Length);
     }
 
     /// <summary>
@@ -715,57 +718,67 @@ public class RtfList : RtfElement, IRtfExtendedElement
         }
 
         byte[] t;
-        result.Write(OpenGroup, 0, OpenGroup.Length);
-        result.Write(ListText, 0, ListText.Length);
-        result.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+        result.Write(OpenGroup, offset: 0, OpenGroup.Length);
+        result.Write(ListText, offset: 0, ListText.Length);
+        result.Write(RtfPhrase.ParagraphDefaults, offset: 0, RtfPhrase.ParagraphDefaults.Length);
+
         if (InTable)
         {
-            result.Write(RtfPhrase.InTable, 0, RtfPhrase.InTable.Length);
+            result.Write(RtfPhrase.InTable, offset: 0, RtfPhrase.InTable.Length);
         }
 
-        result.Write(RtfFontList.FontNumber, 0, RtfFontList.FontNumber.Length);
+        result.Write(RtfFontList.FontNumber, offset: 0, RtfFontList.FontNumber.Length);
+
         if (listLevel.GetListType() != RtfListLevel.LIST_TYPE_BULLET)
         {
-            result.Write(t = IntToByteArray(listLevel.GetFontNumber().GetFontNumber()), 0, t.Length);
+            result.Write(t = IntToByteArray(listLevel.GetFontNumber().GetFontNumber()), offset: 0, t.Length);
         }
         else
         {
-            result.Write(t = IntToByteArray(listLevel.GetFontBullet().GetFontNumber()), 0, t.Length);
+            result.Write(t = IntToByteArray(listLevel.GetFontBullet().GetFontNumber()), offset: 0, t.Length);
         }
 
         listLevel.WriteIndentation(result);
-        result.Write(Delimiter, 0, Delimiter.Length);
+        result.Write(Delimiter, offset: 0, Delimiter.Length);
+
         if (listLevel.GetListType() != RtfListLevel.LIST_TYPE_BULLET)
         {
             switch (listLevel.GetListType())
             {
                 case RtfListLevel.LIST_TYPE_NUMBERED:
-                    result.Write(t = IntToByteArray(itemNr), 0, t.Length);
+                    result.Write(t = IntToByteArray(itemNr), offset: 0, t.Length);
+
                     break;
                 case RtfListLevel.LIST_TYPE_UPPER_LETTERS:
-                    result.Write(t = DocWriter.GetIsoBytes(RomanAlphabetFactory.GetUpperCaseString(itemNr)), 0,
-                                 t.Length);
+                    result.Write(t = DocWriter.GetIsoBytes(RomanAlphabetFactory.GetUpperCaseString(itemNr)), offset: 0,
+                        t.Length);
+
                     break;
                 case RtfListLevel.LIST_TYPE_LOWER_LETTERS:
-                    result.Write(t = DocWriter.GetIsoBytes(RomanAlphabetFactory.GetLowerCaseString(itemNr)), 0,
-                                 t.Length);
+                    result.Write(t = DocWriter.GetIsoBytes(RomanAlphabetFactory.GetLowerCaseString(itemNr)), offset: 0,
+                        t.Length);
+
                     break;
                 case RtfListLevel.LIST_TYPE_UPPER_ROMAN:
-                    result.Write(t = DocWriter.GetIsoBytes(RomanNumberFactory.GetUpperCaseString(itemNr)), 0, t.Length);
+                    result.Write(t = DocWriter.GetIsoBytes(RomanNumberFactory.GetUpperCaseString(itemNr)), offset: 0,
+                        t.Length);
+
                     break;
                 case RtfListLevel.LIST_TYPE_LOWER_ROMAN:
-                    result.Write(t = DocWriter.GetIsoBytes(RomanNumberFactory.GetLowerCaseString(itemNr)), 0, t.Length);
+                    result.Write(t = DocWriter.GetIsoBytes(RomanNumberFactory.GetLowerCaseString(itemNr)), offset: 0,
+                        t.Length);
+
                     break;
             }
 
-            result.Write(ListNumberEnd, 0, ListNumberEnd.Length);
+            result.Write(ListNumberEnd, offset: 0, ListNumberEnd.Length);
         }
         else
         {
-            Document.FilterSpecialChar(result, listLevel.GetBulletCharacter(), true, false);
+            Document.FilterSpecialChar(result, listLevel.GetBulletCharacter(), useHex: true, softLineBreaks: false);
         }
 
-        result.Write(Tab, 0, Tab.Length);
-        result.Write(CloseGroup, 0, CloseGroup.Length);
+        result.Write(Tab, offset: 0, Tab.Length);
+        result.Write(CloseGroup, offset: 0, CloseGroup.Length);
     }
 }

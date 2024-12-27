@@ -84,77 +84,78 @@ public class RtfParagraphStyle : RtfFont
     /// <summary>
     ///     Constant for center alignment
     /// </summary>
-    public static readonly byte[] AlignCenter = DocWriter.GetIsoBytes("\\qc");
+    public static readonly byte[] AlignCenter = DocWriter.GetIsoBytes(text: "\\qc");
 
     /// <summary>
     ///     Constant for justified alignment
     /// </summary>
-    public static readonly byte[] AlignJustify = DocWriter.GetIsoBytes("\\qj");
+    public static readonly byte[] AlignJustify = DocWriter.GetIsoBytes(text: "\\qj");
 
     /// <summary>
     ///     Constant for left alignment
     /// </summary>
-    public static readonly byte[] AlignLeft = DocWriter.GetIsoBytes("\\ql");
+    public static readonly byte[] AlignLeft = DocWriter.GetIsoBytes(text: "\\ql");
 
     /// <summary>
     ///     Constant for right alignment
     /// </summary>
-    public static readonly byte[] AlignRight = DocWriter.GetIsoBytes("\\qr");
+    public static readonly byte[] AlignRight = DocWriter.GetIsoBytes(text: "\\qr");
 
     /// <summary>
     ///     Constant for the first line indentation
     /// </summary>
-    public static readonly byte[] FirstLineIndent = DocWriter.GetIsoBytes("\\fi");
+    public static readonly byte[] FirstLineIndent = DocWriter.GetIsoBytes(text: "\\fi");
 
     /// <summary>
     ///     Constant for left indentation
     /// </summary>
-    public static readonly byte[] IndentLeft = DocWriter.GetIsoBytes("\\li");
+    public static readonly byte[] IndentLeft = DocWriter.GetIsoBytes(text: "\\li");
 
     /// <summary>
     ///     Constant for right indentation
     /// </summary>
-    public static readonly byte[] IndentRight = DocWriter.GetIsoBytes("\\ri");
+    public static readonly byte[] IndentRight = DocWriter.GetIsoBytes(text: "\\ri");
 
     /// <summary>
     ///     Constant for keeping the paragraph together on one page
     /// </summary>
-    public static readonly byte[] KeepTogether = DocWriter.GetIsoBytes("\\keep");
+    public static readonly byte[] KeepTogether = DocWriter.GetIsoBytes(text: "\\keep");
 
     /// <summary>
     ///     Constant for keeping the paragraph toghether with the next one on one page
     /// </summary>
-    public static readonly byte[] KeepTogetherWithNext = DocWriter.GetIsoBytes("\\keepn");
+    public static readonly byte[] KeepTogetherWithNext = DocWriter.GetIsoBytes(text: "\\keepn");
 
     /// <summary>
     ///     Constant for the space after the paragraph.
     /// </summary>
-    public static readonly byte[] SpacingAfter = DocWriter.GetIsoBytes("\\sa");
+    public static readonly byte[] SpacingAfter = DocWriter.GetIsoBytes(text: "\\sa");
 
     /// <summary>
     ///     Constant for the space before the paragraph.
     /// </summary>
-    public static readonly byte[] SpacingBefore = DocWriter.GetIsoBytes("\\sb");
+    public static readonly byte[] SpacingBefore = DocWriter.GetIsoBytes(text: "\\sb");
 
     /// <summary>
     ///     The style for level 1 headings.
     /// </summary>
-    public static readonly RtfParagraphStyle StyleHeading1 = new("heading 1", "Normal");
+    public static readonly RtfParagraphStyle StyleHeading1 = new(styleName: "heading 1", basedOnName: "Normal");
 
     /// <summary>
     ///     The style for level 2 headings.
     /// </summary>
-    public static readonly RtfParagraphStyle StyleHeading2 = new("heading 2", "Normal");
+    public static readonly RtfParagraphStyle StyleHeading2 = new(styleName: "heading 2", basedOnName: "Normal");
 
     /// <summary>
     ///     The style for level 3 headings.
     /// </summary>
-    public static readonly RtfParagraphStyle StyleHeading3 = new("heading 3", "Normal");
+    public static readonly RtfParagraphStyle StyleHeading3 = new(styleName: "heading 3", basedOnName: "Normal");
 
     /// <summary>
     ///     The NORMAL/STANDARD style.
     /// </summary>
-    public static readonly RtfParagraphStyle StyleNormal = new("Normal", "Arial", 12, NORMAL, BaseColor.Black);
+    public static readonly RtfParagraphStyle StyleNormal = new(styleName: "Normal", fontName: "Arial", fontSize: 12,
+        NORMAL, BaseColor.Black);
 
     /// <summary>
     ///     The name of the RtfParagraphStyle this RtfParagraphStyle is based on.
@@ -248,14 +249,15 @@ public class RtfParagraphStyle : RtfFont
     /// <param name="fontStyle">The style of the font to use for this RtfParagraphStyle.</param>
     /// <param name="fontColor">The colour of the font to use for this RtfParagraphStyle.</param>
     public RtfParagraphStyle(string styleName, string fontName, int fontSize, int fontStyle, BaseColor fontColor) :
-        base(null, new RtfFont(fontName, fontSize, fontStyle, fontColor)) => _styleName = styleName;
+        base(doc: null, new RtfFont(fontName, fontSize, fontStyle, fontColor))
+        => _styleName = styleName;
 
     /// <summary>
     ///     Constructs a new RtfParagraphStyle that is based on an existing RtfParagraphStyle.
     /// </summary>
     /// <param name="styleName">The name of this RtfParagraphStyle.</param>
     /// <param name="basedOnName">The name of the RtfParagraphStyle this RtfParagraphStyle is based on.</param>
-    public RtfParagraphStyle(string styleName, string basedOnName) : base(null, new Font())
+    public RtfParagraphStyle(string styleName, string basedOnName) : base(doc: null, new Font())
     {
         _styleName = styleName;
         _basedOnName = basedOnName;
@@ -320,6 +322,7 @@ public class RtfParagraphStyle : RtfFont
 
         var paragraphStyle = (RtfParagraphStyle)obj;
         var result = GetStyleName().Equals(paragraphStyle.GetStyleName(), StringComparison.Ordinal);
+
         return result;
     }
 
@@ -344,7 +347,7 @@ public class RtfParagraphStyle : RtfFont
     /// <summary>
     ///     Gets the hash code of this RtfParagraphStyle.
     /// </summary>
-    public override int GetHashCode() => _styleName.GetHashCode();
+    public override int GetHashCode() => _styleName.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>
     ///     Gets the left indentation of this RtfParagraphStyle.
@@ -407,6 +410,7 @@ public class RtfParagraphStyle : RtfFont
         {
             _baseStyle = Document.GetDocumentHeader().GetRtfParagraphStyle(_basedOnName);
             _baseStyle.HandleInheritance();
+
             if (!((_modified & ModifiedAlignment) == ModifiedAlignment))
             {
                 _alignment = _baseStyle.GetAlignment();
@@ -494,10 +498,7 @@ public class RtfParagraphStyle : RtfFont
     ///     is relative to the left indentation.
     /// </summary>
     /// <param name="firstLineIndent">The first line indentation to use.</param>
-    public void SetFirstLineIndent(int firstLineIndent)
-    {
-        _firstLineIndent = firstLineIndent;
-    }
+    public void SetFirstLineIndent(int firstLineIndent) => _firstLineIndent = firstLineIndent;
 
     /// <summary>
     ///     Sets the font name of this RtfParagraphStyle.
@@ -604,8 +605,8 @@ public class RtfParagraphStyle : RtfFont
         }
 
         byte[] t;
-        result.Write(t = DocWriter.GetIsoBytes("\\s"), 0, t.Length);
-        result.Write(t = IntToByteArray(_styleNumber), 0, t.Length);
+        result.Write(t = DocWriter.GetIsoBytes(text: "\\s"), offset: 0, t.Length);
+        result.Write(t = IntToByteArray(_styleNumber), offset: 0, t.Length);
         writeParagraphSettings(result);
     }
 
@@ -627,17 +628,17 @@ public class RtfParagraphStyle : RtfFont
         }
 
         byte[] t;
-        outp.Write(t = DocWriter.GetIsoBytes("{"), 0, t.Length);
-        outp.Write(t = DocWriter.GetIsoBytes("\\style"), 0, t.Length);
-        outp.Write(t = DocWriter.GetIsoBytes("\\s"), 0, t.Length);
-        outp.Write(t = IntToByteArray(_styleNumber), 0, t.Length);
-        outp.Write(t = RtfElement.Delimiter, 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "{"), offset: 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\style"), offset: 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\s"), offset: 0, t.Length);
+        outp.Write(t = IntToByteArray(_styleNumber), offset: 0, t.Length);
+        outp.Write(t = RtfElement.Delimiter, offset: 0, t.Length);
         writeParagraphSettings(outp);
         base.WriteBegin(outp);
-        outp.Write(t = RtfElement.Delimiter, 0, t.Length);
-        outp.Write(t = DocWriter.GetIsoBytes(_styleName), 0, t.Length);
-        outp.Write(t = DocWriter.GetIsoBytes(";"), 0, t.Length);
-        outp.Write(t = DocWriter.GetIsoBytes("}"), 0, t.Length);
+        outp.Write(t = RtfElement.Delimiter, offset: 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(_styleName), offset: 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: ";"), offset: 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "}"), offset: 0, t.Length);
         Document.OutputDebugLinebreak(outp);
     }
 
@@ -652,10 +653,7 @@ public class RtfParagraphStyle : RtfFont
     ///     Sets the number of this RtfParagraphStyle in the stylesheet list.
     /// </summary>
     /// <param name="styleNumber">The number to use.</param>
-    protected internal void SetStyleNumber(int styleNumber)
-    {
-        _styleNumber = styleNumber;
-    }
+    internal protected void SetStyleNumber(int styleNumber) => _styleNumber = styleNumber;
 
     /// <summary>
     ///     Gets the number of this RtfParagraphStyle in the stylesheet list.
@@ -669,55 +667,61 @@ public class RtfParagraphStyle : RtfFont
     private void writeParagraphSettings(Stream result)
     {
         byte[] t;
+
         if (_keepTogether)
         {
-            result.Write(t = KeepTogether, 0, t.Length);
+            result.Write(t = KeepTogether, offset: 0, t.Length);
         }
 
         if (_keepTogetherWithNext)
         {
-            result.Write(t = KeepTogetherWithNext, 0, t.Length);
+            result.Write(t = KeepTogetherWithNext, offset: 0, t.Length);
         }
 
         switch (_alignment)
         {
             case Element.ALIGN_LEFT:
-                result.Write(t = AlignLeft, 0, t.Length);
+                result.Write(t = AlignLeft, offset: 0, t.Length);
+
                 break;
             case Element.ALIGN_RIGHT:
-                result.Write(t = AlignRight, 0, t.Length);
+                result.Write(t = AlignRight, offset: 0, t.Length);
+
                 break;
             case Element.ALIGN_CENTER:
-                result.Write(t = AlignCenter, 0, t.Length);
+                result.Write(t = AlignCenter, offset: 0, t.Length);
+
                 break;
             case Element.ALIGN_JUSTIFIED:
             case Element.ALIGN_JUSTIFIED_ALL:
-                result.Write(t = AlignJustify, 0, t.Length);
+                result.Write(t = AlignJustify, offset: 0, t.Length);
+
                 break;
         }
 
-        result.Write(t = FirstLineIndent, 0, t.Length);
-        result.Write(t = IntToByteArray(_firstLineIndent), 0, t.Length);
-        result.Write(t = IndentLeft, 0, t.Length);
-        result.Write(t = IntToByteArray(_indentLeft), 0, t.Length);
-        result.Write(t = IndentRight, 0, t.Length);
-        result.Write(t = IntToByteArray(_indentRight), 0, t.Length);
+        result.Write(t = FirstLineIndent, offset: 0, t.Length);
+        result.Write(t = IntToByteArray(_firstLineIndent), offset: 0, t.Length);
+        result.Write(t = IndentLeft, offset: 0, t.Length);
+        result.Write(t = IntToByteArray(_indentLeft), offset: 0, t.Length);
+        result.Write(t = IndentRight, offset: 0, t.Length);
+        result.Write(t = IntToByteArray(_indentRight), offset: 0, t.Length);
+
         if (_spacingBefore > 0)
         {
-            result.Write(t = SpacingBefore, 0, t.Length);
-            result.Write(t = IntToByteArray(_spacingBefore), 0, t.Length);
+            result.Write(t = SpacingBefore, offset: 0, t.Length);
+            result.Write(t = IntToByteArray(_spacingBefore), offset: 0, t.Length);
         }
 
         if (_spacingAfter > 0)
         {
-            result.Write(t = SpacingAfter, 0, t.Length);
-            result.Write(t = IntToByteArray(_spacingAfter), 0, t.Length);
+            result.Write(t = SpacingAfter, offset: 0, t.Length);
+            result.Write(t = IntToByteArray(_spacingAfter), offset: 0, t.Length);
         }
 
         if (_lineLeading > 0)
         {
-            result.Write(t = RtfPhrase.LineSpacing, 0, t.Length);
-            result.Write(t = IntToByteArray(_lineLeading), 0, t.Length);
+            result.Write(t = RtfPhrase.LineSpacing, offset: 0, t.Length);
+            result.Write(t = IntToByteArray(_lineLeading), offset: 0, t.Length);
         }
     }
 }

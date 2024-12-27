@@ -9,8 +9,8 @@ namespace iTextSharp.text.html.simpleparser;
 public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 {
     public const string tagsSupportedString =
-        "ol ul li a pre font span br p div body table td th tr i b u sub sup em strong s strike"
-        + " h1 h2 h3 h4 h5 h6 img hr";
+        "ol ul li a pre font span br p div body table td th tr i b u sub sup em strong s strike" +
+        " h1 h2 h3 h4 h5 h6 img hr";
 
     public static INullValueDictionary<string, string> TagsSupported = new NullValueDictionary<string, string>();
 
@@ -31,6 +31,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
     static HtmlWorker()
     {
         var tok = new StringTokenizer(tagsSupportedString);
+
         while (tok.HasMoreTokens())
         {
             TagsSupported[tok.NextToken()] = null;
@@ -48,9 +49,10 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         {
             _interfaceProps = value;
             FontFactoryImp ff = null;
+
             if (_interfaceProps != null)
             {
-                ff = _interfaceProps["font_factory"] as FontFactoryImp;
+                ff = _interfaceProps[key: "font_factory"] as FontFactoryImp;
             }
 
             if (ff != null)
@@ -81,6 +83,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
     public bool Add(IElement element)
     {
         ObjectList.Add(element);
+
         return true;
     }
 
@@ -118,10 +121,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
     public bool SetPageSize(Rectangle pageSize) => true;
 
-    public void Dispose()
-    {
-        Close();
-    }
+    public void Dispose() => Close();
 
     public virtual void EndDocument()
     {
@@ -151,20 +151,23 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         }
 
         var follow = FactoryProperties.FollowTags[tag];
+
         if (follow != null)
         {
             _cprops.RemoveChain(follow);
+
             return;
         }
 
-        if (tag.Equals("font", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("span", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "font", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "span", StringComparison.OrdinalIgnoreCase))
         {
             _cprops.RemoveChain(tag);
+
             return;
         }
 
-        if (tag.Equals("a", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "a", StringComparison.OrdinalIgnoreCase))
         {
             if (_currentParagraph == null)
             {
@@ -173,9 +176,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             IALink i = null;
             var skip = false;
+
             if (_interfaceProps != null)
             {
-                i = _interfaceProps["alink_interface"] as IALink;
+                i = _interfaceProps[key: "alink_interface"] as IALink;
+
                 if (i != null)
                 {
                     skip = i.Process(_currentParagraph, _cprops);
@@ -184,10 +189,12 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             if (!skip)
             {
-                var href = _cprops["href"];
+                var href = _cprops[key: "href"];
+
                 if (href != null)
                 {
                     var chunks = _currentParagraph.Chunks;
+
                     for (var k = 0; k < chunks.Count; ++k)
                     {
                         var ck = chunks[k];
@@ -201,11 +208,12 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             tmp2.Add(_currentParagraph);
             tmp.Add(tmp2);
             _currentParagraph = tmp;
-            _cprops.RemoveChain("a");
+            _cprops.RemoveChain(key: "a");
+
             return;
         }
 
-        if (tag.Equals("br", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "br", StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -219,6 +227,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             else
             {
                 var obj = _stack.Pop();
+
                 if (obj is ITextElementArray)
                 {
                     var current = (ITextElementArray)obj;
@@ -230,6 +239,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         }
 
         _currentParagraph = null;
+
         if (tag.Equals(HtmlTags.UNORDEREDLIST, StringComparison.OrdinalIgnoreCase) ||
             tag.Equals(HtmlTags.ORDEREDLIST, StringComparison.OrdinalIgnoreCase))
         {
@@ -240,15 +250,18 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _skipText = false;
             _cprops.RemoveChain(tag);
+
             if (_stack.Count == 0)
             {
                 return;
             }
 
             var obj = _stack.Pop();
+
             if (!(obj is List))
             {
                 _stack.Push(obj);
+
                 return;
             }
 
@@ -269,47 +282,56 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             _pendingLi = false;
             _skipText = true;
             _cprops.RemoveChain(tag);
+
             if (_stack.Count == 0)
             {
                 return;
             }
 
             var obj = _stack.Pop();
+
             if (!(obj is ListItem))
             {
                 _stack.Push(obj);
+
                 return;
             }
 
             if (_stack.Count == 0)
             {
                 Document.Add(obj);
+
                 return;
             }
 
             var list = _stack.Pop();
+
             if (!(list is List))
             {
                 _stack.Push(list);
+
                 return;
             }
 
             var item = (ListItem)obj;
             ((List)list).Add(item);
             var cks = item.Chunks;
+
             if (cks.Count > 0)
             {
-                item.ListSymbol.Font = cks[0].Font;
+                item.ListSymbol.Font = cks[index: 0].Font;
             }
 
             _stack.Push(list);
+
             return;
         }
 
-        if (tag.Equals("div", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("body", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "div", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "body", StringComparison.OrdinalIgnoreCase))
         {
             _cprops.RemoveChain(tag);
+
             return;
         }
 
@@ -317,37 +339,41 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         {
             _cprops.RemoveChain(tag);
             _isPre = false;
+
             return;
         }
 
-        if (tag.Equals("p", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "p", StringComparison.OrdinalIgnoreCase))
         {
             _cprops.RemoveChain(tag);
+
             return;
         }
 
-        if (tag.Equals("h1", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h2", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h3", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h4", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h5", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h6", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "h1", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h2", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h3", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h4", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h5", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h6", StringComparison.OrdinalIgnoreCase))
         {
             _cprops.RemoveChain(tag);
+
             return;
         }
 
-        if (tag.Equals("table", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "table", StringComparison.OrdinalIgnoreCase))
         {
             if (_pendingTr)
             {
-                EndElement("tr");
+                EndElement(tag: "tr");
             }
 
-            _cprops.RemoveChain("table");
+            _cprops.RemoveChain(key: "table");
             var table = (IncTable)_stack.Pop();
             var tb = table.BuildTable();
             tb.SplitRows = true;
+
             if (_stack.Count == 0)
             {
                 Document.Add(tb);
@@ -361,23 +387,26 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             _pendingTr = state[0];
             _pendingTd = state[1];
             _skipText = false;
+
             return;
         }
 
-        if (tag.Equals("tr", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "tr", StringComparison.OrdinalIgnoreCase))
         {
             if (_pendingTd)
             {
-                EndElement("td");
+                EndElement(tag: "td");
             }
 
             _pendingTr = false;
-            _cprops.RemoveChain("tr");
+            _cprops.RemoveChain(key: "tr");
             var cells = new List<PdfPCell>();
             IncTable table = null;
+
             while (true)
             {
                 var obj = _stack.Pop();
+
                 if (obj is IncCell)
                 {
                     cells.Add(((IncCell)obj).Cell);
@@ -386,6 +415,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 if (obj is IncTable)
                 {
                     table = (IncTable)obj;
+
                     break;
                 }
             }
@@ -394,14 +424,15 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             table.EndRow();
             _stack.Push(table);
             _skipText = true;
+
             return;
         }
 
-        if (tag.Equals("td", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("th", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "td", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "th", StringComparison.OrdinalIgnoreCase))
         {
             _pendingTd = false;
-            _cprops.RemoveChain("td");
+            _cprops.RemoveChain(key: "td");
             _skipText = true;
         }
     }
@@ -409,8 +440,8 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
     public virtual void StartDocument()
     {
         var h = new NullValueDictionary<string, string>();
-        Style.ApplyStyle("body", h);
-        _cprops.AddToChain("body", h);
+        Style.ApplyStyle(tag: "body", h);
+        _cprops.AddToChain(key: "body", h);
     }
 
     public virtual void Text(string str)
@@ -426,6 +457,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         }
 
         var content = str;
+
         if (_isPre)
         {
             if (_currentParagraph == null)
@@ -434,10 +466,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             }
 
             _currentParagraph.Add(FactoryProperties.CreateChunk(content, _cprops));
+
             return;
         }
 
-        if (content.Trim().Length == 0 && content.IndexOf(" ", StringComparison.Ordinal) < 0)
+        if (content.Trim().Length == 0 && content.IndexOf(value: ' ', StringComparison.Ordinal) < 0)
         {
             return;
         }
@@ -446,6 +479,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         var len = content.Length;
         char character;
         var newline = false;
+
         for (var i = 0; i < len; i++)
         {
             switch (character = content[i])
@@ -461,7 +495,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                     if (i > 0)
                     {
                         newline = true;
-                        buf.Append(' ');
+                        buf.Append(value: ' ');
                     }
 
                     break;
@@ -472,6 +506,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 default:
                     newline = false;
                     buf.Append(character);
+
                     break;
             }
         }
@@ -498,18 +533,22 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
         Style.ApplyStyle(tag, h);
         var follow = FactoryProperties.FollowTags[tag];
+
         if (follow != null)
         {
             var prop = new NullValueDictionary<string, string>();
             prop[follow] = null;
             _cprops.AddToChain(follow, prop);
+
             return;
         }
 
         FactoryProperties.InsertStyle(h, _cprops);
+
         if (tag.Equals(HtmlTags.ANCHOR, StringComparison.OrdinalIgnoreCase))
         {
             _cprops.AddToChain(tag, h);
+
             if (_currentParagraph == null)
             {
                 _currentParagraph = new Paragraph();
@@ -517,6 +556,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _stack.Push(_currentParagraph);
             _currentParagraph = new Paragraph();
+
             return;
         }
 
@@ -527,7 +567,8 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 _currentParagraph = new Paragraph();
             }
 
-            _currentParagraph.Add(FactoryProperties.CreateChunk("\n", _cprops));
+            _currentParagraph.Add(FactoryProperties.CreateChunk(text: "\n", _cprops));
+
             return;
         }
 
@@ -538,6 +579,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             // where an initial break is only inserted when the preceding element doesn't
             // end with a break, but a trailing break is always inserted.
             var addLeadingBreak = true;
+
             if (_currentParagraph == null)
             {
                 _currentParagraph = new Paragraph();
@@ -548,49 +590,54 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             {
                 // Not a new paragraph
                 var numChunks = _currentParagraph.Chunks.Count;
-                if (numChunks == 0 ||
-                    _currentParagraph.Chunks[numChunks - 1].Content.EndsWith("\n", StringComparison.OrdinalIgnoreCase))
+
+                if (numChunks == 0 || _currentParagraph.Chunks[numChunks - 1].Content.EndsWith(value: '\n'))
                 {
                     addLeadingBreak = false;
                 }
             }
 
-            var align = h["align"];
+            var align = h[key: "align"];
             var hrAlign = Element.ALIGN_CENTER;
+
             if (align != null)
             {
-                if (Util.EqualsIgnoreCase(align, "left"))
+                if (Util.EqualsIgnoreCase(align, s2: "left"))
                 {
                     hrAlign = Element.ALIGN_LEFT;
                 }
 
-                if (Util.EqualsIgnoreCase(align, "right"))
+                if (Util.EqualsIgnoreCase(align, s2: "right"))
                 {
                     hrAlign = Element.ALIGN_RIGHT;
                 }
             }
 
-            var width = h["width"];
+            var width = h[key: "width"];
             float hrWidth = 1;
+
             if (width != null)
             {
                 var tmpWidth = Markup.ParseLength(width, Markup.DEFAULT_FONT_SIZE);
+
                 if (tmpWidth > 0)
                 {
                     hrWidth = tmpWidth;
                 }
 
-                if (!width.EndsWith("%", StringComparison.OrdinalIgnoreCase))
+                if (!width.EndsWith(value: '%'))
                 {
                     hrWidth = 100; // Treat a pixel width as 100% for now.
                 }
             }
 
-            var size = h["size"];
+            var size = h[key: "size"];
             float hrSize = 1;
+
             if (size != null)
             {
                 var tmpSize = Markup.ParseLength(size, Markup.DEFAULT_FONT_SIZE);
+
                 if (tmpSize > 0)
                 {
                     hrSize = tmpSize;
@@ -602,8 +649,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 _currentParagraph.Add(Chunk.Newline);
             }
 
-            _currentParagraph.Add(new LineSeparator(hrSize, hrWidth, null, hrAlign, _currentParagraph.Leading / 2));
+            _currentParagraph.Add(new LineSeparator(hrSize, hrWidth, lineColor: null, hrAlign,
+                _currentParagraph.Leading / 2));
+
             _currentParagraph.Add(Chunk.Newline);
+
             return;
         }
 
@@ -611,12 +661,14 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             tag.Equals(HtmlTags.SPAN, StringComparison.OrdinalIgnoreCase))
         {
             _cprops.AddToChain(tag, h);
+
             return;
         }
 
         if (tag.Equals(HtmlTags.IMAGE, StringComparison.OrdinalIgnoreCase))
         {
             var src = h[ElementTags.SRC];
+
             if (src == null)
             {
                 return;
@@ -624,18 +676,20 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _cprops.AddToChain(tag, h);
             Image img = null;
+
             if (_interfaceProps != null)
             {
-                if (_interfaceProps["img_provider"] is IImageProvider ip)
+                if (_interfaceProps[key: "img_provider"] is IImageProvider ip)
                 {
                     img = ip.GetImage(src, h, _cprops, Document);
                 }
 
                 if (img == null)
                 {
-                    if (_interfaceProps["img_static"] is INullValueDictionary<string, object> images)
+                    if (_interfaceProps[key: "img_static"] is INullValueDictionary<string, object> images)
                     {
                         var tim = (Image)images[src];
+
                         if (tim != null)
                         {
                             img = Image.GetInstance(tim);
@@ -643,10 +697,10 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                     }
                     else
                     {
-                        if (!src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                        if (!src.StartsWith(value: "http", StringComparison.OrdinalIgnoreCase))
                         {
                             // relative src references only
-                            if (_interfaceProps["img_baseurl"] is string baseurl)
+                            if (_interfaceProps[key: "img_baseurl"] is string baseurl)
                             {
                                 src = baseurl + src;
                                 img = Image.GetInstance(src);
@@ -658,9 +712,10 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             if (img == null)
             {
-                if (!src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (!src.StartsWith(value: "http", StringComparison.OrdinalIgnoreCase))
                 {
-                    var path = _cprops["image_path"];
+                    var path = _cprops[key: "image_path"];
+
                     if (path == null)
                     {
                         path = "";
@@ -672,11 +727,12 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 img = Image.GetInstance(src);
             }
 
-            var align = h["align"];
-            var width = h["width"];
-            var height = h["height"];
-            var before = _cprops["before"];
-            var after = _cprops["after"];
+            var align = h[key: "align"];
+            var width = h[key: "width"];
+            var height = h[key: "height"];
+            var before = _cprops[key: "before"];
+            var after = _cprops[key: "after"];
+
             if (before != null)
             {
                 img.SpacingBefore = float.Parse(before, NumberFormatInfo.InvariantInfo);
@@ -688,6 +744,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             }
 
             var actualFontSize = Markup.ParseLength(_cprops[ElementTags.SIZE], Markup.DEFAULT_FONT_SIZE);
+
             if (actualFontSize <= 0f)
             {
                 actualFontSize = Markup.DEFAULT_FONT_SIZE;
@@ -695,6 +752,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             var widthInPoints = Markup.ParseLength(width, actualFontSize);
             var heightInPoints = Markup.ParseLength(height, actualFontSize);
+
             if (widthInPoints > 0 && heightInPoints > 0)
             {
                 img.ScaleAbsolute(widthInPoints, heightInPoints);
@@ -711,15 +769,17 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             }
 
             img.WidthPercentage = 0;
+
             if (align != null)
             {
-                EndElement("p");
+                EndElement(tag: "p");
                 var ralign = Image.MIDDLE_ALIGN;
-                if (Util.EqualsIgnoreCase(align, "left"))
+
+                if (Util.EqualsIgnoreCase(align, s2: "left"))
                 {
                     ralign = Image.LEFT_ALIGN;
                 }
-                else if (Util.EqualsIgnoreCase(align, "right"))
+                else if (Util.EqualsIgnoreCase(align, s2: "right"))
                 {
                     ralign = Image.RIGHT_ALIGN;
                 }
@@ -727,9 +787,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 img.Alignment = ralign;
                 IImg i = null;
                 var skip = false;
+
                 if (_interfaceProps != null)
                 {
-                    i = _interfaceProps["img_interface"] as IImg;
+                    i = _interfaceProps[key: "img_interface"] as IImg;
+
                     if (i != null)
                     {
                         skip = i.Process(img, h, _cprops, Document);
@@ -746,32 +808,35 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             else
             {
                 _cprops.RemoveChain(tag);
+
                 if (_currentParagraph == null)
                 {
                     _currentParagraph = FactoryProperties.CreateParagraph(_cprops);
                 }
 
-                _currentParagraph.Add(new Chunk(img, 0, 0));
+                _currentParagraph.Add(new Chunk(img, offsetX: 0, offsetY: 0));
             }
 
             return;
         }
 
-        EndElement("p");
-        if (tag.Equals("h1", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h2", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h3", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h4", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h5", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("h6", StringComparison.OrdinalIgnoreCase))
+        EndElement(tag: "p");
+
+        if (tag.Equals(value: "h1", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h2", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h3", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h4", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h5", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "h6", StringComparison.OrdinalIgnoreCase))
         {
             if (!h.ContainsKey(ElementTags.SIZE))
             {
-                var v = 7 - int.Parse(tag.Substring(1), CultureInfo.InvariantCulture);
+                var v = 7 - int.Parse(tag.Substring(startIndex: 1), CultureInfo.InvariantCulture);
                 h[ElementTags.SIZE] = v.ToString(CultureInfo.InvariantCulture);
             }
 
             _cprops.AddToChain(tag, h);
+
             return;
         }
 
@@ -784,18 +849,20 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _skipText = true;
             _cprops.AddToChain(tag, h);
-            var list = new List(false);
+            var list = new List(numbered: false);
+
             try
             {
-                list.IndentationLeft = float.Parse(_cprops["indent"], NumberFormatInfo.InvariantInfo);
+                list.IndentationLeft = float.Parse(_cprops[key: "indent"], NumberFormatInfo.InvariantInfo);
             }
             catch
             {
                 list.Autoindent = true;
             }
 
-            list.SetListSymbol("\u2022");
+            list.SetListSymbol(symbol: "\u2022");
             _stack.Push(list);
+
             return;
         }
 
@@ -808,10 +875,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _skipText = true;
             _cprops.AddToChain(tag, h);
-            var list = new List(true);
+            var list = new List(numbered: true);
+
             try
             {
-                list.IndentationLeft = float.Parse(_cprops["indent"], NumberFormatInfo.InvariantInfo);
+                list.IndentationLeft = float.Parse(_cprops[key: "indent"], NumberFormatInfo.InvariantInfo);
             }
             catch
             {
@@ -819,6 +887,7 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             }
 
             _stack.Push(list);
+
             return;
         }
 
@@ -833,14 +902,16 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             _pendingLi = true;
             _cprops.AddToChain(tag, h);
             _stack.Push(FactoryProperties.CreateListItem(_cprops));
+
             return;
         }
 
         if (tag.Equals(HtmlTags.DIV, StringComparison.OrdinalIgnoreCase) ||
             tag.Equals(HtmlTags.BODY, StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("p", StringComparison.OrdinalIgnoreCase))
+            tag.Equals(value: "p", StringComparison.OrdinalIgnoreCase))
         {
             _cprops.AddToChain(tag, h);
+
             return;
         }
 
@@ -853,24 +924,26 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _cprops.AddToChain(tag, h);
             _isPre = true;
+
             return;
         }
 
-        if (tag.Equals("tr", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "tr", StringComparison.OrdinalIgnoreCase))
         {
             if (_pendingTr)
             {
-                EndElement("tr");
+                EndElement(tag: "tr");
             }
 
             _skipText = true;
             _pendingTr = true;
-            _cprops.AddToChain("tr", h);
+            _cprops.AddToChain(key: "tr", h);
+
             return;
         }
 
-        if (tag.Equals("td", StringComparison.OrdinalIgnoreCase) ||
-            tag.Equals("th", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "td", StringComparison.OrdinalIgnoreCase) ||
+            tag.Equals(value: "th", StringComparison.OrdinalIgnoreCase))
         {
             if (_pendingTd)
             {
@@ -879,28 +952,37 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
 
             _skipText = false;
             _pendingTd = true;
-            _cprops.AddToChain("td", h);
+            _cprops.AddToChain(key: "td", h);
             _stack.Push(new IncCell(tag, _cprops));
+
             return;
         }
 
-        if (tag.Equals("table", StringComparison.OrdinalIgnoreCase))
+        if (tag.Equals(value: "table", StringComparison.OrdinalIgnoreCase))
         {
-            _cprops.AddToChain("table", h);
+            _cprops.AddToChain(key: "table", h);
             var table = new IncTable(h);
             _stack.Push(table);
-            _tableState.Push(new[] { _pendingTr, _pendingTd });
+
+            _tableState.Push(new[]
+            {
+                _pendingTr, _pendingTd
+            });
+
             _pendingTr = _pendingTd = false;
             _skipText = true;
         }
     }
 
-    public static List<IElement> ParseToList(TextReader reader, StyleSheet style) => ParseToList(reader, style, null);
+    public static List<IElement> ParseToList(TextReader reader, StyleSheet style)
+        => ParseToList(reader, style, interfaceProps: null);
 
-    public static List<IElement> ParseToList(TextReader reader, StyleSheet style,
-                                             INullValueDictionary<string, object> interfaceProps)
+    public static List<IElement> ParseToList(TextReader reader,
+        StyleSheet style,
+        INullValueDictionary<string, object> interfaceProps)
     {
-        var worker = new HtmlWorker(null);
+        var worker = new HtmlWorker(document: null);
+
         if (style != null)
         {
             worker.Style = style;
@@ -910,11 +992,9 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
         worker.InterfaceProps = interfaceProps;
         worker.ObjectList = new List<IElement>();
         worker.Parse(reader);
+
         return worker.ObjectList;
     }
 
-    public void Parse(TextReader reader)
-    {
-        SimpleXmlParser.Parse(this, null, reader, true);
-    }
+    public void Parse(TextReader reader) => SimpleXmlParser.Parse(this, comment: null, reader, html: true);
 }

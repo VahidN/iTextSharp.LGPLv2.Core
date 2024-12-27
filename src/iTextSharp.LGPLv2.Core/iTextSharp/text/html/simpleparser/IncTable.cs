@@ -85,7 +85,7 @@ public class IncTable : IElement
         {
             var intWidths = new List<int>();
 
-            foreach (var widthElement in widths.Split(','))
+            foreach (var widthElement in widths.Split(separator: ','))
             {
                 intWidths.Add(int.Parse(widthElement, CultureInfo.InvariantCulture));
             }
@@ -101,7 +101,7 @@ public class IncTable : IElement
         }
         else
         {
-            if (width.EndsWith(value: "%", StringComparison.OrdinalIgnoreCase))
+            if (width.EndsWith(value: '%'))
             {
                 table.WidthPercentage = float.Parse(width.Substring(startIndex: 0, width.Length - 1),
                     NumberFormatInfo.InvariantInfo);

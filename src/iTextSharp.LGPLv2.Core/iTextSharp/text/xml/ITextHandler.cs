@@ -77,8 +77,8 @@ public class TextHandler : ParserBase
     /// </summary>
     /// <param name="document"></param>
     /// <param name="myTags"></param>
-    public TextHandler(IDocListener document, NullValueDictionary<string, XmlPeer> myTags) :
-        this(document) => MyTags = myTags;
+    public TextHandler(IDocListener document, NullValueDictionary<string, XmlPeer> myTags) : this(document)
+        => MyTags = myTags;
 
     /// <summary>
     ///     @throws DocumentException
@@ -87,8 +87,7 @@ public class TextHandler : ParserBase
     /// <param name="document"></param>
     /// <param name="myTags"></param>
     /// <param name="bf"></param>
-    public TextHandler(IDocListener document, TagMap myTags, BaseFont bf) : this(document, myTags) =>
-        DefaultFont = bf;
+    public TextHandler(IDocListener document, TagMap myTags, BaseFont bf) : this(document, myTags) => DefaultFont = bf;
 
     public BaseFont DefaultFont { set; get; }
 
@@ -110,7 +109,7 @@ public class TextHandler : ParserBase
             return;
         }
 
-        if (content.Trim().Length == 0 && content.IndexOf(" ", StringComparison.Ordinal) < 0)
+        if (content.Trim().Length == 0 && content.IndexOf(value: ' ', StringComparison.Ordinal) < 0)
         {
             return;
         }
@@ -119,6 +118,7 @@ public class TextHandler : ParserBase
         var len = content.Length;
         char character;
         var newline = false;
+
         for (var i = 0; i < len; i++)
         {
             switch (character = content[i])
@@ -134,7 +134,7 @@ public class TextHandler : ParserBase
                     if (i > 0)
                     {
                         newline = true;
-                        buf.Append(' ');
+                        buf.Append(value: ' ');
                     }
 
                     break;
@@ -145,17 +145,18 @@ public class TextHandler : ParserBase
                 default:
                     newline = false;
                     buf.Append(character);
+
                     break;
             }
         }
 
         var tmp = buf.ToString();
-        var rline = new string('\r', 1);
-        var nline = new string('\n', 1);
-        var tline = new string('\t', 1);
-        tmp = tmp.Replace("\\n", nline);
-        tmp = tmp.Replace("\\t", tline);
-        tmp = tmp.Replace("\\r", rline);
+        var rline = new string(c: '\r', count: 1);
+        var nline = new string(c: '\n', count: 1);
+        var tline = new string(c: '\t', count: 1);
+        tmp = tmp.Replace(oldValue: "\\n", nline, StringComparison.Ordinal);
+        tmp = tmp.Replace(oldValue: "\\t", tline, StringComparison.Ordinal);
+        tmp = tmp.Replace(oldValue: "\\r", rline, StringComparison.Ordinal);
 
         if (CurrentChunk == null)
         {
@@ -180,10 +181,7 @@ public class TextHandler : ParserBase
     /// <param name="uri"></param>
     /// <param name="lname"></param>
     /// <param name="name">the name of the tag that ends</param>
-    public override void EndElement(string uri, string lname, string name)
-    {
-        HandleEndingTags(name);
-    }
+    public override void EndElement(string uri, string lname, string name) => HandleEndingTags(name);
 
     /// <summary>
     ///     This method deals with the starting tags.
@@ -195,11 +193,13 @@ public class TextHandler : ParserBase
         {
             throw new ArgumentNullException(nameof(name));
         }
+
         //System.err.Println("Stop: " + name);
 
         if (ElementTags.IGNORE.Equals(name, StringComparison.Ordinal))
         {
             Ignore = false;
+
             return;
         }
 
@@ -219,6 +219,7 @@ public class TextHandler : ParserBase
         if (ElementTags.TITLE.Equals(name, StringComparison.Ordinal))
         {
             var current = (Paragraph)Stack.Pop();
+
             if (CurrentChunk != null)
             {
                 current.Add(CurrentChunk);
@@ -228,6 +229,7 @@ public class TextHandler : ParserBase
             var previous = (Section)Stack.Pop();
             previous.Title = current;
             Stack.Push(previous);
+
             return;
         }
 
@@ -235,6 +237,7 @@ public class TextHandler : ParserBase
         if (CurrentChunk != null)
         {
             ITextElementArray current;
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
@@ -258,10 +261,11 @@ public class TextHandler : ParserBase
         // phrases, anchors, lists, tables
         if (ElementTags.PHRASE.Equals(name, StringComparison.Ordinal) ||
             ElementTags.ANCHOR.Equals(name, StringComparison.Ordinal) ||
-            ElementTags.LIST.Equals(name, StringComparison.Ordinal)
-            || ElementTags.PARAGRAPH.Equals(name, StringComparison.Ordinal))
+            ElementTags.LIST.Equals(name, StringComparison.Ordinal) ||
+            ElementTags.PARAGRAPH.Equals(name, StringComparison.Ordinal))
         {
             var current = Stack.Pop();
+
             try
             {
                 var previous = (ITextElementArray)Stack.Pop();
@@ -289,6 +293,7 @@ public class TextHandler : ParserBase
         if (ElementTags.TABLE.Equals(name, StringComparison.Ordinal))
         {
             var table = (Table)Stack.Pop();
+
             try
             {
                 var previous = (ITextElementArray)Stack.Pop();
@@ -310,9 +315,11 @@ public class TextHandler : ParserBase
             var columns = 0;
             Table table;
             Cell cell;
+
             while (true)
             {
                 var element = Stack.Pop();
+
                 if (element.Type == Element.CELL)
                 {
                     cell = (Cell)element;
@@ -322,6 +329,7 @@ public class TextHandler : ParserBase
                 else
                 {
                     table = (Table)element;
+
                     break;
                 }
             }
@@ -331,10 +339,11 @@ public class TextHandler : ParserBase
                 table.AddColumns(columns - table.Columns);
             }
 
-            cells.Reverse(0, cells.Count);
+            cells.Reverse(index: 0, cells.Count);
             string width;
             var cellWidths = new float[columns];
             var cellNulls = new bool[columns];
+
             for (var i = 0; i < columns; i++)
             {
                 cellWidths[i] = 0;
@@ -343,13 +352,15 @@ public class TextHandler : ParserBase
 
             float total = 0;
             var j = 0;
+
             foreach (var c in cells)
             {
                 cell = c;
                 width = cell.GetWidthAsString();
-                if (cell.Width.ApproxEquals(0))
+
+                if (cell.Width.ApproxEquals(d2: 0))
                 {
-                    if (cell.Colspan == 1 && cellWidths[j].ApproxEquals(0))
+                    if (cell.Colspan == 1 && cellWidths[j].ApproxEquals(d2: 0))
                     {
                         try
                         {
@@ -366,12 +377,13 @@ public class TextHandler : ParserBase
                         cellNulls[j] = false;
                     }
                 }
-                else if (cell.Colspan == 1 && width.EndsWith("%", StringComparison.Ordinal))
+                else if (cell.Colspan == 1 && width.EndsWith(value: '%'))
                 {
                     try
                     {
-                        cellWidths[j] = float.Parse(width.Substring(0, width.Length - 1),
-                                                    NumberFormatInfo.InvariantInfo);
+                        cellWidths[j] = float.Parse(width.Substring(startIndex: 0, width.Length - 1),
+                            NumberFormatInfo.InvariantInfo);
+
                         total += cellWidths[j];
                     }
                     catch
@@ -385,12 +397,14 @@ public class TextHandler : ParserBase
             }
 
             var widths = table.ProportionalWidths;
+
             if (widths.Length == columns)
             {
                 var left = 0.0f;
+
                 for (var i = 0; i < columns; i++)
                 {
-                    if (cellNulls[i] && widths[i].ApproxNotEqual(0))
+                    if (cellNulls[i] && widths[i].ApproxNotEqual(b: 0))
                     {
                         left += widths[i];
                         cellWidths[i] = widths[i];
@@ -401,7 +415,7 @@ public class TextHandler : ParserBase
                 {
                     for (var i = 0; i < widths.Length; i++)
                     {
-                        if (cellWidths[i].ApproxEquals(0) && widths[i].ApproxNotEqual(0))
+                        if (cellWidths[i].ApproxEquals(d2: 0) && widths[i].ApproxNotEqual(b: 0))
                         {
                             cellWidths[i] = widths[i] / left * (100.0f - total);
                         }
@@ -415,7 +429,7 @@ public class TextHandler : ParserBase
         }
 
         // registerfont
-        if (name.Equals("registerfont", StringComparison.Ordinal))
+        if (name.Equals(value: "registerfont", StringComparison.Ordinal))
         {
             return;
         }
@@ -424,6 +438,7 @@ public class TextHandler : ParserBase
         if (ElementTags.HEADER.Equals(name, StringComparison.Ordinal))
         {
             Document.Header = (HeaderFooter)Stack.Pop();
+
             return;
         }
 
@@ -431,17 +446,18 @@ public class TextHandler : ParserBase
         if (ElementTags.FOOTER.Equals(name, StringComparison.Ordinal))
         {
             Document.Footer = (HeaderFooter)Stack.Pop();
+
             return;
         }
 
         // before
-        if (name.Equals("before", StringComparison.Ordinal))
+        if (name.Equals(value: "before", StringComparison.Ordinal))
         {
             return;
         }
 
         // after
-        if (name.Equals("after", StringComparison.Ordinal))
+        if (name.Equals(value: "after", StringComparison.Ordinal))
         {
             return;
         }
@@ -456,6 +472,7 @@ public class TextHandler : ParserBase
         if (ElementTags.SECTION.Equals(name, StringComparison.Ordinal))
         {
             Stack.Pop();
+
             return;
         }
 
@@ -463,6 +480,7 @@ public class TextHandler : ParserBase
         if (ElementTags.CHAPTER.Equals(name, StringComparison.Ordinal))
         {
             Document.Add(Stack.Pop());
+
             return;
         }
 
@@ -474,6 +492,7 @@ public class TextHandler : ParserBase
                 while (true)
                 {
                     var element = Stack.Pop();
+
                     try
                     {
                         var previous = (ITextElementArray)Stack.Pop();
@@ -519,6 +538,7 @@ public class TextHandler : ParserBase
         if (Ignore || ElementTags.IGNORE.Equals(name, StringComparison.Ordinal))
         {
             Ignore = true;
+
             return;
         }
 
@@ -526,6 +546,7 @@ public class TextHandler : ParserBase
         if (CurrentChunk != null)
         {
             ITextElementArray current;
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
@@ -534,11 +555,11 @@ public class TextHandler : ParserBase
             {
                 if (DefaultFont == null)
                 {
-                    current = new Paragraph("", new Font());
+                    current = new Paragraph(str: "", new Font());
                 }
                 else
                 {
-                    current = new Paragraph("", new Font(DefaultFont));
+                    current = new Paragraph(str: "", new Font(DefaultFont));
                 }
             }
 
@@ -548,7 +569,7 @@ public class TextHandler : ParserBase
         }
 
         // registerfont
-        if (name.Equals("registerfont", StringComparison.Ordinal))
+        if (name.Equals(value: "registerfont", StringComparison.Ordinal))
         {
             FontFactory.Register(attributes);
         }
@@ -557,6 +578,7 @@ public class TextHandler : ParserBase
         if (ElementTags.HEADER.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(new HeaderFooter(attributes));
+
             return;
         }
 
@@ -564,26 +586,29 @@ public class TextHandler : ParserBase
         if (ElementTags.FOOTER.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(new HeaderFooter(attributes));
+
             return;
         }
 
         // before
-        if (name.Equals("before", StringComparison.Ordinal))
+        if (name.Equals(value: "before", StringComparison.Ordinal))
         {
             var tmp = (HeaderFooter)Stack.Pop();
 
             tmp.Before = ElementFactory.GetPhrase(attributes);
             Stack.Push(tmp);
+
             return;
         }
 
         // after
-        if (name.Equals("after", StringComparison.Ordinal))
+        if (name.Equals(value: "after", StringComparison.Ordinal))
         {
             var tmp = (HeaderFooter)Stack.Pop();
 
             tmp.After = ElementFactory.GetPhrase(attributes);
             Stack.Push(tmp);
+
             return;
         }
 
@@ -591,6 +616,7 @@ public class TextHandler : ParserBase
         if (ElementTags.CHUNK.Equals(name, StringComparison.Ordinal))
         {
             CurrentChunk = ElementFactory.GetChunk(attributes);
+
             if (DefaultFont != null)
             {
                 CurrentChunk.Font = new Font(DefaultFont);
@@ -603,6 +629,7 @@ public class TextHandler : ParserBase
         if (ElementTags.ENTITY.Equals(name, StringComparison.Ordinal))
         {
             var f = new Font();
+
             if (CurrentChunk != null)
             {
                 HandleEndingTags(ElementTags.CHUNK);
@@ -610,6 +637,7 @@ public class TextHandler : ParserBase
             }
 
             CurrentChunk = EntitiesToSymbol.Get(attributes[ElementTags.ID], f);
+
             return;
         }
 
@@ -617,6 +645,7 @@ public class TextHandler : ParserBase
         if (ElementTags.PHRASE.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetPhrase(attributes));
+
             return;
         }
 
@@ -624,6 +653,7 @@ public class TextHandler : ParserBase
         if (ElementTags.ANCHOR.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetAnchor(attributes));
+
             return;
         }
 
@@ -632,6 +662,7 @@ public class TextHandler : ParserBase
             ElementTags.TITLE.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetParagraph(attributes));
+
             return;
         }
 
@@ -639,6 +670,7 @@ public class TextHandler : ParserBase
         if (ElementTags.LIST.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetList(attributes));
+
             return;
         }
 
@@ -646,6 +678,7 @@ public class TextHandler : ParserBase
         if (ElementTags.LISTITEM.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetListItem(attributes));
+
             return;
         }
 
@@ -653,6 +686,7 @@ public class TextHandler : ParserBase
         if (ElementTags.CELL.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetCell(attributes));
+
             return;
         }
 
@@ -661,9 +695,10 @@ public class TextHandler : ParserBase
         {
             var table = ElementFactory.GetTable(attributes);
             var widths = table.ProportionalWidths;
+
             for (var i = 0; i < widths.Length; i++)
             {
-                if (widths[i].ApproxEquals(0))
+                if (widths[i].ApproxEquals(d2: 0))
                 {
                     widths[i] = 100.0f / widths.Length;
                 }
@@ -671,6 +706,7 @@ public class TextHandler : ParserBase
 
             table.Widths = widths;
             Stack.Push(table);
+
             return;
         }
 
@@ -682,6 +718,7 @@ public class TextHandler : ParserBase
             section = ElementFactory.GetSection((Section)previous, attributes);
             Stack.Push(previous);
             Stack.Push(section);
+
             return;
         }
 
@@ -689,6 +726,7 @@ public class TextHandler : ParserBase
         if (ElementTags.CHAPTER.Equals(name, StringComparison.Ordinal))
         {
             Stack.Push(ElementFactory.GetChapter(attributes));
+
             return;
         }
 
@@ -696,15 +734,18 @@ public class TextHandler : ParserBase
         if (ElementTags.IMAGE.Equals(name, StringComparison.Ordinal))
         {
             var img = ElementFactory.GetImage(attributes);
+
             try
             {
                 AddImage(img);
+
                 return;
             }
             catch
             {
                 // if there is no element on the stack, the Image is added to the document
                 Document.Add(img);
+
                 return;
             }
         }
@@ -714,9 +755,11 @@ public class TextHandler : ParserBase
         {
             var annotation = ElementFactory.GetAnnotation(attributes);
             ITextElementArray current;
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
+
                 try
                 {
                     current.Add(annotation);
@@ -740,6 +783,7 @@ public class TextHandler : ParserBase
         if (isNewline(name))
         {
             ITextElementArray current;
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
@@ -754,7 +798,7 @@ public class TextHandler : ParserBase
                 }
                 else
                 {
-                    CurrentChunk.Append("\n");
+                    CurrentChunk.Append(str: "\n");
                 }
             }
 
@@ -765,11 +809,13 @@ public class TextHandler : ParserBase
         if (isNewpage(name))
         {
             ITextElementArray current;
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
-                var newPage = new Chunk("");
+                var newPage = new Chunk(content: "");
                 newPage.SetNewPage();
+
                 if (DefaultFont != null)
                 {
                     newPage.Font = new Font(DefaultFont);
@@ -789,7 +835,10 @@ public class TextHandler : ParserBase
         if (ElementTags.HORIZONTALRULE.Equals(name, StringComparison.Ordinal))
         {
             ITextElementArray current;
-            var hr = new LineSeparator(1.0f, 100.0f, null, Element.ALIGN_CENTER, 0);
+
+            var hr = new LineSeparator(lineWidth: 1.0f, percentage: 100.0f, lineColor: null, Element.ALIGN_CENTER,
+                offset: 0);
+
             try
             {
                 current = (ITextElementArray)Stack.Pop();
@@ -808,13 +857,16 @@ public class TextHandler : ParserBase
         if (IsDocumentRoot(name))
         {
             string value;
+
             // pagesize and orientation specific code suggested by Samuel Gabriel
             // Updated by Ricardo Coutinho. Only use if set in html!
             Rectangle pageSize = null;
             string orientation = null;
+
             foreach (var key in attributes.Keys)
             {
                 value = attributes[key];
+
                 // margin specific code suggested by Reza Nasiri
                 if (Util.EqualsIgnoreCase(ElementTags.LEFT, key))
                 {
@@ -838,7 +890,7 @@ public class TextHandler : ParserBase
 
                 if (ElementTags.PAGE_SIZE.Equals(key, StringComparison.Ordinal))
                 {
-                    pageSize = (Rectangle)typeof(PageSize).GetField(value).GetValue(null);
+                    pageSize = (Rectangle)typeof(PageSize).GetField(value).GetValue(obj: null);
                 }
                 else if (ElementTags.ORIENTATION.Equals(key, StringComparison.Ordinal))
                 {
@@ -863,8 +915,8 @@ public class TextHandler : ParserBase
                 Document.SetPageSize(pageSize);
             }
 
-            Document.SetMargins(_leftMargin, _rightMargin, _topMargin,
-                                _bottomMargin);
+            Document.SetMargins(_leftMargin, _rightMargin, _topMargin, _bottomMargin);
+
             if (ControlOpenClose)
             {
                 Document.Open();
@@ -894,10 +946,7 @@ public class TextHandler : ParserBase
     ///     yourself.
     /// </remarks>
     /// <param name="controlOpenClose">set this to false if you plan to open/close the Document yourself</param>
-    public void SetControlOpenClose(bool controlOpenClose)
-    {
-        ControlOpenClose = controlOpenClose;
-    }
+    public void SetControlOpenClose(bool controlOpenClose) => ControlOpenClose = controlOpenClose;
 
     /// <summary>
     ///     This method gets called when a start tag is encountered.
@@ -906,10 +955,10 @@ public class TextHandler : ParserBase
     /// <param name="lname"></param>
     /// <param name="name">the name of the tag that is encountered</param>
     /// <param name="attrs">the list of attributes</param>
-    public override void StartElement(string uri, string lname, string name,
-                                      INullValueDictionary<string, string> attrs)
+    public override void StartElement(string uri, string lname, string name, INullValueDictionary<string, string> attrs)
     {
         var attributes = new Properties();
+
         if (attrs != null)
         {
             foreach (var key in attrs.Keys)
@@ -921,7 +970,7 @@ public class TextHandler : ParserBase
         HandleStartingTags(name, attributes);
     }
 
-    protected internal void AddImage(Image img)
+    internal protected void AddImage(Image img)
     {
         if (img == null)
         {
@@ -930,27 +979,28 @@ public class TextHandler : ParserBase
 
         // if there is an element on the stack...
         var current = Stack.Pop();
+
         // ...and it's a Chapter or a Section, the Image can be
         // added directly
-        if (current is Chapter
-            || current is Section
-            || current is Cell)
+        if (current is Chapter || current is Section || current is Cell)
         {
             ((ITextElementArray)current).Add(img);
             Stack.Push(current);
+
             return;
         }
+
         // ...if not, we need to to a lot of stuff
 
         var newStack = new Stack<IElement>();
-        while (!(current is Chapter
-                 || current is Section || current is Cell))
+
+        while (!(current is Chapter || current is Section || current is Cell))
         {
             newStack.Push(current);
+
             if (current is Anchor)
             {
-                img.Annotation = new Annotation(0, 0, 0,
-                                                0, ((Anchor)current).Reference);
+                img.Annotation = new Annotation(llx: 0, lly: 0, urx: 0, ury: 0, ((Anchor)current).Reference);
             }
 
             current = Stack.Pop();
@@ -958,6 +1008,7 @@ public class TextHandler : ParserBase
 
         ((ITextElementArray)current).Add(img);
         Stack.Push(current);
+
         while (newStack.Count != 0)
         {
             Stack.Push(newStack.Pop());

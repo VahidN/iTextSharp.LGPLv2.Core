@@ -50,6 +50,36 @@ public sealed class SimpleXmlParser
     private const int Unknown = 0;
 
     /// <summary>
+    ///     The handler to which we are going to forward comments.
+    /// </summary>
+    internal readonly ISimpleXmlDocHandlerComment comment;
+
+    /// <summary>
+    ///     The handler to which we are going to forward document content
+    /// </summary>
+    internal readonly ISimpleXmlDocHandler Doc;
+
+    /// <summary>
+    ///     current entity
+    /// </summary>
+    internal readonly StringBuilder entity = new();
+
+    /// <summary>
+    ///     Are we parsing HTML?
+    /// </summary>
+    internal readonly bool Html;
+
+    /// <summary>
+    ///     the state stack
+    /// </summary>
+    internal readonly Stack<int> Stack;
+
+    /// <summary>
+    ///     current text (whatever is encountered between tags)
+    /// </summary>
+    internal readonly StringBuilder text = new();
+
+    /// <summary>
     ///     the attribute key.
     /// </summary>
     internal string Attributekey;
@@ -75,29 +105,9 @@ public sealed class SimpleXmlParser
     internal int Columns;
 
     /// <summary>
-    ///     The handler to which we are going to forward comments.
-    /// </summary>
-    internal readonly ISimpleXmlDocHandlerComment comment;
-
-    /// <summary>
-    ///     The handler to which we are going to forward document content
-    /// </summary>
-    internal readonly ISimpleXmlDocHandler Doc;
-
-    /// <summary>
-    ///     current entity
-    /// </summary>
-    internal readonly StringBuilder entity = new();
-
-    /// <summary>
     ///     was the last character equivalent to a newline?
     /// </summary>
     internal bool Eol;
-
-    /// <summary>
-    ///     Are we parsing HTML?
-    /// </summary>
-    internal readonly bool Html;
 
     /// <summary>
     ///     the line we are currently reading
@@ -128,11 +138,6 @@ public sealed class SimpleXmlParser
     internal int QuoteCharacter = '"';
 
     /// <summary>
-    ///     the state stack
-    /// </summary>
-    internal readonly Stack<int> Stack;
-
-    /// <summary>
     ///     the current state
     /// </summary>
     internal int State;
@@ -141,11 +146,6 @@ public sealed class SimpleXmlParser
     ///     current tagname
     /// </summary>
     internal string Tag;
-
-    /// <summary>
-    ///     current text (whatever is encountered between tags)
-    /// </summary>
-    internal readonly StringBuilder text = new();
 
     /// <summary>
     ///     Creates a Simple XML parser object.
@@ -176,35 +176,40 @@ public sealed class SimpleXmlParser
         var cc = s.ToCharArray();
         var len = cc.Length;
         var sb = new StringBuilder();
+
         for (var k = 0; k < len; ++k)
         {
             int c = cc[k];
+
             switch (c)
             {
                 case '<':
-                    sb.Append("&lt;");
+                    sb.Append(value: "&lt;");
+
                     break;
                 case '>':
-                    sb.Append("&gt;");
+                    sb.Append(value: "&gt;");
+
                     break;
                 case '&':
-                    sb.Append("&amp;");
+                    sb.Append(value: "&amp;");
+
                     break;
                 case '"':
-                    sb.Append("&quot;");
+                    sb.Append(value: "&quot;");
+
                     break;
                 case '\'':
-                    sb.Append("&apos;");
+                    sb.Append(value: "&apos;");
+
                     break;
                 default:
-                    if (c == 0x9 || c == 0xA || c == 0xD
-                        || (c >= 0x20 && c <= 0xD7FF)
-                        || (c >= 0xE000 && c <= 0xFFFD)
-                        || (c >= 0x10000 && c <= 0x10FFFF))
+                    if (c == 0x9 || c == 0xA || c == 0xD || (c >= 0x20 && c <= 0xD7FF) ||
+                        (c >= 0xE000 && c <= 0xFFFD) || (c >= 0x10000 && c <= 0x10FFFF))
                     {
                         if (onlyAscii && c > 127)
                         {
-                            sb.Append("&#").Append(c).Append(';');
+                            sb.Append(value: "&#").Append(c).Append(value: ';');
                         }
                         else
                         {
@@ -252,18 +257,21 @@ public sealed class SimpleXmlParser
         }
 
         var b4 = new byte[4];
-        var count = inp.Read(b4, 0, b4.Length);
+        var count = inp.Read(b4, offset: 0, b4.Length);
+
         if (count != 4)
         {
-            throw new IOException("Insufficient length.");
+            throw new IOException(message: "Insufficient length.");
         }
 
         var encoding = getEncodingName(b4);
         string decl = null;
-        if (encoding.Equals("UTF-8", StringComparison.Ordinal))
+
+        if (encoding.Equals(value: "UTF-8", StringComparison.Ordinal))
         {
             var sb = new StringBuilder();
             int c;
+
             while ((c = inp.ReadByte()) != -1)
             {
                 if (c == '>')
@@ -276,10 +284,11 @@ public sealed class SimpleXmlParser
 
             decl = sb.ToString();
         }
-        else if (encoding.Equals("CP037", StringComparison.Ordinal))
+        else if (encoding.Equals(value: "CP037", StringComparison.Ordinal))
         {
             using var bi = new MemoryStream();
             int c;
+
             while ((c = inp.ReadByte()) != -1)
             {
                 if (c == 0x6e) // that's '>' in ebcdic
@@ -290,12 +299,13 @@ public sealed class SimpleXmlParser
                 bi.WriteByte((byte)c);
             }
 
-            decl = EncodingsRegistry.GetEncoding(37).GetString(bi.ToArray()); //cp037 ebcdic
+            decl = EncodingsRegistry.GetEncoding(codepage: 37).GetString(bi.ToArray()); //cp037 ebcdic
         }
 
         if (decl != null)
         {
             decl = getDeclaredEncoding(decl);
+
             if (decl != null)
             {
                 encoding = decl;
@@ -306,10 +316,7 @@ public sealed class SimpleXmlParser
         Parse(doc, streamReader);
     }
 
-    public static void Parse(ISimpleXmlDocHandler doc, TextReader r)
-    {
-        Parse(doc, null, r, false);
-    }
+    public static void Parse(ISimpleXmlDocHandler doc, TextReader r) => Parse(doc, comment: null, r, html: false);
 
     private static string getDeclaredEncoding(string decl)
     {
@@ -318,14 +325,16 @@ public sealed class SimpleXmlParser
             return null;
         }
 
-        var idx = decl.IndexOf("encoding", StringComparison.OrdinalIgnoreCase);
+        var idx = decl.IndexOf(value: "encoding", StringComparison.OrdinalIgnoreCase);
+
         if (idx < 0)
         {
             return null;
         }
 
-        var idx1 = decl.IndexOf("\"", idx, StringComparison.Ordinal);
-        var idx2 = decl.IndexOf("'", idx, StringComparison.Ordinal);
+        var idx1 = decl.IndexOf(value: '"', idx);
+        var idx2 = decl.IndexOf(value: '\'', idx);
+
         if (idx1 == idx2)
         {
             return null;
@@ -333,7 +342,8 @@ public sealed class SimpleXmlParser
 
         if ((idx1 < 0 && idx2 > 0) || (idx2 > 0 && idx2 < idx1))
         {
-            var idx3 = decl.IndexOf("'", idx2 + 1, StringComparison.Ordinal);
+            var idx3 = decl.IndexOf(value: '\'', idx2 + 1);
+
             if (idx3 < 0)
             {
                 return null;
@@ -344,7 +354,8 @@ public sealed class SimpleXmlParser
 
         if ((idx2 < 0 && idx1 > 0) || (idx1 > 0 && idx1 < idx2))
         {
-            var idx3 = decl.IndexOf("\"", idx1 + 1, StringComparison.Ordinal);
+            var idx3 = decl.IndexOf(value: '"', idx1 + 1);
+
             if (idx3 < 0)
             {
                 return null;
@@ -370,6 +381,7 @@ public sealed class SimpleXmlParser
         // UTF-16, with BOM
         var b0 = b4[0] & 0xFF;
         var b1 = b4[1] & 0xFF;
+
         if (b0 == 0xFE && b1 == 0xFF)
         {
             // UTF-16, big-endian
@@ -384,6 +396,7 @@ public sealed class SimpleXmlParser
 
         // UTF-8 with a BOM
         var b2 = b4[2] & 0xFF;
+
         if (b0 == 0xEF && b1 == 0xBB && b2 == 0xBF)
         {
             return "UTF-8";
@@ -391,6 +404,7 @@ public sealed class SimpleXmlParser
 
         // other encodings
         var b3 = b4[3] & 0xFF;
+
         if (b0 == 0x00 && b1 == 0x00 && b2 == 0x00 && b3 == 0x3C)
         {
             // UCS-4, big endian (1234)
@@ -487,6 +501,7 @@ public sealed class SimpleXmlParser
                 break;
             case AttributeKey:
                 Attributekey = text.ToString();
+
                 if (Html)
                 {
                     Attributekey = Attributekey.ToLower(CultureInfo.InvariantCulture);
@@ -497,6 +512,7 @@ public sealed class SimpleXmlParser
             case AttributeValue:
                 Attributevalue = text.ToString();
                 Attributes[Attributekey] = Attributevalue;
+
                 break;
         }
 
@@ -510,6 +526,7 @@ public sealed class SimpleXmlParser
     private void go(TextReader reader)
     {
         Doc.StartDocument();
+
         while (true)
         {
             // read a new character
@@ -517,6 +534,7 @@ public sealed class SimpleXmlParser
             {
                 Character = reader.Read();
             }
+
             // or re-examin the previous character
             else
             {
@@ -538,7 +556,7 @@ public sealed class SimpleXmlParser
                 }
                 else
                 {
-                    throwException("Missing end tag");
+                    throwException(s: "Missing end tag");
                 }
 
                 return;
@@ -548,6 +566,7 @@ public sealed class SimpleXmlParser
             if (Character == '\n' && Eol)
             {
                 Eol = false;
+
                 continue;
             }
 
@@ -583,6 +602,7 @@ public sealed class SimpleXmlParser
                     }
 
                     break;
+
                 // we can encounter any content
                 case Text:
                     if (Character == '<')
@@ -613,10 +633,12 @@ public sealed class SimpleXmlParser
                     }
 
                     break;
+
                 // we have just seen a < and are wondering what we are looking at
                 // <foo>, </foo>, <!-- ... --->, etc.
                 case TagEncountered:
                     initTag();
+
                     if (Character == '/')
                     {
                         State = InClosetag;
@@ -633,13 +655,14 @@ public sealed class SimpleXmlParser
                     }
 
                     break;
+
                 // we are processing something like this <foo ... >.
                 // It could still be a <!-- ... --> or something.
                 case ExaminTag:
                     if (Character == '>')
                     {
                         doTag();
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -647,17 +670,17 @@ public sealed class SimpleXmlParser
                     {
                         State = SingleTag;
                     }
-                    else if (Character == '-' && text.ToString().Equals("!-", StringComparison.Ordinal))
+                    else if (Character == '-' && text.ToString().Equals(value: "!-", StringComparison.Ordinal))
                     {
                         flush();
                         State = Comment;
                     }
-                    else if (Character == '[' && text.ToString().Equals("![CDATA", StringComparison.Ordinal))
+                    else if (Character == '[' && text.ToString().Equals(value: "![CDATA", StringComparison.Ordinal))
                     {
                         flush();
                         State = Cdata;
                     }
-                    else if (Character == 'E' && text.ToString().Equals("!DOCTYP", StringComparison.Ordinal))
+                    else if (Character == 'E' && text.ToString().Equals(value: "!DOCTYP", StringComparison.Ordinal))
                     {
                         flush();
                         State = Pi;
@@ -673,11 +696,12 @@ public sealed class SimpleXmlParser
                     }
 
                     break;
+
                 // we know the name of the tag now.
                 case TagExamined:
                     if (Character == '>')
                     {
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -702,7 +726,8 @@ public sealed class SimpleXmlParser
                     if (Character == '>')
                     {
                         doTag();
-                        processTag(false);
+                        processTag(start: false);
+
                         if (!Html && Nested == 0)
                         {
                             return;
@@ -729,22 +754,24 @@ public sealed class SimpleXmlParser
                     }
 
                     doTag();
-                    processTag(true);
-                    processTag(false);
+                    processTag(start: true);
+                    processTag(start: false);
                     initTag();
+
                     if (!Html && Nested == 0)
                     {
                         Doc.EndDocument();
+
                         return;
                     }
 
                     State = restoreState();
+
                     break;
 
                 // we are processing CDATA
                 case Cdata:
-                    if (Character == '>'
-                        && text.ToString().EndsWith("]]", StringComparison.Ordinal))
+                    if (Character == '>' && text.ToString().EndsWith(value: "]]", StringComparison.Ordinal))
                     {
                         text.Length = text.Length - 2;
                         flush();
@@ -760,8 +787,7 @@ public sealed class SimpleXmlParser
                 // we are processing a comment.  We are inside
                 // the <!-- .... --> looking for the -->.
                 case Comment:
-                    if (Character == '>'
-                        && text.ToString().EndsWith("--", StringComparison.Ordinal))
+                    if (Character == '>' && text.ToString().EndsWith(value: "--", StringComparison.Ordinal))
                     {
                         text.Length = text.Length - 2;
                         flush();
@@ -779,6 +805,7 @@ public sealed class SimpleXmlParser
                     if (Character == '>')
                     {
                         State = restoreState();
+
                         if (State == Text)
                         {
                             State = Unknown;
@@ -795,9 +822,10 @@ public sealed class SimpleXmlParser
                         var cent = entity.ToString();
                         entity.Length = 0;
                         var ce = EntitiesToUnicode.DecodeEntity(cent);
+
                         if (ce == '\0')
                         {
-                            text.Append('&').Append(cent).Append(';');
+                            text.Append(value: '&').Append(cent).Append(value: ';');
                         }
                         else
                         {
@@ -805,12 +833,12 @@ public sealed class SimpleXmlParser
                         }
                     }
                     else if ((Character != '#' && (Character < '0' || Character > '9') &&
-                              (Character < 'a' || Character > 'z')
-                              && (Character < 'A' || Character > 'Z')) || entity.Length >= 7)
+                              (Character < 'a' || Character > 'z') && (Character < 'A' || Character > 'Z')) ||
+                             entity.Length >= 7)
                     {
                         State = restoreState();
                         PreviousCharacter = Character;
-                        text.Append('&').Append(entity);
+                        text.Append(value: '&').Append(entity);
                         entity.Length = 0;
                     }
                     else
@@ -819,12 +847,13 @@ public sealed class SimpleXmlParser
                     }
 
                     break;
+
                 // We are processing the quoted right-hand side of an element's attribute.
                 case Quote:
                     if (Html && QuoteCharacter == ' ' && Character == '>')
                     {
                         flush();
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -844,7 +873,7 @@ public sealed class SimpleXmlParser
                     }
                     else if (" \r\n\u0009".IndexOf(((char)Character).ToString(), StringComparison.Ordinal) >= 0)
                     {
-                        text.Append(' ');
+                        text.Append(value: ' ');
                     }
                     else if (Character == '&')
                     {
@@ -873,7 +902,7 @@ public sealed class SimpleXmlParser
                     else if (Html && Character == '>')
                     {
                         text.Length = 0;
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -896,7 +925,7 @@ public sealed class SimpleXmlParser
                     else if (Html && Character == '>')
                     {
                         text.Length = 0;
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -913,7 +942,7 @@ public sealed class SimpleXmlParser
                     }
                     else
                     {
-                        throwException("Error in attribute processing.");
+                        throwException(s: "Error in attribute processing.");
                     }
 
                     break;
@@ -931,7 +960,7 @@ public sealed class SimpleXmlParser
                     else if (Html && Character == '>')
                     {
                         flush();
-                        processTag(true);
+                        processTag(start: true);
                         initTag();
                         State = restoreState();
                     }
@@ -943,7 +972,7 @@ public sealed class SimpleXmlParser
                     }
                     else
                     {
-                        throwException("Error in attribute processing");
+                        throwException(s: "Error in attribute processing");
                     }
 
                     break;
@@ -996,16 +1025,10 @@ public sealed class SimpleXmlParser
     ///     Adds a state to the stack.
     /// </summary>
     /// <param name="s">a state to add to the stack</param>
-    private void saveState(int s)
-    {
-        Stack.Push(s);
-    }
+    private void saveState(int s) => Stack.Push(s);
 
     /// <summary>
     ///     Throws an exception
     /// </summary>
-    private void throwException(string s)
-    {
-        throw new IOException(s + " near line " + Lines + ", column " + Columns);
-    }
+    private void throwException(string s) => throw new IOException(s + " near line " + Lines + ", column " + Columns);
 }

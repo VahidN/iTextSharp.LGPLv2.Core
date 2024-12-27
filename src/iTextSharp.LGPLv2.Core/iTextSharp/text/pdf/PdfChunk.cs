@@ -92,24 +92,24 @@ public class PdfChunk
 
     static PdfChunk()
     {
-        _keysAttributes.Add(Chunk.ACTION, null);
-        _keysAttributes.Add(Chunk.UNDERLINE, null);
-        _keysAttributes.Add(Chunk.REMOTEGOTO, null);
-        _keysAttributes.Add(Chunk.LOCALGOTO, null);
-        _keysAttributes.Add(Chunk.LOCALDESTINATION, null);
-        _keysAttributes.Add(Chunk.GENERICTAG, null);
-        _keysAttributes.Add(Chunk.NEWPAGE, null);
-        _keysAttributes.Add(Chunk.IMAGE, null);
-        _keysAttributes.Add(Chunk.BACKGROUND, null);
-        _keysAttributes.Add(Chunk.PDFANNOTATION, null);
-        _keysAttributes.Add(Chunk.SKEW, null);
-        _keysAttributes.Add(Chunk.HSCALE, null);
-        _keysAttributes.Add(Chunk.SEPARATOR, null);
-        _keysAttributes.Add(Chunk.TAB, null);
-        _keysNoStroke.Add(Chunk.SUBSUPSCRIPT, null);
-        _keysNoStroke.Add(Chunk.SPLITCHARACTER, null);
-        _keysNoStroke.Add(Chunk.HYPHENATION, null);
-        _keysNoStroke.Add(Chunk.TEXTRENDERMODE, null);
+        _keysAttributes.Add(Chunk.ACTION, value: null);
+        _keysAttributes.Add(Chunk.UNDERLINE, value: null);
+        _keysAttributes.Add(Chunk.REMOTEGOTO, value: null);
+        _keysAttributes.Add(Chunk.LOCALGOTO, value: null);
+        _keysAttributes.Add(Chunk.LOCALDESTINATION, value: null);
+        _keysAttributes.Add(Chunk.GENERICTAG, value: null);
+        _keysAttributes.Add(Chunk.NEWPAGE, value: null);
+        _keysAttributes.Add(Chunk.IMAGE, value: null);
+        _keysAttributes.Add(Chunk.BACKGROUND, value: null);
+        _keysAttributes.Add(Chunk.PDFANNOTATION, value: null);
+        _keysAttributes.Add(Chunk.SKEW, value: null);
+        _keysAttributes.Add(Chunk.HSCALE, value: null);
+        _keysAttributes.Add(Chunk.SEPARATOR, value: null);
+        _keysAttributes.Add(Chunk.TAB, value: null);
+        _keysNoStroke.Add(Chunk.SUBSUPSCRIPT, value: null);
+        _keysNoStroke.Add(Chunk.SPLITCHARACTER, value: null);
+        _keysNoStroke.Add(Chunk.HYPHENATION, value: null);
+        _keysNoStroke.Add(Chunk.TEXTRENDERMODE, value: null);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class PdfChunk
         if (BaseFont == null)
         {
             // translation of the font-family to a PDF font-family
-            BaseFont = f.GetCalculatedBaseFont(false);
+            BaseFont = f.GetCalculatedBaseFont(specialEncoding: false);
         }
         else
         {
@@ -396,8 +396,7 @@ public class PdfChunk
 
     public float Width => font.Width(value);
 
-    public static bool NoPrint(int c)
-        => (c >= 0x200b && c <= 0x200f) || (c >= 0x202a && c <= 0x202e);
+    public static bool NoPrint(int c) => (c >= 0x200b && c <= 0x200f) || (c >= 0x202a && c <= 0x202e);
 
     /// <summary>
     ///     Gets the Unicode equivalent to a CID.
@@ -406,8 +405,7 @@ public class PdfChunk
     /// </summary>
     /// <param name="c">the CID code</param>
     /// <returns>the Unicode equivalent</returns>
-    public int GetUnicodeEquivalent(int c)
-        => BaseFont.GetUnicodeEquivalent(c);
+    public int GetUnicodeEquivalent(int c) => BaseFont.GetUnicodeEquivalent(c);
 
     public float GetWidthCorrected(float charSpacing, float wordSpacing)
     {
@@ -419,7 +417,7 @@ public class PdfChunk
         var numberOfSpaces = 0;
         var idx = -1;
 
-        while ((idx = value.IndexOf(" ", idx + 1, StringComparison.Ordinal)) >= 0)
+        while ((idx = value.IndexOf(value: ' ', idx + 1)) >= 0)
         {
             ++numberOfSpaces;
         }
@@ -427,8 +425,7 @@ public class PdfChunk
         return Width + (value.Length * charSpacing + numberOfSpaces * wordSpacing);
     }
 
-    public bool IsNewlineSplit()
-        => NewlineSplit;
+    public bool IsNewlineSplit() => NewlineSplit;
 
     /// <summary>
     ///     Gets the image in the  PdfChunk .
@@ -445,29 +442,28 @@ public class PdfChunk
     /// <summary>
     ///     sets the value.
     /// </summary>
-    public override string ToString()
-        => value;
+    public override string ToString() => value;
 
     public float TrimFirstSpace()
     {
         var ft = font.Font;
 
-        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
+        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            if (value.Length > 1 && value.StartsWith("\u0001", StringComparison.Ordinal))
+            if (value.Length > 1 && value.StartsWith(value: '\u0001'))
             {
-                value = value.Substring(1);
+                value = value.Substring(startIndex: 1);
 
-                return font.Width('\u0001');
+                return font.Width(character: '\u0001');
             }
         }
         else
         {
-            if (value.Length > 1 && value.StartsWith(" ", StringComparison.Ordinal))
+            if (value.Length > 1 && value.StartsWith(value: ' '))
             {
-                value = value.Substring(1);
+                value = value.Substring(startIndex: 1);
 
-                return font.Width(' ');
+                return font.Width(character: ' ');
             }
         }
 
@@ -478,22 +474,22 @@ public class PdfChunk
     {
         var ft = font.Font;
 
-        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
+        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            if (value.Length > 1 && value.EndsWith("\u0001", StringComparison.Ordinal))
+            if (value.Length > 1 && value.EndsWith(value: '\u0001'))
             {
-                value = value.Substring(0, value.Length - 1);
+                value = value.Substring(startIndex: 0, value.Length - 1);
 
-                return font.Width('\u0001');
+                return font.Width(character: '\u0001');
             }
         }
         else
         {
-            if (value.Length > 1 && value.EndsWith(" ", StringComparison.Ordinal))
+            if (value.Length > 1 && value.EndsWith(value: ' '))
             {
-                value = value.Substring(0, value.Length - 1);
+                value = value.Substring(startIndex: 0, value.Length - 1);
 
-                return font.Width(' ');
+                return font.Width(character: ' ');
             }
         }
 
@@ -568,31 +564,27 @@ public class PdfChunk
         return false;
     }
 
-    public bool IsImage()
-        => image != null;
+    public bool IsImage() => image != null;
 
     /// <summary>
     ///     Checks if this  PdfChunk  is a Separator Chunk.
     ///     @since   2.1.2
     /// </summary>
     /// <returns>true if this chunk is a separator.</returns>
-    public bool IsSeparator()
-        => IsAttribute(Chunk.SEPARATOR);
+    public bool IsSeparator() => IsAttribute(Chunk.SEPARATOR);
 
     public bool IsSpecialEncoding()
         => encoding.Equals(CjkFont.CJK_ENCODING, StringComparison.Ordinal) ||
            encoding.Equals(BaseFont.IDENTITY_H, StringComparison.Ordinal);
 
-    public bool IsStroked()
-        => Attributes.Count > 0;
+    public bool IsStroked() => Attributes.Count > 0;
 
     /// <summary>
     ///     Checks if this  PdfChunk  is a tab Chunk.
     ///     @since   2.1.2
     /// </summary>
     /// <returns>true if this chunk is a separator.</returns>
-    public bool IsTab()
-        => IsAttribute(Chunk.TAB);
+    public bool IsTab() => IsAttribute(Chunk.TAB);
 
     public PdfChunk Split(float width)
     {
@@ -629,7 +621,7 @@ public class PdfChunk
         var ft = font.Font;
         var surrogate = false;
 
-        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
+        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
             while (currentPosition < length)
             {
@@ -642,7 +634,7 @@ public class PdfChunk
                 {
                     NewlineSplit = true;
                     var returnValue = value.Substring(currentPosition + 1);
-                    value = value.Substring(0, currentPosition);
+                    value = value.Substring(startIndex: 0, currentPosition);
 
                     if (value.Length < 1)
                     {
@@ -668,7 +660,7 @@ public class PdfChunk
                 }
 
                 // if a split-character is encountered, the splitPosition is altered
-                if (SplitCharacter.IsSplitCharacter(0, currentPosition, length, valueArray, _thisChunk))
+                if (SplitCharacter.IsSplitCharacter(start: 0, currentPosition, length, valueArray, _thisChunk))
                 {
                     splitPosition = currentPosition + 1;
                 }
@@ -695,7 +687,7 @@ public class PdfChunk
                     }
 
                     var returnValue = value.Substring(currentPosition + inc);
-                    value = value.Substring(0, currentPosition);
+                    value = value.Substring(startIndex: 0, currentPosition);
 
                     if (value.Length < 1)
                     {
@@ -736,7 +728,7 @@ public class PdfChunk
                 }
 
                 // if a split-character is encountered, the splitPosition is altered
-                if (SplitCharacter.IsSplitCharacter(0, currentPosition, length, valueArray, null))
+                if (SplitCharacter.IsSplitCharacter(start: 0, currentPosition, length, valueArray, ck: null))
                 {
                     splitPosition = currentPosition + 1;
                 }
@@ -761,7 +753,8 @@ public class PdfChunk
             return pc;
         }
 
-        if (lastSpace > splitPosition && SplitCharacter.IsSplitCharacter(0, 0, 1, _singleSpace, null))
+        if (lastSpace > splitPosition &&
+            SplitCharacter.IsSplitCharacter(start: 0, current: 0, end: 1, _singleSpace, ck: null))
         {
             splitPosition = lastSpace;
         }
@@ -780,7 +773,7 @@ public class PdfChunk
                 if (pre.Length > 0)
                 {
                     var returnValue = post + value.Substring(wordIdx);
-                    value = Trim(value.Substring(0, lastSpace) + pre);
+                    value = Trim(value.Substring(startIndex: 0, lastSpace) + pre);
                     var pc = new PdfChunk(returnValue, this);
 
                     return pc;
@@ -789,7 +782,7 @@ public class PdfChunk
         }
 
         var retVal = value.Substring(splitPosition);
-        value = Trim(value.Substring(0, splitPosition));
+        value = Trim(value.Substring(startIndex: 0, splitPosition));
         var tmp = new PdfChunk(retVal, this);
 
         return tmp;
@@ -804,18 +797,18 @@ public class PdfChunk
 
         var ft = font.Font;
 
-        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(' ') != ' ')
+        if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            while (str.EndsWith("\u0001", StringComparison.Ordinal))
+            while (str.EndsWith(value: '\u0001'))
             {
-                str = str.Substring(0, str.Length - 1);
+                str = str.Substring(startIndex: 0, str.Length - 1);
             }
         }
         else
         {
-            while (str.EndsWith(" ", StringComparison.Ordinal) || str.EndsWith("\t", StringComparison.Ordinal))
+            while (str.EndsWith(value: ' ') || str.EndsWith(value: '\t'))
             {
-                str = str.Substring(0, str.Length - 1);
+                str = str.Substring(startIndex: 0, str.Length - 1);
             }
         }
 
@@ -828,7 +821,7 @@ public class PdfChunk
         {
             if (image.ScaledWidth > width)
             {
-                var pc = new PdfChunk("", this);
+                var pc = new PdfChunk(str: "", this);
                 value = "";
                 Attributes.Remove(Chunk.IMAGE);
                 image = null;
@@ -846,8 +839,8 @@ public class PdfChunk
         // it's no use trying to split if there isn't even enough place for a space
         if (width < font.Width())
         {
-            var returnValue = value.Substring(1);
-            value = value.Substring(0, 1);
+            var returnValue = value.Substring(startIndex: 1);
+            value = value.Substring(startIndex: 0, length: 1);
             var pc = new PdfChunk(returnValue, this);
 
             return pc;
@@ -905,7 +898,7 @@ public class PdfChunk
         }
 
         var retVal = value.Substring(currentPosition);
-        value = value.Substring(0, currentPosition);
+        value = value.Substring(startIndex: 0, currentPosition);
         var tmp = new PdfChunk(retVal, this);
 
         return tmp;

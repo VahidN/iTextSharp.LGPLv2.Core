@@ -26,10 +26,14 @@ public class PdfDate : PdfString
     {
         //d = d.ToUniversalTime();
 
-        Value = d.ToString("\\D\\:yyyyMMddHHmmss", DateTimeFormatInfo.InvariantInfo);
+        Value = d.ToString(format: "\\D\\:yyyyMMddHHmmss", DateTimeFormatInfo.InvariantInfo);
+
         // bug fix for .NET Framework - see https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#zzzSpecifier
-        var timezone = d.Kind == DateTimeKind.Utc ? "+00:00" : d.ToString("zzz", DateTimeFormatInfo.InvariantInfo);
-        timezone = timezone.Replace(":", "'");
+        var timezone = d.Kind == DateTimeKind.Utc
+            ? "+00:00"
+            : d.ToString(format: "zzz", DateTimeFormatInfo.InvariantInfo);
+
+        timezone = timezone.Replace(oldValue: ":", newValue: "'", StringComparison.Ordinal);
         Value += timezone + "'";
     }
 
@@ -52,30 +56,35 @@ public class PdfDate : PdfString
             throw new ArgumentNullException(nameof(date));
         }
 
-        if (date.StartsWith("D:", StringComparison.Ordinal))
+        if (date.StartsWith(value: "D:", StringComparison.Ordinal))
         {
-            date = date.Substring(2);
+            date = date.Substring(startIndex: 2);
         }
 
         int year, month = 1, day = 1, hour = 0, minute = 0, second = 0;
         int offsetHour = 0, offsetMinute = 0;
         var variation = '\0';
-        year = int.Parse(date.Substring(0, 4), CultureInfo.InvariantCulture);
+        year = int.Parse(date.Substring(startIndex: 0, length: 4), CultureInfo.InvariantCulture);
+
         if (date.Length >= 6)
         {
-            month = int.Parse(date.Substring(4, 2), CultureInfo.InvariantCulture);
+            month = int.Parse(date.Substring(startIndex: 4, length: 2), CultureInfo.InvariantCulture);
+
             if (date.Length >= 8)
             {
-                day = int.Parse(date.Substring(6, 2), CultureInfo.InvariantCulture);
+                day = int.Parse(date.Substring(startIndex: 6, length: 2), CultureInfo.InvariantCulture);
+
                 if (date.Length >= 10)
                 {
-                    hour = int.Parse(date.Substring(8, 2), CultureInfo.InvariantCulture);
+                    hour = int.Parse(date.Substring(startIndex: 8, length: 2), CultureInfo.InvariantCulture);
+
                     if (date.Length >= 12)
                     {
-                        minute = int.Parse(date.Substring(10, 2), CultureInfo.InvariantCulture);
+                        minute = int.Parse(date.Substring(startIndex: 10, length: 2), CultureInfo.InvariantCulture);
+
                         if (date.Length >= 14)
                         {
-                            second = int.Parse(date.Substring(12, 2), CultureInfo.InvariantCulture);
+                            second = int.Parse(date.Substring(startIndex: 12, length: 2), CultureInfo.InvariantCulture);
                         }
                     }
                 }
@@ -83,12 +92,14 @@ public class PdfDate : PdfString
         }
 
         var d = new DateTime(year, month, day, hour, minute, second);
+
         if (date.Length <= 14)
         {
             return d;
         }
 
-        variation = date[14];
+        variation = date[index: 14];
+
         if (variation == 'Z')
         {
             return d.ToLocalTime();
@@ -96,14 +107,16 @@ public class PdfDate : PdfString
 
         if (date.Length >= 17)
         {
-            offsetHour = int.Parse(date.Substring(15, 2), CultureInfo.InvariantCulture);
+            offsetHour = int.Parse(date.Substring(startIndex: 15, length: 2), CultureInfo.InvariantCulture);
+
             if (date.Length >= 20)
             {
-                offsetMinute = int.Parse(date.Substring(18, 2), CultureInfo.InvariantCulture);
+                offsetMinute = int.Parse(date.Substring(startIndex: 18, length: 2), CultureInfo.InvariantCulture);
             }
         }
 
-        var span = new TimeSpan(offsetHour, offsetMinute, 0);
+        var span = new TimeSpan(offsetHour, offsetMinute, seconds: 0);
+
         if (variation == '-')
         {
             d += span;
@@ -128,81 +141,94 @@ public class PdfDate : PdfString
             throw new ArgumentNullException(nameof(d));
         }
 
-        if (d.StartsWith("D:", StringComparison.Ordinal))
+        if (d.StartsWith(value: "D:", StringComparison.Ordinal))
         {
-            d = d.Substring(2);
+            d = d.Substring(startIndex: 2);
         }
 
         var sb = new StringBuilder();
+
         if (d.Length < 4)
         {
             return "0000";
         }
 
-        sb.Append(d.Substring(0, 4)); //year
-        d = d.Substring(4);
+        sb.Append(d.Substring(startIndex: 0, length: 4)); //year
+        d = d.Substring(startIndex: 4);
+
         if (d.Length < 2)
         {
             return sb.ToString();
         }
 
-        sb.Append('-').Append(d.Substring(0, 2)); //month
-        d = d.Substring(2);
+        sb.Append(value: '-').Append(d.Substring(startIndex: 0, length: 2)); //month
+        d = d.Substring(startIndex: 2);
+
         if (d.Length < 2)
         {
             return sb.ToString();
         }
 
-        sb.Append('-').Append(d.Substring(0, 2)); //day
-        d = d.Substring(2);
+        sb.Append(value: '-').Append(d.Substring(startIndex: 0, length: 2)); //day
+        d = d.Substring(startIndex: 2);
+
         if (d.Length < 2)
         {
             return sb.ToString();
         }
 
-        sb.Append('T').Append(d.Substring(0, 2)); //hour
-        d = d.Substring(2);
+        sb.Append(value: 'T').Append(d.Substring(startIndex: 0, length: 2)); //hour
+        d = d.Substring(startIndex: 2);
+
         if (d.Length < 2)
         {
-            sb.Append(":00Z");
+            sb.Append(value: ":00Z");
+
             return sb.ToString();
         }
 
-        sb.Append(':').Append(d.Substring(0, 2)); //minute
-        d = d.Substring(2);
+        sb.Append(value: ':').Append(d.Substring(startIndex: 0, length: 2)); //minute
+        d = d.Substring(startIndex: 2);
+
         if (d.Length < 2)
         {
-            sb.Append('Z');
+            sb.Append(value: 'Z');
+
             return sb.ToString();
         }
 
-        sb.Append(':').Append(d.Substring(0, 2)); //second
-        d = d.Substring(2);
-        if (d.StartsWith("-", StringComparison.Ordinal) ||
-            d.StartsWith("+", StringComparison.Ordinal))
+        sb.Append(value: ':').Append(d.Substring(startIndex: 0, length: 2)); //second
+        d = d.Substring(startIndex: 2);
+
+        if (d.StartsWith(value: '-') || d.StartsWith(value: '+'))
         {
-            var sign = d.Substring(0, 1);
-            d = d.Substring(1);
+            var sign = d.Substring(startIndex: 0, length: 1);
+            d = d.Substring(startIndex: 1);
             var h = "00";
             var m = "00";
+
             if (d.Length >= 2)
             {
-                h = d.Substring(0, 2);
+                h = d.Substring(startIndex: 0, length: 2);
+
                 if (d.Length > 2)
                 {
-                    d = d.Substring(3);
+                    d = d.Substring(startIndex: 3);
+
                     if (d.Length >= 2)
                     {
-                        m = d.Substring(0, 2);
+                        m = d.Substring(startIndex: 0, length: 2);
                     }
                 }
 
-                sb.Append(sign).Append(h).Append(':').Append(m);
+                sb.Append(sign).Append(h).Append(value: ':').Append(m);
+
                 return sb.ToString();
             }
         }
 
-        sb.Append('Z');
+        sb.Append(value: 'Z');
+
         return sb.ToString();
     }
 
@@ -212,6 +238,6 @@ public class PdfDate : PdfString
     /// <returns>a formatted date</returns>
     public string GetW3CDate() => GetW3CDate(Value);
 
-    private static string setLength(int i, int length) => i.ToString(CultureInfo.InvariantCulture)
-                                                           .PadLeft(length, '0');
+    private static string setLength(int i, int length)
+        => i.ToString(CultureInfo.InvariantCulture).PadLeft(length, paddingChar: '0');
 }

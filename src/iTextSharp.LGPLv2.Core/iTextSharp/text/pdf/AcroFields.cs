@@ -1552,8 +1552,8 @@ public class AcroFields
             throw new ArgumentNullException(nameof(newName));
         }
 
-        var idx1 = oldName.LastIndexOf(value: ".", StringComparison.Ordinal) + 1;
-        var idx2 = newName.LastIndexOf(value: ".", StringComparison.Ordinal) + 1;
+        var idx1 = oldName.LastIndexOf(value: '.') + 1;
+        var idx2 = newName.LastIndexOf(value: '.') + 1;
 
         if (idx1 != idx2)
         {

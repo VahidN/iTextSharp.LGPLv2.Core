@@ -367,6 +367,7 @@ public static class Markup
         }
 
         s = s.ToLower(CultureInfo.InvariantCulture).Trim();
+
         try
         {
             return WebColors.GetRgbColor(s);
@@ -386,18 +387,21 @@ public static class Markup
     public static Properties ParseAttributes(string str)
     {
         var result = new Properties();
+
         if (str == null)
         {
             return result;
         }
 
-        var keyValuePairs = new StringTokenizer(str, ";");
+        var keyValuePairs = new StringTokenizer(str, delim: ";");
         StringTokenizer keyValuePair;
         string key;
         string value;
+
         while (keyValuePairs.HasMoreTokens())
         {
-            keyValuePair = new StringTokenizer(keyValuePairs.NextToken(), ":");
+            keyValuePair = new StringTokenizer(keyValuePairs.NextToken(), delim: ":");
+
             if (keyValuePair.HasMoreTokens())
             {
                 key = keyValuePair.NextToken().Trim().Trim();
@@ -416,14 +420,14 @@ public static class Markup
                 continue;
             }
 
-            if (value.StartsWith("\"", StringComparison.OrdinalIgnoreCase))
+            if (value.StartsWith(value: '"'))
             {
-                value = value.Substring(1);
+                value = value.Substring(startIndex: 1);
             }
 
-            if (value.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+            if (value.EndsWith(value: '"'))
             {
-                value = value.Substring(0, value.Length - 1);
+                value = value.Substring(startIndex: 0, value.Length - 1);
             }
 
             result.Add(key.ToLower(CultureInfo.InvariantCulture), value);
@@ -453,6 +457,7 @@ public static class Markup
         var pos = 0;
         var length = str.Length;
         var ok = true;
+
         while (ok && pos < length)
         {
             switch (str[pos])
@@ -471,9 +476,11 @@ public static class Markup
                 case '9':
                 case '.':
                     pos++;
+
                     break;
                 default:
                     ok = false;
+
                     break;
             }
         }
@@ -488,28 +495,29 @@ public static class Markup
             return float.Parse(str, NumberFormatInfo.InvariantInfo);
         }
 
-        var f = float.Parse(str.Substring(0, pos), NumberFormatInfo.InvariantInfo);
+        var f = float.Parse(str.Substring(startIndex: 0, pos), NumberFormatInfo.InvariantInfo);
         str = str.Substring(pos);
+
         // inches
-        if (str.StartsWith("in", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "in", StringComparison.OrdinalIgnoreCase))
         {
             return f * 72f;
         }
 
         // centimeters
-        if (str.StartsWith("cm", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "cm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 2.54f * 72f;
         }
 
         // millimeters
-        if (str.StartsWith("mm", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "mm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 25.4f * 72f;
         }
 
         // picas
-        if (str.StartsWith("pc", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "pc", StringComparison.OrdinalIgnoreCase))
         {
             return f * 12f;
         }
@@ -532,6 +540,7 @@ public static class Markup
         var pos = 0;
         var length = str.Length;
         var ok = true;
+
         while (ok && pos < length)
         {
             switch (str[pos])
@@ -550,9 +559,11 @@ public static class Markup
                 case '9':
                 case '.':
                     pos++;
+
                     break;
                 default:
                     ok = false;
+
                     break;
             }
         }
@@ -567,41 +578,42 @@ public static class Markup
             return float.Parse(str, NumberFormatInfo.InvariantInfo);
         }
 
-        var f = float.Parse(str.Substring(0, pos), NumberFormatInfo.InvariantInfo);
+        var f = float.Parse(str.Substring(startIndex: 0, pos), NumberFormatInfo.InvariantInfo);
         str = str.Substring(pos);
+
         // inches
-        if (str.StartsWith("in", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "in", StringComparison.OrdinalIgnoreCase))
         {
             return f * 72f;
         }
 
         // centimeters
-        if (str.StartsWith("cm", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "cm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 2.54f * 72f;
         }
 
         // millimeters
-        if (str.StartsWith("mm", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "mm", StringComparison.OrdinalIgnoreCase))
         {
             return f / 25.4f * 72f;
         }
 
         // picas
-        if (str.StartsWith("pc", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "pc", StringComparison.OrdinalIgnoreCase))
         {
             return f * 12f;
         }
 
         // 1em is equal to the current font size
-        if (str.StartsWith("em", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "em", StringComparison.OrdinalIgnoreCase))
         {
             return f * actualFontSize;
         }
 
         // one ex is the x-height of a font (x-height is usually about half the
         // font-size)
-        if (str.StartsWith("ex", StringComparison.OrdinalIgnoreCase))
+        if (str.StartsWith(value: "ex", StringComparison.OrdinalIgnoreCase))
         {
             return f * actualFontSize / 2;
         }
@@ -620,8 +632,7 @@ public static class Markup
     /// <param name="startComment"></param>
     /// <param name="endComment"></param>
     /// <returns>the String stripped of its comment section</returns>
-    public static string RemoveComment(string str, string startComment,
-                                       string endComment)
+    public static string RemoveComment(string str, string startComment, string endComment)
     {
         if (str == null)
         {
@@ -637,6 +648,7 @@ public static class Markup
         var pos = 0;
         var end = endComment.Length;
         var start = str.IndexOf(startComment, pos, StringComparison.Ordinal);
+
         while (start > -1)
         {
             result.Append(str.Substring(pos, start - pos));
@@ -645,6 +657,7 @@ public static class Markup
         }
 
         result.Append(str.Substring(pos));
+
         return result.ToString();
     }
 }

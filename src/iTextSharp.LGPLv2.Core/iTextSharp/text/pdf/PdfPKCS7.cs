@@ -1703,7 +1703,7 @@ public class PdfPkcs7
             while (nTok.HasMoreTokens())
             {
                 var token = nTok.NextToken();
-                var index = token.IndexOf(value: "=", StringComparison.Ordinal);
+                var index = token.IndexOf(value: '=', StringComparison.Ordinal);
 
                 if (index == -1)
                 {

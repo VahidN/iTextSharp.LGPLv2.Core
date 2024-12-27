@@ -89,187 +89,513 @@ public class Barcode128 : Barcode
     /// </summary>
     private static readonly byte[][] _bars =
     {
-        new byte[] { 2, 1, 2, 2, 2, 2 },
-        new byte[] { 2, 2, 2, 1, 2, 2 },
-        new byte[] { 2, 2, 2, 2, 2, 1 },
-        new byte[] { 1, 2, 1, 2, 2, 3 },
-        new byte[] { 1, 2, 1, 3, 2, 2 },
-        new byte[] { 1, 3, 1, 2, 2, 2 },
-        new byte[] { 1, 2, 2, 2, 1, 3 },
-        new byte[] { 1, 2, 2, 3, 1, 2 },
-        new byte[] { 1, 3, 2, 2, 1, 2 },
-        new byte[] { 2, 2, 1, 2, 1, 3 },
-        new byte[] { 2, 2, 1, 3, 1, 2 },
-        new byte[] { 2, 3, 1, 2, 1, 2 },
-        new byte[] { 1, 1, 2, 2, 3, 2 },
-        new byte[] { 1, 2, 2, 1, 3, 2 },
-        new byte[] { 1, 2, 2, 2, 3, 1 },
-        new byte[] { 1, 1, 3, 2, 2, 2 },
-        new byte[] { 1, 2, 3, 1, 2, 2 },
-        new byte[] { 1, 2, 3, 2, 2, 1 },
-        new byte[] { 2, 2, 3, 2, 1, 1 },
-        new byte[] { 2, 2, 1, 1, 3, 2 },
-        new byte[] { 2, 2, 1, 2, 3, 1 },
-        new byte[] { 2, 1, 3, 2, 1, 2 },
-        new byte[] { 2, 2, 3, 1, 1, 2 },
-        new byte[] { 3, 1, 2, 1, 3, 1 },
-        new byte[] { 3, 1, 1, 2, 2, 2 },
-        new byte[] { 3, 2, 1, 1, 2, 2 },
-        new byte[] { 3, 2, 1, 2, 2, 1 },
-        new byte[] { 3, 1, 2, 2, 1, 2 },
-        new byte[] { 3, 2, 2, 1, 1, 2 },
-        new byte[] { 3, 2, 2, 2, 1, 1 },
-        new byte[] { 2, 1, 2, 1, 2, 3 },
-        new byte[] { 2, 1, 2, 3, 2, 1 },
-        new byte[] { 2, 3, 2, 1, 2, 1 },
-        new byte[] { 1, 1, 1, 3, 2, 3 },
-        new byte[] { 1, 3, 1, 1, 2, 3 },
-        new byte[] { 1, 3, 1, 3, 2, 1 },
-        new byte[] { 1, 1, 2, 3, 1, 3 },
-        new byte[] { 1, 3, 2, 1, 1, 3 },
-        new byte[] { 1, 3, 2, 3, 1, 1 },
-        new byte[] { 2, 1, 1, 3, 1, 3 },
-        new byte[] { 2, 3, 1, 1, 1, 3 },
-        new byte[] { 2, 3, 1, 3, 1, 1 },
-        new byte[] { 1, 1, 2, 1, 3, 3 },
-        new byte[] { 1, 1, 2, 3, 3, 1 },
-        new byte[] { 1, 3, 2, 1, 3, 1 },
-        new byte[] { 1, 1, 3, 1, 2, 3 },
-        new byte[] { 1, 1, 3, 3, 2, 1 },
-        new byte[] { 1, 3, 3, 1, 2, 1 },
-        new byte[] { 3, 1, 3, 1, 2, 1 },
-        new byte[] { 2, 1, 1, 3, 3, 1 },
-        new byte[] { 2, 3, 1, 1, 3, 1 },
-        new byte[] { 2, 1, 3, 1, 1, 3 },
-        new byte[] { 2, 1, 3, 3, 1, 1 },
-        new byte[] { 2, 1, 3, 1, 3, 1 },
-        new byte[] { 3, 1, 1, 1, 2, 3 },
-        new byte[] { 3, 1, 1, 3, 2, 1 },
-        new byte[] { 3, 3, 1, 1, 2, 1 },
-        new byte[] { 3, 1, 2, 1, 1, 3 },
-        new byte[] { 3, 1, 2, 3, 1, 1 },
-        new byte[] { 3, 3, 2, 1, 1, 1 },
-        new byte[] { 3, 1, 4, 1, 1, 1 },
-        new byte[] { 2, 2, 1, 4, 1, 1 },
-        new byte[] { 4, 3, 1, 1, 1, 1 },
-        new byte[] { 1, 1, 1, 2, 2, 4 },
-        new byte[] { 1, 1, 1, 4, 2, 2 },
-        new byte[] { 1, 2, 1, 1, 2, 4 },
-        new byte[] { 1, 2, 1, 4, 2, 1 },
-        new byte[] { 1, 4, 1, 1, 2, 2 },
-        new byte[] { 1, 4, 1, 2, 2, 1 },
-        new byte[] { 1, 1, 2, 2, 1, 4 },
-        new byte[] { 1, 1, 2, 4, 1, 2 },
-        new byte[] { 1, 2, 2, 1, 1, 4 },
-        new byte[] { 1, 2, 2, 4, 1, 1 },
-        new byte[] { 1, 4, 2, 1, 1, 2 },
-        new byte[] { 1, 4, 2, 2, 1, 1 },
-        new byte[] { 2, 4, 1, 2, 1, 1 },
-        new byte[] { 2, 2, 1, 1, 1, 4 },
-        new byte[] { 4, 1, 3, 1, 1, 1 },
-        new byte[] { 2, 4, 1, 1, 1, 2 },
-        new byte[] { 1, 3, 4, 1, 1, 1 },
-        new byte[] { 1, 1, 1, 2, 4, 2 },
-        new byte[] { 1, 2, 1, 1, 4, 2 },
-        new byte[] { 1, 2, 1, 2, 4, 1 },
-        new byte[] { 1, 1, 4, 2, 1, 2 },
-        new byte[] { 1, 2, 4, 1, 1, 2 },
-        new byte[] { 1, 2, 4, 2, 1, 1 },
-        new byte[] { 4, 1, 1, 2, 1, 2 },
-        new byte[] { 4, 2, 1, 1, 1, 2 },
-        new byte[] { 4, 2, 1, 2, 1, 1 },
-        new byte[] { 2, 1, 2, 1, 4, 1 },
-        new byte[] { 2, 1, 4, 1, 2, 1 },
-        new byte[] { 4, 1, 2, 1, 2, 1 },
-        new byte[] { 1, 1, 1, 1, 4, 3 },
-        new byte[] { 1, 1, 1, 3, 4, 1 },
-        new byte[] { 1, 3, 1, 1, 4, 1 },
-        new byte[] { 1, 1, 4, 1, 1, 3 },
-        new byte[] { 1, 1, 4, 3, 1, 1 },
-        new byte[] { 4, 1, 1, 1, 1, 3 },
-        new byte[] { 4, 1, 1, 3, 1, 1 },
-        new byte[] { 1, 1, 3, 1, 4, 1 },
-        new byte[] { 1, 1, 4, 1, 3, 1 },
-        new byte[] { 3, 1, 1, 1, 4, 1 },
-        new byte[] { 4, 1, 1, 1, 3, 1 },
-        new byte[] { 2, 1, 1, 4, 1, 2 },
-        new byte[] { 2, 1, 1, 2, 1, 4 },
-        new byte[] { 2, 1, 1, 2, 3, 2 },
+        new byte[]
+        {
+            2, 1, 2, 2, 2, 2
+        },
+        new byte[]
+        {
+            2, 2, 2, 1, 2, 2
+        },
+        new byte[]
+        {
+            2, 2, 2, 2, 2, 1
+        },
+        new byte[]
+        {
+            1, 2, 1, 2, 2, 3
+        },
+        new byte[]
+        {
+            1, 2, 1, 3, 2, 2
+        },
+        new byte[]
+        {
+            1, 3, 1, 2, 2, 2
+        },
+        new byte[]
+        {
+            1, 2, 2, 2, 1, 3
+        },
+        new byte[]
+        {
+            1, 2, 2, 3, 1, 2
+        },
+        new byte[]
+        {
+            1, 3, 2, 2, 1, 2
+        },
+        new byte[]
+        {
+            2, 2, 1, 2, 1, 3
+        },
+        new byte[]
+        {
+            2, 2, 1, 3, 1, 2
+        },
+        new byte[]
+        {
+            2, 3, 1, 2, 1, 2
+        },
+        new byte[]
+        {
+            1, 1, 2, 2, 3, 2
+        },
+        new byte[]
+        {
+            1, 2, 2, 1, 3, 2
+        },
+        new byte[]
+        {
+            1, 2, 2, 2, 3, 1
+        },
+        new byte[]
+        {
+            1, 1, 3, 2, 2, 2
+        },
+        new byte[]
+        {
+            1, 2, 3, 1, 2, 2
+        },
+        new byte[]
+        {
+            1, 2, 3, 2, 2, 1
+        },
+        new byte[]
+        {
+            2, 2, 3, 2, 1, 1
+        },
+        new byte[]
+        {
+            2, 2, 1, 1, 3, 2
+        },
+        new byte[]
+        {
+            2, 2, 1, 2, 3, 1
+        },
+        new byte[]
+        {
+            2, 1, 3, 2, 1, 2
+        },
+        new byte[]
+        {
+            2, 2, 3, 1, 1, 2
+        },
+        new byte[]
+        {
+            3, 1, 2, 1, 3, 1
+        },
+        new byte[]
+        {
+            3, 1, 1, 2, 2, 2
+        },
+        new byte[]
+        {
+            3, 2, 1, 1, 2, 2
+        },
+        new byte[]
+        {
+            3, 2, 1, 2, 2, 1
+        },
+        new byte[]
+        {
+            3, 1, 2, 2, 1, 2
+        },
+        new byte[]
+        {
+            3, 2, 2, 1, 1, 2
+        },
+        new byte[]
+        {
+            3, 2, 2, 2, 1, 1
+        },
+        new byte[]
+        {
+            2, 1, 2, 1, 2, 3
+        },
+        new byte[]
+        {
+            2, 1, 2, 3, 2, 1
+        },
+        new byte[]
+        {
+            2, 3, 2, 1, 2, 1
+        },
+        new byte[]
+        {
+            1, 1, 1, 3, 2, 3
+        },
+        new byte[]
+        {
+            1, 3, 1, 1, 2, 3
+        },
+        new byte[]
+        {
+            1, 3, 1, 3, 2, 1
+        },
+        new byte[]
+        {
+            1, 1, 2, 3, 1, 3
+        },
+        new byte[]
+        {
+            1, 3, 2, 1, 1, 3
+        },
+        new byte[]
+        {
+            1, 3, 2, 3, 1, 1
+        },
+        new byte[]
+        {
+            2, 1, 1, 3, 1, 3
+        },
+        new byte[]
+        {
+            2, 3, 1, 1, 1, 3
+        },
+        new byte[]
+        {
+            2, 3, 1, 3, 1, 1
+        },
+        new byte[]
+        {
+            1, 1, 2, 1, 3, 3
+        },
+        new byte[]
+        {
+            1, 1, 2, 3, 3, 1
+        },
+        new byte[]
+        {
+            1, 3, 2, 1, 3, 1
+        },
+        new byte[]
+        {
+            1, 1, 3, 1, 2, 3
+        },
+        new byte[]
+        {
+            1, 1, 3, 3, 2, 1
+        },
+        new byte[]
+        {
+            1, 3, 3, 1, 2, 1
+        },
+        new byte[]
+        {
+            3, 1, 3, 1, 2, 1
+        },
+        new byte[]
+        {
+            2, 1, 1, 3, 3, 1
+        },
+        new byte[]
+        {
+            2, 3, 1, 1, 3, 1
+        },
+        new byte[]
+        {
+            2, 1, 3, 1, 1, 3
+        },
+        new byte[]
+        {
+            2, 1, 3, 3, 1, 1
+        },
+        new byte[]
+        {
+            2, 1, 3, 1, 3, 1
+        },
+        new byte[]
+        {
+            3, 1, 1, 1, 2, 3
+        },
+        new byte[]
+        {
+            3, 1, 1, 3, 2, 1
+        },
+        new byte[]
+        {
+            3, 3, 1, 1, 2, 1
+        },
+        new byte[]
+        {
+            3, 1, 2, 1, 1, 3
+        },
+        new byte[]
+        {
+            3, 1, 2, 3, 1, 1
+        },
+        new byte[]
+        {
+            3, 3, 2, 1, 1, 1
+        },
+        new byte[]
+        {
+            3, 1, 4, 1, 1, 1
+        },
+        new byte[]
+        {
+            2, 2, 1, 4, 1, 1
+        },
+        new byte[]
+        {
+            4, 3, 1, 1, 1, 1
+        },
+        new byte[]
+        {
+            1, 1, 1, 2, 2, 4
+        },
+        new byte[]
+        {
+            1, 1, 1, 4, 2, 2
+        },
+        new byte[]
+        {
+            1, 2, 1, 1, 2, 4
+        },
+        new byte[]
+        {
+            1, 2, 1, 4, 2, 1
+        },
+        new byte[]
+        {
+            1, 4, 1, 1, 2, 2
+        },
+        new byte[]
+        {
+            1, 4, 1, 2, 2, 1
+        },
+        new byte[]
+        {
+            1, 1, 2, 2, 1, 4
+        },
+        new byte[]
+        {
+            1, 1, 2, 4, 1, 2
+        },
+        new byte[]
+        {
+            1, 2, 2, 1, 1, 4
+        },
+        new byte[]
+        {
+            1, 2, 2, 4, 1, 1
+        },
+        new byte[]
+        {
+            1, 4, 2, 1, 1, 2
+        },
+        new byte[]
+        {
+            1, 4, 2, 2, 1, 1
+        },
+        new byte[]
+        {
+            2, 4, 1, 2, 1, 1
+        },
+        new byte[]
+        {
+            2, 2, 1, 1, 1, 4
+        },
+        new byte[]
+        {
+            4, 1, 3, 1, 1, 1
+        },
+        new byte[]
+        {
+            2, 4, 1, 1, 1, 2
+        },
+        new byte[]
+        {
+            1, 3, 4, 1, 1, 1
+        },
+        new byte[]
+        {
+            1, 1, 1, 2, 4, 2
+        },
+        new byte[]
+        {
+            1, 2, 1, 1, 4, 2
+        },
+        new byte[]
+        {
+            1, 2, 1, 2, 4, 1
+        },
+        new byte[]
+        {
+            1, 1, 4, 2, 1, 2
+        },
+        new byte[]
+        {
+            1, 2, 4, 1, 1, 2
+        },
+        new byte[]
+        {
+            1, 2, 4, 2, 1, 1
+        },
+        new byte[]
+        {
+            4, 1, 1, 2, 1, 2
+        },
+        new byte[]
+        {
+            4, 2, 1, 1, 1, 2
+        },
+        new byte[]
+        {
+            4, 2, 1, 2, 1, 1
+        },
+        new byte[]
+        {
+            2, 1, 2, 1, 4, 1
+        },
+        new byte[]
+        {
+            2, 1, 4, 1, 2, 1
+        },
+        new byte[]
+        {
+            4, 1, 2, 1, 2, 1
+        },
+        new byte[]
+        {
+            1, 1, 1, 1, 4, 3
+        },
+        new byte[]
+        {
+            1, 1, 1, 3, 4, 1
+        },
+        new byte[]
+        {
+            1, 3, 1, 1, 4, 1
+        },
+        new byte[]
+        {
+            1, 1, 4, 1, 1, 3
+        },
+        new byte[]
+        {
+            1, 1, 4, 3, 1, 1
+        },
+        new byte[]
+        {
+            4, 1, 1, 1, 1, 3
+        },
+        new byte[]
+        {
+            4, 1, 1, 3, 1, 1
+        },
+        new byte[]
+        {
+            1, 1, 3, 1, 4, 1
+        },
+        new byte[]
+        {
+            1, 1, 4, 1, 3, 1
+        },
+        new byte[]
+        {
+            3, 1, 1, 1, 4, 1
+        },
+        new byte[]
+        {
+            4, 1, 1, 1, 3, 1
+        },
+        new byte[]
+        {
+            2, 1, 1, 4, 1, 2
+        },
+        new byte[]
+        {
+            2, 1, 1, 2, 1, 4
+        },
+        new byte[]
+        {
+            2, 1, 1, 2, 3, 2
+        }
     };
 
     /// <summary>
     ///     The stop bars.
     /// </summary>
-    private static readonly byte[] _barsStop = { 2, 3, 3, 1, 1, 1, 2 };
+    private static readonly byte[] _barsStop =
+    {
+        2, 3, 3, 1, 1, 1, 2
+    };
 
     static Barcode128()
     {
-        _ais[0] = 20;
-        _ais[1] = 16;
-        _ais[2] = 16;
-        _ais[10] = -1;
-        _ais[11] = 9;
-        _ais[12] = 8;
-        _ais[13] = 8;
-        _ais[15] = 8;
-        _ais[17] = 8;
-        _ais[20] = 4;
-        _ais[21] = -1;
-        _ais[22] = -1;
-        _ais[23] = -1;
-        _ais[240] = -1;
-        _ais[241] = -1;
-        _ais[250] = -1;
-        _ais[251] = -1;
-        _ais[252] = -1;
-        _ais[30] = -1;
+        _ais[key: 0] = 20;
+        _ais[key: 1] = 16;
+        _ais[key: 2] = 16;
+        _ais[key: 10] = -1;
+        _ais[key: 11] = 9;
+        _ais[key: 12] = 8;
+        _ais[key: 13] = 8;
+        _ais[key: 15] = 8;
+        _ais[key: 17] = 8;
+        _ais[key: 20] = 4;
+        _ais[key: 21] = -1;
+        _ais[key: 22] = -1;
+        _ais[key: 23] = -1;
+        _ais[key: 240] = -1;
+        _ais[key: 241] = -1;
+        _ais[key: 250] = -1;
+        _ais[key: 251] = -1;
+        _ais[key: 252] = -1;
+        _ais[key: 30] = -1;
+
         for (var k = 3100; k < 3700; ++k)
         {
             _ais[k] = 10;
         }
 
-        _ais[37] = -1;
+        _ais[key: 37] = -1;
+
         for (var k = 3900; k < 3940; ++k)
         {
             _ais[k] = -1;
         }
 
-        _ais[400] = -1;
-        _ais[401] = -1;
-        _ais[402] = 20;
-        _ais[403] = -1;
+        _ais[key: 400] = -1;
+        _ais[key: 401] = -1;
+        _ais[key: 402] = 20;
+        _ais[key: 403] = -1;
+
         for (var k = 410; k < 416; ++k)
         {
             _ais[k] = 16;
         }
 
-        _ais[420] = -1;
-        _ais[421] = -1;
-        _ais[422] = 6;
-        _ais[423] = -1;
-        _ais[424] = 6;
-        _ais[425] = 6;
-        _ais[426] = 6;
-        _ais[7001] = 17;
-        _ais[7002] = -1;
+        _ais[key: 420] = -1;
+        _ais[key: 421] = -1;
+        _ais[key: 422] = 6;
+        _ais[key: 423] = -1;
+        _ais[key: 424] = 6;
+        _ais[key: 425] = 6;
+        _ais[key: 426] = 6;
+        _ais[key: 7001] = 17;
+        _ais[key: 7002] = -1;
+
         for (var k = 7030; k < 7040; ++k)
         {
             _ais[k] = -1;
         }
 
-        _ais[8001] = 18;
-        _ais[8002] = -1;
-        _ais[8003] = -1;
-        _ais[8004] = -1;
-        _ais[8005] = 10;
-        _ais[8006] = 22;
-        _ais[8007] = -1;
-        _ais[8008] = -1;
-        _ais[8018] = 22;
-        _ais[8020] = -1;
-        _ais[8100] = 10;
-        _ais[8101] = 14;
-        _ais[8102] = 6;
+        _ais[key: 8001] = 18;
+        _ais[key: 8002] = -1;
+        _ais[key: 8003] = -1;
+        _ais[key: 8004] = -1;
+        _ais[key: 8005] = 10;
+        _ais[key: 8006] = 22;
+        _ais[key: 8007] = -1;
+        _ais[key: 8008] = -1;
+        _ais[key: 8018] = 22;
+        _ais[key: 8020] = -1;
+        _ais[key: 8100] = 10;
+        _ais[key: 8101] = 14;
+        _ais[key: 8102] = 6;
+
         for (var k = 90; k < 100; ++k)
         {
             _ais[k] = -1;
@@ -282,7 +608,7 @@ public class Barcode128 : Barcode
     public Barcode128()
     {
         x = 0.8f;
-        font = BaseFont.CreateFont("Helvetica", "winansi", false);
+        font = BaseFont.CreateFont(name: "Helvetica", encoding: "winansi", embedded: false);
         size = 8;
         baseline = size;
         barHeight = size * 3;
@@ -302,6 +628,7 @@ public class Barcode128 : Barcode
             float fontX = 0;
             float fontY = 0;
             string fullCode;
+
             if (font != null)
             {
                 if (baseline > 0)
@@ -315,7 +642,8 @@ public class Barcode128 : Barcode
 
                 if (codeType == CODE128_RAW)
                 {
-                    var idx = code.IndexOf("\uffff", StringComparison.Ordinal);
+                    var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
                     if (idx < 0)
                     {
                         fullCode = "";
@@ -339,10 +667,11 @@ public class Barcode128 : Barcode
 
             if (codeType == CODE128_RAW)
             {
-                var idx = code.IndexOf("\uffff", StringComparison.Ordinal);
+                var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
                 if (idx >= 0)
                 {
-                    fullCode = code.Substring(0, idx);
+                    fullCode = code.Substring(startIndex: 0, idx);
                 }
                 else
                 {
@@ -358,6 +687,7 @@ public class Barcode128 : Barcode
             var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
             fullWidth = Math.Max(fullWidth, fontX);
             var fullHeight = barHeight + fontY;
+
             return new Rectangle(fullWidth, fullHeight);
         }
     }
@@ -377,19 +707,23 @@ public class Barcode128 : Barcode
             }
 
             var localCode = value;
-            if (CodeType == CODE128_UCC && localCode.StartsWith("(", StringComparison.Ordinal))
+
+            if (CodeType == CODE128_UCC && localCode.StartsWith(value: '('))
             {
                 var idx = 0;
                 var ret = "";
+
                 while (idx >= 0)
                 {
-                    var end = localCode.IndexOf(")", idx, StringComparison.Ordinal);
+                    var end = localCode.IndexOf(value: ')', idx);
+
                     if (end < 0)
                     {
                         throw new ArgumentException("Badly formed UCC string: " + localCode);
                     }
 
                     var sai = localCode.Substring(idx + 1, end - (idx + 1));
+
                     if (sai.Length < 2)
                     {
                         throw new ArgumentException("AI too short: (" + sai + ")");
@@ -397,20 +731,23 @@ public class Barcode128 : Barcode
 
                     var ai = int.Parse(sai, CultureInfo.InvariantCulture);
                     var len = _ais[ai];
+
                     if (len == 0)
                     {
                         throw new ArgumentException("AI not found: (" + sai + ")");
                     }
 
                     sai = ai.ToString(CultureInfo.InvariantCulture);
+
                     if (sai.Length == 1)
                     {
                         sai = "0" + sai;
                     }
 
-                    idx = localCode.IndexOf("(", end, StringComparison.Ordinal);
+                    idx = localCode.IndexOf(value: '(', end);
                     var next = idx < 0 ? localCode.Length : idx;
                     ret += sai + localCode.Substring(end + 1, next - (end + 1));
+
                     if (len < 0)
                     {
                         if (idx >= 0)
@@ -447,13 +784,15 @@ public class Barcode128 : Barcode
         }
 
         int k;
-        var idx = text.IndexOf("\uffff", StringComparison.Ordinal);
+        var idx = text.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
         if (idx >= 0)
         {
-            text = text.Substring(0, idx);
+            text = text.Substring(startIndex: 0, idx);
         }
 
-        int chk = text[0];
+        int chk = text[index: 0];
+
         for (k = 1; k < text.Length; ++k)
         {
             chk += k * text[k];
@@ -462,12 +801,14 @@ public class Barcode128 : Barcode
         chk = chk % 103;
         text += (char)chk;
         var bars = new byte[(text.Length + 1) * 6 + 7];
+
         for (k = 0; k < text.Length; ++k)
         {
-            Array.Copy(_bars[text[k]], 0, bars, k * 6, 6);
+            Array.Copy(_bars[text[k]], sourceIndex: 0, bars, k * 6, length: 6);
         }
 
-        Array.Copy(_barsStop, 0, bars, k * 6, 7);
+        Array.Copy(_barsStop, sourceIndex: 0, bars, k * 6, length: 7);
+
         return bars;
     }
 
@@ -485,18 +826,21 @@ public class Barcode128 : Barcode
 
         var buf = new StringBuilder();
         var fnc1 = FNC1.ToString();
+
         try
         {
             while (true)
             {
                 if (code.StartsWith(fnc1, StringComparison.Ordinal))
                 {
-                    code = code.Substring(1);
+                    code = code.Substring(startIndex: 1);
+
                     continue;
                 }
 
                 var n = 0;
                 var idlen = 0;
+
                 for (var k = 2; k < 5; ++k)
                 {
                     if (code.Length < k)
@@ -504,9 +848,10 @@ public class Barcode128 : Barcode
                         break;
                     }
 
-                    if ((n = _ais[int.Parse(code.Substring(0, k), CultureInfo.InvariantCulture)]) != 0)
+                    if ((n = _ais[int.Parse(code.Substring(startIndex: 0, k), CultureInfo.InvariantCulture)]) != 0)
                     {
                         idlen = k;
+
                         break;
                     }
                 }
@@ -516,28 +861,31 @@ public class Barcode128 : Barcode
                     break;
                 }
 
-                buf.Append('(').Append(code.Substring(0, idlen)).Append(')');
+                buf.Append(value: '(').Append(code.Substring(startIndex: 0, idlen)).Append(value: ')');
                 code = code.Substring(idlen);
+
                 if (n > 0)
                 {
                     n -= idlen;
+
                     if (code.Length <= n)
                     {
                         break;
                     }
 
-                    buf.Append(RemoveFnc1(code.Substring(0, n)));
+                    buf.Append(RemoveFnc1(code.Substring(startIndex: 0, n)));
                     code = code.Substring(n);
                 }
                 else
                 {
                     var idx = code.IndexOf(FNC1.ToString(), StringComparison.Ordinal);
+
                     if (idx < 0)
                     {
                         break;
                     }
 
-                    buf.Append(code.Substring(0, idx));
+                    buf.Append(code.Substring(startIndex: 0, idx));
                     code = code.Substring(idx + 1);
                 }
             }
@@ -548,6 +896,7 @@ public class Barcode128 : Barcode
         }
 
         buf.Append(RemoveFnc1(code));
+
         return buf.ToString();
     }
 
@@ -568,9 +917,11 @@ public class Barcode128 : Barcode
 
         var outs = "";
         var tLen = text.Length;
+
         if (tLen == 0)
         {
             outs += START_B;
+
             if (ucc)
             {
                 outs += FNC1_INDEX;
@@ -580,35 +931,40 @@ public class Barcode128 : Barcode
         }
 
         var c = 0;
+
         for (var k = 0; k < tLen; ++k)
         {
             c = text[k];
+
             if (c > 127 && c != FNC1)
             {
                 throw new ArgumentException("There are illegal characters for barcode 128 in '" + text + "'.");
             }
         }
 
-        c = text[0];
+        c = text[index: 0];
         var currentCode = START_B;
         var index = 0;
-        if (IsNextDigits(text, index, 2))
+
+        if (IsNextDigits(text, index, numDigits: 2))
         {
             currentCode = START_C;
             outs += currentCode;
+
             if (ucc)
             {
                 outs += FNC1_INDEX;
             }
 
-            var out2 = GetPackedRawDigits(text, index, 2);
-            index += out2[0];
-            outs += out2.Substring(1);
+            var out2 = GetPackedRawDigits(text, index, numDigits: 2);
+            index += out2[index: 0];
+            outs += out2.Substring(startIndex: 1);
         }
         else if (c < ' ')
         {
             currentCode = START_A;
             outs += currentCode;
+
             if (ucc)
             {
                 outs += FNC1_INDEX;
@@ -620,6 +976,7 @@ public class Barcode128 : Barcode
         else
         {
             outs += currentCode;
+
             if (ucc)
             {
                 outs += FNC1_INDEX;
@@ -643,17 +1000,18 @@ public class Barcode128 : Barcode
             {
                 case START_A:
                 {
-                    if (IsNextDigits(text, index, 4))
+                    if (IsNextDigits(text, index, numDigits: 4))
                     {
                         currentCode = START_C;
                         outs += CODE_AB_TO_C;
-                        var out2 = GetPackedRawDigits(text, index, 4);
-                        index += out2[0];
-                        outs += out2.Substring(1);
+                        var out2 = GetPackedRawDigits(text, index, numDigits: 4);
+                        index += out2[index: 0];
+                        outs += out2.Substring(startIndex: 1);
                     }
                     else
                     {
                         c = text[index++];
+
                         if (c == FNC1)
                         {
                             outs += FNC1_INDEX;
@@ -674,20 +1032,22 @@ public class Barcode128 : Barcode
                         }
                     }
                 }
+
                     break;
                 case START_B:
                 {
-                    if (IsNextDigits(text, index, 4))
+                    if (IsNextDigits(text, index, numDigits: 4))
                     {
                         currentCode = START_C;
                         outs += CODE_AB_TO_C;
-                        var out2 = GetPackedRawDigits(text, index, 4);
-                        index += out2[0];
-                        outs += out2.Substring(1);
+                        var out2 = GetPackedRawDigits(text, index, numDigits: 4);
+                        index += out2[index: 0];
+                        outs += out2.Substring(startIndex: 1);
                     }
                     else
                     {
                         c = text[index++];
+
                         if (c == FNC1)
                         {
                             outs += FNC1_INDEX;
@@ -704,18 +1064,20 @@ public class Barcode128 : Barcode
                         }
                     }
                 }
+
                     break;
                 case START_C:
                 {
-                    if (IsNextDigits(text, index, 2))
+                    if (IsNextDigits(text, index, numDigits: 2))
                     {
-                        var out2 = GetPackedRawDigits(text, index, 2);
-                        index += out2[0];
-                        outs += out2.Substring(1);
+                        var out2 = GetPackedRawDigits(text, index, numDigits: 2);
+                        index += out2[index: 0];
+                        outs += out2.Substring(startIndex: 1);
                     }
                     else
                     {
                         c = text[index++];
+
                         if (c == FNC1)
                         {
                             outs += FNC1_INDEX;
@@ -734,6 +1096,7 @@ public class Barcode128 : Barcode
                         }
                     }
                 }
+
                     break;
             }
         }
@@ -755,9 +1118,11 @@ public class Barcode128 : Barcode
 
         var len = code.Length;
         var buf = new StringBuilder(len);
+
         for (var k = 0; k < len; ++k)
         {
             var c = code[k];
+
             if (c >= 32 && c <= 126)
             {
                 buf.Append(c);
@@ -770,12 +1135,14 @@ public class Barcode128 : Barcode
     public override SKBitmap CreateDrawingImage(Color foreground, Color background)
     {
         string bCode;
+
         if (codeType == CODE128_RAW)
         {
-            var idx = code.IndexOf("\uffff", StringComparison.Ordinal);
+            var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
             if (idx >= 0)
             {
-                bCode = code.Substring(0, idx);
+                bCode = code.Substring(startIndex: 0, idx);
             }
             else
             {
@@ -792,20 +1159,24 @@ public class Barcode128 : Barcode
         var bars = GetBarsCode128Raw(bCode);
         var height = (int)barHeight;
         var bmp = new SKBitmap(fullWidth, height);
+
         for (var h = 0; h < height; ++h)
         {
             var print = true;
             var ptr = 0;
+
             for (var k = 0; k < bars.Length; ++k)
             {
                 int w = bars[k];
                 var c = background;
+
                 if (print)
                 {
                     c = foreground;
                 }
 
                 print = !print;
+
                 for (var j = 0; j < w; ++j)
                 {
                     bmp.SetPixel(ptr++, h, c.ToSKColor());
@@ -849,9 +1220,11 @@ public class Barcode128 : Barcode
         }
 
         string fullCode;
+
         if (codeType == CODE128_RAW)
         {
-            var idx = code.IndexOf("\uffff", StringComparison.Ordinal);
+            var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
             if (idx < 0)
             {
                 fullCode = "";
@@ -871,18 +1244,21 @@ public class Barcode128 : Barcode
         }
 
         float fontX = 0;
+
         if (font != null)
         {
             fontX = font.GetWidthPoint(fullCode = altText != null ? altText : fullCode, size);
         }
 
         string bCode;
+
         if (codeType == CODE128_RAW)
         {
-            var idx = code.IndexOf("\uffff", StringComparison.Ordinal);
+            var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
+
             if (idx >= 0)
             {
-                bCode = code.Substring(0, idx);
+                bCode = code.Substring(startIndex: 0, idx);
             }
             else
             {
@@ -898,6 +1274,7 @@ public class Barcode128 : Barcode
         var fullWidth = (float)(len + 2) * 11 * x + 2 * x;
         float barStartX = 0;
         float textStartX = 0;
+
         switch (textAlignment)
         {
             case Element.ALIGN_LEFT:
@@ -928,6 +1305,7 @@ public class Barcode128 : Barcode
 
         float barStartY = 0;
         float textStartY = 0;
+
         if (font != null)
         {
             if (baseline <= 0)
@@ -943,6 +1321,7 @@ public class Barcode128 : Barcode
 
         var bars = GetBarsCode128Raw(bCode);
         var print = true;
+
         if (barColor != null)
         {
             cb.SetColorFill(barColor);
@@ -951,6 +1330,7 @@ public class Barcode128 : Barcode
         for (var k = 0; k < bars.Length; ++k)
         {
             var w = bars[k] * x;
+
             if (print)
             {
                 cb.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
@@ -961,6 +1341,7 @@ public class Barcode128 : Barcode
         }
 
         cb.Fill();
+
         if (font != null)
         {
             if (textColor != null)
@@ -990,12 +1371,14 @@ public class Barcode128 : Barcode
     {
         var outs = "";
         var start = textIndex;
+
         while (numDigits > 0)
         {
             if (text[textIndex] == FNC1)
             {
                 outs += FNC1_INDEX;
                 ++textIndex;
+
                 continue;
             }
 
@@ -1019,15 +1402,18 @@ public class Barcode128 : Barcode
     internal static bool IsNextDigits(string text, int textIndex, int numDigits)
     {
         var len = text.Length;
+
         while (textIndex < len && numDigits > 0)
         {
             if (text[textIndex] == FNC1)
             {
                 ++textIndex;
+
                 continue;
             }
 
-            var n = Math.Min(2, numDigits);
+            var n = Math.Min(val1: 2, numDigits);
+
             if (textIndex + n > len)
             {
                 return false;
@@ -1036,6 +1422,7 @@ public class Barcode128 : Barcode
             while (n-- > 0)
             {
                 var c = text[textIndex++];
+
                 if (c < '0' || c > '9')
                 {
                     return false;

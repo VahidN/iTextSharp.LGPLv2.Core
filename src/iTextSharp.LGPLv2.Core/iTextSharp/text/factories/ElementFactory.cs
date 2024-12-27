@@ -21,12 +21,14 @@ public static class ElementFactory
 
         var anchor = new Anchor(GetPhrase(attributes));
         var value = attributes[ElementTags.NAME];
+
         if (value != null)
         {
             anchor.Name = value;
         }
 
         value = attributes.Remove(ElementTags.REFERENCE);
+
         if (value != null)
         {
             anchor.Reference = value;
@@ -50,24 +52,28 @@ public static class ElementFactory
         float llx = 0, lly = 0, urx = 0, ury = 0;
 
         var value = attributes[ElementTags.LLX];
+
         if (value != null)
         {
             llx = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.LLY];
+
         if (value != null)
         {
             lly = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.URX];
+
         if (value != null)
         {
             urx = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.URY];
+
         if (value != null)
         {
             ury = float.Parse(value, NumberFormatInfo.InvariantInfo);
@@ -75,18 +81,21 @@ public static class ElementFactory
 
         var title = attributes[ElementTags.TITLE];
         var text = attributes[ElementTags.CONTENT];
+
         if (title != null || text != null)
         {
             return new Annotation(title, text, llx, lly, urx, ury);
         }
 
         value = attributes[ElementTags.URL];
+
         if (value != null)
         {
             return new Annotation(llx, lly, urx, ury, value);
         }
 
         value = attributes[ElementTags.NAMED];
+
         if (value != null)
         {
             return new Annotation(llx, lly, urx, ury, int.Parse(value, CultureInfo.InvariantCulture));
@@ -95,6 +104,7 @@ public static class ElementFactory
         var file = attributes[ElementTags.FILE];
         var destination = attributes[ElementTags.DESTINATION];
         var page = attributes.Remove(ElementTags.PAGE);
+
         if (file != null)
         {
             if (destination != null)
@@ -110,6 +120,7 @@ public static class ElementFactory
 
         title = "";
         text = "";
+
         return new Annotation(title, text, llx, lly, urx, ury);
     }
 
@@ -129,36 +140,42 @@ public static class ElementFactory
         cell.SetHorizontalAlignment(attributes[ElementTags.HORIZONTALALIGN]);
         cell.SetVerticalAlignment(attributes[ElementTags.VERTICALALIGN]);
         var value = attributes[ElementTags.WIDTH];
+
         if (value != null)
         {
             cell.SetWidth(value);
         }
 
         value = attributes[ElementTags.COLSPAN];
+
         if (value != null)
         {
             cell.Colspan = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         value = attributes[ElementTags.ROWSPAN];
+
         if (value != null)
         {
             cell.Rowspan = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         value = attributes[ElementTags.LEADING];
+
         if (value != null)
         {
             cell.Leading = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         cell.Header = Utilities.CheckTrueOrFalse(attributes, ElementTags.HEADER);
+
         if (Utilities.CheckTrueOrFalse(attributes, ElementTags.NOWRAP))
         {
             cell.MaxLines = 1;
         }
 
         setRectangleProperties(cell, attributes);
+
         return cell;
     }
 
@@ -173,8 +190,9 @@ public static class ElementFactory
             throw new ArgumentNullException(nameof(attributes));
         }
 
-        var chapter = new ChapterAutoNumber("");
+        var chapter = new ChapterAutoNumber(title: "");
         setSectionParameters(chapter, attributes);
+
         return chapter;
     }
 
@@ -189,24 +207,31 @@ public static class ElementFactory
             throw new ArgumentNullException(nameof(attributes));
         }
 
-        var chunk = new Chunk { Font = FontFactory.GetFont(attributes) };
+        var chunk = new Chunk
+        {
+            Font = FontFactory.GetFont(attributes)
+        };
 
         var value = attributes[ElementTags.ITEXT];
+
         if (value != null)
         {
             chunk.Append(value);
         }
 
         value = attributes[ElementTags.Localgoto];
+
         if (value != null)
         {
             chunk.SetLocalGoto(value);
         }
 
         value = attributes[ElementTags.Remotegoto];
+
         if (value != null)
         {
             var page = attributes[ElementTags.PAGE];
+
             if (page != null)
             {
                 chunk.SetRemoteGoto(value, int.Parse(page, CultureInfo.InvariantCulture));
@@ -214,6 +239,7 @@ public static class ElementFactory
             else
             {
                 var destination = attributes[ElementTags.DESTINATION];
+
                 if (destination != null)
                 {
                     chunk.SetRemoteGoto(value, destination);
@@ -222,31 +248,38 @@ public static class ElementFactory
         }
 
         value = attributes[ElementTags.Localdestination];
+
         if (value != null)
         {
             chunk.SetLocalDestination(value);
         }
 
         value = attributes[ElementTags.Subsupscript];
+
         if (value != null)
         {
             chunk.SetTextRise(float.Parse(value, NumberFormatInfo.InvariantInfo));
         }
 
         value = attributes[Markup.CSS_KEY_VERTICALALIGN];
-        if (value != null && value.EndsWith("%", StringComparison.Ordinal))
+
+        if (value != null && value.EndsWith(value: '%'))
         {
-            var p = float.Parse(value.Substring(0, value.Length - 1), NumberFormatInfo.InvariantInfo) / 100f;
+            var p = float.Parse(value.Substring(startIndex: 0, value.Length - 1), NumberFormatInfo.InvariantInfo) /
+                    100f;
+
             chunk.SetTextRise(p * chunk.Font.Size);
         }
 
         value = attributes[ElementTags.Generictag];
+
         if (value != null)
         {
             chunk.SetGenericTag(value);
         }
 
         value = attributes[ElementTags.BACKGROUNDCOLOR];
+
         if (value != null)
         {
             chunk.SetBackground(Markup.DecodeColor(value));
@@ -269,15 +302,17 @@ public static class ElementFactory
         }
 
         var value = attributes[ElementTags.URL];
+
         if (value == null)
         {
-            throw new ArgumentException("The URL of the image is missing.");
+            throw new ArgumentException(message: "The URL of the image is missing.");
         }
 
         var image = Image.GetInstance(value);
 
         value = attributes[ElementTags.ALIGN];
         var align = 0;
+
         if (value != null)
         {
             if (Util.EqualsIgnoreCase(ElementTags.ALIGN_LEFT, value))
@@ -294,12 +329,12 @@ public static class ElementFactory
             }
         }
 
-        if (Util.EqualsIgnoreCase("true", attributes[ElementTags.UNDERLYING]))
+        if (Util.EqualsIgnoreCase(s1: "true", attributes[ElementTags.UNDERLYING]))
         {
             align |= Image.UNDERLYING;
         }
 
-        if (Util.EqualsIgnoreCase("true", attributes[ElementTags.TEXTWRAP]))
+        if (Util.EqualsIgnoreCase(s1: "true", attributes[ElementTags.TEXTWRAP]))
         {
             align |= Image.TEXTWRAP;
         }
@@ -307,6 +342,7 @@ public static class ElementFactory
         image.Alignment = align;
 
         value = attributes[ElementTags.ALT];
+
         if (value != null)
         {
             image.Alt = value;
@@ -314,25 +350,29 @@ public static class ElementFactory
 
         var x = attributes[ElementTags.ABSOLUTEX];
         var y = attributes[ElementTags.ABSOLUTEY];
+
         if (x != null && y != null)
         {
             image.SetAbsolutePosition(float.Parse(x, NumberFormatInfo.InvariantInfo),
-                                      float.Parse(y, NumberFormatInfo.InvariantInfo));
+                float.Parse(y, NumberFormatInfo.InvariantInfo));
         }
 
         value = attributes[ElementTags.PLAINWIDTH];
+
         if (value != null)
         {
             image.ScaleAbsoluteWidth(float.Parse(value, NumberFormatInfo.InvariantInfo));
         }
 
         value = attributes[ElementTags.PLAINHEIGHT];
+
         if (value != null)
         {
             image.ScaleAbsoluteHeight(float.Parse(value, NumberFormatInfo.InvariantInfo));
         }
 
         value = attributes[ElementTags.ROTATION];
+
         if (value != null)
         {
             image.Rotation = float.Parse(value, NumberFormatInfo.InvariantInfo);
@@ -353,41 +393,45 @@ public static class ElementFactory
         }
 
         var list = new List
-                   {
-                       Numbered = Utilities.CheckTrueOrFalse(attributes, ElementTags.NUMBERED),
-                       Lettered = Utilities.CheckTrueOrFalse(attributes, ElementTags.LETTERED),
-                       Lowercase = Utilities.CheckTrueOrFalse(attributes, ElementTags.LOWERCASE),
-                       Autoindent = Utilities.CheckTrueOrFalse(attributes, ElementTags.AUTO_INDENT_ITEMS),
-                       Alignindent = Utilities.CheckTrueOrFalse(attributes, ElementTags.ALIGN_INDENTATION_ITEMS),
-                   };
-
+        {
+            Numbered = Utilities.CheckTrueOrFalse(attributes, ElementTags.NUMBERED),
+            Lettered = Utilities.CheckTrueOrFalse(attributes, ElementTags.LETTERED),
+            Lowercase = Utilities.CheckTrueOrFalse(attributes, ElementTags.LOWERCASE),
+            Autoindent = Utilities.CheckTrueOrFalse(attributes, ElementTags.AUTO_INDENT_ITEMS),
+            Alignindent = Utilities.CheckTrueOrFalse(attributes, ElementTags.ALIGN_INDENTATION_ITEMS)
+        };
 
         var value = attributes[ElementTags.FIRST];
+
         if (value != null)
         {
-            var character = value[0];
+            var character = value[index: 0];
             list.First = char.IsLetter(character) ? character : int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         value = attributes[ElementTags.LISTSYMBOL];
+
         if (value != null)
         {
             list.ListSymbol = new Chunk(value, FontFactory.GetFont(attributes));
         }
 
         value = attributes[ElementTags.INDENTATIONLEFT];
+
         if (value != null)
         {
             list.IndentationLeft = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.INDENTATIONRIGHT];
+
         if (value != null)
         {
             list.IndentationRight = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.SYMBOLINDENT];
+
         if (value != null)
         {
             list.SymbolIndent = float.Parse(value, NumberFormatInfo.InvariantInfo);
@@ -403,6 +447,7 @@ public static class ElementFactory
     public static ListItem GetListItem(Properties attributes)
     {
         var item = new ListItem(GetParagraph(attributes));
+
         return item;
     }
 
@@ -419,18 +464,21 @@ public static class ElementFactory
 
         var paragraph = new Paragraph(GetPhrase(attributes));
         var value = attributes[ElementTags.ALIGN];
+
         if (value != null)
         {
             paragraph.SetAlignment(value);
         }
 
         value = attributes[ElementTags.INDENTATIONLEFT];
+
         if (value != null)
         {
             paragraph.IndentationLeft = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.INDENTATIONRIGHT];
+
         if (value != null)
         {
             paragraph.IndentationRight = float.Parse(value, NumberFormatInfo.InvariantInfo);
@@ -450,23 +498,31 @@ public static class ElementFactory
             throw new ArgumentNullException(nameof(attributes));
         }
 
-        var phrase = new Phrase { Font = FontFactory.GetFont(attributes) };
+        var phrase = new Phrase
+        {
+            Font = FontFactory.GetFont(attributes)
+        };
+
         var value = attributes[ElementTags.LEADING];
+
         if (value != null)
         {
             phrase.Leading = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[Markup.CSS_KEY_LINEHEIGHT];
+
         if (value != null)
         {
             phrase.Leading = Markup.ParseLength(value, Markup.DEFAULT_FONT_SIZE);
         }
 
         value = attributes[ElementTags.ITEXT];
+
         if (value != null)
         {
             var chunk = new Chunk(value);
+
             if ((value = attributes[ElementTags.Generictag]) != null)
             {
                 chunk.SetGenericTag(value);
@@ -495,8 +551,9 @@ public static class ElementFactory
             throw new ArgumentNullException(nameof(attributes));
         }
 
-        var section = parent.AddSection("");
+        var section = parent.AddSection(title: "");
         setSectionParameters(section, attributes);
+
         return section;
     }
 
@@ -515,10 +572,12 @@ public static class ElementFactory
         Table table;
 
         var value = attributes[ElementTags.WIDTHS];
+
         if (value != null)
         {
-            var widthTokens = new StringTokenizer(value, ";");
+            var widthTokens = new StringTokenizer(value, delim: ";");
             var values = new List<string>();
+
             while (widthTokens.HasMoreTokens())
             {
                 values.Add(widthTokens.NextToken());
@@ -526,6 +585,7 @@ public static class ElementFactory
 
             table = new Table(values.Count);
             var widths = new float[table.Columns];
+
             for (var i = 0; i < values.Count; i++)
             {
                 value = values[i];
@@ -537,13 +597,14 @@ public static class ElementFactory
         else
         {
             value = attributes[ElementTags.COLUMNS];
+
             try
             {
                 table = new Table(int.Parse(value, CultureInfo.InvariantCulture));
             }
             catch
             {
-                table = new Table(1);
+                table = new Table(columns: 1);
             }
         }
 
@@ -552,41 +613,48 @@ public static class ElementFactory
         table.DefaultCell.Border = Rectangle.BOX;
 
         value = attributes[ElementTags.LASTHEADERROW];
+
         if (value != null)
         {
             table.LastHeaderRow = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         value = attributes[ElementTags.ALIGN];
+
         if (value != null)
         {
             table.SetAlignment(value);
         }
 
         value = attributes[ElementTags.CELLSPACING];
+
         if (value != null)
         {
             table.Spacing = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.CELLPADDING];
+
         if (value != null)
         {
             table.Padding = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.OFFSET];
+
         if (value != null)
         {
             table.Offset = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.WIDTH];
+
         if (value != null)
         {
-            if (value.EndsWith("%", StringComparison.Ordinal))
+            if (value.EndsWith(value: '%'))
             {
-                table.Width = float.Parse(value.Substring(0, value.Length - 1), NumberFormatInfo.InvariantInfo);
+                table.Width = float.Parse(value.Substring(startIndex: 0, value.Length - 1),
+                    NumberFormatInfo.InvariantInfo);
             }
             else
             {
@@ -600,6 +668,7 @@ public static class ElementFactory
         table.Convert2Pdfptable = Utilities.CheckTrueOrFalse(attributes, ElementTags.CONVERT2PDFP);
 
         setRectangleProperties(table, attributes);
+
         return table;
     }
 
@@ -611,12 +680,14 @@ public static class ElementFactory
     private static void setRectangleProperties(Rectangle rect, Properties attributes)
     {
         var value = attributes[ElementTags.BORDERWIDTH];
+
         if (value != null)
         {
             rect.BorderWidth = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         var border = 0;
+
         if (Utilities.CheckTrueOrFalse(attributes, ElementTags.LEFT))
         {
             border |= Rectangle.LEFT_BORDER;
@@ -642,11 +713,13 @@ public static class ElementFactory
         var r = attributes[ElementTags.RED];
         var g = attributes[ElementTags.GREEN];
         var b = attributes[ElementTags.BLUE];
+
         if (r != null || g != null || b != null)
         {
             var red = 0;
             var green = 0;
             var blue = 0;
+
             if (r != null)
             {
                 red = int.Parse(r, CultureInfo.InvariantCulture);
@@ -673,11 +746,13 @@ public static class ElementFactory
         g = attributes.Remove(ElementTags.BGGREEN);
         b = attributes.Remove(ElementTags.BGBLUE);
         value = attributes[ElementTags.BACKGROUNDCOLOR];
+
         if (r != null || g != null || b != null)
         {
             var red = 0;
             var green = 0;
             var blue = 0;
+
             if (r != null)
             {
                 red = int.Parse(r, CultureInfo.InvariantCulture);
@@ -702,6 +777,7 @@ public static class ElementFactory
         else
         {
             value = attributes[ElementTags.GRAYFILL];
+
             if (value != null)
             {
                 rect.GrayFill = float.Parse(value, NumberFormatInfo.InvariantInfo);
@@ -712,24 +788,28 @@ public static class ElementFactory
     private static void setSectionParameters(Section section, Properties attributes)
     {
         var value = attributes[ElementTags.NUMBERDEPTH];
+
         if (value != null)
         {
             section.NumberDepth = int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         value = attributes[ElementTags.INDENT];
+
         if (value != null)
         {
             section.Indentation = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.INDENTATIONLEFT];
+
         if (value != null)
         {
             section.IndentationLeft = float.Parse(value, NumberFormatInfo.InvariantInfo);
         }
 
         value = attributes[ElementTags.INDENTATIONRIGHT];
+
         if (value != null)
         {
             section.IndentationRight = float.Parse(value, NumberFormatInfo.InvariantInfo);

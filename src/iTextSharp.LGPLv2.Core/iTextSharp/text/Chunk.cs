@@ -101,12 +101,12 @@ public class Chunk : IElement
     public const string UNDERLINE = "UNDERLINE";
 
     ///<summary> This is a Chunk containing a newline. </summary>
-    public static readonly Chunk Newline = new("\n");
+    public static readonly Chunk Newline = new(content: "\n");
 
     /// <summary>
     ///     This is a Chunk containing a newpage.
     /// </summary>
-    public static readonly Chunk Nextpage = new("");
+    public static readonly Chunk Nextpage = new(content: "");
 
     ///<summary> Contains some of the attributes for this Chunk. </summary>
     protected INullValueDictionary<string, object> attributes;
@@ -120,10 +120,7 @@ public class Chunk : IElement
     /// <summary> This is the Font of this chunk of text. </summary>
     protected Font font;
 
-    static Chunk()
-    {
-        Nextpage.SetNewPage();
-    }
+    static Chunk() => Nextpage.SetNewPage();
 
     /// <summary>
     ///     constructors
@@ -216,7 +213,11 @@ public class Chunk : IElement
 
         var copyImage = Image.GetInstance(image);
         copyImage.SetAbsolutePosition(float.NaN, float.NaN);
-        setAttribute(IMAGE, new object[] { copyImage, offsetX, offsetY, false });
+
+        setAttribute(IMAGE, new object[]
+        {
+            copyImage, offsetX, offsetY, false
+        });
     }
 
     /// <summary>
@@ -225,7 +226,7 @@ public class Chunk : IElement
     ///     @since   2.1.2
     /// </summary>
     /// <param name="separator">the drawInterface to use to draw the separator.</param>
-    public Chunk(IDrawInterface separator) : this(separator, false)
+    public Chunk(IDrawInterface separator) : this(separator, vertical: false)
     {
     }
 
@@ -237,9 +238,10 @@ public class Chunk : IElement
     /// <param name="separator">the drawInterface to use to draw the separator.</param>
     /// <param name="vertical">true if this is a vertical separator</param>
     public Chunk(IDrawInterface separator, bool vertical) : this(OBJECT_REPLACEMENT_CHARACTER, new Font())
-    {
-        setAttribute(SEPARATOR, new object[] { separator, vertical });
-    }
+        => setAttribute(SEPARATOR, new object[]
+        {
+            separator, vertical
+        });
 
     /// <summary>
     ///     Creates a tab Chunk.
@@ -248,7 +250,7 @@ public class Chunk : IElement
     /// </summary>
     /// <param name="separator">the drawInterface to use to draw the tab.</param>
     /// <param name="tabPosition">an X coordinate that will be used as start position for the next Chunk.</param>
-    public Chunk(IDrawInterface separator, float tabPosition) : this(separator, tabPosition, false)
+    public Chunk(IDrawInterface separator, float tabPosition) : this(separator, tabPosition, newline: false)
     {
     }
 
@@ -261,14 +263,17 @@ public class Chunk : IElement
     /// <param name="tabPosition">an X coordinate that will be used as start position for the next Chunk.</param>
     /// <param name="newline">if true, a newline will be added if the tabPosition has already been reached.</param>
     public Chunk(IDrawInterface separator, float tabPosition, bool newline) : this(OBJECT_REPLACEMENT_CHARACTER,
-                                                                                   new Font())
+        new Font())
     {
         if (tabPosition < 0)
         {
             throw new ArgumentException("A tab position may not be lower than 0; yours is " + tabPosition);
         }
 
-        setAttribute(TAB, new object[] { separator, tabPosition, newline, 0 });
+        setAttribute(TAB, new object[]
+        {
+            separator, tabPosition, newline, 0
+        });
     }
 
     /// <summary>
@@ -279,10 +284,11 @@ public class Chunk : IElement
     /// <param name="offsetY">the image offset in the y direction</param>
     /// <param name="changeLeading">true if the leading has to be adapted to the image</param>
     public Chunk(Image image, float offsetX, float offsetY, bool changeLeading) : this(OBJECT_REPLACEMENT_CHARACTER,
-                                                                                       new Font())
-    {
-        setAttribute(IMAGE, new object[] { image, offsetX, offsetY, changeLeading });
-    }
+        new Font())
+        => setAttribute(IMAGE, new object[]
+        {
+            image, offsetX, offsetY, changeLeading
+        });
 
     /// <summary>
     ///     implementation of the Element-methods
@@ -331,6 +337,7 @@ public class Chunk : IElement
             }
 
             var f = attributes[HSCALE];
+
             if (f == null)
             {
                 return 1f;
@@ -350,6 +357,7 @@ public class Chunk : IElement
         {
             var tmp = new List<Chunk>();
             tmp.Add(this);
+
             return tmp;
         }
     }
@@ -443,6 +451,7 @@ public class Chunk : IElement
         }
 
         var obj = (object[])attributes[IMAGE];
+
         if (obj == null)
         {
             return null;
@@ -472,7 +481,8 @@ public class Chunk : IElement
             return GetImage().ScaledWidth;
         }
 
-        return font.GetCalculatedBaseFont(true).GetWidthPoint(Content, font.CalculatedSize) * HorizontalScaling;
+        return font.GetCalculatedBaseFont(specialEncoding: true).GetWidthPoint(Content, font.CalculatedSize) *
+               HorizontalScaling;
     }
 
     /// <summary>
@@ -485,9 +495,9 @@ public class Chunk : IElement
     ///     Checks is this Chunk is empty.
     /// </summary>
     /// <returns>false if the Chunk contains other characters than space.</returns>
-    public virtual bool IsEmpty() => content.ToString().Trim().Length == 0 &&
-                                     content.ToString().IndexOf("\n", StringComparison.Ordinal) == -1 &&
-                                     attributes == null;
+    public virtual bool IsEmpty()
+        => content.ToString().Trim().Length == 0 &&
+           content.ToString().IndexOf(value: '\n', StringComparison.Ordinal) == -1 && attributes == null;
 
     /// <summary>
     ///     Sets an action for this Chunk.
@@ -522,7 +532,8 @@ public class Chunk : IElement
     /// </summary>
     /// <param name="color">the color of the background</param>
     /// <returns>this Chunk</returns>
-    public Chunk SetBackground(BaseColor color) => SetBackground(color, 0, 0, 0, 0);
+    public Chunk SetBackground(BaseColor color)
+        => SetBackground(color, extraLeft: 0, extraBottom: 0, extraRight: 0, extraTop: 0);
 
     /// <summary>
     ///     Sets the color and the size of the background  Chunk .
@@ -534,9 +545,13 @@ public class Chunk : IElement
     /// <param name="extraTop">increase the size of the rectangle in the top</param>
     /// <returns>this  Chunk </returns>
     public Chunk SetBackground(BaseColor color, float extraLeft, float extraBottom, float extraRight, float extraTop)
-    {
-        return setAttribute(BACKGROUND, new object[] { color, new[] { extraLeft, extraBottom, extraRight, extraTop } });
-    }
+        => setAttribute(BACKGROUND, new object[]
+        {
+            color, new[]
+            {
+                extraLeft, extraBottom, extraRight, extraTop
+            }
+        });
 
     /// <summary>
     ///     Sets the generic tag Chunk.
@@ -584,7 +599,7 @@ public class Chunk : IElement
     ///     Sets a new page tag.
     /// </summary>
     /// <returns>this Chunk</returns>
-    public Chunk SetNewPage() => setAttribute(NEWPAGE, null);
+    public Chunk SetNewPage() => setAttribute(NEWPAGE, obj: null);
 
     /// <summary>
     ///     Sets a goto for a remote destination for this Chunk.
@@ -593,9 +608,10 @@ public class Chunk : IElement
     /// <param name="name">the name of the destination to go to</param>
     /// <returns>this Chunk</returns>
     public Chunk SetRemoteGoto(string filename, string name)
-    {
-        return setAttribute(REMOTEGOTO, new object[] { filename, name });
-    }
+        => setAttribute(REMOTEGOTO, new object[]
+        {
+            filename, name
+        });
 
     /// <summary>
     ///     Sets a goto for a remote destination for this Chunk.
@@ -604,9 +620,10 @@ public class Chunk : IElement
     /// <param name="page">the page of the destination to go to. First page is 1</param>
     /// <returns>this Chunk</returns>
     public Chunk SetRemoteGoto(string filename, int page)
-    {
-        return setAttribute(REMOTEGOTO, new object[] { filename, page });
-    }
+        => setAttribute(REMOTEGOTO, new object[]
+        {
+            filename, page
+        });
 
     /// <summary>
     ///     Skews the text to simulate italic and other effects.
@@ -619,7 +636,11 @@ public class Chunk : IElement
     {
         alpha = (float)Math.Tan(alpha * Math.PI / 180);
         beta = (float)Math.Tan(beta * Math.PI / 180);
-        return setAttribute(SKEW, new[] { alpha, beta });
+
+        return setAttribute(SKEW, new[]
+        {
+            alpha, beta
+        });
     }
 
     /// <summary>
@@ -641,9 +662,10 @@ public class Chunk : IElement
     /// <param name="strokeColor">the stroke color or  null  to follow the text color</param>
     /// <returns>this  Chunk </returns>
     public Chunk SetTextRenderMode(int mode, float strokeWidth, BaseColor strokeColor)
-    {
-        return setAttribute(TEXTRENDERMODE, new object[] { mode, strokeWidth, strokeColor });
-    }
+        => setAttribute(TEXTRENDERMODE, new object[]
+        {
+            mode, strokeWidth, strokeColor
+        });
 
     /// <summary>
     ///     Sets the text displacement relative to the baseline. Positive values rise the text,
@@ -665,8 +687,9 @@ public class Chunk : IElement
     /// <param name="thickness">the absolute thickness of the line</param>
     /// <param name="yPosition">the absolute y position relative to the baseline</param>
     /// <returns>this  Chunk </returns>
-    public Chunk SetUnderline(float thickness, float yPosition) =>
-        SetUnderline(null, thickness, 0f, yPosition, 0f, PdfContentByte.LINE_CAP_BUTT);
+    public Chunk SetUnderline(float thickness, float yPosition)
+        => SetUnderline(color: null, thickness, thicknessMul: 0f, yPosition, yPositionMul: 0f,
+            PdfContentByte.LINE_CAP_BUTT);
 
     /// <summary>
     ///     Sets an horizontal line that can be an underline or a strikethrough.
@@ -684,16 +707,28 @@ public class Chunk : IElement
     /// <param name="yPositionMul">the position multiplication factor with the font size</param>
     /// <param name="cap">the end line cap. Allowed values are</param>
     /// <returns>this  Chunk </returns>
-    public Chunk SetUnderline(BaseColor color, float thickness, float thicknessMul, float yPosition, float yPositionMul,
-                              int cap)
+    public Chunk SetUnderline(BaseColor color,
+        float thickness,
+        float thicknessMul,
+        float yPosition,
+        float yPositionMul,
+        int cap)
     {
         if (attributes == null)
         {
             attributes = new NullValueDictionary<string, object>();
         }
 
-        object[] obj = { color, new[] { thickness, thicknessMul, yPosition, yPositionMul, cap } };
+        object[] obj =
+        {
+            color, new[]
+            {
+                thickness, thicknessMul, yPosition, yPositionMul, cap
+            }
+        };
+
         var unders = Utilities.AddToArray((object[][])attributes[UNDERLINE], obj);
+
         return setAttribute(UNDERLINE, unders);
     }
 
@@ -711,6 +746,7 @@ public class Chunk : IElement
         }
 
         attributes[name] = obj;
+
         return this;
     }
 }
