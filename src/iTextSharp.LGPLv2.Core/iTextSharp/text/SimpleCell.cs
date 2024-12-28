@@ -77,7 +77,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
     ///     Dimensions are defined after creation.
     /// </summary>
     /// <param name="row">only true if the CellAttributes object represents a row.</param>
-    public SimpleCell(bool row) : base(0f, 0f, 0f, 0f)
+    public SimpleCell(bool row) : base(llx: 0f, lly: 0f, urx: 0f, ury: 0f)
     {
         _cellgroup = row;
         Border = BOX;
@@ -271,31 +271,36 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
         }
 
         var spLeft = SpacingLeft;
+
         if (float.IsNaN(spLeft))
         {
             spLeft = 0f;
         }
 
         var spRight = SpacingRight;
+
         if (float.IsNaN(spRight))
         {
             spRight = 0f;
         }
 
         var spTop = SpacingTop;
+
         if (float.IsNaN(spTop))
         {
             spTop = 0f;
         }
 
         var spBottom = SpacingBottom;
+
         if (float.IsNaN(spBottom))
         {
             spBottom = 0f;
         }
 
         var rect = new Rectangle(position.GetLeft(spLeft), position.GetBottom(spBottom), position.GetRight(spRight),
-                                 position.GetTop(spTop));
+            position.GetTop(spTop));
+
         rect.CloneNonPositionParameters(this);
         canvases[PdfPTable.BACKGROUNDCANVAS].Rectangle(rect);
         rect.BackgroundColor = null;
@@ -312,6 +317,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
         try
         {
             AddElement(o);
+
             return true;
         }
         catch (InvalidCastException)
@@ -334,31 +340,24 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
 
         if (_cellgroup)
         {
-            if (element is SimpleCell)
+            if (element is SimpleCell simpleCell)
             {
-                if (((SimpleCell)element).Cellgroup)
+                if (simpleCell.Cellgroup)
                 {
-                    throw new BadElementException("You can't add one row to another row.");
+                    throw new BadElementException(message: "You can't add one row to another row.");
                 }
 
-                _content.Add(element);
+                _content.Add(simpleCell);
+
                 return;
             }
 
             throw new BadElementException("You can only add cells to rows, no objects of type " + element.GetType());
         }
 
-        if (element.Type == PARAGRAPH
-            || element.Type == PHRASE
-            || element.Type == ANCHOR
-            || element.Type == CHUNK
-            || element.Type == LIST
-            || element.Type == MARKED
-            || element.Type == JPEG
-            || element.Type == JPEG2000
-            || element.Type == JBIG2
-            || element.Type == IMGRAW
-            || element.Type == IMGTEMPLATE)
+        if (element.Type == PARAGRAPH || element.Type == PHRASE || element.Type == ANCHOR || element.Type == CHUNK ||
+            element.Type == LIST || element.Type == MARKED || element.Type == JPEG || element.Type == JPEG2000 ||
+            element.Type == JBIG2 || element.Type == IMGRAW || element.Type == IMGTEMPLATE)
         {
             _content.Add(element);
         }
@@ -386,6 +385,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
         cell.UseAscender = useAscender;
         cell.UseBorderPadding = useBorderPadding;
         cell.UseDescender = useDescender;
+
         foreach (var element in _content)
         {
             cell.AddElement(element);
@@ -422,6 +422,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
         cell.UseBorderPadding = rowAttributes.useBorderPadding;
         cell.UseDescender = rowAttributes.useDescender;
         cell.Colspan = _colspan;
+
         if (_horizontalAlignment != ALIGN_UNDEFINED)
         {
             cell.HorizontalAlignment = _horizontalAlignment;
@@ -449,30 +450,35 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
 
         float p;
         var spLeft = SpacingLeft;
+
         if (float.IsNaN(spLeft))
         {
             spLeft = 0f;
         }
 
         var spRight = SpacingRight;
+
         if (float.IsNaN(spRight))
         {
             spRight = 0f;
         }
 
         var spTop = SpacingTop;
+
         if (float.IsNaN(spTop))
         {
             spTop = 0f;
         }
 
         var spBottom = SpacingBottom;
+
         if (float.IsNaN(spBottom))
         {
             spBottom = 0f;
         }
 
         p = PaddingLeft;
+
         if (float.IsNaN(p))
         {
             p = 0f;
@@ -480,6 +486,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
 
         cell.PaddingLeft = p + spLeft;
         p = PaddingRight;
+
         if (float.IsNaN(p))
         {
             p = 0f;
@@ -487,6 +494,7 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
 
         cell.PaddingRight = p + spRight;
         p = PaddingTop;
+
         if (float.IsNaN(p))
         {
             p = 0f;
@@ -494,12 +502,14 @@ public class SimpleCell : Rectangle, IPdfPCellEvent, ITextElementArray
 
         cell.PaddingTop = p + spTop;
         p = _paddingBottom;
+
         if (float.IsNaN(p))
         {
             p = 0f;
         }
 
         cell.PaddingBottom = p + spBottom;
+
         foreach (var element in _content)
         {
             cell.AddElement(element);

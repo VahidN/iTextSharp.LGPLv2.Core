@@ -123,7 +123,6 @@ public sealed class SimpleNamedDestination : ISimpleXmlDocHandler
             if (c < ' ')
             {
                 buf.Append(value: '\\');
-                ((int)c).ToString(format: "", CultureInfo.InvariantCulture);
                 var octal = "00" + Convert.ToString(c, toBase: 8);
                 buf.Append(octal.Substring(octal.Length - 3));
             }

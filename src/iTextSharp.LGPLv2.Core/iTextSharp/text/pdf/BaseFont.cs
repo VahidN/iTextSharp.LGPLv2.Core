@@ -318,6 +318,18 @@ public abstract class BaseFont
     protected static readonly INullValueDictionary<string, BaseFont> FontCache =
         new NullValueDictionary<string, BaseFont>();
 
+#if !NET_9
+    private static readonly object _lockObject = new();
+#else
+    private static readonly Lock _lockObject = new();
+#endif
+
+#if !NET_9
+    private static readonly object _syncObject = new();
+#else
+    private static readonly Lock _syncObject = new();
+#endif
+
     private static readonly Random _random = new();
 
     protected int[][] CharBBoxes = new int[256][];
@@ -554,13 +566,11 @@ public abstract class BaseFont
         {
             ResourceSearch.Add(obj);
         }
-        else if (obj is string)
+        else if (obj is string s)
         {
-            var f = (string)obj;
-
-            if (Directory.Exists(f) || File.Exists(f))
+            if (Directory.Exists(s) || File.Exists(s))
             {
-                ResourceSearch.Add(obj);
+                ResourceSearch.Add(s);
             }
         }
     }
@@ -848,7 +858,7 @@ public abstract class BaseFont
         var nameBase = GetBaseName(name);
         encoding = NormalizeEncoding(encoding);
         var isBuiltinFonts14 = BuiltinFonts14.ContainsKey(name);
-        var isCjkFont = isBuiltinFonts14 ? false : CjkFont.IsCjkFont(nameBase, encoding);
+        var isCjkFont = !isBuiltinFonts14 && CjkFont.IsCjkFont(nameBase, encoding);
 
         if (isBuiltinFonts14 || isCjkFont)
         {
@@ -866,7 +876,7 @@ public abstract class BaseFont
 
         if (cached)
         {
-            lock (FontCache)
+            lock (_lockObject)
             {
                 fontFound = FontCache[key];
             }
@@ -913,7 +923,7 @@ public abstract class BaseFont
 
         if (cached)
         {
-            lock (FontCache)
+            lock (_lockObject)
             {
                 fontFound = FontCache[key];
 
@@ -1163,19 +1173,17 @@ public abstract class BaseFont
 
             try
             {
-                if (obj is Assembly)
+                if (obj is Assembly assembly)
                 {
-                    istr = ((Assembly)obj).GetManifestResourceStream(key);
+                    istr = assembly.GetManifestResourceStream(key);
 
                     if (istr != null)
                     {
                         return istr;
                     }
                 }
-                else if (obj is string)
+                else if (obj is string dir)
                 {
-                    var dir = (string)obj;
-
                     try
                     {
                         var asm = Assembly.LoadFrom(dir);
@@ -1606,7 +1614,7 @@ public abstract class BaseFont
     {
         var s = new char[7];
 
-        lock (_random)
+        lock (_syncObject)
         {
             for (var k = 0; k < 6; ++k)
             {

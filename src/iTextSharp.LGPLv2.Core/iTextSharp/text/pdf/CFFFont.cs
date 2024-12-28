@@ -6,123 +6,65 @@ public class CffFont
 {
     internal static readonly string[] OperatorNames =
     {
-        "version", "Notice", "FullName", "FamilyName",
-        "Weight", "FontBBox", "BlueValues", "OtherBlues",
-        "FamilyBlues", "FamilyOtherBlues", "StdHW", "StdVW",
-        "UNKNOWN_12", "UniqueID", "XUID", "charset",
-        "Encoding", "CharStrings", "Private", "Subrs",
-        "defaultWidthX", "nominalWidthX", "UNKNOWN_22", "UNKNOWN_23",
-        "UNKNOWN_24", "UNKNOWN_25", "UNKNOWN_26", "UNKNOWN_27",
-        "UNKNOWN_28", "UNKNOWN_29", "UNKNOWN_30", "UNKNOWN_31",
-        "Copyright", "isFixedPitch", "ItalicAngle", "UnderlinePosition",
-        "UnderlineThickness", "PaintType", "CharstringType", "FontMatrix",
-        "StrokeWidth", "BlueScale", "BlueShift", "BlueFuzz",
-        "StemSnapH", "StemSnapV", "ForceBold", "UNKNOWN_12_15",
-        "UNKNOWN_12_16", "LanguageGroup", "ExpansionFactor",
-        "initialRandomSeed",
-        "SyntheticBase", "PostScript", "BaseFontName", "BaseFontBlend",
-        "UNKNOWN_12_24", "UNKNOWN_12_25", "UNKNOWN_12_26", "UNKNOWN_12_27",
-        "UNKNOWN_12_28", "UNKNOWN_12_29", "ROS", "CIDFontVersion",
-        "CIDFontRevision", "CIDFontType", "CIDCount", "UIDBase",
-        "FDArray", "FDSelect", "FontName",
+        "version", "Notice", "FullName", "FamilyName", "Weight", "FontBBox", "BlueValues", "OtherBlues", "FamilyBlues",
+        "FamilyOtherBlues", "StdHW", "StdVW", "UNKNOWN_12", "UniqueID", "XUID", "charset", "Encoding", "CharStrings",
+        "Private", "Subrs", "defaultWidthX", "nominalWidthX", "UNKNOWN_22", "UNKNOWN_23", "UNKNOWN_24", "UNKNOWN_25",
+        "UNKNOWN_26", "UNKNOWN_27", "UNKNOWN_28", "UNKNOWN_29", "UNKNOWN_30", "UNKNOWN_31", "Copyright", "isFixedPitch",
+        "ItalicAngle", "UnderlinePosition", "UnderlineThickness", "PaintType", "CharstringType", "FontMatrix",
+        "StrokeWidth", "BlueScale", "BlueShift", "BlueFuzz", "StemSnapH", "StemSnapV", "ForceBold", "UNKNOWN_12_15",
+        "UNKNOWN_12_16", "LanguageGroup", "ExpansionFactor", "initialRandomSeed", "SyntheticBase", "PostScript",
+        "BaseFontName", "BaseFontBlend", "UNKNOWN_12_24", "UNKNOWN_12_25", "UNKNOWN_12_26", "UNKNOWN_12_27",
+        "UNKNOWN_12_28", "UNKNOWN_12_29", "ROS", "CIDFontVersion", "CIDFontRevision", "CIDFontType", "CIDCount",
+        "UIDBase", "FDArray", "FDSelect", "FontName"
     };
 
     internal static readonly string[] StandardStrings =
     {
         // Automatically generated from Appendix A of the CFF specification; do
         // not edit. Size should be 391.
-        ".notdef", "space", "exclam", "quotedbl", "numbersign", "dollar",
-        "percent", "ampersand", "quoteright", "parenleft", "parenright",
-        "asterisk", "plus", "comma", "hyphen", "period", "slash", "zero",
-        "one",
-        "two", "three", "four", "five", "six", "seven", "eight", "nine",
-        "colon",
-        "semicolon", "less", "equal", "greater", "question", "at", "A", "B",
-        "C",
-        "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-        "R",
-        "S", "T", "U", "V", "W", "X", "Y", "Z", "bracketleft", "backslash",
-        "bracketright", "asciicircum", "underscore", "quoteleft", "a", "b",
-        "c",
-        "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-        "r",
-        "s", "t", "u", "v", "w", "x", "y", "z", "braceleft", "bar",
-        "braceright",
-        "asciitilde", "exclamdown", "cent", "sterling", "fraction", "yen",
-        "florin", "section", "currency", "quotesingle", "quotedblleft",
-        "guillemotleft", "guilsinglleft", "guilsinglright", "fi", "fl",
-        "endash",
-        "dagger", "daggerdbl", "periodcentered", "paragraph", "bullet",
-        "quotesinglbase", "quotedblbase", "quotedblright", "guillemotright",
-        "ellipsis", "perthousand", "questiondown", "grave", "acute",
-        "circumflex",
-        "tilde", "macron", "breve", "dotaccent", "dieresis", "ring",
-        "cedilla",
-        "hungarumlaut", "ogonek", "caron", "emdash", "AE", "ordfeminine",
-        "Lslash",
-        "Oslash", "OE", "ordmasculine", "ae", "dotlessi", "lslash", "oslash",
-        "oe",
-        "germandbls", "onesuperior", "logicalnot", "mu", "trademark", "Eth",
-        "onehalf", "plusminus", "Thorn", "onequarter", "divide", "brokenbar",
-        "degree", "thorn", "threequarters", "twosuperior", "registered",
-        "minus",
-        "eth", "multiply", "threesuperior", "copyright", "Aacute",
-        "Acircumflex",
-        "Adieresis", "Agrave", "Aring", "Atilde", "Ccedilla", "Eacute",
-        "Ecircumflex", "Edieresis", "Egrave", "Iacute", "Icircumflex",
-        "Idieresis",
-        "Igrave", "Ntilde", "Oacute", "Ocircumflex", "Odieresis", "Ograve",
-        "Otilde", "Scaron", "Uacute", "Ucircumflex", "Udieresis", "Ugrave",
-        "Yacute", "Ydieresis", "Zcaron", "aacute", "acircumflex",
-        "adieresis",
-        "agrave", "aring", "atilde", "ccedilla", "eacute", "ecircumflex",
-        "edieresis", "egrave", "iacute", "icircumflex", "idieresis",
-        "igrave",
-        "ntilde", "oacute", "ocircumflex", "odieresis", "ograve", "otilde",
-        "scaron", "uacute", "ucircumflex", "udieresis", "ugrave", "yacute",
-        "ydieresis", "zcaron", "exclamsmall", "Hungarumlautsmall",
-        "dollaroldstyle", "dollarsuperior", "ampersandsmall", "Acutesmall",
-        "parenleftsuperior", "parenrightsuperior", "twodotenleader",
-        "onedotenleader", "zerooldstyle", "oneoldstyle", "twooldstyle",
-        "threeoldstyle", "fouroldstyle", "fiveoldstyle", "sixoldstyle",
-        "sevenoldstyle", "eightoldstyle", "nineoldstyle", "commasuperior",
-        "threequartersemdash", "periodsuperior", "questionsmall",
-        "asuperior",
-        "bsuperior", "centsuperior", "dsuperior", "esuperior", "isuperior",
-        "lsuperior", "msuperior", "nsuperior", "osuperior", "rsuperior",
-        "ssuperior", "tsuperior", "ff", "ffi", "ffl", "parenleftinferior",
-        "parenrightinferior", "Circumflexsmall", "hyphensuperior",
-        "Gravesmall",
-        "Asmall", "Bsmall", "Csmall", "Dsmall", "Esmall", "Fsmall", "Gsmall",
-        "Hsmall", "Ismall", "Jsmall", "Ksmall", "Lsmall", "Msmall", "Nsmall",
-        "Osmall", "Psmall", "Qsmall", "Rsmall", "Ssmall", "Tsmall", "Usmall",
-        "Vsmall", "Wsmall", "Xsmall", "Ysmall", "Zsmall", "colonmonetary",
-        "onefitted", "rupiah", "Tildesmall", "exclamdownsmall",
-        "centoldstyle",
-        "Lslashsmall", "Scaronsmall", "Zcaronsmall", "Dieresissmall",
-        "Brevesmall",
-        "Caronsmall", "Dotaccentsmall", "Macronsmall", "figuredash",
-        "hypheninferior", "Ogoneksmall", "Ringsmall", "Cedillasmall",
-        "questiondownsmall", "oneeighth", "threeeighths", "fiveeighths",
-        "seveneighths", "onethird", "twothirds", "zerosuperior",
-        "foursuperior",
-        "fivesuperior", "sixsuperior", "sevensuperior", "eightsuperior",
-        "ninesuperior", "zeroinferior", "oneinferior", "twoinferior",
-        "threeinferior", "fourinferior", "fiveinferior", "sixinferior",
-        "seveninferior", "eightinferior", "nineinferior", "centinferior",
-        "dollarinferior", "periodinferior", "commainferior", "Agravesmall",
-        "Aacutesmall", "Acircumflexsmall", "Atildesmall", "Adieresissmall",
-        "Aringsmall", "AEsmall", "Ccedillasmall", "Egravesmall",
-        "Eacutesmall",
-        "Ecircumflexsmall", "Edieresissmall", "Igravesmall", "Iacutesmall",
-        "Icircumflexsmall", "Idieresissmall", "Ethsmall", "Ntildesmall",
-        "Ogravesmall", "Oacutesmall", "Ocircumflexsmall", "Otildesmall",
-        "Odieresissmall", "OEsmall", "Oslashsmall", "Ugravesmall",
-        "Uacutesmall",
-        "Ucircumflexsmall", "Udieresissmall", "Yacutesmall", "Thornsmall",
-        "Ydieresissmall", "001.000", "001.001", "001.002", "001.003",
-        "Black",
-        "Bold", "Book", "Light", "Medium", "Regular", "Roman", "Semibold",
+        ".notdef", "space", "exclam", "quotedbl", "numbersign", "dollar", "percent", "ampersand", "quoteright",
+        "parenleft", "parenright", "asterisk", "plus", "comma", "hyphen", "period", "slash", "zero", "one", "two",
+        "three", "four", "five", "six", "seven", "eight", "nine", "colon", "semicolon", "less", "equal", "greater",
+        "question", "at", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+        "T", "U", "V", "W", "X", "Y", "Z", "bracketleft", "backslash", "bracketright", "asciicircum", "underscore",
+        "quoteleft", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+        "u", "v", "w", "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "exclamdown", "cent", "sterling",
+        "fraction", "yen", "florin", "section", "currency", "quotesingle", "quotedblleft", "guillemotleft",
+        "guilsinglleft", "guilsinglright", "fi", "fl", "endash", "dagger", "daggerdbl", "periodcentered", "paragraph",
+        "bullet", "quotesinglbase", "quotedblbase", "quotedblright", "guillemotright", "ellipsis", "perthousand",
+        "questiondown", "grave", "acute", "circumflex", "tilde", "macron", "breve", "dotaccent", "dieresis", "ring",
+        "cedilla", "hungarumlaut", "ogonek", "caron", "emdash", "AE", "ordfeminine", "Lslash", "Oslash", "OE",
+        "ordmasculine", "ae", "dotlessi", "lslash", "oslash", "oe", "germandbls", "onesuperior", "logicalnot", "mu",
+        "trademark", "Eth", "onehalf", "plusminus", "Thorn", "onequarter", "divide", "brokenbar", "degree", "thorn",
+        "threequarters", "twosuperior", "registered", "minus", "eth", "multiply", "threesuperior", "copyright",
+        "Aacute", "Acircumflex", "Adieresis", "Agrave", "Aring", "Atilde", "Ccedilla", "Eacute", "Ecircumflex",
+        "Edieresis", "Egrave", "Iacute", "Icircumflex", "Idieresis", "Igrave", "Ntilde", "Oacute", "Ocircumflex",
+        "Odieresis", "Ograve", "Otilde", "Scaron", "Uacute", "Ucircumflex", "Udieresis", "Ugrave", "Yacute",
+        "Ydieresis", "Zcaron", "aacute", "acircumflex", "adieresis", "agrave", "aring", "atilde", "ccedilla", "eacute",
+        "ecircumflex", "edieresis", "egrave", "iacute", "icircumflex", "idieresis", "igrave", "ntilde", "oacute",
+        "ocircumflex", "odieresis", "ograve", "otilde", "scaron", "uacute", "ucircumflex", "udieresis", "ugrave",
+        "yacute", "ydieresis", "zcaron", "exclamsmall", "Hungarumlautsmall", "dollaroldstyle", "dollarsuperior",
+        "ampersandsmall", "Acutesmall", "parenleftsuperior", "parenrightsuperior", "twodotenleader", "onedotenleader",
+        "zerooldstyle", "oneoldstyle", "twooldstyle", "threeoldstyle", "fouroldstyle", "fiveoldstyle", "sixoldstyle",
+        "sevenoldstyle", "eightoldstyle", "nineoldstyle", "commasuperior", "threequartersemdash", "periodsuperior",
+        "questionsmall", "asuperior", "bsuperior", "centsuperior", "dsuperior", "esuperior", "isuperior", "lsuperior",
+        "msuperior", "nsuperior", "osuperior", "rsuperior", "ssuperior", "tsuperior", "ff", "ffi", "ffl",
+        "parenleftinferior", "parenrightinferior", "Circumflexsmall", "hyphensuperior", "Gravesmall", "Asmall",
+        "Bsmall", "Csmall", "Dsmall", "Esmall", "Fsmall", "Gsmall", "Hsmall", "Ismall", "Jsmall", "Ksmall", "Lsmall",
+        "Msmall", "Nsmall", "Osmall", "Psmall", "Qsmall", "Rsmall", "Ssmall", "Tsmall", "Usmall", "Vsmall", "Wsmall",
+        "Xsmall", "Ysmall", "Zsmall", "colonmonetary", "onefitted", "rupiah", "Tildesmall", "exclamdownsmall",
+        "centoldstyle", "Lslashsmall", "Scaronsmall", "Zcaronsmall", "Dieresissmall", "Brevesmall", "Caronsmall",
+        "Dotaccentsmall", "Macronsmall", "figuredash", "hypheninferior", "Ogoneksmall", "Ringsmall", "Cedillasmall",
+        "questiondownsmall", "oneeighth", "threeeighths", "fiveeighths", "seveneighths", "onethird", "twothirds",
+        "zerosuperior", "foursuperior", "fivesuperior", "sixsuperior", "sevensuperior", "eightsuperior", "ninesuperior",
+        "zeroinferior", "oneinferior", "twoinferior", "threeinferior", "fourinferior", "fiveinferior", "sixinferior",
+        "seveninferior", "eightinferior", "nineinferior", "centinferior", "dollarinferior", "periodinferior",
+        "commainferior", "Agravesmall", "Aacutesmall", "Acircumflexsmall", "Atildesmall", "Adieresissmall",
+        "Aringsmall", "AEsmall", "Ccedillasmall", "Egravesmall", "Eacutesmall", "Ecircumflexsmall", "Edieresissmall",
+        "Igravesmall", "Iacutesmall", "Icircumflexsmall", "Idieresissmall", "Ethsmall", "Ntildesmall", "Ogravesmall",
+        "Oacutesmall", "Ocircumflexsmall", "Otildesmall", "Odieresissmall", "OEsmall", "Oslashsmall", "Ugravesmall",
+        "Uacutesmall", "Ucircumflexsmall", "Udieresissmall", "Yacutesmall", "Thornsmall", "Ydieresissmall", "001.000",
+        "001.001", "001.002", "001.003", "Black", "Bold", "Book", "Light", "Medium", "Regular", "Roman", "Semibold"
     };
 
     private readonly int _offSize;
@@ -166,7 +108,7 @@ public class CffFont
     {
         //System.err.Println("CFF: nStdString = "+standardStrings.length);
         Buf = inputbuffer;
-        Seek(0);
+        Seek(offset: 0);
 
         int major, minor;
         major = GetCard8();
@@ -210,10 +152,12 @@ public class CffFont
             Fonts[j] = new Font();
             Seek(NameOffsets[j]);
             Fonts[j].Name = "";
+
             for (var k = NameOffsets[j]; k < NameOffsets[j + 1]; k++)
             {
                 Fonts[j].Name += GetCard8();
             }
+
             //System.err.Println("name["+j+"]=<"+fonts[j].name+">");
         }
 
@@ -239,49 +183,52 @@ public class CffFont
         for (var j = 0; j < TopdictOffsets.Length - 1; j++)
         {
             Seek(TopdictOffsets[j]);
+
             while (GetPosition() < TopdictOffsets[j + 1])
             {
                 GetDictItem();
-                if (Key == "FullName")
+
+                if (string.Equals(Key, b: "FullName", StringComparison.Ordinal))
                 {
                     //System.err.Println("getting fullname sid = "+((Integer)args[0]).IntValue);
                     Fonts[j].FullName = GetString((char)(int)Args[0]);
+
                     //System.err.Println("got it");
                 }
-                else if (Key == "ROS")
+                else if (string.Equals(Key, b: "ROS", StringComparison.Ordinal))
                 {
                     Fonts[j].IsCid = true;
                 }
-                else if (Key == "Private")
+                else if (string.Equals(Key, b: "Private", StringComparison.Ordinal))
                 {
                     Fonts[j].PrivateLength = (int)Args[0];
                     Fonts[j].PrivateOffset = (int)Args[1];
                 }
-                else if (Key == "charset")
+                else if (string.Equals(Key, b: "charset", StringComparison.Ordinal))
                 {
                     Fonts[j].CharsetOffset = (int)Args[0];
                 }
-                else if (Key == "Encoding")
+                else if (string.Equals(Key, b: "Encoding", StringComparison.Ordinal))
                 {
                     Fonts[j].EncodingOffset = (int)Args[0];
                     ReadEncoding(Fonts[j].EncodingOffset);
                 }
-                else if (Key == "CharStrings")
+                else if (string.Equals(Key, b: "CharStrings", StringComparison.Ordinal))
                 {
                     Fonts[j].CharstringsOffset = (int)Args[0];
                     var p = GetPosition();
                     Fonts[j].CharstringsOffsets = GetIndex(Fonts[j].CharstringsOffset);
                     Seek(p);
                 }
-                else if (Key == "FDArray")
+                else if (string.Equals(Key, b: "FDArray", StringComparison.Ordinal))
                 {
                     Fonts[j].FdarrayOffset = (int)Args[0];
                 }
-                else if (Key == "FDSelect")
+                else if (string.Equals(Key, b: "FDSelect", StringComparison.Ordinal))
                 {
                     Fonts[j].FdselectOffset = (int)Args[0];
                 }
-                else if (Key == "CharstringType")
+                else if (string.Equals(Key, b: "CharstringType", StringComparison.Ordinal))
                 {
                     Fonts[j].CharstringType = (int)Args[0];
                 }
@@ -292,10 +239,13 @@ public class CffFont
             {
                 //System.err.Println("PRIVATE::");
                 Seek(Fonts[j].PrivateOffset);
+
                 while (GetPosition() < Fonts[j].PrivateOffset + Fonts[j].PrivateLength)
                 {
                     GetDictItem();
-                    if (Key == "Subrs")
+
+                    if (string.Equals(Key, b: "Subrs", StringComparison.Ordinal))
+
                         //Add the private offset to the lsubrs since the offset is
                         // relative to the begining of the PrivateDict
                     {
@@ -317,12 +267,13 @@ public class CffFont
                 for (var k = 0; k < fdarrayOffsets.Length - 1; k++)
                 {
                     Seek(fdarrayOffsets[k]);
+
                     while (GetPosition() < fdarrayOffsets[k + 1])
                     {
                         GetDictItem();
                     }
 
-                    if (Key == "Private")
+                    if (string.Equals(Key, b: "Private", StringComparison.Ordinal))
                     {
                         Fonts[j].FdprivateLengths[k] = (int)Args[0];
                         Fonts[j].FdprivateOffsets[k] = (int)Args[1];
@@ -330,6 +281,7 @@ public class CffFont
                 }
             }
         }
+
         //System.err.Println("CFF: done");
     }
 
@@ -341,6 +293,7 @@ public class CffFont
         }
 
         int j;
+
         for (j = 0; j < Fonts.Length; j++)
         {
             if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
@@ -353,6 +306,7 @@ public class CffFont
     }
 
     public byte[] GetCid(string fontName)
+
         //throws java.io.FileNotFoundException
     {
         if (fontName == null)
@@ -361,6 +315,7 @@ public class CffFont
         }
 
         int j;
+
         for (j = 0; j < Fonts.Length; j++)
         {
             if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
@@ -378,7 +333,7 @@ public class CffFont
 
         // copy the header
 
-        Seek(0);
+        Seek(offset: 0);
 
         int major = GetCard8();
         int minor = GetCard8();
@@ -386,9 +341,10 @@ public class CffFont
         int offSize = GetCard8();
         NextIndexOffset = hdrSize;
 
-        l.Add(new RangeItem(Buf, 0, hdrSize));
+        l.Add(new RangeItem(Buf, offset: 0, hdrSize));
 
         int nglyphs = -1, nstrings = -1;
+
         if (!Fonts[j].IsCid)
         {
             // count the glyphs
@@ -396,6 +352,7 @@ public class CffFont
             nglyphs = GetCard16();
             Seek(StringIndexOffset);
             nstrings = GetCard16() + StandardStrings.Length;
+
             //System.err.Println("number of glyphs = "+nglyphs);
         }
 
@@ -409,11 +366,10 @@ public class CffFont
 
         // create the topdict Index
 
-
         l.Add(new UInt16Item((char)1)); // count
         l.Add(new UInt8Item((char)2)); // offSize
         l.Add(new UInt16Item((char)1)); // first offset
-        OffsetItem topdictIndex1Ref = new IndexOffsetItem(2);
+        OffsetItem topdictIndex1Ref = new IndexOffsetItem(size: 2);
         l.Add(topdictIndex1Ref);
         var topdictBase = new IndexBaseItem();
         l.Add(topdictBase);
@@ -438,13 +394,15 @@ public class CffFont
             // create a ROS key
             l.Add(new DictNumberItem(nstrings));
             l.Add(new DictNumberItem(nstrings + 1));
-            l.Add(new DictNumberItem(0));
+            l.Add(new DictNumberItem(value: 0));
             l.Add(new UInt8Item((char)12));
             l.Add(new UInt8Item((char)30));
+
             // create a CIDCount key
             l.Add(new DictNumberItem(nglyphs));
             l.Add(new UInt8Item((char)12));
             l.Add(new UInt8Item((char)34));
+
             // What about UIDBase (12,35)? Don't know what is it.
             // I don't think we need FontName; the font I looked at didn't have it.
         }
@@ -453,30 +411,34 @@ public class CffFont
         l.Add(fdarrayRef);
         l.Add(new UInt8Item((char)12));
         l.Add(new UInt8Item((char)36));
+
         // create an FDSelect key
         l.Add(fdselectRef);
         l.Add(new UInt8Item((char)12));
         l.Add(new UInt8Item((char)37));
+
         // create an charset key
         l.Add(charsetRef);
         l.Add(new UInt8Item((char)15));
+
         // create a CharStrings key
         l.Add(charstringsRef);
         l.Add(new UInt8Item((char)17));
 
         Seek(TopdictOffsets[j]);
+
         while (GetPosition() < TopdictOffsets[j + 1])
         {
             var p1 = GetPosition();
             GetDictItem();
             var p2 = GetPosition();
-            if (Key == "Encoding"
-                || Key == "Private"
-                || Key == "FDSelect"
-                || Key == "FDArray"
-                || Key == "charset"
-                || Key == "CharStrings"
-               )
+
+            if (string.Equals(Key, b: "Encoding", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "Private", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "FDSelect", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "FDArray", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "charset", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "CharStrings", StringComparison.Ordinal))
             {
                 // just drop them
             }
@@ -499,18 +461,19 @@ public class CffFont
         else
         {
             var fdFontName = Fonts[j].Name + "-OneRange";
+
             if (fdFontName.Length > 127)
             {
-                fdFontName = fdFontName.Substring(0, 127);
+                fdFontName = fdFontName.Substring(startIndex: 0, length: 127);
             }
 
             var extraStrings = "Adobe" + "Identity" + fdFontName;
 
-            var origStringsLen = StringOffsets[StringOffsets.Length - 1]
-                                 - StringOffsets[0];
+            var origStringsLen = StringOffsets[StringOffsets.Length - 1] - StringOffsets[0];
             var stringsBaseOffset = StringOffsets[0] - 1;
 
             byte stringsIndexOffSize;
+
             if (origStringsLen + extraStrings.Length <= 0xff)
             {
                 stringsIndexOffSize = 1;
@@ -530,14 +493,14 @@ public class CffFont
 
             l.Add(new UInt16Item((char)(StringOffsets.Length - 1 + 3))); // count
             l.Add(new UInt8Item((char)stringsIndexOffSize)); // offSize
+
             for (var i = 0; i < StringOffsets.Length; i++)
             {
-                l.Add(new IndexOffsetItem(stringsIndexOffSize,
-                                          StringOffsets[i] - stringsBaseOffset));
+                l.Add(new IndexOffsetItem(stringsIndexOffSize, StringOffsets[i] - stringsBaseOffset));
             }
 
-            var currentStringsOffset = StringOffsets[StringOffsets.Length - 1]
-                                       - stringsBaseOffset;
+            var currentStringsOffset = StringOffsets[StringOffsets.Length - 1] - stringsBaseOffset;
+
             //l.Add(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
             currentStringsOffset += "Adobe".Length;
             l.Add(new IndexOffsetItem(stringsIndexOffSize, currentStringsOffset));
@@ -580,6 +543,7 @@ public class CffFont
 
             l.Add(new UInt16Item((char)1)); // first glyph in range (ignore .notdef)
             l.Add(new UInt16Item((char)(nglyphs - 1))); // nLeft
+
             // now all are covered, the data structure is complete.
 
             // create a font dict index (fdarray)
@@ -589,7 +553,7 @@ public class CffFont
             l.Add(new UInt8Item((char)1)); // offSize
             l.Add(new UInt8Item((char)1)); // first offset
 
-            OffsetItem privateIndex1Ref = new IndexOffsetItem(1);
+            OffsetItem privateIndex1Ref = new IndexOffsetItem(size: 1);
             l.Add(privateIndex1Ref);
             var privateBase = new IndexBaseItem();
             l.Add(privateBase);
@@ -611,10 +575,12 @@ public class CffFont
             // copy the private index & local subroutines
 
             l.Add(new MarkerItem(privateRef));
+
             // copy the private dict and the local subroutines.
             // the length of the private dict seems to NOT include
             // the local subroutines.
             l.Add(new RangeItem(Buf, Fonts[j].PrivateOffset, Fonts[j].PrivateLength));
+
             if (Fonts[j].PrivateSubrs >= 0)
             {
                 //System.err.Println("has subrs="+fonts[j].privateSubrs+" ,len="+fonts[j].privateLength);
@@ -656,6 +622,7 @@ public class CffFont
     public string[] GetNames()
     {
         var names = new string[Fonts.Length];
+
         for (var i = 0; i < Fonts.Length; i++)
         {
             names[i] = Fonts[i].Name;
@@ -683,12 +650,14 @@ public class CffFont
         var p = GetPosition();
         Seek(StringOffsets[j]);
         var s = new StringBuilder();
+
         for (var k = StringOffsets[j]; k < StringOffsets[j + 1]; k++)
         {
             s.Append(GetCard8());
         }
 
         Seek(p);
+
         return s.ToString();
     }
 
@@ -710,6 +679,7 @@ public class CffFont
         }
 
         int j;
+
         for (j = 0; j < Fonts.Length; j++)
         {
             if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
@@ -726,6 +696,7 @@ public class CffFont
     internal char GetCard8()
     {
         var i = Buf.ReadByte();
+
         return (char)(i & 0xff);
     }
 
@@ -753,6 +724,7 @@ public class CffFont
         {
             offsets[0] = -1;
             nextIndexOffset += 2;
+
             return offsets;
         }
 
@@ -762,12 +734,16 @@ public class CffFont
         {
             //nextIndexOffset = ofset to relative segment
             offsets[j] = nextIndexOffset
+
                          //2-> count in the index header. 1->offset size in index header
                          + 2 + 1
+
                          //offset array size * offset size
                          + (count + 1) * indexOffSize
+
                          //???zero <-> one base
                          - 1
+
                          // read object offset relative to object array base
                          + GetOffset(indexOffSize);
         }
@@ -781,6 +757,7 @@ public class CffFont
     internal int GetOffset(int offSize)
     {
         var offset = 0;
+
         for (var i = 0; i < offSize; i++)
         {
             offset *= 256;
@@ -801,10 +778,7 @@ public class CffFont
         format = GetCard8();
     }
 
-    internal void Seek(int offset)
-    {
-        Buf.Seek(offset);
-    }
+    internal void Seek(int offset) => Buf.Seek(offset);
 
     protected void GetDictItem()
     {
@@ -820,11 +794,13 @@ public class CffFont
         while (!gotKey)
         {
             var b0 = GetCard8();
+
             if (b0 == 29)
             {
                 var item = GetInt();
                 Args[ArgCount] = item;
                 ArgCount++;
+
                 //System.err.Println(item+" ");
                 continue;
             }
@@ -834,6 +810,7 @@ public class CffFont
                 var item = GetShort();
                 Args[ArgCount] = (int)item;
                 ArgCount++;
+
                 //System.err.Println(item+" ");
                 continue;
             }
@@ -843,6 +820,7 @@ public class CffFont
                 var item = (sbyte)(b0 - 139);
                 Args[ArgCount] = (int)item;
                 ArgCount++;
+
                 //System.err.Println(item+" ");
                 continue;
             }
@@ -853,6 +831,7 @@ public class CffFont
                 var item = (short)((b0 - 247) * 256 + b1 + 108);
                 Args[ArgCount] = (int)item;
                 ArgCount++;
+
                 //System.err.Println(item+" ");
                 continue;
             }
@@ -863,17 +842,19 @@ public class CffFont
                 var item = (short)(-(b0 - 251) * 256 - b1 - 108);
                 Args[ArgCount] = (int)item;
                 ArgCount++;
+
                 //System.err.Println(item+" ");
                 continue;
             }
 
             if (b0 == 30)
             {
-                var item = "";
+                var item = new StringBuilder();
                 var done = false;
                 var buffer = (char)0;
                 byte avail = 0;
                 var nibble = 0;
+
                 while (!done)
                 {
                     // get a nibble
@@ -898,28 +879,33 @@ public class CffFont
                     switch (nibble)
                     {
                         case 0xa:
-                            item += ".";
+                            item.Append(value: '.');
+
                             break;
                         case 0xb:
-                            item += "E";
+                            item.Append(value: 'E');
+
                             break;
                         case 0xc:
-                            item += "E-";
+                            item.Append(value: "E-");
+
                             break;
                         case 0xe:
-                            item += "-";
+                            item.Append(value: '-');
+
                             break;
                         case 0xf:
                             done = true;
+
                             break;
                         default:
                             if (nibble >= 0 && nibble <= 9)
                             {
-                                item += nibble.ToString(CultureInfo.InvariantCulture);
+                                item.Append(nibble.ToString(CultureInfo.InvariantCulture));
                             }
                             else
                             {
-                                item += "<NIBBLE ERROR: " + nibble + ">";
+                                item.Append("<NIBBLE ERROR: " + nibble + ">");
                                 done = true;
                             }
 
@@ -927,8 +913,9 @@ public class CffFont
                     }
                 }
 
-                Args[ArgCount] = item;
+                Args[ArgCount] = item.ToString();
                 ArgCount++;
+
                 //System.err.Println(" real=["+item+"]");
                 continue;
             }
@@ -936,6 +923,7 @@ public class CffFont
             if (b0 <= 21)
             {
                 gotKey = true;
+
                 if (b0 != 12)
                 {
                     Key = OperatorNames[b0];
@@ -959,22 +947,24 @@ public class CffFont
     {
         Seek(indexOffset);
         int count = GetCard16();
+
         if (count == 0)
         {
-            return new RangeItem(Buf, indexOffset, 2);
+            return new RangeItem(Buf, indexOffset, length: 2);
         }
 
         int indexOffSize = GetCard8();
         Seek(indexOffset + 2 + 1 + count * indexOffSize);
         var size = GetOffset(indexOffSize) - 1;
-        return new RangeItem(Buf, indexOffset,
-                             2 + 1 + (count + 1) * indexOffSize + size);
+
+        return new RangeItem(Buf, indexOffset, 2 + 1 + (count + 1) * indexOffSize + size);
     }
 
-    protected internal class DictNumberItem : Item
+    internal protected class DictNumberItem : Item
     {
         public int Size = 5;
         public int Value;
+
         public DictNumberItem(int value) => Value = value;
 
         /// <summary>
@@ -1013,9 +1003,10 @@ public class CffFont
     ///     an unknown offset in a dictionary for the list.
     ///     We will fix up the offset later; for now, assume it's large.
     /// </summary>
-    protected internal class DictOffsetItem : OffsetItem
+    internal protected class DictOffsetItem : OffsetItem
     {
         public int Size;
+
         public DictOffsetItem() => Size = 5;
 
         /// <summary>
@@ -1053,7 +1044,7 @@ public class CffFont
     /// <summary>
     ///     a utility that creates a range item for an entire index
     /// </summary>
-    protected internal class Font
+    internal protected class Font
     {
         public int[] Charset;
         public int CharsetLength;
@@ -1097,11 +1088,11 @@ public class CffFont
         public int[] SubrsOffsets;
     }
 
-    protected internal class IndexBaseItem : Item
+    internal protected class IndexBaseItem : Item
     {
     }
 
-    protected internal class IndexMarkerItem : Item
+    internal protected class IndexMarkerItem : Item
     {
         private readonly IndexBaseItem _indexBase;
         private readonly OffsetItem _offItem;
@@ -1113,10 +1104,10 @@ public class CffFont
         }
 
         public override void Xref()
-        {
-            //System.err.Println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
-            _offItem.Set(MyOffset - _indexBase.MyOffset + 1);
-        }
+            =>
+
+                //System.err.Println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
+                _offItem.Set(MyOffset - _indexBase.MyOffset + 1);
     }
 
     /// <summary>
@@ -1126,7 +1117,7 @@ public class CffFont
     ///     and a negative value means that this is a dict item that uses a
     ///     variable-size representation.
     /// </summary>
-    protected internal class IndexOffsetItem : OffsetItem
+    internal protected class IndexOffsetItem : OffsetItem
     {
         public int Size;
 
@@ -1146,6 +1137,7 @@ public class CffFont
             }
 
             var i = 0;
+
             switch (Size)
             {
                 case 4:
@@ -1163,6 +1155,7 @@ public class CffFont
                 case 1:
                     buffer[MyOffset + i] = (byte)((Value >> 0) & 0xff);
                     i++;
+
                     break;
             }
             /*
@@ -1186,9 +1179,9 @@ public class CffFont
         }
     }
 
-    protected internal abstract class Item
+    internal protected abstract class Item
     {
-        protected internal int MyOffset = -1;
+        internal protected int MyOffset = -1;
 
         /// <summary>
         ///     Emit the byte stream for this item.
@@ -1218,18 +1211,16 @@ public class CffFont
         }
     }
 
-    protected internal class MarkerItem : Item
+    internal protected class MarkerItem : Item
     {
         private readonly OffsetItem _p;
+
         public MarkerItem(OffsetItem pointerToMarker) => _p = pointerToMarker;
 
-        public override void Xref()
-        {
-            _p.Set(MyOffset);
-        }
+        public override void Xref() => _p.Set(MyOffset);
     }
 
-    protected internal abstract class OffsetItem : Item
+    internal protected abstract class OffsetItem : Item
     {
         public int Value;
 
@@ -1237,17 +1228,13 @@ public class CffFont
         ///     set the value of an offset item that was initially unknown.
         ///     It will be fixed up latex by a call to xref on some marker.
         /// </summary>
-        public void Set(int offset)
-        {
-            Value = offset;
-        }
+        public void Set(int offset) => Value = offset;
     }
-
 
     /// <summary>
     ///     A range item.
     /// </summary>
-    protected internal class RangeItem : Item
+    internal protected class RangeItem : Item
     {
         private readonly RandomAccessFileOrArray _buf;
         public int Offset, Length;
@@ -1268,10 +1255,12 @@ public class CffFont
 
             //System.err.Println("range emit offset "+offset+" size="+length);
             _buf.Seek(Offset);
+
             for (var i = MyOffset; i < MyOffset + Length; i++)
             {
                 buffer[i] = _buf.ReadByte();
             }
+
             //System.err.Println("finished range emit");
         }
 
@@ -1287,9 +1276,10 @@ public class CffFont
         }
     }
 
-    protected internal class StringItem : Item
+    internal protected class StringItem : Item
     {
         public string S;
+
         public StringItem(string s) => S = s;
 
         public override void Emit(byte[] buffer)
@@ -1322,7 +1312,7 @@ public class CffFont
     ///     TODO To change the template for this generated type comment go to
     ///     Window - Preferences - Java - Code Generation - Code and Comments
     /// </summary>
-    protected internal class SubrMarkerItem : Item
+    internal protected class SubrMarkerItem : Item
     {
         private readonly IndexBaseItem _indexBase;
         private readonly OffsetItem _offItem;
@@ -1334,18 +1324,19 @@ public class CffFont
         }
 
         public override void Xref()
-        {
-            //System.err.Println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
-            _offItem.Set(MyOffset - _indexBase.MyOffset);
-        }
+            =>
+
+                //System.err.Println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
+                _offItem.Set(MyOffset - _indexBase.MyOffset);
     }
 
     /// <summary>
     ///     Card24 item.
     /// </summary>
-    protected internal class UInt16Item : Item
+    internal protected class UInt16Item : Item
     {
         public char Value;
+
         public UInt16Item(char value) => Value = value;
 
         /// <summary>
@@ -1374,9 +1365,10 @@ public class CffFont
         }
     }
 
-    protected internal class UInt24Item : Item
+    internal protected class UInt24Item : Item
     {
         public int Value;
+
         public UInt24Item(int value) => Value = value;
 
         /// <summary>
@@ -1409,9 +1401,10 @@ public class CffFont
     /// <summary>
     ///     Card32 item.
     /// </summary>
-    protected internal class UInt32Item : Item
+    internal protected class UInt32Item : Item
     {
         public int Value;
+
         public UInt32Item(int value) => Value = value;
 
         /// <summary>
@@ -1448,9 +1441,10 @@ public class CffFont
     /// <summary>
     ///     A Card8 item.
     /// </summary>
-    protected internal class UInt8Item : Item
+    internal protected class UInt8Item : Item
     {
         public char Value;
+
         public UInt8Item(char value) => Value = value;
 
         /// <summary>

@@ -1499,7 +1499,7 @@ public class BarcodeDatamatrix
         }
     }
 
-    internal class ReedSolomon
+    internal static class ReedSolomon
     {
         private static readonly int[] _alog =
         {
@@ -1711,7 +1711,7 @@ public class BarcodeDatamatrix
         }
     }
 
-    private class DmParams
+    private sealed class DmParams
     {
         internal readonly int DataBlock;
 

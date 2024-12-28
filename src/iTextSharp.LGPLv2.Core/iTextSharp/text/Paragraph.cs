@@ -128,16 +128,15 @@ public class Paragraph : Phrase
     /// <param name="phrase">a Phrase</param>
     public Paragraph(Phrase phrase) : base(phrase)
     {
-        if (phrase is Paragraph)
+        if (phrase is Paragraph paragraph)
         {
-            var p = (Paragraph)phrase;
-            Alignment = p.Alignment;
-            ExtraParagraphSpace = p.ExtraParagraphSpace;
-            FirstLineIndent = p.FirstLineIndent;
-            IndentationLeft = p.IndentationLeft;
-            IndentationRight = p.IndentationRight;
-            SpacingAfter = p.SpacingAfter;
-            SpacingBefore = p.SpacingBefore;
+            Alignment = paragraph.Alignment;
+            ExtraParagraphSpace = paragraph.ExtraParagraphSpace;
+            FirstLineIndent = paragraph.FirstLineIndent;
+            IndentationLeft = paragraph.IndentationLeft;
+            IndentationRight = paragraph.IndentationRight;
+            SpacingAfter = paragraph.SpacingAfter;
+            SpacingBefore = paragraph.SpacingBefore;
         }
     }
 
@@ -245,6 +244,7 @@ public class Paragraph : Phrase
         get
         {
             var m = font == null ? Font.DEFAULTSIZE * multipliedLeading : font.GetCalculatedLeading(multipliedLeading);
+
             if (m > 0 && !HasLeading())
             {
                 return m;
@@ -277,29 +277,31 @@ public class Paragraph : Phrase
     /// <returns>a bool</returns>
     public override bool Add(IElement o)
     {
-        if (o is List)
+        if (o is List list)
         {
-            var list = (List)o;
             list.IndentationLeft = list.IndentationLeft + indentationLeft;
             list.IndentationRight = indentationRight;
             base.Add(list);
+
             return true;
         }
 
-        if (o is Image)
+        if (o is Image image)
         {
-            AddSpecial((Image)o);
+            AddSpecial(image);
+
             return true;
         }
 
-        if (o is Paragraph)
+        if (o is Paragraph paragraph)
         {
-            base.Add(o);
+            base.Add(paragraph);
             var chunks = Chunks;
+
             if (chunks.Count > 0)
             {
                 var tmp = chunks[chunks.Count - 1];
-                base.Add(new Chunk("\n", tmp.Font));
+                base.Add(new Chunk(content: "\n", tmp.Font));
             }
             else
             {
@@ -310,6 +312,7 @@ public class Paragraph : Phrase
         }
 
         base.Add(o);
+
         return true;
     }
 
@@ -325,24 +328,28 @@ public class Paragraph : Phrase
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_CENTER))
         {
             this.alignment = Element.ALIGN_CENTER;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_RIGHT))
         {
             this.alignment = Element.ALIGN_RIGHT;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_JUSTIFIED))
         {
             this.alignment = Element.ALIGN_JUSTIFIED;
+
             return;
         }
 
         if (Util.EqualsIgnoreCase(alignment, ElementTags.ALIGN_JUSTIFIED_ALL))
         {
             this.alignment = Element.ALIGN_JUSTIFIED_ALL;
+
             return;
         }
 

@@ -81,8 +81,9 @@ public class MultiColumnText : IElement
         _columnDefs = new List<ColumnDef>();
         _desiredHeight = height;
         _top = AUTOMATIC;
+
         // canvas will be set later
-        _columnText = new ColumnText(null);
+        _columnText = new ColumnText(canvas: null);
         _totalHeight = 0f;
     }
 
@@ -98,8 +99,9 @@ public class MultiColumnText : IElement
         _desiredHeight = height;
         _top = top;
         _nextY = top;
+
         // canvas will be set later
-        _columnText = new ColumnText(null);
+        _columnText = new ColumnText(canvas: null);
         _totalHeight = 0f;
     }
 
@@ -156,7 +158,6 @@ public class MultiColumnText : IElement
     {
         set => _columnText.Alignment = value;
     }
-
 
     /// <summary>
     ///     Processes the element by adding it to an
@@ -224,10 +225,10 @@ public class MultiColumnText : IElement
     /// </summary>
     /// <param name="sourceColumn"></param>
     public void UseColumnParams(ColumnText sourceColumn)
-    {
-        // note that canvas will be overwritten later
-        _columnText.SetSimpleVars(sourceColumn);
-    }
+        =>
+
+            // note that canvas will be overwritten later
+            _columnText.SetSimpleVars(sourceColumn);
 
     /// <summary>
     ///     Add a new column.  The parameters are limits for each column
@@ -238,6 +239,7 @@ public class MultiColumnText : IElement
     public void AddColumn(float[] left, float[] right)
     {
         var nextDef = new ColumnDef(left, right, this);
+
         if (!nextDef.IsSimple())
         {
             _simple = false;
@@ -271,6 +273,7 @@ public class MultiColumnText : IElement
         var currX = left;
         var width = right - left;
         var colWidth = (width - gutterWidth * (numColumns - 1)) / numColumns;
+
         for (var i = 0; i < numColumns; i++)
         {
             AddSimpleColumn(currX, currX + colWidth);
@@ -284,10 +287,7 @@ public class MultiColumnText : IElement
     ///     @since	2.1.5
     /// </summary>
     /// <param name="phrase">the text</param>
-    public void AddText(Phrase phrase)
-    {
-        _columnText.AddText(phrase);
-    }
+    public void AddText(Phrase phrase) => _columnText.AddText(phrase);
 
     /// <summary>
     ///     Adds a  Chunk  to the current text array.
@@ -295,10 +295,7 @@ public class MultiColumnText : IElement
     ///     @since	2.1.5
     /// </summary>
     /// <param name="chunk">the text</param>
-    public void AddText(Chunk chunk)
-    {
-        _columnText.AddText(chunk);
-    }
+    public void AddText(Chunk chunk) => _columnText.AddText(chunk);
 
     /// <summary>
     ///     Add an element to be rendered in a column.
@@ -320,20 +317,19 @@ public class MultiColumnText : IElement
         {
             _columnText.AddElement(element);
         }
-        else if (element is Phrase)
+        else if (element is Phrase phrase)
         {
-            _columnText.AddText((Phrase)element);
+            _columnText.AddText(phrase);
         }
-        else if (element is Chunk)
+        else if (element is Chunk chunk)
         {
-            _columnText.AddText((Chunk)element);
+            _columnText.AddText(chunk);
         }
         else
         {
             throw new DocumentException("Can't add " + element.GetType() + " to MultiColumnText with complex columns");
         }
     }
-
 
     /// <summary>
     ///     Write out the columns.  After writing, use
@@ -348,24 +344,27 @@ public class MultiColumnText : IElement
     {
         _document = document ?? throw new ArgumentNullException(nameof(document));
         _columnText.Canvas = canvas;
+
         if (_columnDefs.Count == 0)
         {
-            throw new DocumentException("MultiColumnText has no columns");
+            throw new DocumentException(message: "MultiColumnText has no columns");
         }
 
         _overflow = false;
         float currentHeight = 0;
         var done = false;
+
         while (!done)
         {
             if (_top.ApproxEquals(AUTOMATIC))
             {
-                _top = document.GetVerticalPosition(true);
+                _top = document.GetVerticalPosition(ensureNewLine: true);
             }
             else if (_nextY.ApproxEquals(AUTOMATIC))
             {
-                _nextY = document
-                    .GetVerticalPosition(true); // RS - 07/07/2005 - - Get current doc writing position for top of columns on new page.
+                _nextY = document.GetVerticalPosition(
+                    ensureNewLine:
+                    true); // RS - 07/07/2005 - - Get current doc writing position for top of columns on new page.
             }
 
             var currentDef = _columnDefs[CurrentColumn];
@@ -373,11 +372,13 @@ public class MultiColumnText : IElement
 
             var left = currentDef.ResolvePositions(Rectangle.LEFT_BORDER);
             var right = currentDef.ResolvePositions(Rectangle.RIGHT_BORDER);
+
             if (document.IsMarginMirroring() && document.PageNumber % 2 == 0)
             {
                 var delta = document.RightMargin - document.Left;
                 left = (float[])left.Clone();
                 right = (float[])right.Clone();
+
                 for (var i = 0; i < left.Length; i += 2)
                 {
                     left[i] -= delta;
@@ -401,6 +402,7 @@ public class MultiColumnText : IElement
             }
 
             var result = _columnText.Go();
+
             if ((result & ColumnText.NO_MORE_TEXT) != 0)
             {
                 done = true;
@@ -418,6 +420,7 @@ public class MultiColumnText : IElement
                 if (_desiredHeight.ApproxNotEqual(AUTOMATIC) && _totalHeight >= _desiredHeight)
                 {
                     _overflow = true;
+
                     break;
                 } // need to start new page and reset the columns
 
@@ -438,6 +441,7 @@ public class MultiColumnText : IElement
     private void newPage()
     {
         ResetCurrentColumn();
+
         if (_desiredHeight.ApproxEquals(AUTOMATIC))
         {
             _top = _nextY = AUTOMATIC;
@@ -448,6 +452,7 @@ public class MultiColumnText : IElement
         }
 
         _totalHeight = 0;
+
         if (_document != null)
         {
             _document.NewPage();
@@ -464,6 +469,7 @@ public class MultiColumnText : IElement
     {
         var max = float.MinValue;
         var min = float.MaxValue;
+
         for (var i = 0; i < left.Length; i += 2)
         {
             min = Math.Min(min, left[i + 1]);
@@ -503,6 +509,7 @@ public class MultiColumnText : IElement
     {
         _currentColumn = (_currentColumn + 1) % _columnDefs.Count;
         _top = _nextY;
+
         if (_currentColumn == 0)
         {
             newPage();
@@ -512,10 +519,7 @@ public class MultiColumnText : IElement
     /// <summary>
     ///     Resets the current column.
     /// </summary>
-    public void ResetCurrentColumn()
-    {
-        _currentColumn = 0;
-    }
+    public void ResetCurrentColumn() => _currentColumn = 0;
 
     /// <summary>
     ///     Shifts the current column.
@@ -526,6 +530,7 @@ public class MultiColumnText : IElement
         if (_currentColumn + 1 < _columnDefs.Count)
         {
             _currentColumn++;
+
             return true;
         }
 
@@ -536,10 +541,7 @@ public class MultiColumnText : IElement
     ///     Sets the direction of the columns.
     /// </summary>
     /// <param name="direction">true = right2left; false = left2right</param>
-    public void SetColumnsRightToLeft(bool direction)
-    {
-        _columnsRightToLeft = direction;
-    }
+    public void SetColumnsRightToLeft(bool direction) => _columnsRightToLeft = direction;
 
     /// <summary>
     ///     Inner class used to define a column
@@ -564,6 +566,7 @@ public class MultiColumnText : IElement
             _left[0] = leftPosition; // x1
             _left[1] = mc._top; // y1
             _left[2] = leftPosition; // x2
+
             if (mc._desiredHeight.ApproxEquals(AUTOMATIC) || mc._top.ApproxEquals(AUTOMATIC))
             {
                 _left[3] = AUTOMATIC;
@@ -577,6 +580,7 @@ public class MultiColumnText : IElement
             _right[0] = rightPosition; // x1
             _right[1] = mc._top; // y1
             _right[2] = rightPosition; // x2
+
             if (mc._desiredHeight.ApproxEquals(AUTOMATIC) || mc._top.ApproxEquals(AUTOMATIC))
             {
                 _right[3] = AUTOMATIC;
@@ -609,6 +613,7 @@ public class MultiColumnText : IElement
             if (!IsSimple())
             {
                 positions[1] = _mc._top;
+
                 return positions;
             }
 
@@ -621,6 +626,7 @@ public class MultiColumnText : IElement
 
             positions[1] = _mc._top;
             positions[3] = _mc.getColumnBottom();
+
             return positions;
         }
 
@@ -628,7 +634,8 @@ public class MultiColumnText : IElement
         ///     Checks if column definition is a simple rectangle
         /// </summary>
         /// <returns>true if it is a simple column</returns>
-        internal bool IsSimple() => _left.Length == 4 && _right.Length == 4 && _left[0].ApproxEquals(_left[2]) &&
-                                    _right[0].ApproxEquals(_right[2]);
+        internal bool IsSimple()
+            => _left.Length == 4 && _right.Length == 4 && _left[0].ApproxEquals(_left[2]) &&
+               _right[0].ApproxEquals(_right[2]);
     }
 }

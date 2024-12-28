@@ -5,11 +5,11 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfLiteral : PdfObject
 {
-    public PdfLiteral(string text) : base(0, text)
+    public PdfLiteral(string text) : base(type: 0, text)
     {
     }
 
-    public PdfLiteral(byte[] b) : base(0, b)
+    public PdfLiteral(byte[] b) : base(type: 0, b)
     {
     }
 
@@ -21,9 +21,10 @@ public class PdfLiteral : PdfObject
     {
     }
 
-    public PdfLiteral(int size) : base(0, (byte[])null)
+    public PdfLiteral(int size) : base(type: 0, (byte[])null)
     {
         Bytes = new byte[size];
+
         for (var k = 0; k < size; ++k)
         {
             Bytes[k] = 32;
@@ -47,9 +48,9 @@ public class PdfLiteral : PdfObject
 
     public override void ToPdf(PdfWriter writer, Stream os)
     {
-        if (os is OutputStreamCounter)
+        if (os is OutputStreamCounter outputStreamCounter)
         {
-            Position = ((OutputStreamCounter)os).Counter;
+            Position = outputStreamCounter.Counter;
         }
 
         base.ToPdf(writer, os);

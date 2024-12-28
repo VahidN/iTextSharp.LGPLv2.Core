@@ -199,5 +199,216 @@ dotnet_diagnostic.IDE0044.severity = warning
 # SYSLIB0014: Method 'System.Net.WebRequest.Create(Uri)' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.'
 dotnet_diagnostic.SYSLIB0014.severity = suggestion
 
+
+# S125 : Remove this commented out code.
+dotnet_diagnostic.S125.severity = suggestion
+
+# MA0026 : TODO Evaluate the effect of this.
+dotnet_diagnostic.MA0026.severity = suggestion
+
+# S1135 : Complete the task associated to this 'TODO' comment.
+dotnet_diagnostic.S1135.severity = suggestion
+
+# S4663 : Remove this empty comment
+dotnet_diagnostic.S4663.severity = suggestion
+
+# S108: Either remove or fill this block of code.
+dotnet_diagnostic.S108.severity = suggestion
+
+# S1104 : Make this field 'private' and encapsulate it in a 'public' property.
+dotnet_diagnostic.S1104.severity = suggestion
+
+# MA0051 : Method is too long
+dotnet_diagnostic.MA0051.severity = suggestion
+
+# S1764: Correct one of the identical expressions on both sides of operator '&&'.
+dotnet_diagnostic.S1764.severity = suggestion
+
+# MA0056 : Do not call overridable members in constructor
+dotnet_diagnostic.MA0056.severity = suggestion
+
+# S1121 : Extract the assignment of 't' from this expression.
+dotnet_diagnostic.S1121.severity = suggestion
+
+# S127: Do not update the loop counter 'k' within the loop body.
+dotnet_diagnostic.S127.severity = suggestion
+
+# S4143 : Verify this is the index/key that was intended; 
+dotnet_diagnostic.S4143.severity = suggestion
+
+# S2486 : Handle the exception or explain in a comment why it can be ignored.
+dotnet_diagnostic.S2486.severity = suggestion
+
+# S1066: Merge this if statement with the enclosing one.
+dotnet_diagnostic.S1066.severity = suggestion
+
+#S1854 : Remove this useless assignment to local variable
+dotnet_diagnostic.S1854.severity = suggestion
+
+# S1871: Either merge this case with the identical one on line x or change one of the implementations.
+dotnet_diagnostic.S1871.severity = suggestion
+
+# S3400: Remove this method and declare a constant for this value.
+dotnet_diagnostic.S3400.severity = suggestion
+
+# S2292: Make this an auto-implemented property and remove its backing field.
+dotnet_diagnostic.S2292.severity = suggestion
+
+# S1144 : Remove the unused private field
+dotnet_diagnostic.S1144.severity = suggestion
+
+# S907: Remove this use of 'goto'.
+dotnet_diagnostic.S907.severity = suggestion
+
+# S4275 : Refactor this getter so that it actually refers to the field
+dotnet_diagnostic.S4275.severity = suggestion
+
+# S4487: Remove this unread private field or refactor the code to use its value.
+dotnet_diagnostic.S4487.severity = suggestion
+
+# S3887: Use an immutable collection or reduce the accessibility of the non-private readonly field
+dotnet_diagnostic.S3887.severity = suggestion
+
+# S2386: Use an immutable collection or reduce the accessibility of the public static field.
+dotnet_diagnostic.S2386.severity = suggestion
+
+# S1940: Use the opposite operator ('!=') instead.
+dotnet_diagnostic.S1940.severity = suggestion
+
+# S3241: Change return type to 'void'; not a single caller uses the returned value.
+dotnet_diagnostic.S3241.severity = suggestion
+
+# S1199: Extract this nested code block into a separate method.
+dotnet_diagnostic.S1199.severity = suggestion
+
+# S1481: Remove the unused local variable.
+dotnet_diagnostic.S1481.severity = suggestion
+
+# S1075 : Refactor your code not to use hardcoded absolute paths or URIs.
+dotnet_diagnostic.S1075.severity = suggestion
+
+# MA0037 : Remove empty statement
+dotnet_diagnostic.MA0037.severity = suggestion
+
+# S2376: Provide a getter
+dotnet_diagnostic.S2376.severity = suggestion
+
+# S1450: Remove the field and declare it as a local variable in the relevant methods.
+dotnet_diagnostic.S1450.severity = suggestion
+
+# S3604: Remove the member initializer, all constructors set an initial value for the member.
+dotnet_diagnostic.S3604.severity = suggestion
+
+# S1116: Remove this empty statement.
+dotnet_diagnostic.S1116.severity = suggestion
+
+# S1168 : Return an empty collection instead of null.
+dotnet_diagnostic.S1168.severity = suggestion
+
+# S1264 : Replace this 'for' loop with a 'while' loop.
+dotnet_diagnostic.S1264.severity = suggestion
+
+# S3237: Use the 'value' contextual keyword in this property set accessor declaration.
+dotnet_diagnostic.S3237.severity = suggestion
+
+# S4136: All method overloads should be adjacent.
+dotnet_diagnostic.S4136.severity = suggestion
+
+# S2368: Make this method private or simplify its parameters to not use multidimensional/ jagged arrays.
+dotnet_diagnostic.S2368.severity = suggestion
+
+# S1186: Add a nested comment explaining why this method is empty, throw a 'NotSupportedException' or complete the implementation.
+dotnet_diagnostic.S1186.severity = suggestion
+
+# S1699: Remove this call from a constructor to the overridable method.
+dotnet_diagnostic.S1699.severity = suggestion
+
+# S3881: Fix this implementation of 'IDisposable' to conform to the dispose pattern.
+dotnet_diagnostic.S3881.severity = suggestion
+
+# MA0016: Prefer using collection abstraction instead of implementation
+dotnet_diagnostic.MA0016.severity = suggestion
+
+# S2223: Change the visibility or make it 'const' or 'readonly'.
+dotnet_diagnostic.S2223.severity = suggestion
+
+# MA0069: Non-constant static fields should not be visible
+dotnet_diagnostic.MA0069.severity = suggestion
+
+# MA0097: A class that implements IComparable<T> or IComparable should override comparison operators
+dotnet_diagnostic.MA0097.severity = suggestion
+
+# S1210: When implementing IComparable, you should also override Equals, ==, !=, <, <=, >, and >=.
+dotnet_diagnostic.S1210.severity = suggestion
+
+# S4144: Update this method so that its implementation is not identical to X.
+dotnet_diagnostic.S4144.severity = suggestion
+
+# S2094: Remove this empty class, write its code or make it an "interface".
+dotnet_diagnostic.S2094.severity = suggestion
+
+# S3963: Initialize all 'static fields' inline and remove the 'static constructor'.
+dotnet_diagnostic.S3963.severity = suggestion
+
+# S3458: Remove this empty 'case' clause.
+dotnet_diagnostic.S3458.severity = suggestion
+
+# S2183: Remove this useless shift by 0.
+dotnet_diagnostic.S2183.severity = suggestion
+
+# S1172: Remove this unused method parameter.
+dotnet_diagnostic.S1172.severity = suggestion
+
+# MA0015: Use an overload of 'System. ArgumentException' with the parameter name
+dotnet_diagnostic.MA0015.severity = suggestion
+
+# S2692: 0 is a valid index, but this check ignores it.
+dotnet_diagnostic.S2692.severity = suggestion
+
+# S927: Rename parameter 'refi' to 'piRef' to match the base class declaration.
+dotnet_diagnostic.S927.severity = suggestion
+
+# S1643: Use a StringBuilder instead.
+dotnet_diagnostic.S1643.severity = suggestion
+
+# S3256 : Use 'string.IsNullOrEmpty()' instead of comparing to empty string.
+dotnet_diagnostic.S3256.severity = suggestion
+
+# S2328: Refactor 'GetHashCode' to not reference mutable fields.
+dotnet_diagnostic.S2328.severity = suggestion
+
+# S3267: Loops should be simplified using the "Where" LINQ method
+dotnet_diagnostic.S3267.severity = suggestion
+
+# S3217: Either change the type of 'n' to 'PdfObject' or iterate on a generic collection of type 'PdfNumber'.
+dotnet_diagnostic.S3217.severity = suggestion
+
+# MA0094: A class that provides CompareTo(T) should implement IComparable<T>
+dotnet_diagnostic.MA0094.severity = suggestion
+
+# S3358 : Extract this nested ternary operation into an independent statement.
+dotnet_diagnostic.S3358.severity = suggestion
+
+# S1244 : Do not check floating point equality with exact values, use a range instead.
+dotnet_diagnostic.S1244.severity = suggestion
+
+# S2372 : Remove the exception throwing from this property getter, or refactor the property into a method.
+dotnet_diagnostic.S2372.severity = suggestion
+
+# S3626: Remove this redundant jump.
+dotnet_diagnostic.S3626.severity = suggestion
+
+# S1751 : Refactor the containing loop to do more than one iteration.
+dotnet_diagnostic.S1751.severity = suggestion
+
+# S2234 : Parameters to 'SetColumn' have the same names but not the same order as the method arguments.
+dotnet_diagnostic.S2234.severity = suggestion
+
+# S3885 : Replace this call to 'Assembly.LoadFrom' with 'Assembly.Load'.
+dotnet_diagnostic.S3885.severity = suggestion
+
+# S3218 : Rename this method to not shadow the outer class' member with the same name.
+dotnet_diagnostic.S3218.severity = suggestion
+
 # force file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:error

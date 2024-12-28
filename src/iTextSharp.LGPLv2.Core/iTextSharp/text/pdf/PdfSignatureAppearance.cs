@@ -52,17 +52,17 @@ public class PdfSignatureAppearance
     /// <summary>
     ///     The self signed filter.
     /// </summary>
-    public static PdfName SelfSigned = PdfName.AdobePpklite;
+    public static readonly PdfName SelfSigned = PdfName.AdobePpklite;
 
     /// <summary>
     ///     The VeriSign filter.
     /// </summary>
-    public static PdfName VerisignSigned = PdfName.VerisignPpkvs;
+    public static readonly PdfName VerisignSigned = PdfName.VerisignPpkvs;
 
     /// <summary>
     ///     The Windows Certificate Security.
     /// </summary>
-    public static PdfName WincerSigned = PdfName.AdobePpkms;
+    public static readonly PdfName WincerSigned = PdfName.AdobePpkms;
 
     private readonly PdfTemplate[] _app = new PdfTemplate[5];
 
@@ -294,7 +294,7 @@ public class PdfSignatureAppearance
         {
             if (value < PdfWriter.RUN_DIRECTION_DEFAULT || value > PdfWriter.RUN_DIRECTION_RTL)
             {
-                throw new ArgumentException("Invalid run direction: " + _runDirection);
+                throw new ArgumentException("Invalid run direction: " + _runDirection, nameof(value));
             }
 
             _runDirection = value;
@@ -479,7 +479,7 @@ public class PdfSignatureAppearance
 
                 if (lit == null)
                 {
-                    throw new ArgumentException("The key " + key + " didn't reserve space in PreClose().");
+                    throw new InvalidOperationException("The key " + key + " didn't reserve space in PreClose().");
                 }
 
                 bf.Reset();
@@ -487,8 +487,8 @@ public class PdfSignatureAppearance
 
                 if (bf.Size > lit.PosLength)
                 {
-                    throw new ArgumentException("The key " + key + " is too big. Is " + bf.Size + ", reserved " +
-                                                lit.PosLength);
+                    throw new InvalidOperationException("The key " + key + " is too big. Is " + bf.Size +
+                                                        ", reserved " + lit.PosLength);
                 }
 
                 if (TempFile == null)
@@ -504,7 +504,7 @@ public class PdfSignatureAppearance
 
             if (update.Size != _exclusionLocations.Count)
             {
-                throw new ArgumentException(message: "The update dictionary has less keys than required.");
+                throw new InvalidOperationException(message: "The update dictionary has less keys than required.");
             }
 
             if (TempFile == null)
@@ -902,17 +902,8 @@ public class PdfSignatureAppearance
             }
 
             n1 += ".";
-            found = true;
 
-            foreach (var fn in af.Fields.Keys)
-            {
-                if (fn.StartsWith(n1, StringComparison.Ordinal))
-                {
-                    found = false;
-
-                    break;
-                }
-            }
+            found = af.Fields.Keys.All(fn => !fn.StartsWith(n1, StringComparison.Ordinal));
         }
 
         name += step;
@@ -1062,7 +1053,7 @@ public class PdfSignatureAppearance
             }
             else
             {
-                throw new ArgumentException("Unknown filter: " + Filter);
+                throw new InvalidOperationException("Unknown filter: " + Filter);
             }
 
             SigStandard.SetExternalDigest(_externalDigest, _externalRsAdata, _digestEncryptionAlgorithm);
@@ -1264,7 +1255,7 @@ public class PdfSignatureAppearance
         {
             if (fieldName.IndexOf(value: '.', StringComparison.Ordinal) >= 0)
             {
-                throw new ArgumentException(message: "Field names cannot contain a dot.");
+                throw new ArgumentException(message: "Field names cannot contain a dot.", nameof(fieldName));
             }
 
             var af = _writer.AcroFields;
@@ -1272,7 +1263,7 @@ public class PdfSignatureAppearance
 
             if (item != null)
             {
-                throw new ArgumentException("The field " + fieldName + " already exists.");
+                throw new ArgumentException("The field " + fieldName + " already exists.", nameof(fieldName));
             }
 
             FieldName = fieldName;
@@ -1280,7 +1271,7 @@ public class PdfSignatureAppearance
 
         if (page < 1 || page > _writer.Reader.NumberOfPages)
         {
-            throw new ArgumentException("Invalid page number: " + page);
+            throw new InvalidOperationException("Invalid page number: " + page);
         }
 
         PageRect = new Rectangle(pageRect);
@@ -1301,14 +1292,14 @@ public class PdfSignatureAppearance
 
         if (item == null)
         {
-            throw new ArgumentException("The field " + fieldName + " does not exist.");
+            throw new InvalidOperationException("The field " + fieldName + " does not exist.");
         }
 
         var merged = item.GetMerged(idx: 0);
 
         if (!PdfName.Sig.Equals(PdfReader.GetPdfObject(merged.Get(PdfName.Ft))))
         {
-            throw new ArgumentException("The field " + fieldName + " is not a signature field.");
+            throw new InvalidOperationException("The field " + fieldName + " is not a signature field.");
         }
 
         FieldName = fieldName;

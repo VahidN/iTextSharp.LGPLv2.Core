@@ -20,23 +20,3 @@ public interface IRtfDataCache
     /// <param name="target">The OutputStream to write the content into.</param>
     void WriteTo(Stream target);
 }
-
-/// <summary>
-/// </summary>
-public static class RtfDataCache
-{
-    /// <summary>
-    ///     Constant for caching efficently into memory.
-    /// </summary>
-    public const int CACHE_MEMORY_EFFICIENT = 3;
-
-    /// <summary>
-    ///     Constant for caching into memory.
-    /// </summary>
-    public const int CACHE_MEMORY = 2;
-
-    /// <summary>
-    ///     Constant for caching to the disk.
-    /// </summary>
-    public const int CACHE_DISK = 1;
-}

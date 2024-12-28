@@ -20,8 +20,6 @@ public sealed class ZStream
     private const int ZSyncFlush = 2;
     private const int ZVersionError = -6;
 
-    internal Adler32 _adler = new();
-
     public long Adler;
     public int AvailIn;
     public int AvailOut;
@@ -70,6 +68,7 @@ public sealed class ZStream
 
         var ret = Dstate.DeflateEnd();
         Dstate = null;
+
         return ret;
     }
 
@@ -77,11 +76,12 @@ public sealed class ZStream
 
     public int DeflateInit(int level, bool nowrap) => DeflateInit(level, MaxWbits, nowrap);
 
-    public int DeflateInit(int level, int bits) => DeflateInit(level, bits, false);
+    public int DeflateInit(int level, int bits) => DeflateInit(level, bits, nowrap: false);
 
     public int DeflateInit(int level, int bits, bool nowrap)
     {
         Dstate = new Deflate();
+
         return Dstate.DeflateInit(this, level, nowrap ? -bits : bits);
     }
 
@@ -110,7 +110,6 @@ public sealed class ZStream
         NextIn = null;
         NextOut = null;
         Msg = null;
-        _adler = null;
     }
 
     public int Inflate(int f)
@@ -132,6 +131,7 @@ public sealed class ZStream
 
         var ret = Istate.InflateEnd(this);
         Istate = null;
+
         return ret;
     }
 
@@ -140,11 +140,12 @@ public sealed class ZStream
 
     public int InflateInit(bool nowrap) => InflateInit(DefWbits, nowrap);
 
-    public int InflateInit(int w) => InflateInit(w, false);
+    public int InflateInit(int w) => InflateInit(w, nowrap: false);
 
     public int InflateInit(int w, bool nowrap)
     {
         Istate = new Inflate();
+
         return Istate.InflateInit(this, nowrap ? -w : w);
     }
 
@@ -194,24 +195,22 @@ public sealed class ZStream
             return;
         }
 
-        if (Dstate.PendingBuf.Length <= Dstate.PendingOut ||
-            NextOut.Length <= NextOutIndex ||
-            Dstate.PendingBuf.Length < Dstate.PendingOut + len ||
-            NextOut.Length < NextOutIndex + len)
+        if (Dstate.PendingBuf.Length <= Dstate.PendingOut || NextOut.Length <= NextOutIndex ||
+            Dstate.PendingBuf.Length < Dstate.PendingOut + len || NextOut.Length < NextOutIndex + len)
         {
             //      System.out.println(dstate.pending_buf.length+", "+dstate.pending_out+
             //			 ", "+next_out.length+", "+next_out_index+", "+len);
             //      System.out.println("avail_out="+avail_out);
         }
 
-        Array.Copy(Dstate.PendingBuf, Dstate.PendingOut,
-                   NextOut, NextOutIndex, len);
+        Array.Copy(Dstate.PendingBuf, Dstate.PendingOut, NextOut, NextOutIndex, len);
 
         NextOutIndex += len;
         Dstate.PendingOut += len;
         TotalOut += len;
         AvailOut -= len;
         Dstate.Pending -= len;
+
         if (Dstate.Pending == 0)
         {
             Dstate.PendingOut = 0;
@@ -257,6 +256,7 @@ public sealed class ZStream
         Array.Copy(NextIn, NextInIndex, buf, start, len);
         NextInIndex += len;
         TotalIn += len;
+
         return len;
     }
 }

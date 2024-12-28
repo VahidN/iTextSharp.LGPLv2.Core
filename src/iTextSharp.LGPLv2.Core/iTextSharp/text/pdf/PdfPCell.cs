@@ -98,11 +98,11 @@ public class PdfPCell : Rectangle
     ///     Constructs an empty  PdfPCell .
     ///     The default padding is 2.
     /// </summary>
-    public PdfPCell() : base(0, 0, 0, 0)
+    public PdfPCell() : base(llx: 0, lly: 0, urx: 0, ury: 0)
     {
         borderWidth = 0.5f;
         border = BOX;
-        Column.SetLeading(0, 1);
+        Column.SetLeading(fixedLeading: 0, multipliedLeading: 1);
     }
 
     /// <summary>
@@ -110,12 +110,12 @@ public class PdfPCell : Rectangle
     ///     The default padding is 2.
     /// </summary>
     /// <param name="phrase">the text</param>
-    public PdfPCell(Phrase phrase) : base(0, 0, 0, 0)
+    public PdfPCell(Phrase phrase) : base(llx: 0, lly: 0, urx: 0, ury: 0)
     {
         borderWidth = 0.5f;
         border = BOX;
         Column.AddText(this.phrase = phrase);
-        Column.SetLeading(0, 1);
+        Column.SetLeading(fixedLeading: 0, multipliedLeading: 1);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ public class PdfPCell : Rectangle
     ///     The default padding is 0.
     /// </summary>
     /// <param name="image">the  Image </param>
-    public PdfPCell(Image image) : this(image, false)
+    public PdfPCell(Image image) : this(image, fit: false)
     {
     }
 
@@ -133,20 +133,21 @@ public class PdfPCell : Rectangle
     /// </summary>
     /// <param name="image">the  Image </param>
     /// <param name="fit"> true  to fit the image to the cell</param>
-    public PdfPCell(Image image, bool fit) : base(0, 0, 0, 0)
+    public PdfPCell(Image image, bool fit) : base(llx: 0, lly: 0, urx: 0, ury: 0)
     {
         borderWidth = 0.5f;
         border = BOX;
+
         if (fit)
         {
             _image = image;
-            Column.SetLeading(0, 1);
+            Column.SetLeading(fixedLeading: 0, multipliedLeading: 1);
             Padding = borderWidth / 2;
         }
         else
         {
-            Column.AddText(phrase = new Phrase(new Chunk(image, 0, 0)));
-            Column.SetLeading(0, 1);
+            Column.AddText(phrase = new Phrase(new Chunk(image, offsetX: 0, offsetY: 0)));
+            Column.SetLeading(fixedLeading: 0, multipliedLeading: 1);
             Padding = 0;
         }
     }
@@ -157,7 +158,7 @@ public class PdfPCell : Rectangle
     ///     The default padding is 0.
     /// </summary>
     /// <param name="table">The  PdfPTable </param>
-    public PdfPCell(PdfPTable table) : this(table, null)
+    public PdfPCell(PdfPTable table) : this(table, style: null)
     {
     }
 
@@ -168,7 +169,7 @@ public class PdfPCell : Rectangle
     /// </summary>
     /// <param name="table">The  PdfPTable </param>
     /// <param name="style">The style to apply to the cell (you could use getDefaultCell())</param>
-    public PdfPCell(PdfPTable table, PdfPCell style) : base(0, 0, 0, 0)
+    public PdfPCell(PdfPTable table, PdfPCell style) : base(llx: 0, lly: 0, urx: 0, ury: 0)
     {
         if (table == null)
         {
@@ -177,11 +178,12 @@ public class PdfPCell : Rectangle
 
         borderWidth = 0.5f;
         border = BOX;
-        Column.SetLeading(0, 1);
+        Column.SetLeading(fixedLeading: 0, multipliedLeading: 1);
         _table = table;
         table.WidthPercentage = 100;
         table.ExtendLastRow = true;
         Column.AddElement(table);
+
         if (style != null)
         {
             CloneNonPositionParameters(style);
@@ -207,10 +209,8 @@ public class PdfPCell : Rectangle
     ///     Constructs a deep copy of a  PdfPCell .
     /// </summary>
     /// <param name="cell">the  PdfPCell  to duplicate</param>
-    public PdfPCell(PdfPCell cell) : base(cell?.Llx ?? throw new ArgumentNullException(nameof(cell)),
-                                          cell.Lly,
-                                          cell.Urx,
-                                          cell.Ury)
+    public PdfPCell(PdfPCell cell) : base(cell?.Llx ?? throw new ArgumentNullException(nameof(cell)), cell.Lly,
+        cell.Urx, cell.Ury)
     {
         CloneNonPositionParameters(cell);
         _verticalAlignment = cell._verticalAlignment;
@@ -224,6 +224,7 @@ public class PdfPCell : Rectangle
         _noWrap = cell._noWrap;
         _colspan = cell._colspan;
         _rowspan = cell._rowspan;
+
         if (cell._table != null)
         {
             _table = new PdfPTable(cell._table);
@@ -264,9 +265,9 @@ public class PdfPCell : Rectangle
             {
                 _cellEvent = value;
             }
-            else if (_cellEvent is PdfPCellEventForwarder)
+            else if (_cellEvent is PdfPCellEventForwarder pdfPCellEventForwarder)
             {
-                ((PdfPCellEventForwarder)_cellEvent).AddCellEvent(value);
+                pdfPCellEventForwarder.AddCellEvent(value);
             }
             else
             {
@@ -292,7 +293,7 @@ public class PdfPCell : Rectangle
     ///     Gets the ColumnText with the content of the cell.
     /// </summary>
     /// <returns>a columntext object</returns>
-    public ColumnText Column { get; set; } = new(null);
+    public ColumnText Column { get; set; } = new(canvas: null);
 
     /// <summary>
     ///     Returns the list of composite elements of the column.
@@ -313,6 +314,7 @@ public class PdfPCell : Rectangle
             if (UseBorderPadding)
             {
                 var localBorder = BorderWidthBottom / (UseVariableBorders ? 1f : 2f);
+
                 return _paddingBottom + localBorder;
             }
 
@@ -332,6 +334,7 @@ public class PdfPCell : Rectangle
             if (UseBorderPadding)
             {
                 var localBorder = BorderWidthLeft / (UseVariableBorders ? 1f : 2f);
+
                 return _paddingLeft + localBorder;
             }
 
@@ -351,6 +354,7 @@ public class PdfPCell : Rectangle
             if (UseBorderPadding)
             {
                 var localBorder = BorderWidthRight / (UseVariableBorders ? 1f : 2f);
+
                 return _paddingRight + localBorder;
             }
 
@@ -370,6 +374,7 @@ public class PdfPCell : Rectangle
             if (UseBorderPadding)
             {
                 var localBorder = BorderWidthTop / (UseVariableBorders ? 1f : 2f);
+
                 return _paddingTop + localBorder;
             }
 
@@ -430,7 +435,7 @@ public class PdfPCell : Rectangle
         get => _image;
         set
         {
-            Column.SetText(null);
+            Column.SetText(phrase: null);
             _table = null;
             _image = value;
         }
@@ -568,6 +573,7 @@ public class PdfPCell : Rectangle
         set
         {
             var rot = value % 360;
+
             if (rot < 0)
             {
                 rot += 360;
@@ -575,7 +581,7 @@ public class PdfPCell : Rectangle
 
             if (rot % 90 != 0)
             {
-                throw new ArgumentException("Rotation must be a multiple of 90.");
+                throw new ArgumentException(message: "Rotation must be a multiple of 90.");
             }
 
             _rotation = rot;
@@ -627,8 +633,9 @@ public class PdfPCell : Rectangle
         set
         {
             _table = value;
-            Column.SetText(null);
+            Column.SetText(phrase: null);
             _image = null;
+
             if (_table != null)
             {
                 _table.ExtendLastRow = _verticalAlignment == ALIGN_TOP;
@@ -677,6 +684,7 @@ public class PdfPCell : Rectangle
         set
         {
             _verticalAlignment = value;
+
             if (_table != null)
             {
                 _table.ExtendLastRow = _verticalAlignment == ALIGN_TOP;
@@ -693,7 +701,7 @@ public class PdfPCell : Rectangle
         if (_table != null)
         {
             _table = null;
-            Column.SetText(null);
+            Column.SetText(phrase: null);
         }
 
         Column.AddElement(element);
@@ -708,12 +716,12 @@ public class PdfPCell : Rectangle
     {
         var pivoted = Rotation == 90 || Rotation == 270;
         var img = Image;
+
         if (img != null)
         {
-            img.ScalePercent(100);
+            img.ScalePercent(percent: 100);
             var refWidth = pivoted ? img.ScaledHeight : img.ScaledWidth;
-            var scale = (Right - EffectivePaddingRight
-                               - EffectivePaddingLeft - Left) / refWidth;
+            var scale = (Right - EffectivePaddingRight - EffectivePaddingLeft - Left) / refWidth;
             img.ScalePercent(scale * 100);
             var refHeight = pivoted ? img.ScaledWidth : img.ScaledHeight;
             Bottom = Top - EffectivePaddingTop - EffectivePaddingBottom - refHeight;
@@ -728,6 +736,7 @@ public class PdfPCell : Rectangle
             {
                 var ct = ColumnText.Duplicate(Column);
                 float right, top, left, bottom;
+
                 if (pivoted)
                 {
                     right = PdfPRow.RIGHT_LIMIT;
@@ -744,7 +753,8 @@ public class PdfPCell : Rectangle
                 }
 
                 PdfPRow.SetColumn(ct, left, bottom, right, top);
-                ct.Go(true);
+                ct.Go(simulate: true);
+
                 if (pivoted)
                 {
                     Bottom = Top - EffectivePaddingTop - EffectivePaddingBottom - ct.FilledWidth;
@@ -752,6 +762,7 @@ public class PdfPCell : Rectangle
                 else
                 {
                     var yLine = ct.YLine;
+
                     if (UseDescender)
                     {
                         yLine += ct.Descender;
@@ -763,6 +774,7 @@ public class PdfPCell : Rectangle
         }
 
         var height = Height;
+
         if (HasFixedHeight())
         {
             height = FixedHeight;
@@ -797,9 +809,7 @@ public class PdfPCell : Rectangle
     /// <param name="fixedLeading">the fixed leading</param>
     /// <param name="multipliedLeading">the variable leading</param>
     public void SetLeading(float fixedLeading, float multipliedLeading)
-    {
-        Column.SetLeading(fixedLeading, multipliedLeading);
-    }
+        => Column.SetLeading(fixedLeading, multipliedLeading);
 
     /// <summary>
     ///     Consumes part of the content of the cell.
@@ -811,18 +821,19 @@ public class PdfPCell : Rectangle
         var rightLimit = Right - EffectivePaddingRight;
         var leftLimit = Left + EffectivePaddingLeft;
         var bry = height - EffectivePaddingTop - EffectivePaddingBottom;
+
         if (Rotation != 90 && Rotation != 270)
         {
-            Column.SetSimpleColumn(leftLimit, bry + 0.001f, rightLimit, 0);
+            Column.SetSimpleColumn(leftLimit, bry + 0.001f, rightLimit, ury: 0);
         }
         else
         {
-            Column.SetSimpleColumn(0, leftLimit, bry + 0.001f, rightLimit);
+            Column.SetSimpleColumn(llx: 0, leftLimit, bry + 0.001f, rightLimit);
         }
 
         try
         {
-            Column.Go(true);
+            Column.Go(simulate: true);
         }
         catch (DocumentException)
         {

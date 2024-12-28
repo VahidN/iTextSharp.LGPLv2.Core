@@ -6,7 +6,7 @@ namespace iTextSharp.text.rtf.style;
 ///     @author Howard Shank (hgshank@yahoo.com)
 ///     @since 2.0.8
 /// </summary>
-public sealed class RtfStyleTypes
+public static class RtfStyleTypes
 {
     /// <summary>
     ///     Indicates paragraph style.

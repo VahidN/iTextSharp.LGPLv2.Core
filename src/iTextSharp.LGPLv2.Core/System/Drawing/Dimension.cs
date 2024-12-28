@@ -23,7 +23,7 @@ public class Dimension : Dimension2D
     ///     Creates an instance of  Dimension  with a width
     ///     of zero and a height of zero.
     /// </summary>
-    public Dimension() : this(0, 0)
+    public Dimension() : this(width: 0, height: 0)
     {
     }
 
@@ -100,10 +100,9 @@ public class Dimension : Dimension2D
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is Dimension)
+        if (obj is Dimension dimension)
         {
-            var d = (Dimension)obj;
-            return width == d.width && height == d.height;
+            return width == dimension.width && height == dimension.height;
         }
 
         return false;
@@ -116,6 +115,7 @@ public class Dimension : Dimension2D
     public override int GetHashCode()
     {
         var sum = width + height;
+
         return sum * (sum + 1) / 2 + width;
     }
 

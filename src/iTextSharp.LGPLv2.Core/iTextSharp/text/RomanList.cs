@@ -13,7 +13,7 @@ public class RomanList : List
     /// <summary>
     ///     Initialization
     /// </summary>
-    public RomanList() : base(true)
+    public RomanList() : base(numbered: true)
     {
     }
 
@@ -21,7 +21,7 @@ public class RomanList : List
     ///     Initialization
     /// </summary>
     /// <param name="symbolIndent">indent</param>
-    public RomanList(int symbolIndent) : base(true, symbolIndent)
+    public RomanList(int symbolIndent) : base(numbered: true, symbolIndent)
     {
     }
 
@@ -30,7 +30,7 @@ public class RomanList : List
     /// </summary>
     /// <param name="romanlower">roman-char in lowercase</param>
     /// <param name="symbolIndent">indent</param>
-    public RomanList(bool romanlower, int symbolIndent) : base(true, symbolIndent) => lowercase = romanlower;
+    public RomanList(bool romanlower, int symbolIndent) : base(numbered: true, symbolIndent) => lowercase = romanlower;
 
     /// <summary>
     ///     Adds an  Object  to the  List .
@@ -39,25 +39,25 @@ public class RomanList : List
     /// <returns>true if adding the object succeeded</returns>
     public override bool Add(IElement o)
     {
-        if (o is ListItem)
+        if (o is ListItem listItem)
         {
-            var item = (ListItem)o;
             var chunk = new Chunk(preSymbol, symbol.Font);
             chunk.Append(RomanNumberFactory.GetString(first + list.Count, lowercase));
             chunk.Append(postSymbol);
-            item.ListSymbol = chunk;
-            item.SetIndentationLeft(symbolIndent, autoindent);
-            item.IndentationRight = 0;
-            list.Add(item);
+            listItem.ListSymbol = chunk;
+            listItem.SetIndentationLeft(symbolIndent, autoindent);
+            listItem.IndentationRight = 0;
+            list.Add(listItem);
+
             return true;
         }
 
-        if (o is List)
+        if (o is List element)
         {
-            var nested = (List)o;
-            nested.IndentationLeft = nested.IndentationLeft + symbolIndent;
+            element.IndentationLeft += symbolIndent;
             first--;
-            list.Add(nested);
+            list.Add(element);
+
             return true;
         }
 

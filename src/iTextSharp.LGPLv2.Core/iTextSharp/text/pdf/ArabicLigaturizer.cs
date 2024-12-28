@@ -128,241 +128,247 @@ public static class ArabicLigaturizer
 
     private static readonly char[][] _chartable =
     {
-        new[] { '\u0621', '\uFE80' }, /* HAMZA */
         new[]
         {
-            '\u0622', '\uFE81', '\uFE82',
-        }, /* ALEF WITH MADDA ABOVE */
-        new[]
+            '\u0621', '\uFE80'
+        }, /* HAMZA */ new[]
         {
-            '\u0623', '\uFE83', '\uFE84',
-        }, /* ALEF WITH HAMZA ABOVE */
-        new[] { '\u0624', '\uFE85', '\uFE86' }, /* WAW WITH HAMZA ABOVE */
-        new[]
+            '\u0622', '\uFE81', '\uFE82'
+        }, /* ALEF WITH MADDA ABOVE */ new[]
         {
-            '\u0625', '\uFE87', '\uFE88',
-        }, /* ALEF WITH HAMZA BELOW */
-        new[]
+            '\u0623', '\uFE83', '\uFE84'
+        }, /* ALEF WITH HAMZA ABOVE */ new[]
         {
-            '\u0626', '\uFE89', '\uFE8A', '\uFE8B', '\uFE8C',
-        }, /* YEH WITH HAMZA ABOVE */
-        new[] { '\u0627', '\uFE8D', '\uFE8E' }, /* ALEF */
-        new[]
+            '\u0624', '\uFE85', '\uFE86'
+        }, /* WAW WITH HAMZA ABOVE */ new[]
         {
-            '\u0628', '\uFE8F', '\uFE90', '\uFE91', '\uFE92',
-        }, /* BEH */
-        new[] { '\u0629', '\uFE93', '\uFE94' }, /* TEH MARBUTA */
-        new[]
+            '\u0625', '\uFE87', '\uFE88'
+        }, /* ALEF WITH HAMZA BELOW */ new[]
         {
-            '\u062A', '\uFE95', '\uFE96', '\uFE97', '\uFE98',
-        }, /* TEH */
-        new[]
+            '\u0626', '\uFE89', '\uFE8A', '\uFE8B', '\uFE8C'
+        }, /* YEH WITH HAMZA ABOVE */ new[]
         {
-            '\u062B', '\uFE99', '\uFE9A', '\uFE9B', '\uFE9C',
-        }, /* THEH */
-        new[]
+            '\u0627', '\uFE8D', '\uFE8E'
+        }, /* ALEF */ new[]
         {
-            '\u062C', '\uFE9D', '\uFE9E', '\uFE9F', '\uFEA0',
-        }, /* JEEM */
-        new[]
+            '\u0628', '\uFE8F', '\uFE90', '\uFE91', '\uFE92'
+        }, /* BEH */ new[]
         {
-            '\u062D', '\uFEA1', '\uFEA2', '\uFEA3', '\uFEA4',
-        }, /* HAH */
-        new[]
+            '\u0629', '\uFE93', '\uFE94'
+        }, /* TEH MARBUTA */ new[]
         {
-            '\u062E', '\uFEA5', '\uFEA6', '\uFEA7', '\uFEA8',
-        }, /* KHAH */
-        new[] { '\u062F', '\uFEA9', '\uFEAA' }, /* DAL */
-        new[] { '\u0630', '\uFEAB', '\uFEAC' }, /* THAL */
-        new[] { '\u0631', '\uFEAD', '\uFEAE' }, /* REH */
-        new[] { '\u0632', '\uFEAF', '\uFEB0' }, /* ZAIN */
-        new[]
+            '\u062A', '\uFE95', '\uFE96', '\uFE97', '\uFE98'
+        }, /* TEH */ new[]
         {
-            '\u0633', '\uFEB1', '\uFEB2', '\uFEB3', '\uFEB4',
-        }, /* SEEN */
-        new[]
+            '\u062B', '\uFE99', '\uFE9A', '\uFE9B', '\uFE9C'
+        }, /* THEH */ new[]
         {
-            '\u0634', '\uFEB5', '\uFEB6', '\uFEB7', '\uFEB8',
-        }, /* SHEEN */
-        new[]
+            '\u062C', '\uFE9D', '\uFE9E', '\uFE9F', '\uFEA0'
+        }, /* JEEM */ new[]
         {
-            '\u0635', '\uFEB9', '\uFEBA', '\uFEBB', '\uFEBC',
-        }, /* SAD */
-        new[]
+            '\u062D', '\uFEA1', '\uFEA2', '\uFEA3', '\uFEA4'
+        }, /* HAH */ new[]
         {
-            '\u0636', '\uFEBD', '\uFEBE', '\uFEBF', '\uFEC0',
-        }, /* DAD */
-        new[]
+            '\u062E', '\uFEA5', '\uFEA6', '\uFEA7', '\uFEA8'
+        }, /* KHAH */ new[]
         {
-            '\u0637', '\uFEC1', '\uFEC2', '\uFEC3', '\uFEC4',
-        }, /* TAH */
-        new[]
+            '\u062F', '\uFEA9', '\uFEAA'
+        }, /* DAL */ new[]
         {
-            '\u0638', '\uFEC5', '\uFEC6', '\uFEC7', '\uFEC8',
-        }, /* ZAH */
-        new[]
+            '\u0630', '\uFEAB', '\uFEAC'
+        }, /* THAL */ new[]
         {
-            '\u0639', '\uFEC9', '\uFECA', '\uFECB', '\uFECC',
-        }, /* AIN */
-        new[]
+            '\u0631', '\uFEAD', '\uFEAE'
+        }, /* REH */ new[]
         {
-            '\u063A', '\uFECD', '\uFECE', '\uFECF', '\uFED0',
-        }, /* GHAIN */
-        new[]
+            '\u0632', '\uFEAF', '\uFEB0'
+        }, /* ZAIN */ new[]
         {
-            '\u0640', '\u0640', '\u0640', '\u0640', '\u0640',
-        }, /* TATWEEL */
-        new[]
+            '\u0633', '\uFEB1', '\uFEB2', '\uFEB3', '\uFEB4'
+        }, /* SEEN */ new[]
         {
-            '\u0641', '\uFED1', '\uFED2', '\uFED3', '\uFED4',
-        }, /* FEH */
-        new[]
+            '\u0634', '\uFEB5', '\uFEB6', '\uFEB7', '\uFEB8'
+        }, /* SHEEN */ new[]
         {
-            '\u0642', '\uFED5', '\uFED6', '\uFED7', '\uFED8',
-        }, /* QAF */
-        new[]
+            '\u0635', '\uFEB9', '\uFEBA', '\uFEBB', '\uFEBC'
+        }, /* SAD */ new[]
         {
-            '\u0643', '\uFED9', '\uFEDA', '\uFEDB', '\uFEDC',
-        }, /* KAF */
-        new[]
+            '\u0636', '\uFEBD', '\uFEBE', '\uFEBF', '\uFEC0'
+        }, /* DAD */ new[]
         {
-            '\u0644', '\uFEDD', '\uFEDE', '\uFEDF', '\uFEE0',
-        }, /* LAM */
-        new[]
+            '\u0637', '\uFEC1', '\uFEC2', '\uFEC3', '\uFEC4'
+        }, /* TAH */ new[]
         {
-            '\u0645', '\uFEE1', '\uFEE2', '\uFEE3', '\uFEE4',
-        }, /* MEEM */
-        new[]
+            '\u0638', '\uFEC5', '\uFEC6', '\uFEC7', '\uFEC8'
+        }, /* ZAH */ new[]
         {
-            '\u0646', '\uFEE5', '\uFEE6', '\uFEE7', '\uFEE8',
-        }, /* NOON */
-        new[]
+            '\u0639', '\uFEC9', '\uFECA', '\uFECB', '\uFECC'
+        }, /* AIN */ new[]
         {
-            '\u0647', '\uFEE9', '\uFEEA', '\uFEEB', '\uFEEC',
-        }, /* HEH */
-        new[] { '\u0648', '\uFEED', '\uFEEE' }, /* WAW */
-        new[]
+            '\u063A', '\uFECD', '\uFECE', '\uFECF', '\uFED0'
+        }, /* GHAIN */ new[]
         {
-            '\u0649', '\uFEEF', '\uFEF0', '\uFBE8', '\uFBE9',
-        }, /* ALEF MAKSURA */
-        new[]
+            '\u0640', '\u0640', '\u0640', '\u0640', '\u0640'
+        }, /* TATWEEL */ new[]
         {
-            '\u064A', '\uFEF1', '\uFEF2', '\uFEF3', '\uFEF4',
-        }, /* YEH */
-        new[] { '\u0671', '\uFB50', '\uFB51' }, /* ALEF WASLA */
-        new[]
+            '\u0641', '\uFED1', '\uFED2', '\uFED3', '\uFED4'
+        }, /* FEH */ new[]
         {
-            '\u0679', '\uFB66', '\uFB67', '\uFB68', '\uFB69',
-        }, /* TTEH */
-        new[]
+            '\u0642', '\uFED5', '\uFED6', '\uFED7', '\uFED8'
+        }, /* QAF */ new[]
         {
-            '\u067A', '\uFB5E', '\uFB5F', '\uFB60', '\uFB61',
-        }, /* TTEHEH */
-        new[]
+            '\u0643', '\uFED9', '\uFEDA', '\uFEDB', '\uFEDC'
+        }, /* KAF */ new[]
         {
-            '\u067B', '\uFB52', '\uFB53', '\uFB54', '\uFB55',
-        }, /* BEEH */
-        new[]
+            '\u0644', '\uFEDD', '\uFEDE', '\uFEDF', '\uFEE0'
+        }, /* LAM */ new[]
         {
-            '\u067E', '\uFB56', '\uFB57', '\uFB58', '\uFB59',
-        }, /* PEH */
-        new[]
+            '\u0645', '\uFEE1', '\uFEE2', '\uFEE3', '\uFEE4'
+        }, /* MEEM */ new[]
         {
-            '\u067F', '\uFB62', '\uFB63', '\uFB64', '\uFB65',
-        }, /* TEHEH */
-        new[]
+            '\u0646', '\uFEE5', '\uFEE6', '\uFEE7', '\uFEE8'
+        }, /* NOON */ new[]
         {
-            '\u0680', '\uFB5A', '\uFB5B', '\uFB5C', '\uFB5D',
-        }, /* BEHEH */
-        new[]
+            '\u0647', '\uFEE9', '\uFEEA', '\uFEEB', '\uFEEC'
+        }, /* HEH */ new[]
         {
-            '\u0683', '\uFB76', '\uFB77', '\uFB78', '\uFB79',
-        }, /* NYEH */
-        new[]
+            '\u0648', '\uFEED', '\uFEEE'
+        }, /* WAW */ new[]
         {
-            '\u0684', '\uFB72', '\uFB73', '\uFB74', '\uFB75',
-        }, /* DYEH */
-        new[]
+            '\u0649', '\uFEEF', '\uFEF0', '\uFBE8', '\uFBE9'
+        }, /* ALEF MAKSURA */ new[]
         {
-            '\u0686', '\uFB7A', '\uFB7B', '\uFB7C', '\uFB7D',
-        }, /* TCHEH */
-        new[]
+            '\u064A', '\uFEF1', '\uFEF2', '\uFEF3', '\uFEF4'
+        }, /* YEH */ new[]
         {
-            '\u0687', '\uFB7E', '\uFB7F', '\uFB80', '\uFB81',
-        }, /* TCHEHEH */
-        new[] { '\u0688', '\uFB88', '\uFB89' }, /* DDAL */
-        new[] { '\u068C', '\uFB84', '\uFB85' }, /* DAHAL */
-        new[] { '\u068D', '\uFB82', '\uFB83' }, /* DDAHAL */
-        new[] { '\u068E', '\uFB86', '\uFB87' }, /* DUL */
-        new[] { '\u0691', '\uFB8C', '\uFB8D' }, /* RREH */
-        new[] { '\u0698', '\uFB8A', '\uFB8B' }, /* JEH */
-        new[]
+            '\u0671', '\uFB50', '\uFB51'
+        }, /* ALEF WASLA */ new[]
         {
-            '\u06A4', '\uFB6A', '\uFB6B', '\uFB6C', '\uFB6D',
-        }, /* VEH */
-        new[]
+            '\u0679', '\uFB66', '\uFB67', '\uFB68', '\uFB69'
+        }, /* TTEH */ new[]
         {
-            '\u06A6', '\uFB6E', '\uFB6F', '\uFB70', '\uFB71',
-        }, /* PEHEH */
-        new[]
+            '\u067A', '\uFB5E', '\uFB5F', '\uFB60', '\uFB61'
+        }, /* TTEHEH */ new[]
         {
-            '\u06A9', '\uFB8E', '\uFB8F', '\uFB90', '\uFB91',
-        }, /* KEHEH */
-        new[]
+            '\u067B', '\uFB52', '\uFB53', '\uFB54', '\uFB55'
+        }, /* BEEH */ new[]
         {
-            '\u06AD', '\uFBD3', '\uFBD4', '\uFBD5', '\uFBD6',
-        }, /* NG */
-        new[]
+            '\u067E', '\uFB56', '\uFB57', '\uFB58', '\uFB59'
+        }, /* PEH */ new[]
         {
-            '\u06AF', '\uFB92', '\uFB93', '\uFB94', '\uFB95',
-        }, /* GAF */
-        new[]
+            '\u067F', '\uFB62', '\uFB63', '\uFB64', '\uFB65'
+        }, /* TEHEH */ new[]
         {
-            '\u06B1', '\uFB9A', '\uFB9B', '\uFB9C', '\uFB9D',
-        }, /* NGOEH */
-        new[]
+            '\u0680', '\uFB5A', '\uFB5B', '\uFB5C', '\uFB5D'
+        }, /* BEHEH */ new[]
         {
-            '\u06B3', '\uFB96', '\uFB97', '\uFB98', '\uFB99',
-        }, /* GUEH */
-        new[] { '\u06BA', '\uFB9E', '\uFB9F' }, /* NOON GHUNNA */
-        new[]
+            '\u0683', '\uFB76', '\uFB77', '\uFB78', '\uFB79'
+        }, /* NYEH */ new[]
         {
-            '\u06BB', '\uFBA0', '\uFBA1', '\uFBA2', '\uFBA3',
-        }, /* RNOON */
-        new[]
+            '\u0684', '\uFB72', '\uFB73', '\uFB74', '\uFB75'
+        }, /* DYEH */ new[]
         {
-            '\u06BE', '\uFBAA', '\uFBAB', '\uFBAC', '\uFBAD',
-        }, /* HEH DOACHASHMEE */
-        new[] { '\u06C0', '\uFBA4', '\uFBA5' }, /* HEH WITH YEH ABOVE */
-        new[]
+            '\u0686', '\uFB7A', '\uFB7B', '\uFB7C', '\uFB7D'
+        }, /* TCHEH */ new[]
         {
-            '\u06C1', '\uFBA6', '\uFBA7', '\uFBA8', '\uFBA9',
-        }, /* HEH GOAL */
-        new[] { '\u06C5', '\uFBE0', '\uFBE1' }, /* KIRGHIZ OE */
-        new[] { '\u06C6', '\uFBD9', '\uFBDA' }, /* OE */
-        new[] { '\u06C7', '\uFBD7', '\uFBD8' }, /* U */
-        new[] { '\u06C8', '\uFBDB', '\uFBDC' }, /* YU */
-        new[] { '\u06C9', '\uFBE2', '\uFBE3' }, /* KIRGHIZ YU */
-        new[] { '\u06CB', '\uFBDE', '\uFBDF' }, /* VE */
-        new[]
+            '\u0687', '\uFB7E', '\uFB7F', '\uFB80', '\uFB81'
+        }, /* TCHEHEH */ new[]
         {
-            '\u06CC', '\uFBFC', '\uFBFD', '\uFBFE', '\uFBFF',
-        }, /* FARSI YEH */
-        new[]
+            '\u0688', '\uFB88', '\uFB89'
+        }, /* DDAL */ new[]
         {
-            '\u06D0', '\uFBE4', '\uFBE5', '\uFBE6', '\uFBE7',
-        }, /* E */
-        new[] { '\u06D2', '\uFBAE', '\uFBAF' }, /* YEH BARREE */
-        new[]
+            '\u068C', '\uFB84', '\uFB85'
+        }, /* DAHAL */ new[]
         {
-            '\u06D3', '\uFBB0', '\uFBB1',
-        }, /* YEH BARREE WITH HAMZA ABOVE */
+            '\u068D', '\uFB82', '\uFB83'
+        }, /* DDAHAL */ new[]
+        {
+            '\u068E', '\uFB86', '\uFB87'
+        }, /* DUL */ new[]
+        {
+            '\u0691', '\uFB8C', '\uFB8D'
+        }, /* RREH */ new[]
+        {
+            '\u0698', '\uFB8A', '\uFB8B'
+        }, /* JEH */ new[]
+        {
+            '\u06A4', '\uFB6A', '\uFB6B', '\uFB6C', '\uFB6D'
+        }, /* VEH */ new[]
+        {
+            '\u06A6', '\uFB6E', '\uFB6F', '\uFB70', '\uFB71'
+        }, /* PEHEH */ new[]
+        {
+            '\u06A9', '\uFB8E', '\uFB8F', '\uFB90', '\uFB91'
+        }, /* KEHEH */ new[]
+        {
+            '\u06AD', '\uFBD3', '\uFBD4', '\uFBD5', '\uFBD6'
+        }, /* NG */ new[]
+        {
+            '\u06AF', '\uFB92', '\uFB93', '\uFB94', '\uFB95'
+        }, /* GAF */ new[]
+        {
+            '\u06B1', '\uFB9A', '\uFB9B', '\uFB9C', '\uFB9D'
+        }, /* NGOEH */ new[]
+        {
+            '\u06B3', '\uFB96', '\uFB97', '\uFB98', '\uFB99'
+        }, /* GUEH */ new[]
+        {
+            '\u06BA', '\uFB9E', '\uFB9F'
+        }, /* NOON GHUNNA */ new[]
+        {
+            '\u06BB', '\uFBA0', '\uFBA1', '\uFBA2', '\uFBA3'
+        }, /* RNOON */ new[]
+        {
+            '\u06BE', '\uFBAA', '\uFBAB', '\uFBAC', '\uFBAD'
+        }, /* HEH DOACHASHMEE */ new[]
+        {
+            '\u06C0', '\uFBA4', '\uFBA5'
+        }, /* HEH WITH YEH ABOVE */ new[]
+        {
+            '\u06C1', '\uFBA6', '\uFBA7', '\uFBA8', '\uFBA9'
+        }, /* HEH GOAL */ new[]
+        {
+            '\u06C5', '\uFBE0', '\uFBE1'
+        }, /* KIRGHIZ OE */ new[]
+        {
+            '\u06C6', '\uFBD9', '\uFBDA'
+        }, /* OE */ new[]
+        {
+            '\u06C7', '\uFBD7', '\uFBD8'
+        }, /* U */ new[]
+        {
+            '\u06C8', '\uFBDB', '\uFBDC'
+        }, /* YU */ new[]
+        {
+            '\u06C9', '\uFBE2', '\uFBE3'
+        }, /* KIRGHIZ YU */ new[]
+        {
+            '\u06CB', '\uFBDE', '\uFBDF'
+        }, /* VE */ new[]
+        {
+            '\u06CC', '\uFBFC', '\uFBFD', '\uFBFE', '\uFBFF'
+        }, /* FARSI YEH */ new[]
+        {
+            '\u06D0', '\uFBE4', '\uFBE5', '\uFBE6', '\uFBE7'
+        }, /* E */ new[]
+        {
+            '\u06D2', '\uFBAE', '\uFBAF'
+        }, /* YEH BARREE */ new[]
+        {
+            '\u06D3', '\uFBB0', '\uFBB1'
+        } /* YEH BARREE WITH HAMZA ABOVE */
     };
 
-    internal static int Arabic_shape(char[] src, int srcoffset, int srclength, char[] dest, int destoffset,
-                                     int destlength, int level)
+    internal static int Arabic_shape(char[] src,
+        int srcoffset,
+        int srclength,
+        char[] dest,
+        int destoffset,
+        int destlength,
+        int level)
     {
         var str = new char[srclength];
+
         for (var k = srclength + srcoffset - 1; k >= srcoffset; --k)
         {
             str[k - srcoffset] = src[k];
@@ -370,13 +376,15 @@ public static class ArabicLigaturizer
 
         var str2 = new StringBuilder(srclength);
         Shape(str, str2, level);
+
         if ((level & (ar_composedtashkeel | ar_lig)) != 0)
         {
             Doublelig(str2, level);
         }
 
         //        string.Reverse();
-        Array.Copy(str2.ToString().ToCharArray(), 0, dest, destoffset, str2.Length);
+        Array.Copy(str2.ToString().ToCharArray(), sourceIndex: 0, dest, destoffset, str2.Length);
+
         return str2.Length;
     }
 
@@ -394,6 +402,7 @@ public static class ArabicLigaturizer
         while (si < olen)
         {
             lapresult = (char)0;
+
             if ((level & ar_composedtashkeel) != 0)
             {
                 switch (str[j])
@@ -403,18 +412,23 @@ public static class ArabicLigaturizer
                         {
                             case Kasra:
                                 lapresult = '\uFC62';
+
                                 break;
                             case Fatha:
                                 lapresult = '\uFC60';
+
                                 break;
                             case Damma:
                                 lapresult = '\uFC61';
+
                                 break;
                             case '\u064C':
                                 lapresult = '\uFC5E';
+
                                 break;
                             case '\u064D':
                                 lapresult = '\uFC5F';
+
                                 break;
                         }
 
@@ -452,27 +466,35 @@ public static class ArabicLigaturizer
                         {
                             case '\uFE9E':
                                 lapresult = '\uFC3F';
+
                                 break; /* JEEM final */
                             case '\uFEA0':
                                 lapresult = '\uFCC9';
+
                                 break; /* JEEM medial */
                             case '\uFEA2':
                                 lapresult = '\uFC40';
+
                                 break; /* HAH final */
                             case '\uFEA4':
                                 lapresult = '\uFCCA';
+
                                 break; /* HAH medial */
                             case '\uFEA6':
                                 lapresult = '\uFC41';
+
                                 break; /* KHAH final */
                             case '\uFEA8':
                                 lapresult = '\uFCCB';
+
                                 break; /* KHAH medial */
                             case '\uFEE2':
                                 lapresult = '\uFC42';
+
                                 break; /* MEEM final */
                             case '\uFEE4':
                                 lapresult = '\uFCCC';
+
                                 break; /* MEEM medial */
                         }
 
@@ -482,12 +504,15 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEA0':
                                 lapresult = '\uFCA1';
+
                                 break; /* JEEM medial */
                             case '\uFEA4':
                                 lapresult = '\uFCA2';
+
                                 break; /* HAH medial */
                             case '\uFEA8':
                                 lapresult = '\uFCA3';
+
                                 break; /* KHAH medial */
                         }
 
@@ -497,12 +522,15 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEA0':
                                 lapresult = '\uFC9C';
+
                                 break; /* JEEM medial */
                             case '\uFEA4':
                                 lapresult = '\uFC9D';
+
                                 break; /* HAH medial */
                             case '\uFEA8':
                                 lapresult = '\uFC9E';
+
                                 break; /* KHAH medial */
                         }
 
@@ -512,12 +540,15 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEA0':
                                 lapresult = '\uFCD2';
+
                                 break; /* JEEM initial */
                             case '\uFEA4':
                                 lapresult = '\uFCD3';
+
                                 break; /* HAH medial */
                             case '\uFEA8':
                                 lapresult = '\uFCD4';
+
                                 break; /* KHAH medial */
                         }
 
@@ -528,9 +559,11 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEAE':
                                 lapresult = '\uFC8A';
+
                                 break; /* REH final  */
                             case '\uFEB0':
                                 lapresult = '\uFC8B';
+
                                 break; /* ZAIN final */
                         }
 
@@ -540,15 +573,19 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEA0':
                                 lapresult = '\uFCCE';
+
                                 break; /* JEEM medial */
                             case '\uFEA4':
                                 lapresult = '\uFCCF';
+
                                 break; /* HAH medial */
                             case '\uFEA8':
                                 lapresult = '\uFCD0';
+
                                 break; /* KHAH medial */
                             case '\uFEE4':
                                 lapresult = '\uFCD1';
+
                                 break; /* MEEM medial */
                         }
 
@@ -559,6 +596,7 @@ public static class ArabicLigaturizer
                         {
                             case '\uFEF2':
                                 lapresult = '\uFC32';
+
                                 break; /* YEH final */
                         }
 
@@ -587,17 +625,21 @@ public static class ArabicLigaturizer
     internal static void ProcessNumbers(char[] text, int offset, int length, int options)
     {
         var limit = offset + length;
+
         if ((options & DIGITS_MASK) != 0)
         {
             var digitBase = '\u0030'; // European digits
+
             switch (options & DIGIT_TYPE_MASK)
             {
                 case DIGIT_TYPE_AN:
                     digitBase = '\u0660'; // Arabic-Indic digits
+
                     break;
 
                 case DIGIT_TYPE_AN_EXTENDED:
                     digitBase = '\u06f0'; // Eastern Arabic-Indic digits (Persian and Urdu)
+
                     break;
             }
 
@@ -606,38 +648,46 @@ public static class ArabicLigaturizer
                 case DIGITS_EN2AN:
                 {
                     var digitDelta = digitBase - '\u0030';
+
                     for (var i = offset; i < limit; ++i)
                     {
                         var ch = text[i];
+
                         if (ch <= '\u0039' && ch >= '\u0030')
                         {
                             text[i] += (char)digitDelta;
                         }
                     }
                 }
+
                     break;
 
                 case DIGITS_AN2EN:
                 {
                     var digitTop = (char)(digitBase + 9);
                     var digitDelta = '\u0030' - digitBase;
+
                     for (var i = offset; i < limit; ++i)
                     {
                         var ch = text[i];
+
                         if (ch <= digitTop && ch >= digitBase)
                         {
                             text[i] += (char)digitDelta;
                         }
                     }
                 }
+
                     break;
 
                 case DIGITS_EN2AN_INIT_LR:
-                    ShapeToArabicDigitsWithContext(text, 0, length, digitBase, false);
+                    ShapeToArabicDigitsWithContext(text, start: 0, length, digitBase, lastStrongWasAl: false);
+
                     break;
 
                 case DIGITS_EN2AN_INIT_AL:
-                    ShapeToArabicDigitsWithContext(text, 0, length, digitBase, true);
+                    ShapeToArabicDigitsWithContext(text, start: 0, length, digitBase, lastStrongWasAl: true);
+
                     break;
             }
         }
@@ -646,12 +696,12 @@ public static class ArabicLigaturizer
     internal static void Shape(char[] text, StringBuilder str, int level)
     {
         /* string is assumed to be empty and big enough.
-        * text is the original text.
-        * This routine does the basic arabic reshaping.
-        * *len the number of non-null characters.
-        *
-        * Note: We have to unshape each character first!
-        */
+         * text is the original text.
+         * This routine does the basic arabic reshaping.
+         * *len the number of non-null characters.
+         *
+         * Note: We have to unshape each character first!
+         */
         int join;
         int which;
         char nextletter;
@@ -659,16 +709,20 @@ public static class ArabicLigaturizer
         var p = 0; /* initialize for output */
         var oldchar = new Charstruct();
         var curchar = new Charstruct();
+
         while (p < text.Length)
         {
             nextletter = text[p++];
+
             //nextletter = unshape (nextletter);
 
             join = ligature(nextletter, curchar);
+
             if (join == 0)
             {
                 /* shape curchar */
                 var nc = shapecount(nextletter);
+
                 //(*len)++;
                 if (nc == 1)
                 {
@@ -696,11 +750,13 @@ public static class ArabicLigaturizer
                 curchar.Basechar = nextletter;
                 curchar.Numshapes = nc;
                 curchar.Lignum++;
+
                 //          (*len) += unligature (&curchar, level);
             }
             else if (join == 1)
             {
             }
+
             //      else
             //        {
             //          (*len) += unligature (&curchar, level);
@@ -726,23 +782,30 @@ public static class ArabicLigaturizer
         copycstostring(str, curchar, level);
     }
 
-    internal static void ShapeToArabicDigitsWithContext(char[] dest, int start, int length, char digitBase,
-                                                        bool lastStrongWasAl)
+    internal static void ShapeToArabicDigitsWithContext(char[] dest,
+        int start,
+        int length,
+        char digitBase,
+        bool lastStrongWasAl)
     {
         digitBase -= '0'; // move common adjustment out of loop
 
         var limit = start + length;
+
         for (var i = start; i < limit; ++i)
         {
             var ch = dest[i];
+
             switch (BidiOrder.GetDirection(ch))
             {
                 case BidiOrder.L:
                 case BidiOrder.R:
                     lastStrongWasAl = false;
+
                     break;
                 case BidiOrder.AL:
                     lastStrongWasAl = true;
+
                     break;
                 case BidiOrder.EN:
                     if (lastStrongWasAl && ch <= '\u0039')
@@ -759,13 +822,16 @@ public static class ArabicLigaturizer
         /* which 0=isolated 1=final 2=initial 3=medial */
     {
         int l, r, m;
+
         if (s >= '\u0621' && s <= '\u06D3')
         {
             l = 0;
             r = _chartable.Length - 1;
+
             while (l <= r)
             {
                 m = (l + r) / 2;
+
                 if (s == _chartable[m][0])
                 {
                     return _chartable[m][which + 1];
@@ -801,6 +867,7 @@ public static class ArabicLigaturizer
 
         str.Append(s.Basechar);
         s.Lignum--;
+
         if (s.Mark1 != 0)
         {
             if ((level & ar_novowel) == 0)
@@ -844,6 +911,7 @@ public static class ArabicLigaturizer
         if (isVowel(newchar))
         {
             retval = 1;
+
             if (oldchar.Vowel != 0 && newchar != Shadda)
             {
                 retval = 2; /* we eliminate the old vowel .. */
@@ -868,13 +936,16 @@ public static class ArabicLigaturizer
                         case Alef:
                             oldchar.Basechar = Alefhamzabelow;
                             retval = 2;
+
                             break;
                         case LamAlef:
                             oldchar.Basechar = LamAlefhamzabelow;
                             retval = 2;
+
                             break;
                         default:
                             oldchar.Mark1 = Hamzabelow;
+
                             break;
                     }
 
@@ -885,23 +956,28 @@ public static class ArabicLigaturizer
                         case Alef:
                             oldchar.Basechar = Alefhamza;
                             retval = 2;
+
                             break;
                         case LamAlef:
                             oldchar.Basechar = LamAlefhamza;
                             retval = 2;
+
                             break;
                         case Waw:
                             oldchar.Basechar = Wawhamza;
                             retval = 2;
+
                             break;
                         case Yeh:
                         case Alefmaksura:
                         case Farsiyeh:
                             oldchar.Basechar = Yehhamza;
                             retval = 2;
+
                             break;
                         default: /* whatever sense this may make .. */
                             oldchar.Mark1 = Hamzaabove;
+
                             break;
                     }
 
@@ -912,12 +988,14 @@ public static class ArabicLigaturizer
                         case Alef:
                             oldchar.Basechar = Alefmadda;
                             retval = 2;
+
                             break;
                     }
 
                     break;
                 default:
                     oldchar.Vowel = newchar;
+
                     break;
             }
 
@@ -944,21 +1022,25 @@ public static class ArabicLigaturizer
                         oldchar.Basechar = LamAlef;
                         oldchar.Numshapes = 2;
                         retval = 3;
+
                         break;
                     case Alefhamza:
                         oldchar.Basechar = LamAlefhamza;
                         oldchar.Numshapes = 2;
                         retval = 3;
+
                         break;
                     case Alefhamzabelow:
                         oldchar.Basechar = LamAlefhamzabelow;
                         oldchar.Numshapes = 2;
                         retval = 3;
+
                         break;
                     case Alefmadda:
                         oldchar.Basechar = LamAlefmadda;
                         oldchar.Numshapes = 2;
                         retval = 3;
+
                         break;
                 }
 
@@ -967,6 +1049,7 @@ public static class ArabicLigaturizer
                 oldchar.Basechar = newchar;
                 oldchar.Numshapes = shapecount(newchar);
                 retval = 1;
+
                 break;
         }
 
@@ -976,13 +1059,16 @@ public static class ArabicLigaturizer
     private static int shapecount(char s)
     {
         int l, r, m;
+
         if (s >= '\u0621' && s <= '\u06D3' && !isVowel(s))
         {
             l = 0;
             r = _chartable.Length - 1;
+
             while (l <= r)
             {
                 m = (l + r) / 2;
+
                 if (s == _chartable[m][0])
                 {
                     return _chartable[m].Length - 1;
@@ -1005,9 +1091,10 @@ public static class ArabicLigaturizer
 
         return 1;
     }
+
     // '\u3f00'?
 
-    private class Charstruct
+    private sealed class Charstruct
     {
         internal char Basechar;
         internal int Lignum;

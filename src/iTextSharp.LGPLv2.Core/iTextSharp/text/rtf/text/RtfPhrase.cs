@@ -13,22 +13,22 @@ public class RtfPhrase : RtfElement
     /// <summary>
     ///     Constant for phrase in a table indication
     /// </summary>
-    public new static readonly byte[] InTable = DocWriter.GetIsoBytes("\\intbl");
+    public new static readonly byte[] InTable = DocWriter.GetIsoBytes(text: "\\intbl");
 
     /// <summary>
     ///     Constant for the line spacing.
     /// </summary>
-    public static readonly byte[] LineSpacing = DocWriter.GetIsoBytes("\\sl");
+    public static readonly byte[] LineSpacing = DocWriter.GetIsoBytes(text: "\\sl");
 
     /// <summary>
     ///     Constant for the resetting of the paragraph defaults
     /// </summary>
-    public static readonly byte[] ParagraphDefaults = DocWriter.GetIsoBytes("\\pard");
+    public static readonly byte[] ParagraphDefaults = DocWriter.GetIsoBytes(text: "\\pard");
 
     /// <summary>
     ///     Constant for resetting of font settings to their defaults
     /// </summary>
-    public static readonly byte[] Plain = DocWriter.GetIsoBytes("\\plain");
+    public static readonly byte[] Plain = DocWriter.GetIsoBytes(text: "\\plain");
 
     /// <summary>
     ///     The height of each line.
@@ -66,18 +66,21 @@ public class RtfPhrase : RtfElement
             _lineLeading = 0;
         }
 
-        var phraseFont = new ST.RtfFont(null, phrase.Font);
+        var phraseFont = new ST.RtfFont(doc: null, phrase.Font);
+
         for (var i = 0; i < phrase.Count; i++)
         {
             var chunk = phrase[i];
-            if (chunk is Chunk)
+
+            if (chunk is Chunk element)
             {
-                ((Chunk)chunk).Font = phraseFont.Difference(((Chunk)chunk).Font);
+                element.Font = phraseFont.Difference(element.Font);
             }
 
             try
             {
                 var rtfElements = doc.GetMapper().MapElement(chunk);
+
                 for (var j = 0; j < rtfElements.Length; j++)
                 {
                     Chunks.Add(rtfElements[j]);
@@ -93,7 +96,7 @@ public class RtfPhrase : RtfElement
     ///     A basically empty constructor that is used by the RtfParagraph.
     /// </summary>
     /// <param name="doc">The RtfDocument this RtfPhrase belongs to.</param>
-    protected internal RtfPhrase(RtfDocument doc) : base(doc)
+    internal protected RtfPhrase(RtfDocument doc) : base(doc)
     {
     }
 
@@ -105,6 +108,7 @@ public class RtfPhrase : RtfElement
     public override void SetInHeader(bool inHeader)
     {
         base.SetInHeader(inHeader);
+
         for (var i = 0; i < Chunks.Count; i++)
         {
             Chunks[i].SetInHeader(inHeader);
@@ -119,6 +123,7 @@ public class RtfPhrase : RtfElement
     public override void SetInTable(bool inTable)
     {
         base.SetInTable(inTable);
+
         for (var i = 0; i < Chunks.Count; i++)
         {
             Chunks[i].SetInTable(inTable);
@@ -133,6 +138,7 @@ public class RtfPhrase : RtfElement
     public override void SetRtfDocument(RtfDocument doc)
     {
         base.SetRtfDocument(doc);
+
         for (var i = 0; i < Chunks.Count; i++)
         {
             Chunks[i].SetRtfDocument(Document);
@@ -152,17 +158,18 @@ public class RtfPhrase : RtfElement
         }
 
         byte[] t;
-        outp.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
-        outp.Write(Plain, 0, Plain.Length);
+        outp.Write(ParagraphDefaults, offset: 0, ParagraphDefaults.Length);
+        outp.Write(Plain, offset: 0, Plain.Length);
+
         if (base.InTable)
         {
-            outp.Write(InTable, 0, InTable.Length);
+            outp.Write(InTable, offset: 0, InTable.Length);
         }
 
         if (_lineLeading > 0)
         {
-            outp.Write(LineSpacing, 0, LineSpacing.Length);
-            outp.Write(t = IntToByteArray(_lineLeading), 0, t.Length);
+            outp.Write(LineSpacing, offset: 0, LineSpacing.Length);
+            outp.Write(t = IntToByteArray(_lineLeading), offset: 0, t.Length);
         }
 
         foreach (var rbe in Chunks)

@@ -21,9 +21,16 @@ public sealed class FontFactoryImp
         "3", "1", "1033", "3", "0", "1033", "1", "0", "0", "0", "3", "0"
     };
 
-    private static readonly ConcurrentDictionary<string, List<string>> _fontFamilies = new();
+    private static readonly ConcurrentDictionary<string, List<string>> _fontFamilies =
+        new(StringComparer.OrdinalIgnoreCase);
+
     private static readonly Properties _trueTypeFonts = new();
+
+#if !NET_9
     private static readonly object _syncLock = new();
+#else
+    private static readonly Lock _syncLock = new();
+#endif
 
     private FontFactoryImp()
     {
@@ -172,9 +179,7 @@ public sealed class FontFactoryImp
                 return new Font(Font.UNDEFINED, size, style, color);
             }
 
-            var lowercasefontname = fontname.ToLower(CultureInfo.InvariantCulture);
-
-            if (_fontFamilies.TryGetValue(lowercasefontname, out var tmp))
+            if (_fontFamilies.TryGetValue(fontname.ToLower(CultureInfo.InvariantCulture), out var tmp))
             {
                 // some bugs were fixed here by Daniel Marczisovszky
                 var fs = Font.NORMAL;

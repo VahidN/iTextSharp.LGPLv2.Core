@@ -67,40 +67,44 @@ public class PdfXConformanceImp : IPdfXConformance
         }
 
         var conf = writer.PdfxConformance;
+
         switch (key)
         {
             case PDFXKEY_COLOR:
                 switch (conf)
                 {
                     case PdfWriter.PDFX1A2001:
-                        if (obj1 is ExtendedColor)
+                        if (obj1 is ExtendedColor extendedColor)
                         {
-                            var ec = (ExtendedColor)obj1;
-                            switch (ec.Type)
+                            switch (extendedColor.Type)
                             {
                                 case ExtendedColor.TYPE_CMYK:
                                 case ExtendedColor.TYPE_GRAY:
                                     return;
                                 case ExtendedColor.TYPE_RGB:
-                                    throw new PdfXConformanceException("Colorspace RGB is not allowed.");
+                                    throw new PdfXConformanceException(s: "Colorspace RGB is not allowed.");
                                 case ExtendedColor.TYPE_SEPARATION:
-                                    var sc = (SpotColor)ec;
+                                    var sc = (SpotColor)extendedColor;
                                     CheckPdfxConformance(writer, PDFXKEY_COLOR, sc.PdfSpotColor.AlternativeCs);
+
                                     break;
                                 case ExtendedColor.TYPE_SHADING:
-                                    var xc = (ShadingColor)ec;
+                                    var xc = (ShadingColor)extendedColor;
+
                                     CheckPdfxConformance(writer, PDFXKEY_COLOR,
-                                                         xc.PdfShadingPattern.Shading.ColorSpace);
+                                        xc.PdfShadingPattern.Shading.ColorSpace);
+
                                     break;
                                 case ExtendedColor.TYPE_PATTERN:
-                                    var pc = (PatternColor)ec;
+                                    var pc = (PatternColor)extendedColor;
                                     CheckPdfxConformance(writer, PDFXKEY_COLOR, pc.Painter.DefaultColor);
+
                                     break;
                             }
                         }
                         else if (obj1 is BaseColor)
                         {
-                            throw new PdfXConformanceException("Colorspace RGB is not allowed.");
+                            throw new PdfXConformanceException(s: "Colorspace RGB is not allowed.");
                         }
 
                         break;
@@ -112,7 +116,7 @@ public class PdfXConformanceImp : IPdfXConformance
             case PDFXKEY_RGB:
                 if (conf == PdfWriter.PDFX1A2001)
                 {
-                    throw new PdfXConformanceException("Colorspace RGB is not allowed.");
+                    throw new PdfXConformanceException(s: "Colorspace RGB is not allowed.");
                 }
 
                 break;
@@ -136,15 +140,17 @@ public class PdfXConformanceImp : IPdfXConformance
                 }
 
                 var image = (PdfImage)obj1;
+
                 if (image.Get(PdfName.Smask) != null)
                 {
-                    throw new PdfXConformanceException("The /SMask key is not allowed in images.");
+                    throw new PdfXConformanceException(s: "The /SMask key is not allowed in images.");
                 }
 
                 switch (conf)
                 {
                     case PdfWriter.PDFX1A2001:
                         var cs = image.Get(PdfName.Colorspace);
+
                         if (cs == null)
                         {
                             return;
@@ -154,14 +160,14 @@ public class PdfXConformanceImp : IPdfXConformance
                         {
                             if (PdfName.Devicergb.Equals(cs))
                             {
-                                throw new PdfXConformanceException("Colorspace RGB is not allowed.");
+                                throw new PdfXConformanceException(s: "Colorspace RGB is not allowed.");
                             }
                         }
                         else if (cs.IsArray())
                         {
-                            if (PdfName.Calrgb.Equals(((PdfArray)cs)[0]))
+                            if (PdfName.Calrgb.Equals(((PdfArray)cs)[idx: 0]))
                             {
-                                throw new PdfXConformanceException("Colorspace CalRGB is not allowed.");
+                                throw new PdfXConformanceException(s: "Colorspace CalRGB is not allowed.");
                             }
                         }
 
@@ -177,6 +183,7 @@ public class PdfXConformanceImp : IPdfXConformance
 
                 var gs = (PdfDictionary)obj1;
                 var obj = gs.Get(PdfName.Bm);
+
                 if (obj != null && !PdfGState.BmNormal.Equals(obj) && !PdfGState.BmCompatible.Equals(obj))
                 {
                     throw new PdfXConformanceException("Blend mode " + obj + " not allowed.");
@@ -184,21 +191,23 @@ public class PdfXConformanceImp : IPdfXConformance
 
                 obj = gs.Get(PdfName.CA);
                 var v = 0.0;
-                if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(1.0))
+
+                if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(b: 1.0))
                 {
                     throw new PdfXConformanceException("Transparency is not allowed: /CA = " + v);
                 }
 
                 obj = gs.Get(PdfName.CA_);
                 v = 0.0;
-                if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(1.0))
+
+                if (obj != null && (v = ((PdfNumber)obj).DoubleValue).ApproxNotEqual(b: 1.0))
                 {
                     throw new PdfXConformanceException("Transparency is not allowed: /ca = " + v);
                 }
 
                 break;
             case PDFXKEY_LAYER:
-                throw new PdfXConformanceException("Layers are not allowed.");
+                throw new PdfXConformanceException(s: "Layers are not allowed.");
         }
     }
 
@@ -214,10 +223,10 @@ public class PdfXConformanceImp : IPdfXConformance
             if (extraCatalog.Get(PdfName.Outputintents) == null)
             {
                 var outp = new PdfDictionary(PdfName.Outputintent);
-                outp.Put(PdfName.Outputcondition, new PdfString("SWOP CGATS TR 001-1995"));
-                outp.Put(PdfName.Outputconditionidentifier, new PdfString("CGATS TR 001"));
-                outp.Put(PdfName.Registryname, new PdfString("http://www.color.org"));
-                outp.Put(PdfName.Info, new PdfString(""));
+                outp.Put(PdfName.Outputcondition, new PdfString(value: "SWOP CGATS TR 001-1995"));
+                outp.Put(PdfName.Outputconditionidentifier, new PdfString(value: "CGATS TR 001"));
+                outp.Put(PdfName.Registryname, new PdfString(value: "http://www.color.org"));
+                outp.Put(PdfName.Info, new PdfString(value: ""));
                 outp.Put(PdfName.S, PdfName.GtsPdfx);
                 extraCatalog.Put(PdfName.Outputintents, new PdfArray(outp));
             }
@@ -237,28 +246,28 @@ public class PdfXConformanceImp : IPdfXConformance
             {
                 if (IsPdfX1A2001())
                 {
-                    info.Put(PdfName.GtsPdfxversion, new PdfString("PDF/X-1:2001"));
-                    info.Put(new PdfName("GTS_PDFXConformance"), new PdfString("PDF/X-1a:2001"));
+                    info.Put(PdfName.GtsPdfxversion, new PdfString(value: "PDF/X-1:2001"));
+                    info.Put(new PdfName(name: "GTS_PDFXConformance"), new PdfString(value: "PDF/X-1a:2001"));
                 }
                 else if (IsPdfX32002())
                 {
-                    info.Put(PdfName.GtsPdfxversion, new PdfString("PDF/X-3:2002"));
+                    info.Put(PdfName.GtsPdfxversion, new PdfString(value: "PDF/X-3:2002"));
                 }
             }
 
             if (info.Get(PdfName.Title) == null)
             {
-                info.Put(PdfName.Title, new PdfString("Pdf document"));
+                info.Put(PdfName.Title, new PdfString(value: "Pdf document"));
             }
 
             if (info.Get(PdfName.Creator) == null)
             {
-                info.Put(PdfName.Creator, new PdfString("Unknown"));
+                info.Put(PdfName.Creator, new PdfString(value: "Unknown"));
             }
 
             if (info.Get(PdfName.Trapped) == null)
             {
-                info.Put(PdfName.Trapped, new PdfName("False"));
+                info.Put(PdfName.Trapped, new PdfName(name: "False"));
             }
         }
     }

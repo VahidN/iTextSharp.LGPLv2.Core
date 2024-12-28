@@ -162,7 +162,7 @@ public class ColumnText
     protected PdfContentByte[] canvases;
     protected bool Composite;
     protected ColumnText CompositeColumn;
-    protected internal IList<IElement> CompositeElements;
+    internal protected IList<IElement> CompositeElements;
 
     /// <summary>
     ///     The leading for the current line.
@@ -291,6 +291,7 @@ public class ColumnText
         {
             canvas = value;
             canvases = null;
+
             if (CompositeColumn != null)
             {
                 CompositeColumn.Canvas = value;
@@ -308,6 +309,7 @@ public class ColumnText
         {
             canvases = value;
             canvas = canvases[PdfPTable.TEXTCANVAS];
+
             if (CompositeColumn != null)
             {
                 CompositeColumn.Canvases = canvases;
@@ -473,8 +475,9 @@ public class ColumnText
     /// <returns>the duplicated</returns>
     public static ColumnText Duplicate(ColumnText org)
     {
-        var ct = new ColumnText(null);
+        var ct = new ColumnText(canvas: null);
         ct.SetACopy(org);
+
         return ct;
     }
 
@@ -488,10 +491,11 @@ public class ColumnText
     /// <returns>the width of the line</returns>
     public static float GetWidth(Phrase phrase, int runDirection, int arabicOptions)
     {
-        var ct = new ColumnText(null);
+        var ct = new ColumnText(canvas: null);
         ct.AddText(phrase);
         ct.addWaitingPhrase();
-        var line = ct.BidiLine.ProcessLine(0, 20000, Element.ALIGN_LEFT, runDirection, arabicOptions);
+        var line = ct.BidiLine.ProcessLine(leftX: 0, width: 20000, Element.ALIGN_LEFT, runDirection, arabicOptions);
+
         if (line == null)
         {
             return 0;
@@ -506,7 +510,7 @@ public class ColumnText
     /// </summary>
     /// <param name="phrase">the  Phrase  containing the line</param>
     /// <returns>the width of the line</returns>
-    public static float GetWidth(Phrase phrase) => GetWidth(phrase, PdfWriter.RUN_DIRECTION_NO_BIDI, 0);
+    public static float GetWidth(Phrase phrase) => GetWidth(phrase, PdfWriter.RUN_DIRECTION_NO_BIDI, arabicOptions: 0);
 
     /// <summary>
     ///     Checks the status variable and looks if there's still some text.
@@ -525,21 +529,20 @@ public class ColumnText
     /// <param name="runDirection">the run direction</param>
     /// <param name="arabicOptions">the options for the arabic shaping</param>
     public static void ShowTextAligned(PdfContentByte canvas,
-                                       int alignment,
-                                       Phrase phrase,
-                                       float x,
-                                       float y,
-                                       float rotation,
-                                       int runDirection,
-                                       int arabicOptions)
+        int alignment,
+        Phrase phrase,
+        float x,
+        float y,
+        float rotation,
+        int runDirection,
+        int arabicOptions)
     {
         if (canvas == null)
         {
             throw new ArgumentNullException(nameof(canvas));
         }
 
-        if (alignment != Element.ALIGN_LEFT && alignment != Element.ALIGN_CENTER
-                                            && alignment != Element.ALIGN_RIGHT)
+        if (alignment != Element.ALIGN_LEFT && alignment != Element.ALIGN_CENTER && alignment != Element.ALIGN_RIGHT)
         {
             alignment = Element.ALIGN_LEFT;
         }
@@ -550,23 +553,27 @@ public class ColumnText
         float ury = 2;
         float llx;
         float urx;
+
         switch (alignment)
         {
             case Element.ALIGN_LEFT:
                 llx = 0;
                 urx = 20000;
+
                 break;
             case Element.ALIGN_RIGHT:
                 llx = -20000;
                 urx = 0;
+
                 break;
             default:
                 llx = -20000;
                 urx = 20000;
+
                 break;
         }
 
-        if (rotation.ApproxEquals(0))
+        if (rotation.ApproxEquals(d2: 0))
         {
             llx += x;
             lly += y;
@@ -581,7 +588,8 @@ public class ColumnText
             canvas.ConcatCtm(cos, sin, -sin, cos, x, y);
         }
 
-        ct.SetSimpleColumn(phrase, llx, lly, urx, ury, 2, alignment);
+        ct.SetSimpleColumn(phrase, llx, lly, urx, ury, leading: 2, alignment);
+
         if (runDirection == PdfWriter.RUN_DIRECTION_RTL)
         {
             if (alignment == Element.ALIGN_LEFT)
@@ -611,14 +619,13 @@ public class ColumnText
     /// <param name="y">the y reference position</param>
     /// <param name="rotation">the rotation to be applied in degrees counterclockwise</param>
     public static void ShowTextAligned(PdfContentByte canvas,
-                                       int alignment,
-                                       Phrase phrase,
-                                       float x,
-                                       float y,
-                                       float rotation)
-    {
-        ShowTextAligned(canvas, alignment, phrase, x, y, rotation, PdfWriter.RUN_DIRECTION_NO_BIDI, 0);
-    }
+        int alignment,
+        Phrase phrase,
+        float x,
+        float y,
+        float rotation)
+        => ShowTextAligned(canvas, alignment, phrase, x, y, rotation, PdfWriter.RUN_DIRECTION_NO_BIDI,
+            arabicOptions: 0);
 
     /// <summary>
     ///     Adds an element. Elements supported are  Paragraph ,
@@ -634,12 +641,12 @@ public class ColumnText
             return;
         }
 
-        if (element is Image)
+        if (element is Image img)
         {
-            var img = (Image)element;
-            var t = new PdfPTable(1);
+            var t = new PdfPTable(numColumns: 1);
             var w = img.WidthPercentage;
-            if (w.ApproxEquals(0))
+
+            if (w.ApproxEquals(d2: 0))
             {
                 t.TotalWidth = img.ScaledWidth;
                 t.LockedWidth = true;
@@ -651,20 +658,24 @@ public class ColumnText
 
             t.SpacingAfter = img.SpacingAfter;
             t.SpacingBefore = img.SpacingBefore;
+
             switch (img.Alignment)
             {
                 case Image.LEFT_ALIGN:
                     t.HorizontalAlignment = Element.ALIGN_LEFT;
+
                     break;
                 case Image.RIGHT_ALIGN:
                     t.HorizontalAlignment = Element.ALIGN_RIGHT;
+
                     break;
                 default:
                     t.HorizontalAlignment = Element.ALIGN_CENTER;
+
                     break;
             }
 
-            var c = new PdfPCell(img, true);
+            var c = new PdfPCell(img, fit: true);
             c.Padding = 0;
             c.Border = img.Border;
             c.BorderColor = img.BorderColor;
@@ -683,21 +694,21 @@ public class ColumnText
             element = new Paragraph((Phrase)element);
         }
 
-        if (element is SimpleTable)
+        if (element is SimpleTable simpleTable)
         {
             try
             {
-                element = ((SimpleTable)element).CreatePdfPTable();
+                element = simpleTable.CreatePdfPTable();
             }
             catch (DocumentException)
             {
-                throw new ArgumentException("Element not allowed.");
+                throw new ArgumentException(message: "Element not allowed.");
             }
         }
         else if (element.Type != Element.PARAGRAPH && element.Type != Element.LIST && element.Type != Element.PTABLE &&
                  element.Type != Element.YMARK)
         {
-            throw new ArgumentException("Element not allowed.");
+            throw new ArgumentException(message: "Element not allowed.");
         }
 
         if (!Composite)
@@ -723,15 +734,17 @@ public class ColumnText
         }
 
         addWaitingPhrase();
+
         if (BidiLine == null)
         {
             WaitPhrase = phrase;
+
             return;
         }
 
         foreach (var c in phrase.Chunks)
         {
-            BidiLine.AddChunk(new PdfChunk(c, null));
+            BidiLine.AddChunk(new PdfChunk(c, action: null));
         }
     }
 
@@ -768,7 +781,7 @@ public class ColumnText
     ///     @throws DocumentException on error
     /// </summary>
     /// <returns>returns the result of the operation. It can be  NO_MORE_TEXT </returns>
-    public int Go() => Go(false);
+    public int Go() => Go(simulate: false);
 
     /// <summary>
     ///     Outputs the lines to the document. The output can be simulated.
@@ -785,6 +798,7 @@ public class ColumnText
         }
 
         addWaitingPhrase();
+
         if (BidiLine == null)
         {
             return NO_MORE_TEXT;
@@ -803,6 +817,7 @@ public class ColumnText
         PdfContentByte text = null;
         _firstLineY = float.NaN;
         var localRunDirection = PdfWriter.RUN_DIRECTION_NO_BIDI;
+
         if (runDirection != PdfWriter.RUN_DIRECTION_DEFAULT)
         {
             localRunDirection = runDirection;
@@ -816,7 +831,7 @@ public class ColumnText
         }
         else if (!simulate)
         {
-            throw new InvalidOperationException("ColumnText.go with simulate==false and text==null.");
+            throw new InvalidOperationException(message: "ColumnText.go with simulate==false and text==null.");
         }
 
         if (!simulate)
@@ -835,14 +850,17 @@ public class ColumnText
         PdfLine line;
         float x1;
         var status = 0;
+
         while (true)
         {
             firstIndent = _lastWasNewline ? indent : followingIndent; //
+
             if (RectangularMode)
             {
                 if (RectangularWidth <= firstIndent + rightIndent)
                 {
                     status = NO_MORE_COLUMN;
+
                     if (BidiLine.IsEmpty())
                     {
                         status |= NO_MORE_TEXT;
@@ -854,21 +872,22 @@ public class ColumnText
                 if (BidiLine.IsEmpty())
                 {
                     status = NO_MORE_TEXT;
+
                     break;
                 }
 
-                line = BidiLine.ProcessLine(LeftX,
-                                            RectangularWidth - firstIndent - rightIndent,
-                                            alignment,
-                                            localRunDirection,
-                                            _arabicOptions);
+                line = BidiLine.ProcessLine(LeftX, RectangularWidth - firstIndent - rightIndent, alignment,
+                    localRunDirection, _arabicOptions);
+
                 if (line == null)
                 {
                     status = NO_MORE_TEXT;
+
                     break;
                 }
 
                 var maxSize = line.GetMaxSize();
+
                 if (UseAscender && float.IsNaN(_firstLineY))
                 {
                     CurrentLeading = line.Ascender;
@@ -882,10 +901,12 @@ public class ColumnText
                 {
                     status = NO_MORE_COLUMN;
                     BidiLine.Restore();
+
                     break;
                 }
 
                 yLine -= CurrentLeading;
+
                 if (!simulate && !dirty)
                 {
                     text.BeginText();
@@ -904,15 +925,18 @@ public class ColumnText
             {
                 var yTemp = yLine;
                 var xx = FindLimitsTwoLines();
+
                 if (xx == null)
                 {
                     status = NO_MORE_COLUMN;
+
                     if (BidiLine.IsEmpty())
                     {
                         status |= NO_MORE_TEXT;
                     }
 
                     yLine = yTemp;
+
                     break;
                 }
 
@@ -920,11 +944,13 @@ public class ColumnText
                 {
                     status = NO_MORE_TEXT;
                     yLine = yTemp;
+
                     break;
                 }
 
                 x1 = Math.Max(xx[0], xx[2]);
                 var x2 = Math.Min(xx[1], xx[3]);
+
                 if (x2 - x1 <= firstIndent + rightIndent)
                 {
                     continue;
@@ -936,15 +962,14 @@ public class ColumnText
                     dirty = true;
                 }
 
-                line = BidiLine.ProcessLine(x1,
-                                            x2 - x1 - firstIndent - rightIndent,
-                                            alignment,
-                                            localRunDirection,
-                                            _arabicOptions);
+                line = BidiLine.ProcessLine(x1, x2 - x1 - firstIndent - rightIndent, alignment, localRunDirection,
+                    _arabicOptions);
+
                 if (line == null)
                 {
                     status = NO_MORE_TEXT;
                     yLine = yTemp;
+
                     break;
                 }
             }
@@ -985,6 +1010,7 @@ public class ColumnText
         }
 
         SetSimpleVars(org);
+
         if (org.BidiLine != null)
         {
             BidiLine = new BidiLine(org.BidiLine);
@@ -1076,6 +1102,7 @@ public class ColumnText
         RightX = Math.Max(llx, urx);
         yLine = MaxY;
         RectangularWidth = RightX - LeftX;
+
         if (RectangularWidth < 0)
         {
             RectangularWidth = 0;
@@ -1117,10 +1144,10 @@ public class ColumnText
     ///     @since 2.1.2
     /// </summary>
     /// <returns>true or false</returns>
-    public bool ZeroHeightElement() =>
-        Composite && CompositeElements.Count != 0 && CompositeElements[0].Type == Element.YMARK;
+    public bool ZeroHeightElement()
+        => Composite && CompositeElements.Count != 0 && CompositeElements[index: 0].Type == Element.YMARK;
 
-    protected internal void SetSimpleVars(ColumnText org)
+    internal protected void SetSimpleVars(ColumnText org)
     {
         if (org == null)
         {
@@ -1131,12 +1158,14 @@ public class ColumnText
         MinY = org.MinY;
         alignment = org.alignment;
         LeftWall = null;
+
         if (org.LeftWall != null)
         {
             LeftWall = new List<float[]>(org.LeftWall);
         }
 
         RightWall = null;
+
         if (org.RightWall != null)
         {
             RightWall = new List<float[]>(org.RightWall);
@@ -1163,13 +1192,15 @@ public class ColumnText
         descender = org.descender;
         Composite = org.Composite;
         _splittedRow = org._splittedRow;
+
         if (org.Composite)
         {
             CompositeElements = new List<IElement>(org.CompositeElements);
+
             if (_splittedRow)
             {
-                var table = (PdfPTable)CompositeElements[0];
-                CompositeElements[0] = new PdfPTable(table);
+                var table = (PdfPTable)CompositeElements[index: 0];
+                CompositeElements[index: 0] = new PdfPTable(table);
             }
 
             if (org.CompositeColumn != null)
@@ -1206,16 +1237,18 @@ public class ColumnText
 
         if (cLine.Length < 4)
         {
-            throw new InvalidOperationException("No valid column line found.");
+            throw new InvalidOperationException(message: "No valid column line found.");
         }
 
         List<float[]> cc = new();
+
         for (var k = 0; k < cLine.Length - 2; k += 2)
         {
             var x1 = cLine[k];
             var y1 = cLine[k + 1];
             var x2 = cLine[k + 2];
             var y2 = cLine[k + 3];
+
             if (y1.ApproxEquals(y2))
             {
                 continue;
@@ -1236,7 +1269,7 @@ public class ColumnText
 
         if (cc.Count == 0)
         {
-            throw new InvalidOperationException("No valid column line found.");
+            throw new InvalidOperationException(message: "No valid column line found.");
         }
 
         return cc;
@@ -1250,18 +1283,23 @@ public class ColumnText
     protected float[] FindLimitsOneLine()
     {
         var x1 = FindLimitsPoint(LeftWall);
+
         if (LineStatus == LINE_STATUS_OFFLIMITS || LineStatus == LINE_STATUS_NOLINE)
         {
             return null;
         }
 
         var x2 = FindLimitsPoint(RightWall);
+
         if (LineStatus == LINE_STATUS_NOLINE)
         {
             return null;
         }
 
-        return new[] { x1, x2 };
+        return new[]
+        {
+            x1, x2
+        };
     }
 
     /// <summary>
@@ -1278,15 +1316,18 @@ public class ColumnText
         }
 
         LineStatus = LINE_STATUS_OK;
+
         if (yLine < MinY || yLine > MaxY)
         {
             LineStatus = LINE_STATUS_OFFLIMITS;
+
             return 0;
         }
 
         for (var k = 0; k < wall.Count; ++k)
         {
             var r = wall[k];
+
             if (yLine < r[0] || yLine > r[1])
             {
                 continue;
@@ -1296,6 +1337,7 @@ public class ColumnText
         }
 
         LineStatus = LINE_STATUS_NOLINE;
+
         return 0;
     }
 
@@ -1308,27 +1350,31 @@ public class ColumnText
     protected float[] FindLimitsTwoLines()
     {
         var repeat = false;
+
         for (;;)
         {
-            if (repeat && CurrentLeading.ApproxEquals(0))
+            if (repeat && CurrentLeading.ApproxEquals(d2: 0))
             {
                 return null;
             }
 
             repeat = true;
             var x1 = FindLimitsOneLine();
+
             if (LineStatus == LINE_STATUS_OFFLIMITS)
             {
                 return null;
             }
 
             yLine -= CurrentLeading;
+
             if (LineStatus == LINE_STATUS_NOLINE)
             {
                 continue;
             }
 
             var x2 = FindLimitsOneLine();
+
             if (LineStatus == LINE_STATUS_OFFLIMITS)
             {
                 return null;
@@ -1337,6 +1383,7 @@ public class ColumnText
             if (LineStatus == LINE_STATUS_NOLINE)
             {
                 yLine -= CurrentLeading;
+
                 continue;
             }
 
@@ -1345,7 +1392,10 @@ public class ColumnText
                 continue;
             }
 
-            return new[] { x1[0], x1[1], x2[0], x2[1] };
+            return new[]
+            {
+                x1[0], x1[1], x2[0], x2[1]
+            };
         }
     }
 
@@ -1353,13 +1403,14 @@ public class ColumnText
     {
         if (!RectangularMode)
         {
-            throw new DocumentException("Irregular columns are not supported in composite mode.");
+            throw new DocumentException(message: "Irregular columns are not supported in composite mode.");
         }
 
         _linesWritten = 0;
         descender = 0;
         var firstPass = AdjustFirstLine;
         main_loop:
+
         while (true)
         {
             if (CompositeElements.Count == 0)
@@ -1367,15 +1418,18 @@ public class ColumnText
                 return NO_MORE_TEXT;
             }
 
-            var element = CompositeElements[0];
+            var element = CompositeElements[index: 0];
+
             if (element.Type == Element.PARAGRAPH)
             {
                 var para = (Paragraph)element;
                 var status = 0;
+
                 for (var keep = 0; keep < 2; ++keep)
                 {
                     var lastY = yLine;
                     var createHere = false;
+
                     if (CompositeColumn == null)
                     {
                         CompositeColumn = new ColumnText(canvas);
@@ -1390,6 +1444,7 @@ public class ColumnText
                         CompositeColumn.ArabicOptions = _arabicOptions;
                         CompositeColumn.SpaceCharRatio = _spaceCharRatio;
                         CompositeColumn.AddText(para);
+
                         if (!firstPass)
                         {
                             yLine -= para.SpacingBefore;
@@ -1408,10 +1463,12 @@ public class ColumnText
                     var keepCandidate = para.KeepTogether && createHere && !firstPass;
                     status = CompositeColumn.Go(simulate || (keepCandidate && keep == 0));
                     UpdateFilledWidth(CompositeColumn._filledWidth);
+
                     if ((status & NO_MORE_TEXT) == 0 && keepCandidate)
                     {
                         CompositeColumn = null;
                         yLine = lastY;
+
                         return NO_MORE_COLUMN;
                     }
 
@@ -1431,10 +1488,11 @@ public class ColumnText
                 yLine = CompositeColumn.yLine;
                 _linesWritten += CompositeColumn._linesWritten;
                 descender = CompositeColumn.descender;
+
                 if ((status & NO_MORE_TEXT) != 0)
                 {
                     CompositeColumn = null;
-                    CompositeElements.RemoveAt(0);
+                    CompositeElements.RemoveAt(index: 0);
                     yLine -= para.SpacingAfter;
                 }
 
@@ -1451,26 +1509,34 @@ public class ColumnText
                 var listIndentation = list.IndentationLeft;
                 var count = 0;
                 var stack = new Stack<object[]>();
+
                 for (var k = 0; k < items.Count; ++k)
                 {
                     var obj = items[k];
-                    if (obj is ListItem)
+
+                    if (obj is ListItem listItem)
                     {
                         if (count == ListIdx)
                         {
-                            item = (ListItem)obj;
+                            item = listItem;
+
                             break;
                         }
 
                         ++count;
                     }
-                    else if (obj is List)
+                    else if (obj is List list1)
                     {
-                        stack.Push(new object[] { list, k, listIndentation });
-                        list = (List)obj;
+                        stack.Push(new object[]
+                        {
+                            list, k, listIndentation
+                        });
+
+                        list = list1;
                         items = list.Items;
                         listIndentation += list.IndentationLeft;
                         k = -1;
+
                         continue;
                     }
 
@@ -1488,16 +1554,19 @@ public class ColumnText
                 }
 
                 var status = 0;
+
                 for (var keep = 0; keep < 2; ++keep)
                 {
                     var lastY = yLine;
                     var createHere = false;
+
                     if (CompositeColumn == null)
                     {
                         if (item == null)
                         {
                             ListIdx = 0;
-                            CompositeElements.RemoveAt(0);
+                            CompositeElements.RemoveAt(index: 0);
+
                             goto main_loop;
                         }
 
@@ -1514,6 +1583,7 @@ public class ColumnText
                         CompositeColumn.ArabicOptions = _arabicOptions;
                         CompositeColumn.SpaceCharRatio = _spaceCharRatio;
                         CompositeColumn.AddText(item);
+
                         if (!firstPass)
                         {
                             yLine -= item.SpacingBefore;
@@ -1532,10 +1602,12 @@ public class ColumnText
                     var keepCandidate = item.KeepTogether && createHere && !firstPass;
                     status = CompositeColumn.Go(simulate || (keepCandidate && keep == 0));
                     UpdateFilledWidth(CompositeColumn._filledWidth);
+
                     if ((status & NO_MORE_TEXT) == 0 && keepCandidate)
                     {
                         CompositeColumn = null;
                         yLine = lastY;
+
                         return NO_MORE_COLUMN;
                     }
 
@@ -1555,16 +1627,13 @@ public class ColumnText
                 yLine = CompositeColumn.yLine;
                 _linesWritten += CompositeColumn._linesWritten;
                 descender = CompositeColumn.descender;
+
                 if (!float.IsNaN(CompositeColumn._firstLineY) && !CompositeColumn._firstLineYDone)
                 {
                     if (!simulate)
                     {
-                        ShowTextAligned(canvas,
-                                        Element.ALIGN_LEFT,
-                                        new Phrase(item.ListSymbol),
-                                        CompositeColumn.LeftX + listIndentation,
-                                        CompositeColumn._firstLineY,
-                                        0);
+                        ShowTextAligned(canvas, Element.ALIGN_LEFT, new Phrase(item.ListSymbol),
+                            CompositeColumn.LeftX + listIndentation, CompositeColumn._firstLineY, rotation: 0);
                     }
 
                     CompositeColumn._firstLineYDone = true;
@@ -1596,12 +1665,14 @@ public class ColumnText
                 // we ignore tables without a body
                 if (table.Size <= table.HeaderRows)
                 {
-                    CompositeElements.RemoveAt(0);
+                    CompositeElements.RemoveAt(index: 0);
+
                     continue;
                 }
 
                 // offsets
                 var yTemp = yLine;
+
                 if (!firstPass && ListIdx == 0)
                 {
                     yTemp -= table.SpacingBefore;
@@ -1619,6 +1690,7 @@ public class ColumnText
                 CurrentLeading = 0;
                 var x1 = LeftX;
                 float tableWidth;
+
                 if (table.LockedWidth)
                 {
                     tableWidth = table.TotalWidth;
@@ -1633,6 +1705,7 @@ public class ColumnText
                 // how many header rows are real header rows; how many are footer rows?
                 var headerRows = table.HeaderRows;
                 var footerRows = table.FooterRows;
+
                 if (footerRows > headerRows)
                 {
                     footerRows = headerRows;
@@ -1645,14 +1718,17 @@ public class ColumnText
                 // make sure the header and footer fit on the page
                 var skipHeader = table.SkipFirstHeader && ListIdx <= realHeaderRows &&
                                  (table.ElementComplete || ListIdx != realHeaderRows);
+
                 if (!skipHeader)
                 {
                     yTemp -= headerHeight;
+
                     if (yTemp < MinY || yTemp > MaxY)
                     {
                         if (firstPass)
                         {
-                            CompositeElements.RemoveAt(0);
+                            CompositeElements.RemoveAt(index: 0);
+
                             continue;
                         }
 
@@ -1662,6 +1738,7 @@ public class ColumnText
 
                 // how many real rows (not header or footer rows) fit on a page?
                 int k;
+
                 if (ListIdx < headerRows)
                 {
                     ListIdx = headerRows;
@@ -1675,6 +1752,7 @@ public class ColumnText
                 for (k = ListIdx; k < table.Size; ++k)
                 {
                     var rowHeight = table.GetRowHeight(k);
+
                     if (yTemp - rowHeight < MinY)
                     {
                         break;
@@ -1697,8 +1775,9 @@ public class ColumnText
                         {
                             _splittedRow = true;
                             table = new PdfPTable(table);
-                            CompositeElements[0] = table;
+                            CompositeElements[index: 0] = table;
                             var rows = table.Rows;
+
                             for (var i = headerRows; i < ListIdx; ++i)
                             {
                                 rows[i] = null;
@@ -1707,6 +1786,7 @@ public class ColumnText
 
                         var h = yTemp - MinY;
                         var newRow = table.GetRow(k).SplitRow(table, k, h);
+
                         if (newRow == null)
                         {
                             if (k == ListIdx)
@@ -1722,8 +1802,9 @@ public class ColumnText
                     }
                     else if (!table.SplitRows && k == ListIdx && firstPass)
                     {
-                        CompositeElements.RemoveAt(0);
+                        CompositeElements.RemoveAt(index: 0);
                         _splittedRow = false;
+
                         continue;
                     }
                     else if (k == ListIdx && !firstPass && (!table.SplitRows || table.SplitLate) &&
@@ -1735,6 +1816,7 @@ public class ColumnText
 
                 // or k is the number of rows in the table (for loop was done).
                 firstPass = false;
+
                 // we draw the table (for real now)
                 if (!simulate)
                 {
@@ -1745,9 +1827,11 @@ public class ColumnText
                             break;
                         case Element.ALIGN_RIGHT:
                             x1 += RectangularWidth - tableWidth;
+
                             break;
                         default:
                             x1 += (RectangularWidth - tableWidth) / 2f;
+
                             break;
                     }
 
@@ -1758,7 +1842,7 @@ public class ColumnText
                     // first we add the real header rows (if necessary)
                     if (!skipHeader && realHeaderRows > 0)
                     {
-                        sub.AddRange(table.GetRows(0, realHeaderRows));
+                        sub.AddRange(table.GetRows(start: 0, realHeaderRows));
                     }
                     else
                     {
@@ -1767,9 +1851,11 @@ public class ColumnText
 
                     // then we add the real content
                     sub.AddRange(table.GetRows(ListIdx, k));
+
                     // if k < table.size(), we must indicate that the new table is complete;
                     // otherwise no footers will be added (because iText thinks the table continues on the same page)
                     var showFooter = !table.SkipLastFooter;
+
                     if (k < table.Size)
                     {
                         nt.ElementComplete = true;
@@ -1785,12 +1871,14 @@ public class ColumnText
                     // we need a correction if the last row needs to be extended
                     float rowHeight = 0;
                     var index = sub.Count - 1;
+
                     if (showFooter)
                     {
                         index -= footerRows;
                     }
 
                     var last = sub[index];
+
                     if (table.ExtendLastRow)
                     {
                         rowHeight = last.MaxHeights;
@@ -1801,11 +1889,11 @@ public class ColumnText
                     // now we render the rows of the new table
                     if (canvases != null)
                     {
-                        nt.WriteSelectedRows(0, -1, x1, yLineWrite, canvases);
+                        nt.WriteSelectedRows(rowStart: 0, rowEnd: -1, x1, yLineWrite, canvases);
                     }
                     else
                     {
-                        nt.WriteSelectedRows(0, -1, x1, yLineWrite, canvas);
+                        nt.WriteSelectedRows(rowStart: 0, rowEnd: -1, x1, yLineWrite, canvas);
                     }
 
                     if (table.ExtendLastRow)
@@ -1819,6 +1907,7 @@ public class ColumnText
                 }
 
                 yLine = yTemp;
+
                 if (!(skipHeader || table.ElementComplete))
                 {
                     yLine += footerHeight;
@@ -1827,7 +1916,7 @@ public class ColumnText
                 if (k >= table.Size)
                 {
                     yLine -= table.SpacingAfter;
-                    CompositeElements.RemoveAt(0);
+                    CompositeElements.RemoveAt(index: 0);
                     _splittedRow = false;
                     ListIdx = 0;
                 }
@@ -1836,6 +1925,7 @@ public class ColumnText
                     if (_splittedRow)
                     {
                         var rows = table.Rows;
+
                         for (var i = ListIdx; i < k; ++i)
                         {
                             rows[i] = null;
@@ -1843,6 +1933,7 @@ public class ColumnText
                     }
 
                     ListIdx = k;
+
                     return NO_MORE_COLUMN;
                 }
             }
@@ -1854,11 +1945,11 @@ public class ColumnText
                     zh.Draw(canvas, LeftX, MinY, RightX, MaxY, yLine);
                 }
 
-                CompositeElements.RemoveAt(0);
+                CompositeElements.RemoveAt(index: 0);
             }
             else
             {
-                CompositeElements.RemoveAt(0);
+                CompositeElements.RemoveAt(index: 0);
             }
         }
     }
@@ -1868,9 +1959,10 @@ public class ColumnText
         if (BidiLine == null && WaitPhrase != null)
         {
             BidiLine = new BidiLine();
+
             foreach (var ck in WaitPhrase.Chunks)
             {
-                BidiLine.AddChunk(new PdfChunk(ck, null));
+                BidiLine.AddChunk(new PdfChunk(ck, action: null));
             }
 
             WaitPhrase = null;

@@ -15,7 +15,7 @@ public class RtfParagraph : RtfPhrase
     /// <summary>
     ///     Constant for the end of a paragraph
     /// </summary>
-    public static readonly byte[] Paragraph = DocWriter.GetIsoBytes("\\par");
+    public static readonly byte[] Paragraph = DocWriter.GetIsoBytes(text: "\\par");
 
     /// <summary>
     ///     An optional RtfParagraphStyle to use for styling.
@@ -40,23 +40,26 @@ public class RtfParagraph : RtfPhrase
         }
 
         ST.RtfFont baseFont = null;
-        if (paragraph.Font is ST.RtfParagraphStyle)
+
+        if (paragraph.Font is ST.RtfParagraphStyle style)
         {
-            ParagraphStyle = Document.GetDocumentHeader()
-                                     .GetRtfParagraphStyle(((ST.RtfParagraphStyle)paragraph.Font).GetStyleName());
+            ParagraphStyle = Document.GetDocumentHeader().GetRtfParagraphStyle(style.GetStyleName());
             baseFont = ParagraphStyle;
         }
         else
         {
             baseFont = new ST.RtfFont(Document, paragraph.Font);
-            ParagraphStyle =
-                new ST.RtfParagraphStyle(Document, Document.GetDocumentHeader().GetRtfParagraphStyle("Normal"));
+
+            ParagraphStyle = new ST.RtfParagraphStyle(Document,
+                Document.GetDocumentHeader().GetRtfParagraphStyle(styleName: "Normal"));
+
             ParagraphStyle.SetAlignment(paragraph.Alignment);
             ParagraphStyle.SetFirstLineIndent((int)(paragraph.FirstLineIndent * TWIPS_FACTOR));
             ParagraphStyle.SetIndentLeft((int)(paragraph.IndentationLeft * TWIPS_FACTOR));
             ParagraphStyle.SetIndentRight((int)(paragraph.IndentationRight * TWIPS_FACTOR));
             ParagraphStyle.SetSpacingBefore((int)(paragraph.SpacingBefore * TWIPS_FACTOR));
             ParagraphStyle.SetSpacingAfter((int)(paragraph.SpacingAfter * TWIPS_FACTOR));
+
             if (paragraph.HasLeading())
             {
                 ParagraphStyle.SetLineLeading((int)(paragraph.Leading * TWIPS_FACTOR));
@@ -68,9 +71,10 @@ public class RtfParagraph : RtfPhrase
         for (var i = 0; i < paragraph.Count; i++)
         {
             var chunk = paragraph[i];
-            if (chunk is Chunk)
+
+            if (chunk is Chunk element)
             {
-                ((Chunk)chunk).Font = baseFont.Difference(((Chunk)chunk).Font);
+                element.Font = baseFont.Difference(element.Font);
             }
             else if (chunk is RtfImage)
             {
@@ -80,6 +84,7 @@ public class RtfParagraph : RtfPhrase
             try
             {
                 var rtfElements = doc.GetMapper().MapElement(chunk);
+
                 for (var j = 0; j < rtfElements.Length; j++)
                 {
                     Chunks.Add(rtfElements[j]);
@@ -107,28 +112,20 @@ public class RtfParagraph : RtfPhrase
     ///     Sets the left indentation of this RtfParagraph.
     /// </summary>
     /// <param name="indentLeft">The left indentation to use.</param>
-    public void SetIndentLeft(int indentLeft)
-    {
-        ParagraphStyle.SetIndentLeft(indentLeft);
-    }
+    public void SetIndentLeft(int indentLeft) => ParagraphStyle.SetIndentLeft(indentLeft);
 
     /// <summary>
     ///     Sets the right indentation of this RtfParagraph.
     /// </summary>
     /// <param name="indentRight">The right indentation to use.</param>
-    public void SetIndentRight(int indentRight)
-    {
-        ParagraphStyle.SetIndentRight(indentRight);
-    }
+    public void SetIndentRight(int indentRight) => ParagraphStyle.SetIndentRight(indentRight);
 
     /// <summary>
     ///     Set whether this RtfParagraph must stay on the same page as the next one.
     /// </summary>
     /// <param name="keepTogetherWithNext">Whether this RtfParagraph must keep together with the next.</param>
     public void SetKeepTogetherWithNext(bool keepTogetherWithNext)
-    {
-        ParagraphStyle.SetKeepTogetherWithNext(keepTogetherWithNext);
-    }
+        => ParagraphStyle.SetKeepTogetherWithNext(keepTogetherWithNext);
 
     /// <summary>
     ///     Writes the content of this RtfParagraph. First paragraph specific data is written
@@ -141,11 +138,12 @@ public class RtfParagraph : RtfPhrase
             throw new ArgumentNullException(nameof(outp));
         }
 
-        outp.Write(ParagraphDefaults, 0, ParagraphDefaults.Length);
-        outp.Write(Plain, 0, Plain.Length);
+        outp.Write(ParagraphDefaults, offset: 0, ParagraphDefaults.Length);
+        outp.Write(Plain, offset: 0, Plain.Length);
+
         if (((RtfElement)this).InTable)
         {
-            outp.Write(InTable, 0, InTable.Length);
+            outp.Write(InTable, offset: 0, InTable.Length);
         }
 
         if (ParagraphStyle != null)
@@ -153,7 +151,8 @@ public class RtfParagraph : RtfPhrase
             ParagraphStyle.WriteBegin(outp);
         }
 
-        outp.Write(Plain, 0, Plain.Length);
+        outp.Write(Plain, offset: 0, Plain.Length);
+
         for (var i = 0; i < Chunks.Count; i++)
         {
             var rbe = Chunks[i];
@@ -167,7 +166,7 @@ public class RtfParagraph : RtfPhrase
 
         if (!((RtfElement)this).InTable)
         {
-            outp.Write(Paragraph, 0, Paragraph.Length);
+            outp.Write(Paragraph, offset: 0, Paragraph.Length);
         }
 
         Document.OutputDebugLinebreak(outp);

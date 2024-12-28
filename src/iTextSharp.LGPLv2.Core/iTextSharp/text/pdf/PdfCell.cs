@@ -134,23 +134,22 @@ public class PdfCell : Rectangle
                 // if the element is something else
                 default:
                     allActions = new List<PdfAction>();
-                    ProcessActions(ele, null, allActions);
+                    ProcessActions(ele, action: null, allActions);
                     aCounter = 0;
 
                     var currentLineLeading = Leading;
                     var currentLeft = left;
                     var currentRight = right;
 
-                    if (ele is Phrase)
+                    if (ele is Phrase phrase)
                     {
-                        currentLineLeading = ((Phrase)ele).Leading;
+                        currentLineLeading = phrase.Leading;
                     }
 
-                    if (ele is Paragraph)
+                    if (ele is Paragraph paragraph)
                     {
-                        var p = (Paragraph)ele;
-                        currentLeft += p.IndentationLeft;
-                        currentRight -= p.IndentationRight;
+                        currentLeft += paragraph.IndentationLeft;
+                        currentRight -= paragraph.IndentationRight;
                     }
 
                     if (_line == null)
@@ -223,14 +222,14 @@ public class PdfCell : Rectangle
                         while (lastChunk.ToString().Length > 0 && lastChunk.Width + moreWidth > right - left)
                         {
                             // Remove characters to leave room for the 'more' indicator
-                            lastChunk.Value = lastChunk.ToString().Substring(0, lastChunk.Length - 1);
+                            lastChunk.Value = lastChunk.ToString().Substring(startIndex: 0, lastChunk.Length - 1);
                         }
 
                         lastChunk.Value = lastChunk + more;
                     }
                     else
                     {
-                        _lastLine.Add(new PdfChunk(new Chunk(more), null));
+                        _lastLine.Add(new PdfChunk(new Chunk(more), action: null));
                     }
                 }
             }
@@ -245,7 +244,7 @@ public class PdfCell : Rectangle
         // adjust first line height so that it touches the top
         if (_lines.Count > 0)
         {
-            _firstLine = _lines[0];
+            _firstLine = _lines[index: 0];
             var firstLineRealHeight = FirstLineRealHeight;
             _contentHeight -= _firstLine.Height;
             _firstLine.height = firstLineRealHeight;
@@ -404,7 +403,7 @@ public class PdfCell : Rectangle
 
             if (_firstLine != null)
             {
-                var chunk = _firstLine.GetChunk(0);
+                var chunk = _firstLine.GetChunk(idx: 0);
 
                 if (chunk != null)
                 {
@@ -412,7 +411,7 @@ public class PdfCell : Rectangle
 
                     if (image != null)
                     {
-                        firstLineRealHeight = _firstLine.GetChunk(0).Image.ScaledHeight;
+                        firstLineRealHeight = _firstLine.GetChunk(idx: 0).Image.ScaledHeight;
                     }
                     else
                     {
@@ -514,7 +513,7 @@ public class PdfCell : Rectangle
 
                 for (var i = 0; i < size; i++)
                 {
-                    _line = removeLine(0);
+                    _line = removeLine(index: 0);
                     difference += _line.Height;
                 }
             }
@@ -551,11 +550,9 @@ public class PdfCell : Rectangle
         return tmp;
     }
 
-    internal bool MayBeRemoved()
-        => Header || (_lines.Count == 0 && _images.Count == 0);
+    internal bool MayBeRemoved() => Header || (_lines.Count == 0 && _images.Count == 0);
 
-    internal void SetHeader()
-        => Header = true;
+    internal void SetHeader() => Header = true;
 
     protected static void ProcessActions(IElement element, PdfAction action, IList<PdfAction> allActions)
     {
@@ -648,8 +645,8 @@ public class PdfCell : Rectangle
             left = left + (right - left - image.ScaledWidth) / 2f;
         }
 
-        var imageChunk = new Chunk(image, left, 0);
-        imageLine.Add(new PdfChunk(imageChunk, null));
+        var imageChunk = new Chunk(image, left, offsetY: 0);
+        imageLine.Add(new PdfChunk(imageChunk, action: null));
         addLine(imageLine);
 
         return imageLine.Height;
@@ -668,7 +665,7 @@ public class PdfCell : Rectangle
         PdfChunk chunk;
         PdfChunk overflow;
         List<PdfAction> allActions = new();
-        ProcessActions(list, null, allActions);
+        ProcessActions(list, action: null, allActions);
         var aCounter = 0;
 
         foreach (var ele in list.Items)
@@ -812,7 +809,7 @@ public class PdfCell : Rectangle
         {
             if (_lines.Count > 0)
             {
-                _firstLine = _lines[0];
+                _firstLine = _lines[index: 0];
                 var firstLineRealHeight = FirstLineRealHeight;
                 _contentHeight -= _firstLine.Height;
                 _firstLine.height = firstLineRealHeight;

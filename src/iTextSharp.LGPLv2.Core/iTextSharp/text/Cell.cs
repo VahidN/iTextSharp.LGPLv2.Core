@@ -156,9 +156,9 @@ public class Cell : Rectangle, ITextElementArray
     /// <param name="element">the element</param>
     public Cell(IElement element) : this()
     {
-        if (element is Phrase)
+        if (element is Phrase phrase)
         {
-            Leading = ((Phrase)element).Leading;
+            Leading = phrase.Leading;
         }
 
         AddElement(element);

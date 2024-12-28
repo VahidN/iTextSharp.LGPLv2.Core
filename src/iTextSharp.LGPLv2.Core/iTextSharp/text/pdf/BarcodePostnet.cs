@@ -20,16 +20,46 @@ public class BarcodePostnet : Barcode
     /// </summary>
     private static readonly byte[][] _bars =
     {
-        new byte[] { 1, 1, 0, 0, 0 },
-        new byte[] { 0, 0, 0, 1, 1 },
-        new byte[] { 0, 0, 1, 0, 1 },
-        new byte[] { 0, 0, 1, 1, 0 },
-        new byte[] { 0, 1, 0, 0, 1 },
-        new byte[] { 0, 1, 0, 1, 0 },
-        new byte[] { 0, 1, 1, 0, 0 },
-        new byte[] { 1, 0, 0, 0, 1 },
-        new byte[] { 1, 0, 0, 1, 0 },
-        new byte[] { 1, 0, 1, 0, 0 },
+        new byte[]
+        {
+            1, 1, 0, 0, 0
+        },
+        new byte[]
+        {
+            0, 0, 0, 1, 1
+        },
+        new byte[]
+        {
+            0, 0, 1, 0, 1
+        },
+        new byte[]
+        {
+            0, 0, 1, 1, 0
+        },
+        new byte[]
+        {
+            0, 1, 0, 0, 1
+        },
+        new byte[]
+        {
+            0, 1, 0, 1, 0
+        },
+        new byte[]
+        {
+            0, 1, 1, 0, 0
+        },
+        new byte[]
+        {
+            1, 0, 0, 0, 1
+        },
+        new byte[]
+        {
+            1, 0, 0, 1, 0
+        },
+        new byte[]
+        {
+            1, 0, 1, 0, 0
+        }
     };
 
     /// <summary>
@@ -54,6 +84,7 @@ public class BarcodePostnet : Barcode
         get
         {
             var width = ((float)(code.Length + 1) * 5 + 1) * n + x;
+
             return new Rectangle(width, barHeight);
         }
     }
@@ -71,20 +102,22 @@ public class BarcodePostnet : Barcode
         }
 
         var total = 0;
+
         for (var k = text.Length - 1; k >= 0; --k)
         {
-            var n = text[k] - '0';
-            total += n;
+            var i = text[k] - '0';
+            total += i;
         }
 
         text += (char)((10 - total % 10) % 10 + '0');
         var bars = new byte[text.Length * 5 + 2];
         bars[0] = 1;
         bars[bars.Length - 1] = 1;
+
         for (var k = 0; k < text.Length; ++k)
         {
             var c = text[k] - '0';
-            Array.Copy(_bars[c], 0, bars, k * 5 + 1, 5);
+            Array.Copy(_bars[c], sourceIndex: 0, bars, k * 5 + 1, length: 5);
         }
 
         return bars;
@@ -93,24 +126,28 @@ public class BarcodePostnet : Barcode
     public override SKBitmap CreateDrawingImage(Color foreground, Color background)
     {
         var barWidth = (int)x;
+
         if (barWidth <= 0)
         {
             barWidth = 1;
         }
 
         var barDistance = (int)n;
+
         if (barDistance <= barWidth)
         {
             barDistance = barWidth + 1;
         }
 
         var barShort = (int)size;
+
         if (barShort <= 0)
         {
             barShort = 1;
         }
 
         var barTall = (int)barHeight;
+
         if (barTall <= barShort)
         {
             barTall = barShort + 1;
@@ -119,6 +156,7 @@ public class BarcodePostnet : Barcode
         var bars = GetBarsPostnet(code);
         var width = bars.Length * barDistance;
         byte flip = 1;
+
         if (codeType == PLANET)
         {
             flip = 0;
@@ -128,12 +166,15 @@ public class BarcodePostnet : Barcode
 
         var bmp = new SKBitmap(width, barTall);
         var seg1 = barTall - barShort;
+
         for (var i = 0; i < seg1; ++i)
         {
             var idx = 0;
+
             for (var k = 0; k < bars.Length; ++k)
             {
                 var dot = bars[k] == flip;
+
                 for (var j = 0; j < barDistance; ++j)
                 {
                     bmp.SetPixel(idx++, i, dot && j < barWidth ? foreground.ToSKColor() : background.ToSKColor());
@@ -144,6 +185,7 @@ public class BarcodePostnet : Barcode
         for (var i = seg1; i < barTall; ++i)
         {
             var idx = 0;
+
             for (var k = 0; k < bars.Length; ++k)
             {
                 for (var j = 0; j < barDistance; ++j)
@@ -195,6 +237,7 @@ public class BarcodePostnet : Barcode
 
         var bars = GetBarsPostnet(code);
         byte flip = 1;
+
         if (codeType == PLANET)
         {
             flip = 0;
@@ -203,13 +246,15 @@ public class BarcodePostnet : Barcode
         }
 
         float startX = 0;
+
         for (var k = 0; k < bars.Length; ++k)
         {
-            cb.Rectangle(startX, 0, x - inkSpreading, bars[k] == flip ? barHeight : size);
+            cb.Rectangle(startX, y: 0, x - inkSpreading, bars[k] == flip ? barHeight : size);
             startX += n;
         }
 
         cb.Fill();
+
         return BarcodeSize;
     }
 }

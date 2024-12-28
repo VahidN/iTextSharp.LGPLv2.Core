@@ -998,9 +998,9 @@ public class TextHandler : ParserBase
         {
             newStack.Push(current);
 
-            if (current is Anchor)
+            if (current is Anchor element)
             {
-                img.Annotation = new Annotation(llx: 0, lly: 0, urx: 0, ury: 0, ((Anchor)current).Reference);
+                img.Annotation = new Annotation(llx: 0, lly: 0, urx: 0, ury: 0, element.Reference);
             }
 
             current = Stack.Pop();

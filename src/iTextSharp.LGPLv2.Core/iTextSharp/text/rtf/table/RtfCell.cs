@@ -148,7 +148,7 @@ public class RtfCell : Cell, IRtfExtendedElement
     ///     Constructs a deleted RtfCell.
     /// </summary>
     /// <param name="deleted">Whether this RtfCell is actually deleted.</param>
-    protected internal RtfCell(bool deleted)
+    internal protected RtfCell(bool deleted)
     {
         _deleted = deleted;
         verticalAlignment = ALIGN_MIDDLE;
@@ -160,7 +160,7 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// <param name="doc">The RtfDocument this RtfCell belongs to</param>
     /// <param name="row">The RtfRow this RtfCell lies in</param>
     /// <param name="cell">The Cell to base this RtfCell on</param>
-    protected internal RtfCell(RtfDocument doc, RtfRow row, Cell cell)
+    internal protected RtfCell(RtfDocument doc, RtfRow row, Cell cell)
     {
         _document = doc;
         _parentRow = row;
@@ -174,7 +174,7 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// <param name="doc">The RtfDocument this RtfCell belongs to</param>
     /// <param name="row">The RtfRow this RtfCell lies in</param>
     /// <param name="cell">The PdfPCell to base this RtfCell on</param>
-    protected internal RtfCell(RtfDocument doc, RtfRow row, PdfPCell cell)
+    internal protected RtfCell(RtfDocument doc, RtfRow row, PdfPCell cell)
     {
         _document = doc;
         _parentRow = row;
@@ -188,6 +188,7 @@ public class RtfCell : Cell, IRtfExtendedElement
     public void SetInHeader(bool inHeader)
     {
         _inHeader = inHeader;
+
         for (var i = 0; i < _content.Count; i++)
         {
             _content[i].SetInHeader(inHeader);
@@ -206,10 +207,7 @@ public class RtfCell : Cell, IRtfExtendedElement
     ///     Sets the RtfDocument this RtfCell belongs to
     /// </summary>
     /// <param name="doc">The RtfDocument to use</param>
-    public void SetRtfDocument(RtfDocument doc)
-    {
-        _document = doc;
-    }
+    public void SetRtfDocument(RtfDocument doc) => _document = doc;
 
     /// <summary>
     ///     Write the content of this RtfCell
@@ -222,35 +220,40 @@ public class RtfCell : Cell, IRtfExtendedElement
         }
 
         byte[] t;
+
         if (_content.Count == 0)
         {
-            outp.Write(RtfPhrase.ParagraphDefaults, 0, RtfPhrase.ParagraphDefaults.Length);
+            outp.Write(RtfPhrase.ParagraphDefaults, offset: 0, RtfPhrase.ParagraphDefaults.Length);
+
             if (_parentRow.GetParentTable().GetTableFitToPage())
             {
-                outp.Write(RtfParagraphStyle.KeepTogetherWithNext, 0, RtfParagraphStyle.KeepTogetherWithNext.Length);
+                outp.Write(RtfParagraphStyle.KeepTogetherWithNext, offset: 0,
+                    RtfParagraphStyle.KeepTogetherWithNext.Length);
             }
 
-            outp.Write(RtfPhrase.InTable, 0, RtfPhrase.InTable.Length);
+            outp.Write(RtfPhrase.InTable, offset: 0, RtfPhrase.InTable.Length);
         }
         else
         {
             for (var i = 0; i < _content.Count; i++)
             {
                 var rtfElement = _content[i];
-                if (rtfElement is RtfParagraph)
+
+                if (rtfElement is RtfParagraph paragraph)
                 {
-                    ((RtfParagraph)rtfElement).SetKeepTogetherWithNext(_parentRow.GetParentTable().GetTableFitToPage());
+                    paragraph.SetKeepTogetherWithNext(_parentRow.GetParentTable().GetTableFitToPage());
                 }
 
                 rtfElement.WriteContent(outp);
+
                 if (rtfElement is RtfParagraph && i < _content.Count - 1)
                 {
-                    outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+                    outp.Write(RtfParagraph.Paragraph, offset: 0, RtfParagraph.Paragraph.Length);
                 }
             }
         }
 
-        outp.Write(t = DocWriter.GetIsoBytes("\\cell"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\cell"), offset: 0, t.Length);
     }
 
     /// <summary>
@@ -265,26 +268,30 @@ public class RtfCell : Cell, IRtfExtendedElement
         }
 
         byte[] t;
+
         if (_mergeType == MergeVertParent)
         {
-            outp.Write(t = DocWriter.GetIsoBytes("\\clvmgf"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clvmgf"), offset: 0, t.Length);
         }
         else if (_mergeType == MergeVertChild)
         {
-            outp.Write(t = DocWriter.GetIsoBytes("\\clvmrg"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clvmrg"), offset: 0, t.Length);
         }
 
         switch (verticalAlignment)
         {
             case ALIGN_BOTTOM:
-                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalb"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes(text: "\\clvertalb"), offset: 0, t.Length);
+
                 break;
             case ALIGN_CENTER:
             case ALIGN_MIDDLE:
-                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalc"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes(text: "\\clvertalc"), offset: 0, t.Length);
+
                 break;
             case ALIGN_TOP:
-                outp.Write(t = DocWriter.GetIsoBytes("\\clvertalt"), 0, t.Length);
+                outp.Write(t = DocWriter.GetIsoBytes(text: "\\clvertalt"), offset: 0, t.Length);
+
                 break;
         }
 
@@ -292,37 +299,37 @@ public class RtfCell : Cell, IRtfExtendedElement
 
         if (_backgroundColor != null)
         {
-            outp.Write(t = DocWriter.GetIsoBytes("\\clcbpat"), 0, t.Length);
-            outp.Write(t = intToByteArray(_backgroundColor.GetColorNumber()), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clcbpat"), offset: 0, t.Length);
+            outp.Write(t = intToByteArray(_backgroundColor.GetColorNumber()), offset: 0, t.Length);
         }
 
         _document.OutputDebugLinebreak(outp);
 
-        outp.Write(t = DocWriter.GetIsoBytes("\\clftsWidth3"), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\clftsWidth3"), offset: 0, t.Length);
         _document.OutputDebugLinebreak(outp);
 
-        outp.Write(t = DocWriter.GetIsoBytes("\\clwWidth"), 0, t.Length);
-        outp.Write(t = intToByteArray(_cellWidth), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\clwWidth"), offset: 0, t.Length);
+        outp.Write(t = intToByteArray(_cellWidth), offset: 0, t.Length);
         _document.OutputDebugLinebreak(outp);
 
         if (_cellPadding > 0)
         {
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadl"), 0, t.Length);
-            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadt"), 0, t.Length);
-            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadr"), 0, t.Length);
-            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadb"), 0, t.Length);
-            outp.Write(t = intToByteArray(_cellPadding / 2), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfl3"), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadft3"), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfr3"), 0, t.Length);
-            outp.Write(t = DocWriter.GetIsoBytes("\\clpadfb3"), 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadl"), offset: 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadt"), offset: 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadr"), offset: 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadb"), offset: 0, t.Length);
+            outp.Write(t = intToByteArray(_cellPadding / 2), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadfl3"), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadft3"), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadfr3"), offset: 0, t.Length);
+            outp.Write(t = DocWriter.GetIsoBytes(text: "\\clpadfb3"), offset: 0, t.Length);
         }
 
-        outp.Write(t = DocWriter.GetIsoBytes("\\cellx"), 0, t.Length);
-        outp.Write(t = intToByteArray(_cellRight), 0, t.Length);
+        outp.Write(t = DocWriter.GetIsoBytes(text: "\\cellx"), offset: 0, t.Length);
+        outp.Write(t = intToByteArray(_cellRight), offset: 0, t.Length);
     }
 
     /// <summary>
@@ -343,45 +350,43 @@ public class RtfCell : Cell, IRtfExtendedElement
     /// </summary>
     /// <param name="borderGroup">The RtfBorderGroup to use as borders</param>
     public void SetBorders(RtfBorderGroup borderGroup)
-    {
-        _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, borderGroup);
-    }
+        => _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, borderGroup);
 
     /// <summary>
     ///     Gets the borders of this RtfCell
     /// </summary>
     /// <returns>The borders of this RtfCell</returns>
-    protected internal RtfBorderGroup GetBorders() => _borders;
+    internal protected RtfBorderGroup GetBorders() => _borders;
 
     /// <summary>
     ///     Gets the cell padding of this RtfCell
     /// </summary>
     /// <returns>The cell padding of this RtfCell</returns>
-    protected internal int GetCellpadding() => _cellPadding;
+    internal protected int GetCellpadding() => _cellPadding;
 
     /// <summary>
     ///     Gets the right margin of this RtfCell
     /// </summary>
     /// <returns>The right margin of this RtfCell.</returns>
-    protected internal int GetCellRight() => _cellRight;
+    internal protected int GetCellRight() => _cellRight;
 
     /// <summary>
     ///     Gets the cell width of this RtfCell
     /// </summary>
     /// <returns>The cell width of this RtfCell</returns>
-    protected internal int GetCellWidth() => _cellWidth;
+    internal protected int GetCellWidth() => _cellWidth;
 
     /// <summary>
     ///     Get the background color of this RtfCell
     /// </summary>
     /// <returns>The background color of this RtfCell</returns>
-    protected internal RtfColor GetRtfBackgroundColor() => _backgroundColor;
+    internal protected RtfColor GetRtfBackgroundColor() => _backgroundColor;
 
     /// <summary>
     ///     Merge this cell into the parent cell.
     /// </summary>
     /// <param name="mergeParent">The RtfCell to merge with</param>
-    protected internal void SetCellMergeChild(RtfCell mergeParent)
+    internal protected void SetCellMergeChild(RtfCell mergeParent)
     {
         if (mergeParent == null)
         {
@@ -401,19 +406,13 @@ public class RtfCell : Cell, IRtfExtendedElement
     ///     Sets the right margin of this cell. Used in merge operations
     /// </summary>
     /// <param name="cellRight">The right margin to use</param>
-    protected internal void SetCellRight(int cellRight)
-    {
-        _cellRight = cellRight;
-    }
+    internal protected void SetCellRight(int cellRight) => _cellRight = cellRight;
 
     /// <summary>
     ///     Sets the cell width of this RtfCell. Used in merge operations.
     /// </summary>
     /// <param name="cellWidth">The cell width to use</param>
-    protected internal void SetCellWidth(int cellWidth)
-    {
-        _cellWidth = cellWidth;
-    }
+    internal protected void SetCellWidth(int cellWidth) => _cellWidth = cellWidth;
 
     /// <summary>
     ///     Imports the Cell properties into the RtfCell
@@ -426,30 +425,33 @@ public class RtfCell : Cell, IRtfExtendedElement
         if (cell == null)
         {
             _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, _parentRow.GetParentTable().GetBorders());
+
             return;
         }
 
         colspan = cell.Colspan;
         rowspan = cell.Rowspan;
+
         if (cell.Rowspan > 1)
         {
             _mergeType = MergeVertParent;
         }
 
-        if (cell is RtfCell)
+        if (cell is RtfCell rtfCell)
         {
-            _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, ((RtfCell)cell).GetBorders());
+            _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, rtfCell.GetBorders());
         }
         else
         {
             _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, cell.Border, cell.BorderWidth,
-                                          cell.BorderColor);
+                cell.BorderColor);
         }
 
         verticalAlignment = cell.VerticalAlignment;
+
         if (cell.BackgroundColor == null)
         {
-            _backgroundColor = new RtfColor(_document, 255, 255, 255);
+            _backgroundColor = new RtfColor(_document, red: 255, green: 255, blue: 255);
         }
         else
         {
@@ -459,6 +461,7 @@ public class RtfCell : Cell, IRtfExtendedElement
         _cellPadding = (int)_parentRow.GetParentTable().GetCellPadding();
 
         Paragraph container = null;
+
         foreach (var element in cell.Elements)
         {
             try
@@ -482,9 +485,10 @@ public class RtfCell : Cell, IRtfExtendedElement
                     if (container != null)
                     {
                         var rtfElements = _document.GetMapper().MapElement(container);
+
                         for (var i = 0; i < rtfElements.Length; i++)
                         {
-                            rtfElements[i].SetInTable(true);
+                            rtfElements[i].SetInTable(inTable: true);
                             _content.Add(rtfElements[i]);
                         }
 
@@ -499,9 +503,10 @@ public class RtfCell : Cell, IRtfExtendedElement
                     }
 
                     var rtfElements2 = _document.GetMapper().MapElement(element);
+
                     for (var i = 0; i < rtfElements2.Length; i++)
                     {
-                        rtfElements2[i].SetInTable(true);
+                        rtfElements2[i].SetInTable(inTable: true);
                         _content.Add(rtfElements2[i]);
                     }
                 }
@@ -516,9 +521,10 @@ public class RtfCell : Cell, IRtfExtendedElement
             try
             {
                 var rtfElements = _document.GetMapper().MapElement(container);
+
                 for (var i = 0; i < rtfElements.Length; i++)
                 {
-                    rtfElements[i].SetInTable(true);
+                    rtfElements[i].SetInTable(inTable: true);
                     _content.Add(rtfElements[i]);
                 }
             }
@@ -540,6 +546,7 @@ public class RtfCell : Cell, IRtfExtendedElement
         if (cell == null)
         {
             _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, _parentRow.GetParentTable().GetBorders());
+
             return;
         }
 
@@ -552,7 +559,7 @@ public class RtfCell : Cell, IRtfExtendedElement
 
         // BORDERS
         _borders = new RtfBorderGroup(_document, RtfBorder.CELL_BORDER, cell.Border, cell.BorderWidth,
-                                      cell.BorderColor);
+            cell.BorderColor);
 
         // border colors
         border = cell.Border;
@@ -569,32 +576,32 @@ public class RtfCell : Cell, IRtfExtendedElement
         borderWidthLeft = cell.BorderWidthLeft;
         borderWidthRight = cell.BorderWidthRight;
 
-
         colspan = cell.Colspan;
         rowspan = 1; //cell.GetRowspan();
+
         //        if (cell.GetRowspan() > 1) {
         //            this.mergeType = MERGE_VERT_PARENT;
         //        }
-
 
         verticalAlignment = cell.VerticalAlignment;
 
         if (cell.BackgroundColor == null)
         {
-            _backgroundColor = new RtfColor(_document, 255, 255, 255);
+            _backgroundColor = new RtfColor(_document, red: 255, green: 255, blue: 255);
         }
         else
         {
             _backgroundColor = new RtfColor(_document, cell.BackgroundColor);
         }
 
-
         // does it have column composite info?
         var compositeElements = cell.CompositeElements;
+
         if (compositeElements != null)
         {
             // does it have column info?
             Paragraph container = null;
+
             foreach (var element in compositeElements)
             {
                 try
@@ -616,12 +623,14 @@ public class RtfCell : Cell, IRtfExtendedElement
                     else
                     {
                         IRtfBasicElement[] rtfElements = null;
+
                         if (container != null)
                         {
                             rtfElements = _document.GetMapper().MapElement(container);
+
                             for (var i = 0; i < rtfElements.Length; i++)
                             {
-                                rtfElements[i].SetInTable(true);
+                                rtfElements[i].SetInTable(inTable: true);
                                 _content.Add(rtfElements[i]);
                             }
 
@@ -636,9 +645,10 @@ public class RtfCell : Cell, IRtfExtendedElement
                         }
 
                         rtfElements = _document.GetMapper().MapElement(element);
+
                         for (var i = 0; i < rtfElements.Length; i++)
                         {
-                            rtfElements[i].SetInTable(true);
+                            rtfElements[i].SetInTable(inTable: true);
                             _content.Add(rtfElements[i]);
                         }
                     }
@@ -653,9 +663,10 @@ public class RtfCell : Cell, IRtfExtendedElement
                 try
                 {
                     var rtfElements = _document.GetMapper().MapElement(container);
+
                     for (var i = 0; i < rtfElements.Length; i++)
                     {
-                        rtfElements[i].SetInTable(true);
+                        rtfElements[i].SetInTable(inTable: true);
                         _content.Add(rtfElements[i]);
                     }
                 }
@@ -668,14 +679,16 @@ public class RtfCell : Cell, IRtfExtendedElement
         // does it have image info?
 
         var img = cell.Image;
+
         if (img != null)
         {
             try
             {
                 var rtfElements = _document.GetMapper().MapElement(img);
+
                 for (var i = 0; i < rtfElements.Length; i++)
                 {
-                    rtfElements[i].SetInTable(true);
+                    rtfElements[i].SetInTable(inTable: true);
                     _content.Add(rtfElements[i]);
                 }
             }
@@ -686,14 +699,16 @@ public class RtfCell : Cell, IRtfExtendedElement
 
         // does it have phrase info?
         var phrase = cell.Phrase;
+
         if (phrase != null)
         {
             try
             {
                 var rtfElements = _document.GetMapper().MapElement(phrase);
+
                 for (var i = 0; i < rtfElements.Length; i++)
                 {
-                    rtfElements[i].SetInTable(true);
+                    rtfElements[i].SetInTable(inTable: true);
                     _content.Add(rtfElements[i]);
                 }
             }
@@ -704,9 +719,11 @@ public class RtfCell : Cell, IRtfExtendedElement
 
         // does it have table info?
         var table = cell.Table;
+
         if (table != null)
         {
             Add(table);
+
             //            try {
             //              RtfBasicElement[] rtfElements = this.document.GetMapper().MapElement(table);
             //              for (int i = 0; i < rtfElements.length; i++) {

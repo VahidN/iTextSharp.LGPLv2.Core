@@ -14,18 +14,19 @@ public abstract class ExtendedColor : BaseColor
 
     protected int type;
 
-    protected ExtendedColor(int type) : base(0, 0, 0) => this.type = type;
+    protected ExtendedColor(int type) : base(red: 0, green: 0, blue: 0) => this.type = type;
 
     protected ExtendedColor(int type, float red, float green, float blue) : base(Normalize(red), Normalize(green),
-     Normalize(blue)) => this.type = type;
+        Normalize(blue))
+        => this.type = type;
 
     public int Type => type;
 
     public static int GetType(object color)
     {
-        if (color is ExtendedColor)
+        if (color is ExtendedColor extendedColor)
         {
-            return ((ExtendedColor)color).Type;
+            return extendedColor.Type;
         }
 
         return TYPE_RGB;

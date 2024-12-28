@@ -87,14 +87,12 @@ public class TernaryTree : ICloneable
     ///     strings since 0xFFFF is garanteed not to be an Unicode character.
     /// </summary>
     protected char[] Sc;
+
     // number of items in tree
 
     // allocation size for arrays
 
-    internal TernaryTree()
-    {
-        Init();
-    }
+    internal TernaryTree() => Init();
 
     public Iterator Keys => new(this);
 
@@ -103,16 +101,16 @@ public class TernaryTree : ICloneable
     public object Clone()
     {
         var t = new TernaryTree
-                {
-                    Lo = (char[])Lo.Clone(),
-                    Hi = (char[])Hi.Clone(),
-                    Eq = (char[])Eq.Clone(),
-                    Sc = (char[])Sc.Clone(),
-                    Kv = (CharVector)Kv.Clone(),
-                    Root = Root,
-                    Freenode = Freenode,
-                    Length = Length,
-                };
+        {
+            Lo = (char[])Lo.Clone(),
+            Hi = (char[])Hi.Clone(),
+            Eq = (char[])Eq.Clone(),
+            Sc = (char[])Sc.Clone(),
+            Kv = (CharVector)Kv.Clone(),
+            Root = Root,
+            Freenode = Freenode,
+            Length = Length
+        };
 
         return t;
     }
@@ -159,9 +157,11 @@ public class TernaryTree : ICloneable
         }
 
         int i, d, len = str.Length;
+
         for (i = 0; i < len; i++)
         {
             d = str[i] - a[start + i];
+
             if (d != 0)
             {
                 return d;
@@ -209,6 +209,7 @@ public class TernaryTree : ICloneable
         }
 
         var len = 0;
+
         for (var i = start; i < a.Length && a[i] != 0; i++)
         {
             len++;
@@ -217,7 +218,7 @@ public class TernaryTree : ICloneable
         return len;
     }
 
-    public static int Strlen(char[] a) => Strlen(a, 0);
+    public static int Strlen(char[] a) => Strlen(a, start: 0);
 
     /// <summary>
     ///     Balance the tree for best search performance
@@ -230,6 +231,7 @@ public class TernaryTree : ICloneable
         var k = new string[n];
         var v = new char[n];
         var iter = new Iterator(this);
+
         while (iter.HasMoreElements())
         {
             v[i] = iter.Value;
@@ -237,7 +239,7 @@ public class TernaryTree : ICloneable
         }
 
         Init();
-        InsertBalanced(k, v, 0, n);
+        InsertBalanced(k, v, offset: 0, n);
 
         // With uniform letter distribution sc[root] should be around 'm'
         // System.out.Print("After root splitchar = "); System.out.Println(sc[root]);
@@ -252,10 +254,10 @@ public class TernaryTree : ICloneable
 
         var len = key.Length;
         var strkey = new char[len + 1];
-        key.CopyTo(0, strkey, 0, len);
+        key.CopyTo(sourceIndex: 0, strkey, destinationIndex: 0, len);
         strkey[len] = (char)0;
 
-        return Find(strkey, 0);
+        return Find(strkey, start: 0);
     }
 
     public int Find(char[] key, int start)
@@ -284,6 +286,7 @@ public class TernaryTree : ICloneable
 
             c = key[i];
             d = c - Sc[p];
+
             if (d == 0)
             {
                 if (c == 0)
@@ -323,17 +326,17 @@ public class TernaryTree : ICloneable
         }
 
         // make sure we have enough room in the arrays
-        var len = key.Length
-                  + 1; // maximum number of nodes that may be generated
+        var len = key.Length + 1; // maximum number of nodes that may be generated
+
         if (Freenode + len > Eq.Length)
         {
             redimNodeArrays(Eq.Length + BlockSize);
         }
 
         var strkey = new char[len--];
-        key.CopyTo(0, strkey, 0, len);
+        key.CopyTo(sourceIndex: 0, strkey, destinationIndex: 0, len);
         strkey[len] = (char)0;
-        Root = insert(Root, strkey, 0, val);
+        Root = insert(Root, strkey, start: 0, val);
     }
 
     public void Insert(char[] key, int start, char val)
@@ -344,6 +347,7 @@ public class TernaryTree : ICloneable
         }
 
         var len = Strlen(key) + 1;
+
         if (Freenode + len > Eq.Length)
         {
             redimNodeArrays(Eq.Length + BlockSize);
@@ -358,9 +362,9 @@ public class TernaryTree : ICloneable
     {
         Console.Error.WriteLine("Number of keys = " + Length);
         Console.Error.WriteLine("Node count = " + Freenode);
+
         // Console.Error.WriteLine("Array length = " + int.ToString(eq.Length));
-        Console.Error.WriteLine("Key Array length = "
-                                + Kv.Length);
+        Console.Error.WriteLine("Key Array length = " + Kv.Length);
 
         /*
          * for (int i=0; i<kv.Length; i++)
@@ -396,7 +400,7 @@ public class TernaryTree : ICloneable
 
         // ok, compact kv array
         var kx = new CharVector();
-        kx.Alloc(1);
+        kx.Alloc(size: 1);
         var map = new TernaryTree();
         compact(kx, map, Root);
         Kv = kx;
@@ -449,6 +453,7 @@ public class TernaryTree : ICloneable
     private void compact(CharVector kx, TernaryTree map, char p)
     {
         int k;
+
         if (p == 0)
         {
             return;
@@ -457,6 +462,7 @@ public class TernaryTree : ICloneable
         if (Sc[p] == 0xFFFF)
         {
             k = map.Find(Kv.Arr, Lo[p]);
+
             if (k < 0)
             {
                 k = kx.Alloc(Strlen(Kv.Arr, Lo[p]) + 1);
@@ -469,6 +475,7 @@ public class TernaryTree : ICloneable
         else
         {
             compact(kx, map, Lo[p]);
+
             if (Sc[p] != 0)
             {
                 compact(kx, map, Eq[p]);
@@ -484,6 +491,7 @@ public class TernaryTree : ICloneable
     private char insert(char p, char[] key, int start, char val)
     {
         var len = Strlen(key, start);
+
         if (p == 0)
         {
             // this means there is no branch, this node will start a new branch.
@@ -493,11 +501,11 @@ public class TernaryTree : ICloneable
             Eq[p] = val; // holds data
             Length++;
             Hi[p] = (char)0;
+
             if (len > 0)
             {
                 Sc[p] = (char)0xFFFF; // indicates branch is compressed
-                Lo[p] = (char)Kv.Alloc(len
-                                       + 1); // use 'lo' to hold pointer to key
+                Lo[p] = (char)Kv.Alloc(len + 1); // use 'lo' to hold pointer to key
                 Strcpy(Kv.Arr, Lo[p], key, start);
             }
             else
@@ -518,11 +526,13 @@ public class TernaryTree : ICloneable
             Lo[pp] = Lo[p]; // previous pointer to key
             Eq[pp] = Eq[p]; // previous pointer to data
             Lo[p] = (char)0;
+
             if (len > 0)
             {
                 Sc[p] = Kv[Lo[pp]];
                 Eq[p] = pp;
                 Lo[pp]++;
+
                 if (Kv[Lo[pp]] == 0)
                 {
                     // key completly decompressed leaving garbage in key array
@@ -532,8 +542,7 @@ public class TernaryTree : ICloneable
                 }
                 else
                 {
-                    Sc[pp] =
-                        (char)0xFFFF; // we only got first char of key, rest is still there
+                    Sc[pp] = (char)0xFFFF; // we only got first char of key, rest is still there
                 }
             }
             else
@@ -545,11 +554,13 @@ public class TernaryTree : ICloneable
                 Sc[p] = (char)0;
                 Eq[p] = val;
                 Length++;
+
                 return p;
             }
         }
 
         var s = key[start];
+
         if (s < Sc[p])
         {
             Lo[p] = insert(Lo[p], key, start, val);
@@ -581,16 +592,16 @@ public class TernaryTree : ICloneable
     {
         var len = newsize < Lo.Length ? newsize : Lo.Length;
         var na = new char[newsize];
-        Array.Copy(Lo, 0, na, 0, len);
+        Array.Copy(Lo, sourceIndex: 0, na, destinationIndex: 0, len);
         Lo = na;
         na = new char[newsize];
-        Array.Copy(Hi, 0, na, 0, len);
+        Array.Copy(Hi, sourceIndex: 0, na, destinationIndex: 0, len);
         Hi = na;
         na = new char[newsize];
-        Array.Copy(Eq, 0, na, 0, len);
+        Array.Copy(Eq, sourceIndex: 0, na, destinationIndex: 0, len);
         Eq = na;
         na = new char[newsize];
-        Array.Copy(Sc, 0, na, 0, len);
+        Array.Copy(Sc, sourceIndex: 0, na, destinationIndex: 0, len);
         Sc = na;
     }
 
@@ -650,6 +661,7 @@ public class TernaryTree : ICloneable
             var res = _curkey;
             _cur = up();
             run();
+
             return res;
         }
 
@@ -672,6 +684,7 @@ public class TernaryTree : ICloneable
             }
 
             var leaf = false;
+
             for (;;)
             {
                 // first go down on low branch until leaf or compressed branch
@@ -680,13 +693,16 @@ public class TernaryTree : ICloneable
                     if (_parent.Sc[_cur] == 0xFFFF)
                     {
                         leaf = true;
+
                         break;
                     }
 
-                    _ns.Push(new Item((char)_cur, '\u0000'));
+                    _ns.Push(new Item((char)_cur, c: '\u0000'));
+
                     if (_parent.Sc[_cur] == 0)
                     {
                         leaf = true;
+
                         break;
                     }
 
@@ -700,6 +716,7 @@ public class TernaryTree : ICloneable
 
                 // nothing found, go up one node and try again
                 _cur = up();
+
                 if (_cur == -1)
                 {
                     return -1;
@@ -709,9 +726,11 @@ public class TernaryTree : ICloneable
             // The current node should be a data node and
             // the key should be in the key stack (at least partially)
             var buf = new StringBuilder(_ks.ToString());
+
             if (_parent.Sc[_cur] == 0xFFFF)
             {
                 int p = _parent.Lo[_cur];
+
                 while (_parent.Kv[p] != 0)
                 {
                     buf.Append(_parent.Kv[p++]);
@@ -719,6 +738,7 @@ public class TernaryTree : ICloneable
             }
 
             _curkey = buf.ToString();
+
             return 0;
         }
 
@@ -746,6 +766,7 @@ public class TernaryTree : ICloneable
             {
                 i = _ns.Pop();
                 i.Child++;
+
                 switch (i.Child)
                 {
                     case (char)1:
@@ -763,17 +784,20 @@ public class TernaryTree : ICloneable
                         }
 
                         climb = false;
+
                         break;
 
                     case (char)2:
                         res = _parent.Hi[i.Parent];
                         _ns.Push(i.Clone());
+
                         if (_ks.Length > 0)
                         {
                             _ks.Length = _ks.Length - 1; // pop
                         }
 
                         climb = false;
+
                         break;
 
                     default:
@@ -783,6 +807,7 @@ public class TernaryTree : ICloneable
                         }
 
                         climb = true;
+
                         break;
                 }
             }
@@ -790,7 +815,7 @@ public class TernaryTree : ICloneable
             return res;
         }
 
-        private class Item
+        private sealed class Item
         {
             internal readonly char Parent;
             internal char Child;

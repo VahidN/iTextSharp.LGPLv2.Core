@@ -18,8 +18,8 @@ public sealed class RtfCtrlWordMgr
     /// </summary>
     private readonly List<IRtfCtrlWordListener> _listeners = new();
 
-    private PushbackStream _reader;
-    private RtfParser _rtfParser;
+    private readonly PushbackStream _reader;
+    private readonly RtfParser _rtfParser;
 
     /// <summary>
     ///     // TIMING DEBUG INFO
@@ -73,10 +73,7 @@ public sealed class RtfCtrlWordMgr
     ///     the new RtfCtrlWordListener.
     /// </summary>
     /// <param name="listener"></param>
-    public void AddRtfCtrlWordListener(IRtfCtrlWordListener listener)
-    {
-        _listeners.Add(listener);
-    }
+    public void AddRtfCtrlWordListener(IRtfCtrlWordListener listener) => _listeners.Add(listener);
 
     /// <summary>
     ///     Internal to control word manager class.
@@ -92,7 +89,7 @@ public sealed class RtfCtrlWordMgr
         // Call before handler event here
         beforeCtrlWord(ctrlWordData);
 
-        result = dispatchKeyword(ctrlWordData, groupLevel);
+        result = dispatchKeyword(ctrlWordData);
 
         // call after handler event here
         afterCtrlWord(ctrlWordData);
@@ -108,10 +105,7 @@ public sealed class RtfCtrlWordMgr
     ///     the RtfCtrlWordListener that has to be removed.
     /// </summary>
     /// <param name="listener"></param>
-    public void RemoveRtfCtrlWordListener(IRtfCtrlWordListener listener)
-    {
-        _listeners.Remove(listener);
-    }
+    public void RemoveRtfCtrlWordListener(IRtfCtrlWordListener listener) => _listeners.Remove(listener);
 
     private bool afterCtrlWord(RtfCtrlWordData ctrlWordData)
     {
@@ -137,35 +131,34 @@ public sealed class RtfCtrlWordMgr
     ///     Dispatch the token to the correct control word handling object.
     /// </summary>
     /// <param name="ctrlWordData">The  RtfCtrlWordData  object with control word and param</param>
-    /// <param name="groupLevel">The current document group parsing level</param>
     /// <returns>errOK if ok, otherwise an error code.</returns>
-    private int dispatchKeyword(RtfCtrlWordData ctrlWordData, int groupLevel)
+    private int dispatchKeyword(RtfCtrlWordData ctrlWordData)
     {
         var result = RtfParser.errOK;
+
         if (ctrlWordData != null)
         {
             var ctrlWord = _ctrlWordMap.GetCtrlWordHandler(ctrlWordData.CtrlWord);
+
             if (ctrlWord != null)
             {
                 ctrlWord.HandleControlword(ctrlWordData);
+
                 if (Debug && DebugFound)
                 {
-                    Console.Out.WriteLine("Keyword found:" +
-                                          " New:" + ctrlWordData.CtrlWord +
-                                          " Param:" + ctrlWordData.Param +
-                                          " bParam=" + ctrlWordData.HasParam);
+                    Console.Out.WriteLine("Keyword found:" + " New:" + ctrlWordData.CtrlWord + " Param:" +
+                                          ctrlWordData.Param + " bParam=" + ctrlWordData.HasParam);
                 }
             }
             else
             {
                 result = RtfParser.errCtrlWordNotFound;
+
                 //result = RtfParser2.errAssertion;
                 if (Debug && DebugNotFound)
                 {
-                    Console.Out.WriteLine("Keyword unknown:" +
-                                          " New:" + ctrlWordData.CtrlWord +
-                                          " Param:" + ctrlWordData.Param +
-                                          " bParam=" + ctrlWordData.HasParam);
+                    Console.Out.WriteLine("Keyword unknown:" + " New:" + ctrlWordData.CtrlWord + " Param:" +
+                                          ctrlWordData.Param + " bParam=" + ctrlWordData.HasParam);
                 }
             }
         }

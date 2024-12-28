@@ -18,16 +18,10 @@ public class CffFontSubset : CffFont
     /// </summary>
     internal static readonly string[] SubrsEscapeFuncs =
     {
-        "RESERVED_0", "RESERVED_1", "RESERVED_2", "and", "or", "not",
-        "RESERVED_6",
-        "RESERVED_7", "RESERVED_8", "abs", "add", "sub", "div",
-        "RESERVED_13", "neg",
-        "eq", "RESERVED_16", "RESERVED_17", "drop", "RESERVED_19", "put",
-        "get", "ifelse",
-        "random", "mul", "RESERVED_25", "sqrt", "dup", "exch", "index",
-        "roll", "RESERVED_31",
-        "RESERVED_32", "RESERVED_33", "hflex", "flex", "hflex1", "flex1",
-        "RESERVED_REST",
+        "RESERVED_0", "RESERVED_1", "RESERVED_2", "and", "or", "not", "RESERVED_6", "RESERVED_7", "RESERVED_8", "abs",
+        "add", "sub", "div", "RESERVED_13", "neg", "eq", "RESERVED_16", "RESERVED_17", "drop", "RESERVED_19", "put",
+        "get", "ifelse", "random", "mul", "RESERVED_25", "sqrt", "dup", "exch", "index", "roll", "RESERVED_31",
+        "RESERVED_32", "RESERVED_33", "hflex", "flex", "hflex1", "flex1", "RESERVED_REST"
     };
 
     /// <summary>
@@ -35,26 +29,16 @@ public class CffFontSubset : CffFont
     /// </summary>
     internal static readonly string[] SubrsFunctions =
     {
-        "RESERVED_0", "hstem", "RESERVED_2", "vstem", "vmoveto", "rlineto",
-        "hlineto", "vlineto",
-        "rrcurveto", "RESERVED_9", "callsubr", "return", "escape",
-        "RESERVED_13",
-        "endchar", "RESERVED_15", "RESERVED_16", "RESERVED_17", "hstemhm",
-        "hintmask",
-        "cntrmask", "rmoveto", "hmoveto", "vstemhm", "rcurveline",
-        "rlinecurve", "vvcurveto",
-        "hhcurveto", "shortint", "callgsubr", "vhcurveto", "hvcurveto",
+        "RESERVED_0", "hstem", "RESERVED_2", "vstem", "vmoveto", "rlineto", "hlineto", "vlineto", "rrcurveto",
+        "RESERVED_9", "callsubr", "return", "escape", "RESERVED_13", "endchar", "RESERVED_15", "RESERVED_16",
+        "RESERVED_17", "hstemhm", "hintmask", "cntrmask", "rmoveto", "hmoveto", "vstemhm", "rcurveline", "rlinecurve",
+        "vvcurveto", "hhcurveto", "shortint", "callgsubr", "vhcurveto", "hvcurveto"
     };
 
     /// <summary>
     ///     A HashMap for keeping the FDArrays being used by the font
     /// </summary>
     internal readonly INullValueDictionary<int, object> FdArrayUsed = new NullValueDictionary<int, object>();
-
-    /// <summary>
-    ///     The bias for the global subroutines
-    /// </summary>
-    internal int GBias;
 
     /// <summary>
     ///     The GlyphsUsed keys as an ArrayList
@@ -73,11 +57,6 @@ public class CffFontSubset : CffFont
     internal readonly INullValueDictionary<int, int[]> HGSubrsUsed = new NullValueDictionary<int, int[]>();
 
     /// <summary>
-    ///     A HashMaps array for keeping the subroutines used in each FontDict
-    /// </summary>
-    internal INullValueDictionary<int, int[]>[] HSubrsUsed;
-
-    /// <summary>
     ///     A HashMap for keeping the subroutines used in a non-cid font
     /// </summary>
     internal readonly INullValueDictionary<int, int[]> HSubrsUsedNonCid = new NullValueDictionary<int, int[]>();
@@ -88,14 +67,24 @@ public class CffFontSubset : CffFont
     internal readonly List<int> LGSubrsUsed = new();
 
     /// <summary>
-    ///     The SubroutinesUsed HashMaps as ArrayLists
-    /// </summary>
-    internal List<int>[] LSubrsUsed;
-
-    /// <summary>
     ///     The SubroutinesUsed HashMap as ArrayList
     /// </summary>
     internal readonly List<int> LSubrsUsedNonCid = new();
+
+    /// <summary>
+    ///     The bias for the global subroutines
+    /// </summary>
+    internal int GBias;
+
+    /// <summary>
+    ///     A HashMaps array for keeping the subroutines used in each FontDict
+    /// </summary>
+    internal INullValueDictionary<int, int[]>[] HSubrsUsed;
+
+    /// <summary>
+    ///     The SubroutinesUsed HashMaps as ArrayLists
+    /// </summary>
+    internal List<int>[] LSubrsUsed;
 
     /// <summary>
     ///     The new CharString of the font
@@ -136,9 +125,9 @@ public class CffFontSubset : CffFont
     {
         // Use CFFFont c'tor in order to parse the font file.
         GlyphsUsed = glyphsUsed ?? throw new ArgumentNullException(nameof(glyphsUsed));
+
         //Put the glyphs into a list
         GlyphsInList = new List<int>(glyphsUsed.Keys);
-
 
         for (var i = 0; i < Fonts.Length; ++i)
         {
@@ -158,11 +147,13 @@ public class CffFontSubset : CffFont
             {
                 // Proces the FDSelect
                 ReadFdSelect(i);
+
                 // Build the FDArrayUsed hashmap
                 BuildFdArrayUsed(i);
             }
 
             if (Fonts[i].IsCid)
+
                 // Build the FD Array used Hash Map
             {
                 ReadFdArray(i);
@@ -191,8 +182,10 @@ public class CffFontSubset : CffFont
         {
             // Verify that the file is open
             Buf.ReOpen();
+
             // Find the Font that we will be dealing with
             int j;
+
             for (j = 0; j < Fonts.Length; j++)
             {
                 if (fontName.Equals(Fonts[j].Name, StringComparison.Ordinal))
@@ -214,10 +207,13 @@ public class CffFontSubset : CffFont
 
             // Prepare the new CharStrings Index
             BuildNewCharString(j);
+
             // Prepare the new Global and Local Subrs Indices
             BuildNewLgSubrs(j);
+
             // Build the new file
             var ret = BuildNewFile(j);
+
             return ret;
         }
         finally
@@ -244,20 +240,24 @@ public class CffFontSubset : CffFont
     {
         // Set the size to 0
         var offsetSize = 0;
+
         // Go to the beginning of the private dict
         Seek(offset);
+
         // Go until the end of the private dict
         while (GetPosition() < offset + size)
         {
             var p1 = GetPosition();
             GetDictItem();
             var p2 = GetPosition();
+
             // When reached to the subrs offset
-            if (Key == "Subrs")
+            if (string.Equals(Key, b: "Subrs", StringComparison.Ordinal))
             {
                 // The Offsize (minus the subrs key)
                 offsetSize = p2 - p1 - 1;
             }
+
             // All other keys are ignored
         }
 
@@ -276,19 +276,24 @@ public class CffFontSubset : CffFont
         int format;
         var length = 0;
         Seek(offset);
+
         // Read the format
         format = GetCard8();
+
         // Calc according to format
         switch (format)
         {
             case 0:
                 length = 1 + 2 * numofGlyphs;
+
                 break;
             case 1:
-                length = 1 + 3 * countRange(numofGlyphs, 1);
+                length = 1 + 3 * countRange(numofGlyphs, type: 1);
+
                 break;
             case 2:
-                length = 1 + 4 * countRange(numofGlyphs, 2);
+                length = 1 + 4 * countRange(numofGlyphs, type: 2);
+
                 break;
         }
 
@@ -305,18 +310,21 @@ public class CffFontSubset : CffFont
     {
         // Go to the beginning of the private dict and read untill the end
         Seek(Fonts[font].PrivateOffset);
+
         while (GetPosition() < Fonts[font].PrivateOffset + Fonts[font].PrivateLength)
         {
             var p1 = GetPosition();
             GetDictItem();
             var p2 = GetPosition();
+
             // If the dictItem is the "Subrs" then,
             // use marker for offset and write operator number
-            if (Key == "Subrs")
+            if (string.Equals(Key, b: "Subrs", StringComparison.Ordinal))
             {
                 OutputList.Add(subr);
                 OutputList.Add(new UInt8Item((char)19)); // Subrs
             }
+
             // Else copy the entire range
             else
             {
@@ -337,8 +345,10 @@ public class CffFontSubset : CffFont
     {
         // Mark the beginning of the Subrs index
         OutputList.Add(new SubrMarkerItem(subrs, privateBase));
+
         // Put the subsetted new subrs index
-        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewSubrsIndexNonCid), 0, NewSubrsIndexNonCid.Length));
+        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewSubrsIndexNonCid), offset: 0,
+            NewSubrsIndexNonCid.Length));
     }
 
     /// <summary>
@@ -349,8 +359,10 @@ public class CffFontSubset : CffFont
     /// <param name="fdPrivate">OffsetItem array one element for each private</param>
     /// <param name="fdPrivateBase">IndexBaseItem array one element for each private</param>
     /// <param name="fdSubrs">OffsetItem array one element for each private</param>
-    internal void ReconstructPrivateDict(int font, OffsetItem[] fdPrivate, IndexBaseItem[] fdPrivateBase,
-                                         OffsetItem[] fdSubrs)
+    internal void ReconstructPrivateDict(int font,
+        OffsetItem[] fdPrivate,
+        IndexBaseItem[] fdPrivateBase,
+        OffsetItem[] fdSubrs)
     {
         // For each fdarray private dict check if that FD is used.
         // if is used build a new one by changing the subrs offset
@@ -363,21 +375,25 @@ public class CffFontSubset : CffFont
                 OutputList.Add(new MarkerItem(fdPrivate[i]));
                 fdPrivateBase[i] = new IndexBaseItem();
                 OutputList.Add(fdPrivateBase[i]);
+
                 // Goto begining of objects
                 Seek(Fonts[font].FdprivateOffsets[i]);
+
                 while (GetPosition() < Fonts[font].FdprivateOffsets[i] + Fonts[font].FdprivateLengths[i])
                 {
                     var p1 = GetPosition();
                     GetDictItem();
                     var p2 = GetPosition();
+
                     // If the dictItem is the "Subrs" then,
                     // use marker for offset and write operator number
-                    if (Key == "Subrs")
+                    if (string.Equals(Key, b: "Subrs", StringComparison.Ordinal))
                     {
                         fdSubrs[i] = new DictOffsetItem();
                         OutputList.Add(fdSubrs[i]);
                         OutputList.Add(new UInt8Item((char)19)); // Subrs
                     }
+
                     // Else copy the entire range
                     else
                     {
@@ -388,8 +404,7 @@ public class CffFontSubset : CffFont
         }
     }
 
-    internal void ReconstructPrivateSubrs(int font, IndexBaseItem[] fdPrivateBase,
-                                          OffsetItem[] fdSubrs)
+    internal void ReconstructPrivateSubrs(int font, IndexBaseItem[] fdPrivateBase, OffsetItem[] fdSubrs)
     {
         // For each private dict
         for (var i = 0; i < Fonts[font].FdprivateLengths.Length; i++)
@@ -399,8 +414,9 @@ public class CffFontSubset : CffFont
             if (fdSubrs[i] != null && Fonts[font].PrivateSubrsOffset[i] >= 0)
             {
                 OutputList.Add(new SubrMarkerItem(fdSubrs[i], fdPrivateBase[i]));
-                OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewLSubrsIndex[i]), 0,
-                                             NewLSubrsIndex[i].Length));
+
+                OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewLSubrsIndex[i]), offset: 0,
+                    NewLSubrsIndex[i].Length));
             }
         }
     }
@@ -426,10 +442,13 @@ public class CffFontSubset : CffFont
 
         // Calc the index' count field
         var count = (char)(newOffsets.Length - 1);
+
         // Calc the size of the object array
         var size = newOffsets[newOffsets.Length - 1];
+
         // Calc the Offsize
         byte offsize;
+
         if (size <= 0xff)
         {
             offsize = 1;
@@ -450,18 +469,23 @@ public class CffFontSubset : CffFont
         // The byte array for the new index. The size is calc by
         // Count=2, Offsize=1, OffsetArray = Offsize*(Count+1), The object array
         var newIndex = new byte[2 + 1 + offsize * (count + 1) + newObjects.Length];
+
         // The counter for writing
         var place = 0;
+
         // Write the count field
         newIndex[place++] = (byte)((count >> 8) & 0xff);
         newIndex[place++] = (byte)((count >> 0) & 0xff);
+
         // Write the offsize field
         newIndex[place++] = offsize;
+
         // Write the offset array according to the offsize
         for (var i = 0; i < newOffsets.Length; i++)
         {
             // The value to be written
             var num = newOffsets[i] - newOffsets[0] + 1;
+
             // Write in bytes according to the offsize
             switch (offsize)
             {
@@ -476,6 +500,7 @@ public class CffFontSubset : CffFont
                     goto case 1;
                 case 1:
                     newIndex[place++] = (byte)((num >> 0) & 0xff);
+
                     break;
             }
         }
@@ -497,13 +522,16 @@ public class CffFontSubset : CffFont
     protected void BuildFdArrayUsed(int font)
     {
         var fdSelect = Fonts[font].FdSelect;
+
         // For each glyph used
         for (var i = 0; i < GlyphsInList.Count; i++)
         {
             // Pop the glyphs index
             var glyph = GlyphsInList[i];
+
             // Pop the glyph's FD
             var fd = fdSelect[glyph];
+
             // Put the FD index into the FDArrayUsed HashMap
             FdArrayUsed[fd] = null;
         }
@@ -519,14 +547,17 @@ public class CffFontSubset : CffFont
     {
         // Initiate to -1 to indicate lsubr operator present
         Fonts[font].PrivateSubrsOffset[fd] = -1;
+
         // Goto begining of objects
         Seek(Fonts[font].FdprivateOffsets[fd]);
+
         // While in the same object:
         while (GetPosition() < Fonts[font].FdprivateOffsets[fd] + Fonts[font].FdprivateLengths[fd])
         {
             GetDictItem();
+
             // If the dictItem is the "Subrs" then find and store offset,
-            if (Key == "Subrs")
+            if (string.Equals(Key, b: "Subrs", StringComparison.Ordinal))
             {
                 Fonts[font].PrivateSubrsOffset[fd] = (int)Args[0] + Fonts[font].FdprivateOffsets[fd];
             }
@@ -548,6 +579,7 @@ public class CffFontSubset : CffFont
     {
         var lBias = 0;
         var sizeOfNonCidSubrsUsed = 0;
+
         if (Fonts[font].PrivateSubrs >= 0)
         {
             lBias = CalcBias(Fonts[font].PrivateSubrs, font);
@@ -559,6 +591,7 @@ public class CffFontSubset : CffFont
         {
             //Pop the value + check valid
             var subr = LGSubrsUsed[i];
+
             if (subr < GsubrOffsets.Length - 1 && subr >= 0)
             {
                 // Read the subr and process
@@ -567,24 +600,27 @@ public class CffFontSubset : CffFont
 
                 if (Fonts[font].IsCid)
                 {
-                    ReadASubr(start, end, GBias, 0, HGSubrsUsed, LGSubrsUsed, null);
+                    ReadASubr(start, end, GBias, lBias: 0, HGSubrsUsed, LGSubrsUsed, lSubrsOffsets: null);
                 }
                 else
                 {
                     ReadASubr(start, end, GBias, lBias, HSubrsUsedNonCid, LSubrsUsedNonCid, Fonts[font].SubrsOffsets);
+
                     if (sizeOfNonCidSubrsUsed < LSubrsUsedNonCid.Count)
                     {
                         for (var j = sizeOfNonCidSubrsUsed; j < LSubrsUsedNonCid.Count; j++)
                         {
                             //Pop the value + check valid
                             var lSubr = LSubrsUsedNonCid[j];
+
                             if (lSubr < Fonts[font].SubrsOffsets.Length - 1 && lSubr >= 0)
                             {
                                 // Read the subr and process
                                 var lStart = Fonts[font].SubrsOffsets[lSubr];
                                 var lEnd = Fonts[font].SubrsOffsets[lSubr + 1];
+
                                 ReadASubr(lStart, lEnd, GBias, lBias, HSubrsUsedNonCid, LSubrsUsedNonCid,
-                                          Fonts[font].SubrsOffsets);
+                                    Fonts[font].SubrsOffsets);
                             }
                         }
 
@@ -605,22 +641,28 @@ public class CffFontSubset : CffFont
     {
         // Add the count field
         OutputList.Add(new UInt16Item((char)count)); // count
+
         // Add the offsize field
         OutputList.Add(new UInt8Item((char)offsize)); // offSize
+
         // Add the first offset according to the offsize
         switch (offsize)
         {
             case 1:
                 OutputList.Add(new UInt8Item((char)first)); // first offset
+
                 break;
             case 2:
                 OutputList.Add(new UInt16Item((char)first)); // first offset
+
                 break;
             case 3:
                 OutputList.Add(new UInt24Item((char)first)); // first offset
+
                 break;
             case 4:
                 OutputList.Add(new UInt32Item((char)first)); // first offset
+
                 break;
         }
     }
@@ -631,9 +673,7 @@ public class CffFontSubset : CffFont
     /// </summary>
     /// <param name="fontIndex">the font</param>
     protected void BuildNewCharString(int fontIndex)
-    {
-        NewCharStringsIndex = BuildNewIndex(Fonts[fontIndex].CharstringsOffsets, GlyphsUsed, ENDCHAR_OP);
-    }
+        => NewCharStringsIndex = BuildNewIndex(Fonts[fontIndex].CharstringsOffsets, GlyphsUsed, ENDCHAR_OP);
 
     /// <summary>
     ///     The function builds the new output stream according to the subset process
@@ -650,13 +690,13 @@ public class CffFontSubset : CffFont
         CopyHeader();
 
         // create a name index
-        BuildIndexHeader(1, 1, 1);
+        BuildIndexHeader(count: 1, offsize: 1, first: 1);
         OutputList.Add(new UInt8Item((char)(1 + Fonts[font].Name.Length)));
         OutputList.Add(new StringItem(Fonts[font].Name));
 
         // create the topdict Index
-        BuildIndexHeader(1, 2, 1);
-        OffsetItem topdictIndex1Ref = new IndexOffsetItem(2);
+        BuildIndexHeader(count: 1, offsize: 2, first: 1);
+        OffsetItem topdictIndex1Ref = new IndexOffsetItem(size: 2);
         OutputList.Add(topdictIndex1Ref);
         var topdictBase = new IndexBaseItem();
         OutputList.Add(topdictBase);
@@ -674,13 +714,15 @@ public class CffFontSubset : CffFont
             // create a ROS key
             OutputList.Add(new DictNumberItem(Fonts[font].Nstrings));
             OutputList.Add(new DictNumberItem(Fonts[font].Nstrings + 1));
-            OutputList.Add(new DictNumberItem(0));
+            OutputList.Add(new DictNumberItem(value: 0));
             OutputList.Add(new UInt8Item((char)12));
             OutputList.Add(new UInt8Item((char)30));
+
             // create a CIDCount key
             OutputList.Add(new DictNumberItem(Fonts[font].Nglyphs));
             OutputList.Add(new UInt8Item((char)12));
             OutputList.Add(new UInt8Item((char)34));
+
             // Sivan's comments
             // What about UIDBase (12,35)? Don't know what is it.
             // I don't think we need FontName; the font I looked at didn't have it.
@@ -688,21 +730,23 @@ public class CffFontSubset : CffFont
 
         // Go to the TopDict of the font being processed
         Seek(TopdictOffsets[font]);
+
         // Run untill the end of the TopDict
         while (GetPosition() < TopdictOffsets[font + 1])
         {
             var p1 = GetPosition();
             GetDictItem();
             var p2 = GetPosition();
+
             // The encoding key is disregarded since CID has no encoding
-            if (Key == "Encoding"
+            if (string.Equals(Key, b: "Encoding", StringComparison.Ordinal)
+
                 // These keys will be added manualy by the process.
-                || Key == "Private"
-                || Key == "FDSelect"
-                || Key == "FDArray"
-                || Key == "charset"
-                || Key == "CharStrings"
-               )
+                || string.Equals(Key, b: "Private", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "FDSelect", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "FDArray", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "charset", StringComparison.Ordinal) ||
+                string.Equals(Key, b: "CharStrings", StringComparison.Ordinal))
             {
             }
             else
@@ -724,6 +768,7 @@ public class CffFontSubset : CffFont
         {
             OutputList.Add(GetEntireIndexRange(StringIndexOffset));
         }
+
         // If the font is not CID we need to append new strings.
         // We need 3 more strings: Registry, Ordering, and a FontName for one FD.
         // The total length is at most "Adobe"+"Identity"+63 = 76
@@ -733,7 +778,7 @@ public class CffFontSubset : CffFont
         }
 
         // copy the new subsetted global subroutine index
-        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewGSubrsIndex), 0, NewGSubrsIndex.Length));
+        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewGSubrsIndex), offset: 0, NewGSubrsIndex.Length));
 
         // deal with fdarray, fdselect, and the font descriptors
         // If the font is CID:
@@ -744,11 +789,13 @@ public class CffFontSubset : CffFont
             // Copy FDSelect
             // Mark the beginning
             OutputList.Add(new MarkerItem(fdselectRef));
+
             // If an FDSelect exists copy it
             if (Fonts[font].FdselectOffset >= 0)
             {
                 OutputList.Add(new RangeItem(Buf, Fonts[font].FdselectOffset, Fonts[font].FdSelectLength));
             }
+
             // Else create a new one
             else
             {
@@ -766,22 +813,27 @@ public class CffFontSubset : CffFont
             {
                 // Mark the beginning
                 OutputList.Add(new MarkerItem(fdarrayRef));
+
                 // Build a new FDArray with its private dicts and their LSubrs
                 reconstruct(font);
             }
             else
+
                 // Else create a new one
             {
                 CreateFdArray(fdarrayRef, privateRef, font);
             }
         }
+
         // If the font is not CID
         else
         {
             // create FDSelect
             CreateFdSelect(fdselectRef, Fonts[font].Nglyphs);
+
             // recreate a new charset
             CreateCharset(charsetRef, Fonts[font].Nglyphs);
+
             // create a font dict index (fdarray)
             CreateFdArray(fdarrayRef, privateRef, font);
         }
@@ -795,8 +847,10 @@ public class CffFontSubset : CffFont
             OutputList.Add(new MarkerItem(privateRef));
 
             OffsetItem subr = new DictOffsetItem();
+
             // Build and copy the new private dict
             CreateNonCidPrivate(font, subr);
+
             // Copy the new LSubrs index
             CreateNonCidSubrs(font, privateBase, subr);
         }
@@ -805,11 +859,13 @@ public class CffFontSubset : CffFont
         OutputList.Add(new MarkerItem(charstringsRef));
 
         // Add the subsetted charstring
-        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewCharStringsIndex), 0, NewCharStringsIndex.Length));
+        OutputList.Add(new RangeItem(new RandomAccessFileOrArray(NewCharStringsIndex), offset: 0,
+            NewCharStringsIndex.Length));
 
         // now create the new CFF font
         var currentOffset = new int[1];
         currentOffset[0] = 0;
+
         // Count and save the offset for each item
         foreach (var item in OutputList)
         {
@@ -844,8 +900,7 @@ public class CffFontSubset : CffFont
     /// <param name="used">the hashmap of the used objects</param>
     /// <param name="operatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
     /// <returns>the new index subset version</returns>
-    protected byte[] BuildNewIndex(int[] offsets, INullValueDictionary<int, int[]> used,
-                                   byte operatorForUnusedEntries)
+    protected byte[] BuildNewIndex(int[] offsets, INullValueDictionary<int, int[]> used, byte operatorForUnusedEntries)
     {
         if (offsets == null)
         {
@@ -860,10 +915,12 @@ public class CffFontSubset : CffFont
         var unusedCount = 0;
         var offset = 0;
         var newOffsets = new int[offsets.Length];
+
         // Build the Offsets Array for the Subset
         for (var i = 0; i < offsets.Length; ++i)
         {
             newOffsets[i] = offset;
+
             // If the object in the offset is also present in the used
             // HashMap then increment the offset var by its size
             if (used.ContainsKey(i))
@@ -879,13 +936,16 @@ public class CffFontSubset : CffFont
 
         // Offset var determines the size of the object array
         var newObjects = new byte[offset + unusedCount];
+
         // Build the new Object array
         var unusedOffset = 0;
+
         for (var i = 0; i < offsets.Length - 1; ++i)
         {
             var start = newOffsets[i];
             var end = newOffsets[i + 1];
             newOffsets[i] = start + unusedOffset;
+
             // If start != End then the Object is used
             // So, we will copy the object data from the font file
             if (start != end)
@@ -893,6 +953,7 @@ public class CffFontSubset : CffFont
                 // All offsets are Global Offsets relative to the begining of the font file.
                 // Jump the file pointer to the start address to read from.
                 Buf.Seek(offsets[i]);
+
                 // Read from the buffer and write into the array at start.
                 Buf.ReadFully(newObjects, start + unusedOffset, end - start);
             }
@@ -904,6 +965,7 @@ public class CffFontSubset : CffFont
         }
 
         newOffsets[offsets.Length - 1] += unusedOffset;
+
         // Use AssembleIndex to build the index from the offset & object arrays
         return AssembleIndex(newOffsets, newObjects);
     }
@@ -924,15 +986,19 @@ public class CffFontSubset : CffFont
             // in each private dict.
             HSubrsUsed = new NullValueDictionary<int, int[]>[Fonts[font].FdprivateOffsets.Length];
             LSubrsUsed = new List<int>[Fonts[font].FdprivateOffsets.Length];
+
             // A [][] which will store the byte array for each new FD Array lsubs index
             NewLSubrsIndex = new byte[Fonts[font].FdprivateOffsets.Length][];
+
             // An array to hold the offset for each Lsubr index
             Fonts[font].PrivateSubrsOffset = new int[Fonts[font].FdprivateOffsets.Length];
+
             // A [][] which will store the offset array for each lsubr index
             Fonts[font].PrivateSubrsOffsetsArray = new int[Fonts[font].FdprivateOffsets.Length][];
 
             // Put the FDarrayUsed into a list
             var fdInList = new List<int>(FdArrayUsed.Keys);
+
             // For each FD array which is used subset the lsubr
             for (var j = 0; j < fdInList.Count; j++)
             {
@@ -940,37 +1006,44 @@ public class CffFontSubset : CffFont
                 var fd = fdInList[j];
                 HSubrsUsed[fd] = new NullValueDictionary<int, int[]>();
                 LSubrsUsed[fd] = new List<int>();
+
                 //Reads the private dicts looking for the subr operator and
                 // store both the offest for the index and its offset array
                 BuildFdSubrsOffsets(font, fd);
+
                 // Verify that FDPrivate has a LSubrs index
                 if (Fonts[font].PrivateSubrsOffset[fd] >= 0)
                 {
                     //Scans the Charsting data storing the used Local and Global subroutines
                     // by the glyphs. Scans the Subrs recursivley.
                     BuildSubrUsed(font, fd, Fonts[font].PrivateSubrsOffset[fd],
-                                  Fonts[font].PrivateSubrsOffsetsArray[fd], HSubrsUsed[fd], LSubrsUsed[fd]);
+                        Fonts[font].PrivateSubrsOffsetsArray[fd], HSubrsUsed[fd], LSubrsUsed[fd]);
+
                     // Builds the New Local Subrs index
                     NewLSubrsIndex[fd] =
                         BuildNewIndex(Fonts[font].PrivateSubrsOffsetsArray[fd], HSubrsUsed[fd], RETURN_OP);
                 }
             }
         }
+
         // If the font is not CID && the Private Subr exists then subset:
         else if (Fonts[font].PrivateSubrs >= 0)
         {
             // Build the subrs offsets;
             Fonts[font].SubrsOffsets = GetIndex(Fonts[font].PrivateSubrs);
+
             //Scans the Charsting data storing the used Local and Global subroutines
             // by the glyphs. Scans the Subrs recursivley.
-            BuildSubrUsed(font, -1, Fonts[font].PrivateSubrs, Fonts[font].SubrsOffsets, HSubrsUsedNonCid,
-                          LSubrsUsedNonCid);
+            BuildSubrUsed(font, fd: -1, Fonts[font].PrivateSubrs, Fonts[font].SubrsOffsets, HSubrsUsedNonCid,
+                LSubrsUsedNonCid);
         }
 
         // For all fonts susbset the Global Subroutines
         // Scan the Global Subr Hashmap recursivly on the Gsubrs
         BuildGSubrsUsed(font);
+
         if (Fonts[font].PrivateSubrs >= 0)
+
             // Builds the New Local Subrs index
         {
             NewSubrsIndexNonCid = BuildNewIndex(Fonts[font].SubrsOffsets, HSubrsUsedNonCid, RETURN_OP);
@@ -991,8 +1064,12 @@ public class CffFontSubset : CffFont
     /// <param name="subrsOffsets">the offset array of the subr index</param>
     /// <param name="hSubr">HashMap of the subrs used</param>
     /// <param name="lSubr">ArrayList of the subrs used</param>
-    protected void BuildSubrUsed(int font, int fd, int subrOffset, int[] subrsOffsets,
-                                 INullValueDictionary<int, int[]> hSubr, IList<int> lSubr)
+    protected void BuildSubrUsed(int font,
+        int fd,
+        int subrOffset,
+        int[] subrsOffsets,
+        INullValueDictionary<int, int[]> hSubr,
+        IList<int> lSubr)
     {
         if (subrsOffsets == null)
         {
@@ -1024,16 +1101,20 @@ public class CffFontSubset : CffFont
             {
                 EmptyStack();
                 NumOfHints = 0;
+
                 // Using FDSELECT find the FD Array the glyph belongs to.
                 var glyphFd = Fonts[font].FdSelect[glyph];
+
                 // If the Glyph is part of the FD being processed
                 if (glyphFd == fd)
+
                     // Find the Subrs called by the glyph and insert to hash:
                 {
                     ReadASubr(start, end, GBias, lBias, hSubr, lSubr, subrsOffsets);
                 }
             }
             else
+
                 // If the font is not CID
                 //Find the Subrs called by the glyph and insert to hash:
             {
@@ -1046,6 +1127,7 @@ public class CffFontSubset : CffFont
         {
             // Pop the subr value from the hash
             var subr = lSubr[i];
+
             // Ensure the Lsubr call is valid
             if (subr < subrsOffsets.Length - 1 && subr >= 0)
             {
@@ -1068,11 +1150,13 @@ public class CffFontSubset : CffFont
     {
         Seek(offset);
         int nSubrs = GetCard16();
+
         // If type==1 -> bias=0
         if (Fonts[font].CharstringType == 1)
         {
             return 0;
         }
+
         // else calc according to the count
 
         if (nSubrs < 1240)
@@ -1107,22 +1191,26 @@ public class CffFontSubset : CffFont
 
         // Goto begining of the subr
         Seek(begin);
+
         while (GetPosition() < end)
         {
             // Read the next command
             ReadCommand();
             var pos = GetPosition();
             object topElement = null;
+
             if (ArgCount > 0)
             {
                 topElement = Args[ArgCount - 1];
             }
 
             var numOfArgs = ArgCount;
+
             //Check the modification needed on the Argument Stack according to key;
             HandelStack();
+
             // a call to a Lsubr
-            if (Key == "callsubr")
+            if (string.Equals(Key, b: "callsubr", StringComparison.Ordinal))
             {
                 if (numOfArgs > 0)
                 {
@@ -1131,8 +1219,9 @@ public class CffFontSubset : CffFont
                     Seek(pos);
                 }
             }
+
             // a call to a Gsubr
-            else if (Key == "callgsubr")
+            else if (string.Equals(Key, b: "callgsubr", StringComparison.Ordinal))
             {
                 if (numOfArgs > 0)
                 {
@@ -1141,17 +1230,25 @@ public class CffFontSubset : CffFont
                     Seek(pos);
                 }
             }
+
             // A call to "stem"
-            else if (Key == "hstem" || Key == "vstem" || Key == "hstemhm" || Key == "vstemhm")
-                // Increment the NumOfHints by the number couples of of arguments
+            else if (string.Equals(Key, b: "hstem", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "vstem", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "hstemhm", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "vstemhm", StringComparison.Ordinal))
+
+                // Increment the NumOfHints by the number couples of arguments
             {
                 NumOfHints += numOfArgs / 2;
             }
+
             // A call to "mask"
-            else if (Key == "hintmask" || Key == "cntrmask")
+            else if (string.Equals(Key, b: "hintmask", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "cntrmask", StringComparison.Ordinal))
             {
                 // Compute the size of the mask
                 var sizeOfMask = NumOfHints / 8;
+
                 if (NumOfHints % 8 != 0 || sizeOfMask == 0)
                 {
                     sizeOfMask++;
@@ -1173,13 +1270,13 @@ public class CffFontSubset : CffFont
     /// </summary>
     protected void CopyHeader()
     {
-        Seek(0);
+        Seek(offset: 0);
         int major = GetCard8();
         int minor = GetCard8();
         int hdrSize = GetCard8();
         int offSize = GetCard8();
         NextIndexOffset = hdrSize;
-        OutputList.Add(new RangeItem(Buf, 0, hdrSize));
+        OutputList.Add(new RangeItem(Buf, offset: 0, hdrSize));
     }
 
     /// <summary>
@@ -1191,8 +1288,10 @@ public class CffFontSubset : CffFont
     {
         // Go to the beginning of the index
         Seek(indexOffset);
+
         // Read the count field
         int count = GetCard16();
+
         // If count==0 -> size=2
         if (count == 0)
         {
@@ -1201,10 +1300,13 @@ public class CffFontSubset : CffFont
 
         // Read the offsize field
         int indexOffSize = GetCard8();
+
         // Go to the last element of the offset array
         Seek(indexOffset + 2 + 1 + count * indexOffSize);
+
         // The size of the object array is the value of the last element-1
         var size = GetOffset(indexOffSize) - 1;
+
         // Return the size of the entire index
         return 2 + 1 + (count + 1) * indexOffSize + size;
     }
@@ -1234,20 +1336,25 @@ public class CffFontSubset : CffFont
     protected void CreateFdArray(OffsetItem fdarrayRef, OffsetItem privateRef, int font)
     {
         OutputList.Add(new MarkerItem(fdarrayRef));
+
         // Build the header (count=offsize=first=1)
-        BuildIndexHeader(1, 1, 1);
+        BuildIndexHeader(count: 1, offsize: 1, first: 1);
 
         // Mark
-        OffsetItem privateIndex1Ref = new IndexOffsetItem(1);
+        OffsetItem privateIndex1Ref = new IndexOffsetItem(size: 1);
         OutputList.Add(privateIndex1Ref);
         var privateBase = new IndexBaseItem();
+
         // Insert the private operands and operator
         OutputList.Add(privateBase);
+
         // Calc the new size of the private after subsetting
         // Origianl size
         var newSize = Fonts[font].PrivateLength;
+
         // Calc the original size of the Subr offset in the private
         var orgSubrsOffsetSize = CalcSubrOffsetSize(Fonts[font].PrivateOffset, Fonts[font].PrivateLength);
+
         // Increase the ptivate's size
         if (orgSubrsOffsetSize != 0)
         {
@@ -1286,20 +1393,25 @@ public class CffFontSubset : CffFont
     /// <param name="fdselectRef">OffsetItem for the FDSelect</param>
     /// <param name="charsetRef">OffsetItem for the CharSet</param>
     /// <param name="charstringsRef">OffsetItem for the CharString</param>
-    protected void CreateKeys(OffsetItem fdarrayRef, OffsetItem fdselectRef, OffsetItem charsetRef,
-                              OffsetItem charstringsRef)
+    protected void CreateKeys(OffsetItem fdarrayRef,
+        OffsetItem fdselectRef,
+        OffsetItem charsetRef,
+        OffsetItem charstringsRef)
     {
         // create an FDArray key
         OutputList.Add(fdarrayRef);
         OutputList.Add(new UInt8Item((char)12));
         OutputList.Add(new UInt8Item((char)36));
+
         // create an FDSelect key
         OutputList.Add(fdselectRef);
         OutputList.Add(new UInt8Item((char)12));
         OutputList.Add(new UInt8Item((char)37));
+
         // create an charset key
         OutputList.Add(charsetRef);
         OutputList.Add(new UInt8Item((char)15));
+
         // create a CharStrings key
         OutputList.Add(charstringsRef);
         OutputList.Add(new UInt8Item((char)17));
@@ -1313,18 +1425,19 @@ public class CffFontSubset : CffFont
     protected void CreateNewStringIndex(int font)
     {
         var fdFontName = Fonts[font].Name + "-OneRange";
+
         if (fdFontName.Length > 127)
         {
-            fdFontName = fdFontName.Substring(0, 127);
+            fdFontName = fdFontName.Substring(startIndex: 0, length: 127);
         }
 
         var extraStrings = "Adobe" + "Identity" + fdFontName;
 
-        var origStringsLen = StringOffsets[StringOffsets.Length - 1]
-                             - StringOffsets[0];
+        var origStringsLen = StringOffsets[StringOffsets.Length - 1] - StringOffsets[0];
         var stringsBaseOffset = StringOffsets[0] - 1;
 
         byte stringsIndexOffSize;
+
         if (origStringsLen + extraStrings.Length <= 0xff)
         {
             stringsIndexOffSize = 1;
@@ -1344,14 +1457,14 @@ public class CffFontSubset : CffFont
 
         OutputList.Add(new UInt16Item((char)(StringOffsets.Length - 1 + 3))); // count
         OutputList.Add(new UInt8Item((char)stringsIndexOffSize)); // offSize
+
         for (var i = 0; i < StringOffsets.Length; i++)
         {
-            OutputList.Add(new IndexOffsetItem(stringsIndexOffSize,
-                                               StringOffsets[i] - stringsBaseOffset));
+            OutputList.Add(new IndexOffsetItem(stringsIndexOffSize, StringOffsets[i] - stringsBaseOffset));
         }
 
-        var currentStringsOffset = StringOffsets[StringOffsets.Length - 1]
-                                   - stringsBaseOffset;
+        var currentStringsOffset = StringOffsets[StringOffsets.Length - 1] - stringsBaseOffset;
+
         //l.Add(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
         currentStringsOffset += "Adobe".Length;
         OutputList.Add(new IndexOffsetItem(stringsIndexOffSize, currentStringsOffset));
@@ -1386,6 +1499,7 @@ public class CffFontSubset : CffFont
     {
         // Findout what the operator does to the stack
         var stackHandel = StackOpp();
+
         if (stackHandel < 2)
         {
             // The operators that enlarge the stack by one
@@ -1393,17 +1507,20 @@ public class CffFontSubset : CffFont
             {
                 PushStack();
             }
+
             // The operators that pop the stack
             else
             {
                 // Abs value for the for loop
                 stackHandel *= -1;
+
                 for (var i = 0; i < stackHandel; i++)
                 {
                     PopStack();
                 }
             }
         }
+
         // All other flush the stack
         else
         {
@@ -1426,10 +1543,7 @@ public class CffFontSubset : CffFont
     /// <summary>
     ///     Add an item to the stack
     /// </summary>
-    protected void PushStack()
-    {
-        ArgCount++;
-    }
+    protected void PushStack() => ArgCount++;
 
     /// <summary>
     ///     The function reads a subrs (glyph info) between begin and end.
@@ -1443,8 +1557,13 @@ public class CffFontSubset : CffFont
     /// <param name="hSubr">the HashMap for the lSubrs</param>
     /// <param name="lSubr"></param>
     /// <param name="lSubrsOffsets">the ArrayList for the lSubrs</param>
-    protected void ReadASubr(int begin, int end, int gBias, int lBias,
-                             INullValueDictionary<int, int[]> hSubr, IList<int> lSubr, int[] lSubrsOffsets)
+    protected void ReadASubr(int begin,
+        int end,
+        int gBias,
+        int lBias,
+        INullValueDictionary<int, int[]> hSubr,
+        IList<int> lSubr,
+        int[] lSubrsOffsets)
     {
         if (hSubr == null)
         {
@@ -1464,30 +1583,36 @@ public class CffFontSubset : CffFont
         // Clear the stack for the subrs
         EmptyStack();
         NumOfHints = 0;
+
         // Goto begining of the subr
         Seek(begin);
+
         while (GetPosition() < end)
         {
             // Read the next command
             ReadCommand();
             var pos = GetPosition();
             object topElement = null;
+
             if (ArgCount > 0)
             {
                 topElement = Args[ArgCount - 1];
             }
 
             var numOfArgs = ArgCount;
+
             // Check the modification needed on the Argument Stack according to key;
             HandelStack();
+
             // a call to a Lsubr
-            if (Key == "callsubr")
+            if (string.Equals(Key, b: "callsubr", StringComparison.Ordinal))
             {
                 // Verify that arguments are passed
                 if (numOfArgs > 0)
                 {
                     // Calc the index of the Subrs
                     var subr = (int)topElement + lBias;
+
                     // If the subr isn't in the HashMap -> Put in
                     if (!hSubr.ContainsKey(subr))
                     {
@@ -1499,14 +1624,16 @@ public class CffFontSubset : CffFont
                     Seek(pos);
                 }
             }
+
             // a call to a Gsubr
-            else if (Key == "callgsubr")
+            else if (string.Equals(Key, b: "callgsubr", StringComparison.Ordinal))
             {
                 // Verify that arguments are passed
                 if (numOfArgs > 0)
                 {
                     // Calc the index of the Subrs
                     var subr = (int)topElement + gBias;
+
                     // If the subr isn't in the HashMap -> Put in
                     if (!HGSubrsUsed.ContainsKey(subr))
                     {
@@ -1518,17 +1645,25 @@ public class CffFontSubset : CffFont
                     Seek(pos);
                 }
             }
+
             // A call to "stem"
-            else if (Key == "hstem" || Key == "vstem" || Key == "hstemhm" || Key == "vstemhm")
-                // Increment the NumOfHints by the number couples of of arguments
+            else if (string.Equals(Key, b: "hstem", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "vstem", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "hstemhm", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "vstemhm", StringComparison.Ordinal))
+
+                // Increment the NumOfHints by the number couples of arguments
             {
                 NumOfHints += numOfArgs / 2;
             }
+
             // A call to "mask"
-            else if (Key == "hintmask" || Key == "cntrmask")
+            else if (string.Equals(Key, b: "hintmask", StringComparison.Ordinal) ||
+                     string.Equals(Key, b: "cntrmask", StringComparison.Ordinal))
             {
                 // Compute the size of the mask
                 var sizeOfMask = NumOfHints / 8;
+
                 if (NumOfHints % 8 != 0 || sizeOfMask == 0)
                 {
                     sizeOfMask++;
@@ -1550,11 +1685,13 @@ public class CffFontSubset : CffFont
     {
         Key = null;
         var gotKey = false;
+
         // Until a key is found
         while (!gotKey)
         {
             // Read the first Char
             var b0 = GetCard8();
+
             // decode according to the type1/type2 format
             if (b0 == 28) // the two next bytes represent a short int;
             {
@@ -1562,6 +1699,7 @@ public class CffFontSubset : CffFont
                 int second = GetCard8();
                 Args[ArgCount] = (first << 8) | second;
                 ArgCount++;
+
                 continue;
             }
 
@@ -1569,6 +1707,7 @@ public class CffFontSubset : CffFont
             {
                 Args[ArgCount] = b0 - 139;
                 ArgCount++;
+
                 continue;
             }
 
@@ -1577,6 +1716,7 @@ public class CffFontSubset : CffFont
                 int w = GetCard8();
                 Args[ArgCount] = (b0 - 247) * 256 + w + 108;
                 ArgCount++;
+
                 continue;
             }
 
@@ -1585,6 +1725,7 @@ public class CffFontSubset : CffFont
                 int w = GetCard8();
                 Args[ArgCount] = -(b0 - 251) * 256 - w - 108;
                 ArgCount++;
+
                 continue;
             }
 
@@ -1596,17 +1737,20 @@ public class CffFontSubset : CffFont
                 int fourth = GetCard8();
                 Args[ArgCount] = (first << 24) | (second << 16) | (third << 8) | fourth;
                 ArgCount++;
+
                 continue;
             }
 
             if (b0 <= 31 && b0 != 28) // An operator was found.. Set Key.
             {
                 gotKey = true;
+
                 // 12 is an escape command therefor the next byte is a part
                 // of this command
                 if (b0 == 12)
                 {
                     int b1 = GetCard8();
+
                     if (b1 > SubrsEscapeFuncs.Length - 1)
                     {
                         b1 = SubrsEscapeFuncs.Length - 1;
@@ -1631,6 +1775,7 @@ public class CffFontSubset : CffFont
         Seek(Fonts[font].FdarrayOffset);
         Fonts[font].FdArrayCount = GetCard16();
         Fonts[font].FdArrayOffsize = GetCard8();
+
         // Since we will change values inside the FDArray objects
         // We increase its offsize to prevent errors
         if (Fonts[font].FdArrayOffsize < 4)
@@ -1651,8 +1796,10 @@ public class CffFontSubset : CffFont
         // Restore the number of glyphs
         var numOfGlyphs = Fonts[font].Nglyphs;
         var fdSelect = new int[numOfGlyphs];
+
         // Go to the beginning of the FDSelect
         Seek(Fonts[font].FdselectOffset);
+
         // Read the FDSelect's format
         Fonts[font].FdSelectFormat = GetCard8();
 
@@ -1669,22 +1816,28 @@ public class CffFontSubset : CffFont
                 // The FDSelect's Length is one for each glyph + the format
                 // for later use
                 Fonts[font].FdSelectLength = Fonts[font].Nglyphs + 1;
+
                 break;
             case 3:
                 // Format==3 means the ranges version
                 // The number of ranges
                 int nRanges = GetCard16();
                 var l = 0;
+
                 // Read the first in the first range
                 int first = GetCard16();
+
                 for (var i = 0; i < nRanges; i++)
                 {
                     // Read the FD index
                     int fd = GetCard8();
+
                     // Read the first of the next range
                     int last = GetCard16();
+
                     // Calc the steps and write to the array
                     var steps = last - first;
+
                     for (var k = 0; k < steps; k++)
                     {
                         fdSelect[l] = fd;
@@ -1697,6 +1850,7 @@ public class CffFontSubset : CffFont
 
                 // Store the length for later use
                 Fonts[font].FdSelectLength = 1 + 2 + nRanges * 3 + 2;
+
                 break;
         }
 
@@ -1710,30 +1864,45 @@ public class CffFontSubset : CffFont
     /// <returns>The change in the stack. 2-> flush the stack</returns>
     protected int StackOpp()
     {
-        if (Key == "ifelse")
+        if (string.Equals(Key, b: "ifelse", StringComparison.Ordinal))
         {
             return -3;
         }
 
-        if (Key == "roll" || Key == "put")
+        if (string.Equals(Key, b: "roll", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "put", StringComparison.Ordinal))
         {
             return -2;
         }
 
-        if (Key == "callsubr" || Key == "callgsubr" || Key == "add" || Key == "sub" ||
-            Key == "div" || Key == "mul" || Key == "drop" || Key == "and" ||
-            Key == "or" || Key == "eq")
+        if (string.Equals(Key, b: "callsubr", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "callgsubr", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "add", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "sub", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "div", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "mul", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "drop", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "and", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "or", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "eq", StringComparison.Ordinal))
         {
             return -1;
         }
 
-        if (Key == "abs" || Key == "neg" || Key == "sqrt" || Key == "exch" ||
-            Key == "index" || Key == "get" || Key == "not" || Key == "return")
+        if (string.Equals(Key, b: "abs", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "neg", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "sqrt", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "exch", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "index", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "get", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "not", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "return", StringComparison.Ordinal))
         {
             return 0;
         }
 
-        if (Key == "random" || Key == "dup")
+        if (string.Equals(Key, b: "random", StringComparison.Ordinal) ||
+            string.Equals(Key, b: "dup", StringComparison.Ordinal))
         {
             return 1;
         }
@@ -1752,10 +1921,12 @@ public class CffFontSubset : CffFont
         var num = 0;
         char sid;
         int i = 1, nLeft;
+
         while (i < numofGlyphs)
         {
             num++;
             sid = GetCard16();
+
             if (type == 1)
             {
                 nLeft = GetCard8();
@@ -1782,6 +1953,7 @@ public class CffFontSubset : CffFont
         OffsetItem[] fdPrivate = new DictOffsetItem[Fonts[font].FdArrayOffsets.Length - 1];
         var fdPrivateBase = new IndexBaseItem[Fonts[font].FdprivateOffsets.Length];
         OffsetItem[] fdSubrs = new DictOffsetItem[Fonts[font].FdprivateOffsets.Length];
+
         // Reconstruct each type
         reconstructFdArray(font, fdPrivate);
         ReconstructPrivateDict(font, fdPrivate, fdPrivateBase, fdSubrs);
@@ -1797,10 +1969,11 @@ public class CffFontSubset : CffFont
     private void reconstructFdArray(int font, OffsetItem[] fdPrivate)
     {
         // Build the header of the index
-        BuildIndexHeader(Fonts[font].FdArrayCount, Fonts[font].FdArrayOffsize, 1);
+        BuildIndexHeader(Fonts[font].FdArrayCount, Fonts[font].FdArrayOffsize, first: 1);
 
         // For each offset create an Offset Item
         OffsetItem[] fdOffsets = new IndexOffsetItem[Fonts[font].FdArrayOffsets.Length - 1];
+
         for (var i = 0; i < Fonts[font].FdArrayOffsets.Length - 1; i++)
         {
             fdOffsets[i] = new IndexOffsetItem(Fonts[font].FdArrayOffsize);
@@ -1821,20 +1994,24 @@ public class CffFontSubset : CffFont
             {
                 // Goto begining of objects
                 Seek(Fonts[font].FdArrayOffsets[k]);
+
                 while (GetPosition() < Fonts[font].FdArrayOffsets[k + 1])
                 {
                     var p1 = GetPosition();
                     GetDictItem();
                     var p2 = GetPosition();
+
                     // If the dictItem is the "Private" then compute and copy length,
                     // use marker for offset and write operator number
-                    if (Key == "Private")
+                    if (string.Equals(Key, b: "Private", StringComparison.Ordinal))
                     {
                         // Save the original length of the private dict
                         var newSize = (int)Args[0];
+
                         // Save the size of the offset to the subrs in that private
-                        var orgSubrsOffsetSize =
-                            CalcSubrOffsetSize(Fonts[font].FdprivateOffsets[k], Fonts[font].FdprivateLengths[k]);
+                        var orgSubrsOffsetSize = CalcSubrOffsetSize(Fonts[font].FdprivateOffsets[k],
+                            Fonts[font].FdprivateLengths[k]);
+
                         // Increase the private's length accordingly
                         if (orgSubrsOffsetSize != 0)
                         {
@@ -1846,9 +2023,11 @@ public class CffFontSubset : CffFont
                         fdPrivate[k] = new DictOffsetItem();
                         OutputList.Add(fdPrivate[k]);
                         OutputList.Add(new UInt8Item((char)18)); // Private
+
                         // Go back to place
                         Seek(p2);
                     }
+
                     // Else copy the entire range
                     else // other than private
                     {

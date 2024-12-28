@@ -200,9 +200,9 @@ public class AcroFields
         Writer = writer;
         Xfa = new XfaForm(reader);
 
-        if (writer is PdfStamperImp)
+        if (writer is PdfStamperImp imp)
         {
-            _append = ((PdfStamperImp)writer).Append;
+            _append = imp.Append;
         }
 
         Fill();
@@ -467,9 +467,9 @@ public class AcroFields
                                 }
                             }
 
-                            if (tx is TextField)
+                            if (tx is TextField field)
                             {
-                                ((TextField)tx).ExtensionFont = porf;
+                                field.ExtensionFont = porf;
                             }
                         }
                         else
@@ -850,9 +850,9 @@ public class AcroFields
             return "";
         }
 
-        if (v is PrStream)
+        if (v is PrStream stream)
         {
-            var valBytes = PdfReader.GetStreamBytes((PrStream)v);
+            var valBytes = PdfReader.GetStreamBytes(stream);
 
             return PdfEncodings.ConvertToString(valBytes, BaseFont.WINANSI);
         }
@@ -880,9 +880,9 @@ public class AcroFields
             {
                 value = PdfName.DecodeName(v.ToString());
             }
-            else if (v is PdfString)
+            else if (v is PdfString s)
             {
-                value = ((PdfString)v).ToUnicodeString();
+                value = s.ToUnicodeString();
             }
 
             var opts = item.GetValue(idx: 0).GetAsArray(PdfName.Opt);
@@ -906,11 +906,11 @@ public class AcroFields
             return value;
         }
 
-        if (v is PdfString)
+        if (v is PdfString pdfString)
         {
             _lastWasString = true;
 
-            return ((PdfString)v).ToUnicodeString();
+            return pdfString.ToUnicodeString();
         }
 
         if (v is PdfName)
@@ -3519,7 +3519,7 @@ public class AcroFields
         }
     }
 
-    private class InstHit
+    private sealed class InstHit
     {
         private readonly NullValueDictionary<int, int> _hits;
 
@@ -3549,7 +3549,7 @@ public class AcroFields
         }
     }
 
-    private class SorterComparator : IComparer<object[]>
+    private sealed class SorterComparator : IComparer<object[]>
     {
         public int Compare(object[] o1, object[] o2)
         {

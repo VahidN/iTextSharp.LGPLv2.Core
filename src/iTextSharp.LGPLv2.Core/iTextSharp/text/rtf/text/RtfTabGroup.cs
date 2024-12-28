@@ -38,11 +38,12 @@ public class RtfTabGroup : RtfAddableElement
         }
 
         _tabs = new List<RtfTab>();
+
         for (var i = 0; i < tabs.Count; i++)
         {
-            if (tabs[i] is RtfTab)
+            if (tabs[i] is RtfTab tabItems)
             {
-                _tabs.Add(tabs[i]);
+                _tabs.Add(tabItems);
             }
         }
     }
@@ -51,10 +52,7 @@ public class RtfTabGroup : RtfAddableElement
     ///     Adds a RtfTab to the list of grouped tabs.
     /// </summary>
     /// <param name="tab">The RtfTab to add.</param>
-    public void Add(RtfTab tab)
-    {
-        _tabs.Add(tab);
-    }
+    public void Add(RtfTab tab) => _tabs.Add(tab);
 
     /// <summary>
     ///     Combines the tab output form all grouped tabs.

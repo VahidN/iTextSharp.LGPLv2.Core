@@ -122,8 +122,7 @@ public class BmpImage
     /// </summary>
     /// <param name="isp">the stream</param>
     /// <returns>the image</returns>
-    public static Image GetImage(Stream isp)
-        => GetImage(isp, false, 0);
+    public static Image GetImage(Stream isp) => GetImage(isp, noHeader: false, size: 0);
 
     /// <summary>
     ///     Reads a BMP from a stream. The stream is not closed.
@@ -150,8 +149,7 @@ public class BmpImage
     /// </summary>
     /// <param name="file">the file</param>
     /// <returns>the image</returns>
-    public static Image GetImage(string file)
-        => GetImage(Utilities.ToUrl(file));
+    public static Image GetImage(string file) => GetImage(Utilities.ToUrl(file));
 
     /// <summary>
     ///     Reads a BMP from a byte array.
@@ -184,7 +182,7 @@ public class BmpImage
             // Start File Header
             if (!(readUnsignedByte(_inputStream) == 'B' && readUnsignedByte(_inputStream) == 'M'))
             {
-                throw new InvalidOperationException("Invalid magic value for BMP file.");
+                throw new InvalidOperationException(message: "Invalid magic value for BMP file.");
             }
 
             // Read file size
@@ -217,8 +215,8 @@ public class BmpImage
         var planes = readWord(_inputStream);
         _bitsPerPixel = readWord(_inputStream);
 
-        Properties["color_planes"] = planes;
-        Properties["bits_per_pixel"] = _bitsPerPixel;
+        Properties[key: "color_planes"] = planes;
+        Properties[key: "bits_per_pixel"] = _bitsPerPixel;
 
         // As BMP always has 3 rgb bands, except for Version 5,
         // which is bgra
@@ -232,7 +230,7 @@ public class BmpImage
         if (size == 12)
         {
             // Windows 2.x and OS/2 1.x
-            Properties["bmp_version"] = "BMP v. 2.x";
+            Properties[key: "bmp_version"] = "BMP v. 2.x";
 
             // Classify the image type
             if (_bitsPerPixel == 1)
@@ -295,30 +293,30 @@ public class BmpImage
             switch ((int)_compression)
             {
                 case BiRgb:
-                    Properties["compression"] = "BI_RGB";
+                    Properties[key: "compression"] = "BI_RGB";
 
                     break;
 
                 case BiRle8:
-                    Properties["compression"] = "BI_RLE8";
+                    Properties[key: "compression"] = "BI_RLE8";
 
                     break;
 
                 case BiRle4:
-                    Properties["compression"] = "BI_RLE4";
+                    Properties[key: "compression"] = "BI_RLE4";
 
                     break;
 
                 case BiBitfields:
-                    Properties["compression"] = "BI_BITFIELDS";
+                    Properties[key: "compression"] = "BI_BITFIELDS";
 
                     break;
             }
 
-            Properties["x_pixels_per_meter"] = _xPelsPerMeter;
-            Properties["y_pixels_per_meter"] = _yPelsPerMeter;
-            Properties["colors_used"] = colorsUsed;
-            Properties["colors_important"] = colorsImportant;
+            Properties[key: "x_pixels_per_meter"] = _xPelsPerMeter;
+            Properties[key: "y_pixels_per_meter"] = _yPelsPerMeter;
+            Properties[key: "colors_used"] = colorsUsed;
+            Properties[key: "colors_important"] = colorsImportant;
 
             if (size == 40)
             {
@@ -351,9 +349,9 @@ public class BmpImage
                             _redMask = 0x7C00;
                             _greenMask = 0x3E0;
                             _blueMask = 0x1F;
-                            Properties["red_mask"] = _redMask;
-                            Properties["green_mask"] = _greenMask;
-                            Properties["blue_mask"] = _blueMask;
+                            Properties[key: "red_mask"] = _redMask;
+                            Properties[key: "green_mask"] = _greenMask;
+                            Properties[key: "blue_mask"] = _blueMask;
                         }
                         else if (_bitsPerPixel == 32)
                         {
@@ -361,9 +359,9 @@ public class BmpImage
                             _redMask = 0x00FF0000;
                             _greenMask = 0x0000FF00;
                             _blueMask = 0x000000FF;
-                            Properties["red_mask"] = _redMask;
-                            Properties["green_mask"] = _greenMask;
-                            Properties["blue_mask"] = _blueMask;
+                            Properties[key: "red_mask"] = _redMask;
+                            Properties[key: "green_mask"] = _greenMask;
+                            Properties[key: "blue_mask"] = _blueMask;
                         }
 
                         // Read in the palette
@@ -396,7 +394,7 @@ public class BmpImage
                         }
 
                         readPalette(sizeOfPalette);
-                        Properties["bmp_version"] = "BMP v. 3.x";
+                        Properties[key: "bmp_version"] = "BMP v. 3.x";
 
                         break;
 
@@ -416,9 +414,9 @@ public class BmpImage
                         _greenMask = (int)readDWord(_inputStream);
                         _blueMask = (int)readDWord(_inputStream);
 
-                        Properties["red_mask"] = _redMask;
-                        Properties["green_mask"] = _greenMask;
-                        Properties["blue_mask"] = _blueMask;
+                        Properties[key: "red_mask"] = _redMask;
+                        Properties[key: "green_mask"] = _greenMask;
+                        Properties[key: "blue_mask"] = _blueMask;
 
                         if (colorsUsed != 0)
                         {
@@ -427,19 +425,19 @@ public class BmpImage
                             readPalette(sizeOfPalette);
                         }
 
-                        Properties["bmp_version"] = "BMP v. 3.x NT";
+                        Properties[key: "bmp_version"] = "BMP v. 3.x NT";
 
                         break;
 
                     default:
-                        throw new InvalidOperationException("Invalid compression specified in BMP file.");
+                        throw new InvalidOperationException(message: "Invalid compression specified in BMP file.");
                 }
             }
             else if (size == 108)
             {
                 // Windows 4.x BMP
 
-                Properties["bmp_version"] = "BMP v. 4.x";
+                Properties[key: "bmp_version"] = "BMP v. 4.x";
 
                 // rgb masks, valid only if comp is BI_BITFIELDS
                 _redMask = (int)readDWord(_inputStream);
@@ -501,10 +499,10 @@ public class BmpImage
                     }
                 }
 
-                Properties["red_mask"] = _redMask;
-                Properties["green_mask"] = _greenMask;
-                Properties["blue_mask"] = _blueMask;
-                Properties["alpha_mask"] = _alphaMask;
+                Properties[key: "red_mask"] = _redMask;
+                Properties[key: "green_mask"] = _greenMask;
+                Properties[key: "blue_mask"] = _blueMask;
+                Properties[key: "alpha_mask"] = _alphaMask;
 
                 // Read in the palette
                 var numberOfEntries = (int)((_bitmapOffset - 14 - size) / 4);
@@ -541,41 +539,41 @@ public class BmpImage
                 {
                     case LcsCalibratedRgb:
                         // All the new fields are valid only for this case
-                        Properties["color_space"] = "LCS_CALIBRATED_RGB";
-                        Properties["redX"] = redX;
-                        Properties["redY"] = redY;
-                        Properties["redZ"] = redZ;
-                        Properties["greenX"] = greenX;
-                        Properties["greenY"] = greenY;
-                        Properties["greenZ"] = greenZ;
-                        Properties["blueX"] = blueX;
-                        Properties["blueY"] = blueY;
-                        Properties["blueZ"] = blueZ;
-                        Properties["gamma_red"] = gammaRed;
-                        Properties["gamma_green"] = gammaGreen;
-                        Properties["gamma_blue"] = gammaBlue;
+                        Properties[key: "color_space"] = "LCS_CALIBRATED_RGB";
+                        Properties[key: "redX"] = redX;
+                        Properties[key: "redY"] = redY;
+                        Properties[key: "redZ"] = redZ;
+                        Properties[key: "greenX"] = greenX;
+                        Properties[key: "greenY"] = greenY;
+                        Properties[key: "greenZ"] = greenZ;
+                        Properties[key: "blueX"] = blueX;
+                        Properties[key: "blueY"] = blueY;
+                        Properties[key: "blueZ"] = blueZ;
+                        Properties[key: "gamma_red"] = gammaRed;
+                        Properties[key: "gamma_green"] = gammaGreen;
+                        Properties[key: "gamma_blue"] = gammaBlue;
 
                         // break;
-                        throw new NotImplementedException("Not implemented yet.");
+                        throw new NotSupportedException(message: "Not implemented yet.");
 
                     case Lcs_SRgb:
                         // Default Windows color space
-                        Properties["color_space"] = "LCS_sRGB";
+                        Properties[key: "color_space"] = "LCS_sRGB";
 
                         break;
 
                     case LcsCmyk:
-                        Properties["color_space"] = "LCS_CMYK";
+                        Properties[key: "color_space"] = "LCS_CMYK";
 
                         //		    break;
-                        throw new NotImplementedException("Not implemented yet.");
+                        throw new NotSupportedException(message: "Not implemented yet.");
                 }
             }
             else
             {
-                Properties["bmp_version"] = "BMP v. 5.x";
+                Properties[key: "bmp_version"] = "BMP v. 5.x";
 
-                throw new NotImplementedException("BMP version 5 not implemented yet.");
+                throw new NotSupportedException(message: "BMP version 5 not implemented yet.");
             }
         }
 
@@ -788,7 +786,7 @@ public class BmpImage
                 break;
             }
 
-            mask = Util.Usr(mask, 1);
+            mask = Util.Usr(mask, op2: 1);
         }
 
         return mask;
@@ -805,7 +803,7 @@ public class BmpImage
                 break;
             }
 
-            mask = Util.Usr(mask, 1);
+            mask = Util.Usr(mask, op2: 1);
         }
 
         return k;
@@ -830,51 +828,51 @@ public class BmpImage
         {
             case Version21Bit:
                 // no compression
-                return read1Bit(3);
+                return read1Bit(paletteEntries: 3);
 
             case Version24Bit:
                 // no compression
-                return read4Bit(3);
+                return read4Bit(paletteEntries: 3);
 
             case Version28Bit:
                 // no compression
-                return read8Bit(3);
+                return read8Bit(paletteEntries: 3);
 
             case Version224Bit:
                 // no compression
                 bdata = new byte[_width * _height * 3];
                 read24Bit(bdata);
 
-                return new ImgRaw(_width, _height, 3, 8, bdata);
+                return new ImgRaw(_width, _height, components: 3, bpc: 8, bdata);
 
             case Version31Bit:
                 // 1-bit images cannot be compressed.
-                return read1Bit(4);
+                return read1Bit(paletteEntries: 4);
 
             case Version34Bit:
                 switch ((int)_compression)
                 {
                     case BiRgb:
-                        return read4Bit(4);
+                        return read4Bit(paletteEntries: 4);
 
                     case BiRle4:
                         return readRle4();
 
                     default:
-                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException(message: "Invalid compression specified for BMP file.");
                 }
 
             case Version38Bit:
                 switch ((int)_compression)
                 {
                     case BiRgb:
-                        return read8Bit(4);
+                        return read8Bit(paletteEntries: 4);
 
                     case BiRle8:
                         return readRle8();
 
                     default:
-                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException(message: "Invalid compression specified for BMP file.");
                 }
 
             case Version324Bit:
@@ -882,54 +880,54 @@ public class BmpImage
                 bdata = new byte[_width * _height * 3];
                 read24Bit(bdata);
 
-                return new ImgRaw(_width, _height, 3, 8, bdata);
+                return new ImgRaw(_width, _height, components: 3, bpc: 8, bdata);
 
             case Version3Nt16Bit:
-                return read1632Bit(false);
+                return read1632Bit(is32: false);
 
             case Version3Nt32Bit:
-                return read1632Bit(true);
+                return read1632Bit(is32: true);
 
             case Version41Bit:
-                return read1Bit(4);
+                return read1Bit(paletteEntries: 4);
 
             case Version44Bit:
                 switch ((int)_compression)
                 {
                     case BiRgb:
-                        return read4Bit(4);
+                        return read4Bit(paletteEntries: 4);
 
                     case BiRle4:
                         return readRle4();
 
                     default:
-                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException(message: "Invalid compression specified for BMP file.");
                 }
 
             case Version48Bit:
                 switch ((int)_compression)
                 {
                     case BiRgb:
-                        return read8Bit(4);
+                        return read8Bit(paletteEntries: 4);
 
                     case BiRle8:
                         return readRle8();
 
                     default:
-                        throw new InvalidOperationException("Invalid compression specified for BMP file.");
+                        throw new InvalidOperationException(message: "Invalid compression specified for BMP file.");
                 }
 
             case Version416Bit:
-                return read1632Bit(false);
+                return read1632Bit(is32: false);
 
             case Version424Bit:
                 bdata = new byte[_width * _height * 3];
                 read24Bit(bdata);
 
-                return new ImgRaw(_width, _height, 3, 8, bdata);
+                return new ImgRaw(_width, _height, components: 3, bpc: 8, bdata);
 
             case Version432Bit:
-                return read1632Bit(true);
+                return read1632Bit(is32: true);
         }
 
         return null;
@@ -959,7 +957,7 @@ public class BmpImage
 
     private Image indexedModel(byte[] bdata, int bpc, int paletteEntries)
     {
-        Image img = new ImgRaw(_width, _height, 1, bpc, bdata);
+        Image img = new ImgRaw(_width, _height, components: 1, bpc, bdata);
         var colorspace = new PdfArray();
         colorspace.Add(PdfName.Indexed);
         colorspace.Add(PdfName.Devicergb);
@@ -1067,7 +1065,7 @@ public class BmpImage
             }
         }
 
-        return new ImgRaw(_width, _height, 3, 8, bdata);
+        return new ImgRaw(_width, _height, components: 3, bpc: 8, bdata);
     }
 
     /// <summary>
@@ -1116,7 +1114,7 @@ public class BmpImage
             }
         }
 
-        return indexedModel(bdata, 1, paletteEntries);
+        return indexedModel(bdata, bpc: 1, paletteEntries);
     }
 
     /// <summary>
@@ -1242,7 +1240,7 @@ public class BmpImage
             }
         }
 
-        return indexedModel(bdata, 4, paletteEntries);
+        return indexedModel(bdata, bpc: 4, paletteEntries);
     }
 
     /// <summary>
@@ -1292,14 +1290,13 @@ public class BmpImage
             }
         }
 
-        return indexedModel(bdata, 8, paletteEntries);
+        return indexedModel(bdata, bpc: 8, paletteEntries);
     }
 
     /// <summary>
     ///     Unsigned 4 bytes
     /// </summary>
-    private static long readDWord(Stream stream)
-        => readUnsignedInt(stream);
+    private static long readDWord(Stream stream) => readUnsignedInt(stream);
 
     /// <summary>
     ///     Signed 4 bytes
@@ -1317,8 +1314,7 @@ public class BmpImage
     /// <summary>
     ///     32 bit signed value
     /// </summary>
-    private static int readLong(Stream stream)
-        => readInt(stream);
+    private static int readLong(Stream stream) => readInt(stream);
 
     private void readPalette(int sizeOfPalette)
     {
@@ -1336,13 +1332,13 @@ public class BmpImage
 
             if (r <= 0)
             {
-                throw new IOException("incomplete palette");
+                throw new IOException(message: "incomplete palette");
             }
 
             bytesRead += r;
         }
 
-        Properties["palette"] = _palette;
+        Properties[key: "palette"] = _palette;
     }
 
     private Image readRle4()
@@ -1365,7 +1361,7 @@ public class BmpImage
         }
 
         // Decompress the RLE4 compressed data.
-        var val = decodeRle(false, values);
+        var val = decodeRle(is8: false, values);
 
         // Invert it as it is bottom up format.
         if (_isBottomUp)
@@ -1408,7 +1404,7 @@ public class BmpImage
             sh += stride;
         }
 
-        return indexedModel(bdata, 4, 4);
+        return indexedModel(bdata, bpc: 4, paletteEntries: 4);
     }
 
     private Image readRle8()
@@ -1431,7 +1427,7 @@ public class BmpImage
         }
 
         // Since data is compressed, decompress it
-        var val = decodeRle(true, values);
+        var val = decodeRle(is8: true, values);
 
         // Uncompressed data does not have any padding
         imSize = _width * _height;
@@ -1452,7 +1448,7 @@ public class BmpImage
             val = temp;
         }
 
-        return indexedModel(val, 8, 4);
+        return indexedModel(val, bpc: 8, paletteEntries: 4);
     }
 
     /// <summary>
@@ -1472,8 +1468,7 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 8 bits
     /// </summary>
-    private static int readUnsignedByte(Stream stream)
-        => stream.ReadByte() & 0xff;
+    private static int readUnsignedByte(Stream stream) => stream.ReadByte() & 0xff;
 
     /// <summary>
     ///     Unsigned 4 bytes
@@ -1503,6 +1498,5 @@ public class BmpImage
     /// <summary>
     ///     Unsigned 16 bits
     /// </summary>
-    private static int readWord(Stream stream)
-        => readUnsignedShort(stream);
+    private static int readWord(Stream stream) => readUnsignedShort(stream);
 }

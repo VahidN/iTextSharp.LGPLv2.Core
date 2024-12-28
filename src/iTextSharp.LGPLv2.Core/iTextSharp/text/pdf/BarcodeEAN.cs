@@ -423,8 +423,8 @@ public class BarcodeEan : Barcode
 
         for (var k = code.Length - 1; k >= 0; --k)
         {
-            var n = code[k] - '0';
-            total += mul * n;
+            var i = code[k] - '0';
+            total += mul * i;
             mul ^= 2;
         }
 
@@ -501,11 +501,11 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(barCode));
         }
 
-        var code = new int[barCode.Length];
+        var ints = new int[barCode.Length];
 
-        for (var k = 0; k < code.Length; ++k)
+        for (var k = 0; k < ints.Length; ++k)
         {
-            code[k] = barCode[k] - '0';
+            ints[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsEan13];
@@ -513,11 +513,11 @@ public class BarcodeEan : Barcode
         bars[pb++] = 1;
         bars[pb++] = 1;
         bars[pb++] = 1;
-        var sequence = _parity13[code[0]];
+        var sequence = _parity13[ints[0]];
 
         for (var k = 0; k < sequence.Length; ++k)
         {
-            var c = code[k + 1];
+            var c = ints[k + 1];
             var stripes = _bars[c];
 
             if (sequence[k] == Odd)
@@ -544,7 +544,7 @@ public class BarcodeEan : Barcode
 
         for (var k = 7; k < 13; ++k)
         {
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
             bars[pb++] = stripes[0];
             bars[pb++] = stripes[1];
@@ -571,11 +571,11 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(barCode));
         }
 
-        var code = new int[barCode.Length];
+        var ints = new int[barCode.Length];
 
-        for (var k = 0; k < code.Length; ++k)
+        for (var k = 0; k < ints.Length; ++k)
         {
-            code[k] = barCode[k] - '0';
+            ints[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsEan8];
@@ -586,7 +586,7 @@ public class BarcodeEan : Barcode
 
         for (var k = 0; k < 4; ++k)
         {
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
             bars[pb++] = stripes[0];
             bars[pb++] = stripes[1];
@@ -602,7 +602,7 @@ public class BarcodeEan : Barcode
 
         for (var k = 4; k < 8; ++k)
         {
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
             bars[pb++] = stripes[0];
             bars[pb++] = stripes[1];
@@ -629,16 +629,16 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(barCode));
         }
 
-        var code = new int[2];
+        var ints = new int[2];
 
-        for (var k = 0; k < code.Length; ++k)
+        for (var k = 0; k < ints.Length; ++k)
         {
-            code[k] = barCode[k] - '0';
+            ints[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsSupp2];
         var pb = 0;
-        var parity = (code[0] * 10 + code[1]) % 4;
+        var parity = (ints[0] * 10 + ints[1]) % 4;
         bars[pb++] = 1;
         bars[pb++] = 1;
         bars[pb++] = 2;
@@ -652,7 +652,7 @@ public class BarcodeEan : Barcode
                 bars[pb++] = 1;
             }
 
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
 
             if (sequence[k] == Odd)
@@ -686,16 +686,16 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(barCode));
         }
 
-        var code = new int[5];
+        var ints = new int[5];
 
-        for (var k = 0; k < code.Length; ++k)
+        for (var k = 0; k < ints.Length; ++k)
         {
-            code[k] = barCode[k] - '0';
+            ints[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsSupp5];
         var pb = 0;
-        var parity = ((code[0] + code[2] + code[4]) * 3 + (code[1] + code[3]) * 9) % 10;
+        var parity = ((ints[0] + ints[2] + ints[4]) * 3 + (ints[1] + ints[3]) * 9) % 10;
         bars[pb++] = 1;
         bars[pb++] = 1;
         bars[pb++] = 2;
@@ -709,7 +709,7 @@ public class BarcodeEan : Barcode
                 bars[pb++] = 1;
             }
 
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
 
             if (sequence[k] == Odd)
@@ -743,24 +743,24 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(barCode));
         }
 
-        var code = new int[barCode.Length];
+        var ints = new int[barCode.Length];
 
-        for (var k = 0; k < code.Length; ++k)
+        for (var k = 0; k < ints.Length; ++k)
         {
-            code[k] = barCode[k] - '0';
+            ints[k] = barCode[k] - '0';
         }
 
         var bars = new byte[TotalbarsUpce];
-        var flip = code[0] != 0;
+        var flip = ints[0] != 0;
         var pb = 0;
         bars[pb++] = 1;
         bars[pb++] = 1;
         bars[pb++] = 1;
-        var sequence = _paritye[code[code.Length - 1]];
+        var sequence = _paritye[ints[ints.Length - 1]];
 
-        for (var k = 1; k < code.Length - 1; ++k)
+        for (var k = 1; k < ints.Length - 1; ++k)
         {
-            var c = code[k];
+            var c = ints[k];
             var stripes = _bars[c];
 
             if (sequence[k - 1] == (flip ? Even : Odd))

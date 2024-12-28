@@ -16,18 +16,12 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
     ///     Constructs a Tagmap object
     /// </summary>
     /// <param name="tagfile">the file of tags to parse</param>
-    public TagMap(string tagfile)
-    {
-        Init(tagfile);
-    }
+    public TagMap(string tagfile) => Init(tagfile);
 
     /// <summary>
     ///     Constructs a Tagmap object
     /// </summary>
-    public TagMap(XmlDocument xTagfile)
-    {
-        Init(xTagfile);
-    }
+    public TagMap(XmlDocument xTagfile) => Init(xTagfile);
 
     /// <summary>
     ///     Parses the xml document
@@ -48,7 +42,7 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
         a.Parse(tagfile);
     }
 
-    private class AttributeHandler : ParserBase
+    private sealed class AttributeHandler : ParserBase
     {
         /// <summary> This is an attribute </summary>
         public const string ALIAS = "alias";
@@ -124,12 +118,15 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
         /// <param name="lname"></param>
         /// <param name="n"></param>
         /// <param name="attrs">the list of attributes</param>
-        public override void StartElement(string tag, string lname, string n,
-                                          INullValueDictionary<string, string> attrs)
+        public override void StartElement(string tag,
+            string lname,
+            string n,
+            INullValueDictionary<string, string> attrs)
         {
             var name = attrs[NAME];
             var alias = attrs[ALIAS];
             var value = attrs[VALUE];
+
             if (name != null)
             {
                 if (TAG.Equals(lname, StringComparison.Ordinal))
@@ -151,6 +148,7 @@ public class TagMap : NullValueDictionary<string, XmlPeer>
             }
 
             value = attrs[CONTENT];
+
             if (value != null)
             {
                 _currentPeer.Content = value;

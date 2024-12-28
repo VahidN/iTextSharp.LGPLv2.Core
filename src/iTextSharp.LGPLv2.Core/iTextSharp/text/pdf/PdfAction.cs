@@ -107,7 +107,7 @@ public class PdfAction : PdfDictionary
     }
 
     public PdfAction(Uri url, bool isMap) : this(url?.AbsoluteUri ?? throw new ArgumentNullException(nameof(url)),
-                                                 isMap)
+        isMap)
     {
     }
 
@@ -115,7 +115,7 @@ public class PdfAction : PdfDictionary
     ///     Constructs a new  PdfAction  of Subtype URI.
     /// </summary>
     /// <param name="url">the url to go to</param>
-    public PdfAction(string url) : this(url, false)
+    public PdfAction(string url) : this(url, isMap: false)
     {
     }
 
@@ -123,6 +123,7 @@ public class PdfAction : PdfDictionary
     {
         Put(PdfName.S, PdfName.Uri);
         Put(PdfName.Uri, new PdfString(url));
+
         if (isMap)
         {
             Put(PdfName.Ismap, PdfBoolean.Pdftrue);
@@ -153,26 +154,32 @@ public class PdfAction : PdfDictionary
     public PdfAction(int named)
     {
         Put(PdfName.S, PdfName.Named);
+
         switch (named)
         {
             case FIRSTPAGE:
                 Put(PdfName.N, PdfName.Firstpage);
+
                 break;
             case LASTPAGE:
                 Put(PdfName.N, PdfName.Lastpage);
+
                 break;
             case NEXTPAGE:
                 Put(PdfName.N, PdfName.Nextpage);
+
                 break;
             case PREVPAGE:
                 Put(PdfName.N, PdfName.Prevpage);
+
                 break;
             case PRINTDIALOG:
                 Put(PdfName.S, PdfName.Javascript);
-                Put(PdfName.Js, new PdfString("this.print(true);\r"));
+                Put(PdfName.Js, new PdfString(value: "this.print(true);\r"));
+
                 break;
             default:
-                throw new ArgumentException("Invalid named action.");
+                throw new ArgumentException(message: "Invalid named action.");
         }
     }
 
@@ -190,6 +197,7 @@ public class PdfAction : PdfDictionary
     public PdfAction(string application, string parameters, string operation, string defaultDir)
     {
         Put(PdfName.S, PdfName.Launch);
+
         if (parameters == null && operation == null && defaultDir == null)
         {
             Put(PdfName.F, new PdfString(application));
@@ -198,6 +206,7 @@ public class PdfAction : PdfDictionary
         {
             var dic = new PdfDictionary();
             dic.Put(PdfName.F, new PdfString(application));
+
             if (parameters != null)
             {
                 dic.Put(PdfName.P, new PdfString(parameters));
@@ -250,6 +259,7 @@ public class PdfAction : PdfDictionary
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Importdata);
         action.Put(PdfName.F, new PdfString(file));
+
         return action;
     }
 
@@ -265,19 +275,21 @@ public class PdfAction : PdfDictionary
     /// <param name="operation">(Windows-specific) the operation to perform: "open" - Open a document,</param>
     /// <param name="defaultDir">(Windows-specific) the default directory in standard DOS syntax.</param>
     /// <returns>a Launch action</returns>
-    public static PdfAction CreateLaunch(string application, string parameters, string operation, string defaultDir) =>
-        new(application, parameters, operation, defaultDir);
+    public static PdfAction CreateLaunch(string application, string parameters, string operation, string defaultDir)
+        => new(application, parameters, operation, defaultDir);
 
     public static PdfAction CreateResetForm(object[] names, int flags)
     {
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Resetform);
+
         if (names != null)
         {
             action.Put(PdfName.Fields, BuildArray(names));
         }
 
         action.Put(PdfName.Flags, new PdfNumber(flags));
+
         return action;
     }
 
@@ -289,12 +301,14 @@ public class PdfAction : PdfDictionary
         dic.Put(PdfName.F, new PdfString(file));
         dic.Put(PdfName.Fs, PdfName.Url);
         action.Put(PdfName.F, dic);
+
         if (names != null)
         {
             action.Put(PdfName.Fields, BuildArray(names));
         }
 
         action.Put(PdfName.Flags, new PdfNumber(flags));
+
         return action;
     }
 
@@ -307,15 +321,18 @@ public class PdfAction : PdfDictionary
     /// <param name="isName">if true sets the destination as a name, if false sets it as a String</param>
     /// <param name="newWindow"></param>
     /// <returns>a GoToE action</returns>
-    public static PdfAction GotoEmbedded(string filename, PdfTargetDictionary target, string dest, bool isName,
-                                         bool newWindow)
+    public static PdfAction GotoEmbedded(string filename,
+        PdfTargetDictionary target,
+        string dest,
+        bool isName,
+        bool newWindow)
     {
         if (isName)
         {
             return GotoEmbedded(filename, target, new PdfName(dest), newWindow);
         }
 
-        return GotoEmbedded(filename, target, new PdfString(dest, null), newWindow);
+        return GotoEmbedded(filename, target, new PdfString(dest, encoding: null), newWindow);
     }
 
     /// <summary>
@@ -333,6 +350,7 @@ public class PdfAction : PdfDictionary
         action.Put(PdfName.T, target);
         action.Put(PdfName.D, dest);
         action.Put(PdfName.Newwindow, new PdfBoolean(newWindow));
+
         if (filename != null)
         {
             action.Put(PdfName.F, new PdfString(filename));
@@ -365,6 +383,7 @@ public class PdfAction : PdfDictionary
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Goto);
         action.Put(PdfName.D, dest);
+
         return action;
     }
 
@@ -378,13 +397,14 @@ public class PdfAction : PdfDictionary
     {
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Goto);
+
         if (isName)
         {
             action.Put(PdfName.D, new PdfName(dest));
         }
         else
         {
-            action.Put(PdfName.D, new PdfString(dest, null));
+            action.Put(PdfName.D, new PdfString(dest, encoding: null));
         }
 
         return action;
@@ -406,13 +426,14 @@ public class PdfAction : PdfDictionary
         var action = new PdfAction();
         action.Put(PdfName.F, new PdfString(filename));
         action.Put(PdfName.S, PdfName.Gotor);
+
         if (isName)
         {
             action.Put(PdfName.D, new PdfName(dest));
         }
         else
         {
-            action.Put(PdfName.D, new PdfString(dest, null));
+            action.Put(PdfName.D, new PdfString(dest, encoding: null));
         }
 
         if (newWindow)
@@ -448,6 +469,7 @@ public class PdfAction : PdfDictionary
 
         var js = new PdfAction();
         js.Put(PdfName.S, PdfName.Javascript);
+
         if (unicode && code.Length < 50)
         {
             js.Put(PdfName.Js, new PdfString(code, TEXT_UNICODE));
@@ -482,7 +504,7 @@ public class PdfAction : PdfDictionary
     /// <param name="code">the JavaScript code</param>
     /// <param name="writer">the writer for this action</param>
     /// <returns>the JavaScript action</returns>
-    public static PdfAction JavaScript(string code, PdfWriter writer) => JavaScript(code, writer, false);
+    public static PdfAction JavaScript(string code, PdfWriter writer) => JavaScript(code, writer, unicode: false);
 
     /// <summary>
     ///     Creates a Rendition action
@@ -498,8 +520,9 @@ public class PdfAction : PdfDictionary
         var js = new PdfAction();
         js.Put(PdfName.S, PdfName.Rendition);
         js.Put(PdfName.R, new PdfRendition(file, fs, mimeType));
-        js.Put(new PdfName("OP"), new PdfNumber(0));
-        js.Put(new PdfName("AN"), refi);
+        js.Put(new PdfName(name: "OP"), new PdfNumber(value: 0));
+        js.Put(new PdfName(name: "AN"), refi);
+
         return js;
     }
 
@@ -533,39 +556,41 @@ public class PdfAction : PdfDictionary
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Setocgstate);
         var a = new PdfArray();
+
         for (var k = 0; k < state.Count; ++k)
         {
             var o = state[k];
+
             if (o == null)
             {
                 continue;
             }
 
-            if (o is PdfIndirectReference)
+            if (o is PdfIndirectReference reference)
             {
-                a.Add((PdfIndirectReference)o);
+                a.Add(reference);
             }
-            else if (o is PdfLayer)
+            else if (o is PdfLayer layer)
             {
-                a.Add(((PdfLayer)o).Ref);
+                a.Add(layer.Ref);
             }
-            else if (o is PdfName)
+            else if (o is PdfName pdfName)
             {
-                a.Add((PdfName)o);
+                a.Add(pdfName);
             }
-            else if (o is string)
+            else if (o is string s)
             {
                 PdfName name = null;
-                var s = (string)o;
-                if (Util.EqualsIgnoreCase(s, "on"))
+
+                if (Util.EqualsIgnoreCase(s, s2: "on"))
                 {
                     name = PdfName.On;
                 }
-                else if (Util.EqualsIgnoreCase(s, "off"))
+                else if (Util.EqualsIgnoreCase(s, s2: "off"))
                 {
                     name = PdfName.OFF;
                 }
-                else if (Util.EqualsIgnoreCase(s, "toggle"))
+                else if (Util.EqualsIgnoreCase(s, s2: "toggle"))
                 {
                     name = PdfName.Toggle;
                 }
@@ -584,6 +609,7 @@ public class PdfAction : PdfDictionary
         }
 
         action.Put(PdfName.State, a);
+
         if (!preserveRb)
         {
             action.Put(PdfName.Preserverb, PdfBoolean.Pdffalse);
@@ -599,6 +625,7 @@ public class PdfAction : PdfDictionary
     public void Next(PdfAction na)
     {
         var nextAction = Get(PdfName.Next);
+
         if (nextAction == null)
         {
             Put(PdfName.Next, na);
@@ -618,20 +645,22 @@ public class PdfAction : PdfDictionary
     internal static PdfArray BuildArray(object[] names)
     {
         var array = new PdfArray();
+
         for (var k = 0; k < names.Length; ++k)
         {
             var obj = names[k];
-            if (obj is string)
+
+            if (obj is string s)
             {
-                array.Add(new PdfString((string)obj));
+                array.Add(new PdfString(s));
             }
-            else if (obj is PdfAnnotation)
+            else if (obj is PdfAnnotation annotation)
             {
-                array.Add(((PdfAnnotation)obj).IndirectReference);
+                array.Add(annotation.IndirectReference);
             }
             else
             {
-                throw new ArgumentException("The array must contain string or PdfAnnotation.");
+                throw new ArgumentException(message: "The array must contain string or PdfAnnotation.");
             }
         }
 
@@ -643,6 +672,7 @@ public class PdfAction : PdfDictionary
         var action = new PdfAction();
         action.Put(PdfName.S, PdfName.Hide);
         action.Put(PdfName.T, obj);
+
         if (!hide)
         {
             action.Put(PdfName.H, PdfBoolean.Pdffalse);

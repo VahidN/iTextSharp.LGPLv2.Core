@@ -1,6 +1,6 @@
 namespace System.util.zlib;
 
-internal sealed class Adler32
+internal static class Adler32
 {
     /// <summary>
     ///     largest prime smaller than 65536
@@ -27,6 +27,7 @@ internal sealed class Adler32
         {
             k = len < Nmax ? len : Nmax;
             len -= k;
+
             while (k >= 16)
             {
                 s1 += buf[index++] & 0xff;
@@ -70,7 +71,8 @@ internal sealed class Adler32
                 {
                     s1 += buf[index++] & 0xff;
                     s2 += s1;
-                } while (--k != 0);
+                }
+                while (--k != 0);
             }
 
             s1 %= Base;

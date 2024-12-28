@@ -16,12 +16,12 @@ public class RtfDocumentHeader : RtfElement
     /// <summary>
     ///     Constant for facing pages
     /// </summary>
-    private static readonly byte[] _facingPages = DocWriter.GetIsoBytes("\\facingp");
+    private static readonly byte[] _facingPages = DocWriter.GetIsoBytes(text: "\\facingp");
 
     /// <summary>
     ///     Constant for the title page
     /// </summary>
-    private static readonly byte[] _titlePage = DocWriter.GetIsoBytes("\\titlepg");
+    private static readonly byte[] _titlePage = DocWriter.GetIsoBytes(text: "\\titlepg");
 
     /// <summary>
     ///     The code page to use
@@ -84,7 +84,7 @@ public class RtfDocumentHeader : RtfElement
     ///     Constructs a RtfDocumentHeader for a RtfDocument
     /// </summary>
     /// <param name="doc">The RtfDocument this RtfDocumentHeader belongs to</param>
-    protected internal RtfDocumentHeader(RtfDocument doc) : base(doc)
+    internal protected RtfDocumentHeader(RtfDocument doc) : base(doc)
     {
     }
 
@@ -92,19 +92,13 @@ public class RtfDocumentHeader : RtfElement
     ///     Adds an RtfInfoElement to the list of RtfInfoElements
     /// </summary>
     /// <param name="rtfInfoElement">The RtfInfoElement to add</param>
-    public void AddInfoElement(RtfInfoElement rtfInfoElement)
-    {
-        _infoGroup.Add(rtfInfoElement);
-    }
+    public void AddInfoElement(RtfInfoElement rtfInfoElement) => _infoGroup.Add(rtfInfoElement);
 
     /// <summary>
     ///     Removes a RtfList from the list table
     /// </summary>
     /// <param name="list">The RtfList to remove</param>
-    public void FreeListNumber(RtfList list)
-    {
-        _listTable.FreeListNumber(list);
-    }
+    public void FreeListNumber(RtfList list) => _listTable.FreeListNumber(list);
 
     /// <summary>
     ///     Gets the number of the specified RtfColor
@@ -152,27 +146,19 @@ public class RtfDocumentHeader : RtfElement
     /// </summary>
     /// <param name="rtfParagraphStyle">The RtfParagraphStyle to register.</param>
     public void RegisterParagraphStyle(RtfParagraphStyle rtfParagraphStyle)
-    {
-        _stylesheetList.RegisterParagraphStyle(rtfParagraphStyle);
-    }
+        => _stylesheetList.RegisterParagraphStyle(rtfParagraphStyle);
 
     /// <summary>
     ///     Sets the current footer to use
     /// </summary>
     /// <param name="footer">The HeaderFooter to use as footer</param>
-    public void SetFooter(HeaderFooter footer)
-    {
-        _footer = footer;
-    }
+    public void SetFooter(HeaderFooter footer) => _footer = footer;
 
     /// <summary>
     ///     Sets the current header to use
     /// </summary>
     /// <param name="header">The HeaderFooter to use as header</param>
-    public void SetHeader(HeaderFooter header)
-    {
-        _header = header;
-    }
+    public void SetHeader(HeaderFooter header) => _header = header;
 
     /// <summary>
     ///     Write the contents of the document header area.
@@ -217,16 +203,17 @@ public class RtfDocumentHeader : RtfElement
         {
             var header = convertHeaderFooter(_header, RtfHeaderFooter.TYPE_HEADER);
             var footer = convertHeaderFooter(_footer, RtfHeaderFooter.TYPE_FOOTER);
+
             if (header.HasTitlePage() || footer.HasTitlePage())
             {
-                result.Write(_titlePage, 0, _titlePage.Length);
+                result.Write(_titlePage, offset: 0, _titlePage.Length);
                 header.SetHasTitlePage();
                 footer.SetHasTitlePage();
             }
 
             if (header.HasFacingPages() || footer.HasFacingPages())
             {
-                result.Write(_facingPages, 0, _facingPages.Length);
+                result.Write(_facingPages, offset: 0, _facingPages.Length);
                 header.SetHasFacingPages();
                 footer.SetHasFacingPages();
             }
@@ -243,7 +230,7 @@ public class RtfDocumentHeader : RtfElement
     /// <summary>
     ///     Initialises the RtfDocumentHeader.
     /// </summary>
-    protected internal void Init()
+    internal protected void Init()
     {
         _codePage = new RtfCodePage(Document);
         _colorList = new RtfColorList(Document);
@@ -271,14 +258,14 @@ public class RtfDocumentHeader : RtfElement
     {
         if (hf != null)
         {
-            if (hf is RtfHeaderFooterGroup)
+            if (hf is RtfHeaderFooterGroup group)
             {
-                return new RtfHeaderFooterGroup(Document, (RtfHeaderFooterGroup)hf, type);
+                return new RtfHeaderFooterGroup(Document, group, type);
             }
 
-            if (hf is RtfHeaderFooter)
+            if (hf is RtfHeaderFooter footer)
             {
-                return new RtfHeaderFooterGroup(Document, (RtfHeaderFooter)hf, type);
+                return new RtfHeaderFooterGroup(Document, footer, type);
             }
 
             return new RtfHeaderFooterGroup(Document, hf, type);

@@ -11,28 +11,28 @@ namespace iTextSharp.text.rtf.document;
 /// </summary>
 public class RtfDocument : RtfElement
 {
-    private static readonly byte[] _fscBackslash = DocWriter.GetIsoBytes("\\");
+    private static readonly byte[] _fscBackslash = DocWriter.GetIsoBytes(text: "\\");
 
-    private static readonly byte[] _fscHexPrefix = DocWriter.GetIsoBytes("\\\'");
+    private static readonly byte[] _fscHexPrefix = DocWriter.GetIsoBytes(text: "\\\'");
 
-    private static readonly byte[] _fscLine = DocWriter.GetIsoBytes("\\line ");
+    private static readonly byte[] _fscLine = DocWriter.GetIsoBytes(text: "\\line ");
 
-    private static readonly byte[] _fscNewpage = DocWriter.GetIsoBytes("$newpage$");
+    private static readonly byte[] _fscNewpage = DocWriter.GetIsoBytes(text: "$newpage$");
 
-    private static readonly byte[] _fscPagePar = DocWriter.GetIsoBytes("\\page\\par ");
+    private static readonly byte[] _fscPagePar = DocWriter.GetIsoBytes(text: "\\page\\par ");
 
-    private static readonly byte[] _fscPar = DocWriter.GetIsoBytes("\\par ");
+    private static readonly byte[] _fscPar = DocWriter.GetIsoBytes(text: "\\par ");
 
-    private static readonly byte[] _fscTab = DocWriter.GetIsoBytes("\\tab ");
+    private static readonly byte[] _fscTab = DocWriter.GetIsoBytes(text: "\\tab ");
 
-    private static readonly byte[] _fscUniPrefix = DocWriter.GetIsoBytes("\\u");
+    private static readonly byte[] _fscUniPrefix = DocWriter.GetIsoBytes(text: "\\u");
 
     private static readonly Random _random = new();
 
     /// <summary>
     ///     Constant for the Rtf document start
     /// </summary>
-    private static readonly byte[] _rtfDocument = DocWriter.GetIsoBytes("\\rtf1");
+    private static readonly byte[] _rtfDocument = DocWriter.GetIsoBytes(text: "\\rtf1");
 
     /// <summary>
     ///     The RtfDocumentHeader that handles all document header methods
@@ -72,7 +72,7 @@ public class RtfDocument : RtfElement
     /// <summary>
     ///     The default constructor for a RtfDocument
     /// </summary>
-    public RtfDocument() : base(null)
+    public RtfDocument() : base(doc: null)
     {
         _data = new RtfMemoryCache();
         _mapper = new RtfMapper(this);
@@ -95,15 +95,15 @@ public class RtfDocument : RtfElement
 
         try
         {
-            if (element is RtfInfoElement)
+            if (element is RtfInfoElement infoElement)
             {
-                _documentHeader.AddInfoElement((RtfInfoElement)element);
+                _documentHeader.AddInfoElement(infoElement);
             }
             else
             {
-                if (element is RtfImage)
+                if (element is RtfImage rtfImage)
                 {
-                    ((RtfImage)element).SetTopLevelElement(true);
+                    rtfImage.SetTopLevelElement(topLevelElement: true);
                 }
 
                 element.WriteContent(_data.GetOutputStream());
@@ -127,35 +127,39 @@ public class RtfDocument : RtfElement
     {
         if (outp == null)
         {
-            throw new ArgumentException("null OutpuStream");
+            throw new ArgumentException(message: "null OutpuStream");
         }
 
         var alwaysUseUniCode = _documentSettings.IsAlwaysUseUnicode();
+
         if (str == null)
         {
             return;
         }
 
         var len = str.Length;
+
         if (len == 0)
         {
             return;
         }
 
         byte[] t = null;
+
         for (var k = 0; k < len; k++)
         {
             var c = str[k];
+
             if (c < 0x20)
             {
                 //allow return and tab only
                 if (c == '\n')
                 {
-                    outp.Write(t = softLineBreaks ? _fscLine : _fscPar, 0, t.Length);
+                    outp.Write(t = softLineBreaks ? _fscLine : _fscPar, offset: 0, t.Length);
                 }
                 else if (c == '\t')
                 {
-                    outp.Write(_fscTab, 0, _fscTab.Length);
+                    outp.Write(_fscTab, offset: 0, _fscTab.Length);
                 }
                 else
                 {
@@ -165,12 +169,12 @@ public class RtfDocument : RtfElement
             else if (c == '\\' || c == '{' || c == '}')
             {
                 //escape
-                outp.Write(_fscBackslash, 0, _fscBackslash.Length);
+                outp.Write(_fscBackslash, offset: 0, _fscBackslash.Length);
                 outp.WriteByte((byte)c);
             }
             else if (c == '$' && len - k >= _fscNewpage.Length && subMatch(str, k, _fscNewpage))
             {
-                outp.Write(_fscPagePar, 0, _fscPagePar.Length);
+                outp.Write(_fscPagePar, offset: 0, _fscPagePar.Length);
                 k += _fscNewpage.Length - 1;
             }
             else
@@ -180,14 +184,15 @@ public class RtfDocument : RtfElement
                     if (useHex && c <= 0xff)
                     {
                         //encode as 2 char hex string
-                        outp.Write(_fscHexPrefix, 0, _fscHexPrefix.Length);
-                        outp.Write(RtfImage.Byte2CharLut, c * 2, 2);
+                        outp.Write(_fscHexPrefix, offset: 0, _fscHexPrefix.Length);
+                        outp.Write(RtfImage.Byte2CharLut, c * 2, count: 2);
                     }
                     else
                     {
                         //encode as decimal, signed short value
-                        outp.Write(_fscUniPrefix, 0, _fscUniPrefix.Length);
+                        outp.Write(_fscUniPrefix, offset: 0, _fscUniPrefix.Length);
                         var s = ((short)c).ToString(CultureInfo.InvariantCulture);
+
                         for (var x = 0; x < s.Length; x++)
                         {
                             outp.WriteByte((byte)s[x]);
@@ -241,15 +246,18 @@ public class RtfDocument : RtfElement
     public int GetRandomInt()
     {
         int newInt;
+
         do
         {
             lock (_random)
             {
                 newInt = _random.Next(int.MaxValue - 2);
             }
-        } while (_previousRandomInts.Contains(newInt));
+        }
+        while (_previousRandomInts.Contains(newInt));
 
         _previousRandomInts.Add(newInt);
+
         return newInt;
     }
 
@@ -266,15 +274,18 @@ public class RtfDocument : RtfElement
             {
                 case RtfDataCache.CACHE_MEMORY_EFFICIENT:
                     _data = new RtfEfficientMemoryCache();
+
                     break;
                 case RtfDataCache.CACHE_MEMORY:
                     _data = new RtfMemoryCache();
+
                     break;
                 case RtfDataCache.CACHE_DISK:
                     _data = new RtfDiskCache();
+
                     break;
                 default:
-                    throw new ArgumentException("unknown");
+                    throw new ArgumentException(message: "unknown");
             }
         }
         catch (IOException)
@@ -307,10 +318,7 @@ public class RtfDocument : RtfElement
     ///     adding Chapters or Sections.
     /// </summary>
     /// <param name="autogenerate">Whether to automatically generate TOC entries</param>
-    public void SetAutogenerateTocEntries(bool autogenerate)
-    {
-        _autogenerateTocEntries = autogenerate;
-    }
+    public void SetAutogenerateTocEntries(bool autogenerate) => _autogenerateTocEntries = autogenerate;
 
     /// <summary>
     ///     unused
@@ -332,11 +340,11 @@ public class RtfDocument : RtfElement
 
         try
         {
-            outs.Write(OpenGroup, 0, OpenGroup.Length);
-            outs.Write(_rtfDocument, 0, _rtfDocument.Length);
+            outs.Write(OpenGroup, offset: 0, OpenGroup.Length);
+            outs.Write(_rtfDocument, offset: 0, _rtfDocument.Length);
             _documentHeader.WriteContent(outs);
             _data.WriteTo(outs);
-            outs.Write(CloseGroup, 0, CloseGroup.Length);
+            outs.Write(CloseGroup, offset: 0, CloseGroup.Length);
         }
         catch (IOException)
         {

@@ -44,17 +44,21 @@ public class RtfMapper
 
         var rtfElements = new List<IRtfBasicElement>();
 
-        if (element is IRtfBasicElement)
+        if (element is IRtfBasicElement rtfElement)
         {
-            var rtfElement = (IRtfBasicElement)element;
             rtfElement.SetRtfDocument(_rtfDoc);
-            return new[] { rtfElement };
+
+            return new[]
+            {
+                rtfElement
+            };
         }
 
         switch (element.Type)
         {
             case Element.CHUNK:
                 var chunk = (Chunk)element;
+
                 if (chunk.HasAttributes())
                 {
                     if (chunk.Attributes.ContainsKey(Chunk.IMAGE))
@@ -71,7 +75,7 @@ public class RtfMapper
                         var tab = new RtfTab(tabPos, RtfTab.TAB_LEFT_ALIGN);
                         tab.SetRtfDocument(_rtfDoc);
                         rtfElements.Add(tab);
-                        rtfElements.Add(new RtfChunk(_rtfDoc, new Chunk("\t")));
+                        rtfElements.Add(new RtfChunk(_rtfDoc, new Chunk(content: "\t")));
                     }
                     else
                     {
@@ -86,20 +90,25 @@ public class RtfMapper
                 break;
             case Element.PHRASE:
                 rtfElements.Add(new RtfPhrase(_rtfDoc, (Phrase)element));
+
                 break;
             case Element.PARAGRAPH:
                 rtfElements.Add(new RtfParagraph(_rtfDoc, (Paragraph)element));
+
                 break;
             case Element.ANCHOR:
                 rtfElements.Add(new RtfAnchor(_rtfDoc, (Anchor)element));
+
                 break;
             case Element.ANNOTATION:
                 rtfElements.Add(new RtfAnnotation(_rtfDoc, (Annotation)element));
+
                 break;
             case Element.IMGRAW:
             case Element.IMGTEMPLATE:
             case Element.JPEG:
                 rtfElements.Add(new RtfImage(_rtfDoc, (Image)element));
+
                 break;
             case Element.AUTHOR:
             case Element.SUBJECT:
@@ -108,18 +117,23 @@ public class RtfMapper
             case Element.PRODUCER:
             case Element.CREATIONDATE:
                 rtfElements.Add(new RtfInfoElement(_rtfDoc, (Meta)element));
+
                 break;
             case Element.LIST:
                 rtfElements.Add(new RtfList(_rtfDoc, (List)element));
+
                 break;
             case Element.LISTITEM:
                 rtfElements.Add(new RtfListItem(_rtfDoc, (ListItem)element));
+
                 break;
             case Element.SECTION:
                 rtfElements.Add(new RtfSection(_rtfDoc, (Section)element));
+
                 break;
             case Element.CHAPTER:
                 rtfElements.Add(new RtfChapter(_rtfDoc, (Chapter)element));
+
                 break;
             case Element.TABLE:
                 try

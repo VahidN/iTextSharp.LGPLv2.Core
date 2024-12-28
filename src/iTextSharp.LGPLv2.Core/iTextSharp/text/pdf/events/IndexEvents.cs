@@ -305,7 +305,7 @@ public class IndexEvents : PdfPageEventHelper
         }
     }
 
-    private class SortIndex : IComparer<Entry>
+    private sealed class SortIndex : IComparer<Entry>
     {
         public int Compare(Entry arg0, Entry arg1)
         {

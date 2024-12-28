@@ -228,9 +228,8 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             {
                 var obj = _stack.Pop();
 
-                if (obj is ITextElementArray)
+                if (obj is ITextElementArray current)
                 {
-                    var current = (ITextElementArray)obj;
                     current.Add(_currentParagraph);
                 }
 
@@ -407,14 +406,14 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
             {
                 var obj = _stack.Pop();
 
-                if (obj is IncCell)
+                if (obj is IncCell incCell)
                 {
-                    cells.Add(((IncCell)obj).Cell);
+                    cells.Add(incCell.Cell);
                 }
 
-                if (obj is IncTable)
+                if (obj is IncTable incTable)
                 {
-                    table = (IncTable)obj;
+                    table = incTable;
 
                     break;
                 }

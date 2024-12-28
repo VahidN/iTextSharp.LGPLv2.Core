@@ -108,7 +108,11 @@ public abstract class Image : Rectangle
     /// </summary>
     private static object _serialId = 0L;
 
+#if !NET_9
     private static readonly object _mutex = new();
+#else
+    private static readonly Lock _mutex = new();
+#endif
 
     /// <summary>
     ///     Holds value of property initialRotation.
@@ -720,7 +724,7 @@ public abstract class Image : Rectangle
         }
 
         // Add support for base64 encoded images.
-        if (url.Scheme == "data")
+        if (string.Equals(url.Scheme, b: "data", StringComparison.Ordinal))
         {
             var src = url.AbsoluteUri;
 
@@ -1024,7 +1028,7 @@ public abstract class Image : Rectangle
                 transColor = color.R + color.G + color.B < 384 ? 0 : 1;
             }
 
-            int[] transparency = null;
+            int[] ints = null;
             var cbyte = 0x80;
             var wMarker = 0;
             var currByte = 0;
@@ -1076,14 +1080,14 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
-                        if (transparency == null)
+                        if (ints == null)
                         {
                             int alpha = bm.GetPixel(i, j).Alpha;
 
                             if (alpha == 0)
                             {
-                                transparency = new int[2];
-                                transparency[0] = transparency[1] = (bm.GetPixel(i, j).ToArgb() & 0x888) != 0 ? 1 : 0;
+                                ints = new int[2];
+                                ints[0] = ints[1] = (bm.GetPixel(i, j).ToArgb() & 0x888) != 0 ? 1 : 0;
                             }
                         }
 
@@ -1111,7 +1115,7 @@ public abstract class Image : Rectangle
                 }
             }
 
-            return GetInstance(w, h, components: 1, bpc: 1, pixelsByte, transparency);
+            return GetInstance(w, h, components: 1, bpc: 1, pixelsByte, ints);
         }
         else
         {
@@ -1131,7 +1135,7 @@ public abstract class Image : Rectangle
                 blue = color.B;
             }
 
-            int[] transparency = null;
+            int[] ints = null;
 
             if (color != null)
             {
@@ -1178,15 +1182,15 @@ public abstract class Image : Rectangle
                             {
                                 shades = true;
                             }
-                            else if (transparency == null)
+                            else if (ints == null)
                             {
                                 if (alpha == 0)
                                 {
                                     transparentPixel = pxv & 0xffffff;
-                                    transparency = new int[6];
-                                    transparency[0] = transparency[1] = (transparentPixel >> 16) & 0xff;
-                                    transparency[2] = transparency[3] = (transparentPixel >> 8) & 0xff;
-                                    transparency[4] = transparency[5] = transparentPixel & 0xff;
+                                    ints = new int[6];
+                                    ints[0] = ints[1] = (transparentPixel >> 16) & 0xff;
+                                    ints[2] = ints[3] = (transparentPixel >> 8) & 0xff;
+                                    ints[4] = ints[5] = transparentPixel & 0xff;
                                 }
                             }
                             else if ((pxv & 0xffffff) != transparentPixel)
@@ -1203,7 +1207,7 @@ public abstract class Image : Rectangle
 
                 if (shades)
                 {
-                    transparency = null;
+                    ints = null;
                 }
                 else
                 {
@@ -1211,7 +1215,7 @@ public abstract class Image : Rectangle
                 }
             }
 
-            var img = GetInstance(w, h, components: 3, bpc: 8, pixelsByte, transparency);
+            var img = GetInstance(w, h, components: 3, bpc: 8, pixelsByte, ints);
 
             if (smask != null)
             {

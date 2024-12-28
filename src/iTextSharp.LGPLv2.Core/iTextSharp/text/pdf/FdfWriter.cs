@@ -8,7 +8,7 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class FdfWriter
 {
-    private static readonly byte[] _headerFdf = DocWriter.GetIsoBytes("%FDF-1.2\n%\u00e2\u00e3\u00cf\u00d3\n");
+    private static readonly byte[] _headerFdf = DocWriter.GetIsoBytes(text: "%FDF-1.2\n%\u00e2\u00e3\u00cf\u00d3\n");
     private readonly INullValueDictionary<string, object> _fields = new NullValueDictionary<string, object>();
 
     /// <summary>
@@ -34,7 +34,7 @@ public class FdfWriter
     public string GetField(string field)
     {
         var map = _fields;
-        var tk = new StringTokenizer(field, ".");
+        var tk = new StringTokenizer(field, delim: ".");
 
         if (!tk.HasMoreTokens())
         {
@@ -53,9 +53,9 @@ public class FdfWriter
 
             if (tk.HasMoreTokens())
             {
-                if (obj is INullValueDictionary<string, object>)
+                if (obj is INullValueDictionary<string, object> objects)
                 {
-                    map = (INullValueDictionary<string, object>)obj;
+                    map = objects;
                 }
                 else
                 {
@@ -87,7 +87,7 @@ public class FdfWriter
     public INullValueDictionary<string, object> GetFields()
     {
         var values = new NullValueDictionary<string, object>();
-        IterateFields(values, _fields, "");
+        IterateFields(values, _fields, name: "");
 
         return values;
     }
@@ -101,7 +101,7 @@ public class FdfWriter
     public bool RemoveField(string field)
     {
         var map = _fields;
-        var tk = new StringTokenizer(field, ".");
+        var tk = new StringTokenizer(field, delim: ".");
 
         if (!tk.HasMoreTokens())
         {
@@ -125,9 +125,9 @@ public class FdfWriter
 
             if (tk.HasMoreTokens())
             {
-                if (obj is INullValueDictionary<string, object>)
+                if (obj is INullValueDictionary<string, object> objects)
                 {
-                    map = (INullValueDictionary<string, object>)obj;
+                    map = objects;
                 }
                 else
                 {
@@ -173,8 +173,7 @@ public class FdfWriter
     /// <param name="field">the fully qualified field name</param>
     /// <param name="action">the field's action</param>
     /// <returns> true  if the value was inserted,</returns>
-    public bool SetFieldAsAction(string field, PdfAction action)
-        => SetField(field, action);
+    public bool SetFieldAsAction(string field, PdfAction action) => SetField(field, action);
 
     /// <summary>
     ///     Sets the field value as a name.
@@ -184,8 +183,7 @@ public class FdfWriter
     /// <param name="field">the fully qualified field name</param>
     /// <param name="value">the value</param>
     /// <returns> true  if the value was inserted,</returns>
-    public bool SetFieldAsName(string field, string value)
-        => SetField(field, new PdfName(value));
+    public bool SetFieldAsName(string field, string value) => SetField(field, new PdfName(value));
 
     /// <summary>
     ///     Sets the field value as a string.
@@ -260,7 +258,7 @@ public class FdfWriter
         {
             var fn = entry.Key;
             var item = entry.Value;
-            var dic = item.GetMerged(0);
+            var dic = item.GetMerged(idx: 0);
             var v = PdfReader.GetPdfObjectRelease(dic.Get(PdfName.V));
 
             if (v == null)
@@ -306,7 +304,7 @@ public class FdfWriter
             }
             else
             {
-                values[(name + "." + s).Substring(1)] = obj;
+                values[(name + "." + s).Substring(startIndex: 1)] = obj;
             }
         }
     }
@@ -314,7 +312,7 @@ public class FdfWriter
     internal bool SetField(string field, PdfObject value)
     {
         var map = _fields;
-        var tk = new StringTokenizer(field, ".");
+        var tk = new StringTokenizer(field, delim: ".");
 
         if (!tk.HasMoreTokens())
         {
@@ -337,9 +335,9 @@ public class FdfWriter
                     continue;
                 }
 
-                if (obj is NullValueDictionary<string, object>)
+                if (obj is NullValueDictionary<string, object> objects)
                 {
-                    map = (NullValueDictionary<string, object>)obj;
+                    map = objects;
                 }
                 else
                 {
@@ -367,7 +365,7 @@ public class FdfWriter
         internal Wrt(Stream os, FdfWriter fdf) : base(new PdfDocument(), os)
         {
             _fdf = fdf;
-            ((DocWriter)this).Os.Write(_headerFdf, 0, _headerFdf.Length);
+            ((DocWriter)this).Os.Write(_headerFdf, offset: 0, _headerFdf.Length);
             Body = new PdfBody(this);
         }
 
@@ -382,14 +380,14 @@ public class FdfWriter
                 var dic = new PdfDictionary();
                 dic.Put(PdfName.T, new PdfString(key, PdfObject.TEXT_UNICODE));
 
-                if (v is NullValueDictionary<string, object>)
+                if (v is NullValueDictionary<string, object> objects)
                 {
-                    dic.Put(PdfName.Kids, Calculate((NullValueDictionary<string, object>)v));
+                    dic.Put(PdfName.Kids, Calculate(objects));
                 }
-                else if (v is PdfAction)
+                else if (v is PdfAction action)
                 {
                     // (plaflamme)
-                    dic.Put(PdfName.A, (PdfAction)v);
+                    dic.Put(PdfName.A, action);
                 }
                 else
                 {
@@ -415,13 +413,13 @@ public class FdfWriter
             var fd = new PdfDictionary();
             fd.Put(PdfName.Fdf, dic);
             var refi = AddToBody(fd).IndirectReference;
-            var b = GetIsoBytes("trailer\n");
-            ((DocWriter)this).Os.Write(b, 0, b.Length);
+            var b = GetIsoBytes(text: "trailer\n");
+            ((DocWriter)this).Os.Write(b, offset: 0, b.Length);
             var trailer = new PdfDictionary();
             trailer.Put(PdfName.Root, refi);
-            trailer.ToPdf(null, ((DocWriter)this).Os);
-            b = GetIsoBytes("\n%%EOF\n");
-            ((DocWriter)this).Os.Write(b, 0, b.Length);
+            trailer.ToPdf(writer: null, ((DocWriter)this).Os);
+            b = GetIsoBytes(text: "\n%%EOF\n");
+            ((DocWriter)this).Os.Write(b, offset: 0, b.Length);
             ((DocWriter)this).Os.Dispose();
         }
     }

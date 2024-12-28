@@ -11,26 +11,20 @@ public class GreekList : List
     /// <summary>
     ///     Initialization
     /// </summary>
-    public GreekList() : base(true)
-    {
-        SetGreekFont();
-    }
+    public GreekList() : base(numbered: true) => SetGreekFont();
 
     /// <summary>
     ///     Initialisierung
     /// </summary>
     /// <param name="symbolIndent">indent</param>
-    public GreekList(int symbolIndent) : base(true, symbolIndent)
-    {
-        SetGreekFont();
-    }
+    public GreekList(int symbolIndent) : base(numbered: true, symbolIndent) => SetGreekFont();
 
     /// <summary>
     ///     Initialisierung
     /// </summary>
     /// <param name="greeklower">greek-char in lowercase</param>
     /// <param name="symbolIndent">indent</param>
-    public GreekList(bool greeklower, int symbolIndent) : base(true, symbolIndent)
+    public GreekList(bool greeklower, int symbolIndent) : base(numbered: true, symbolIndent)
     {
         lowercase = greeklower;
         SetGreekFont();
@@ -43,9 +37,8 @@ public class GreekList : List
     /// <returns>true if adding the object succeeded</returns>
     public override bool Add(IElement o)
     {
-        if (o is ListItem)
+        if (o is ListItem item)
         {
-            var item = (ListItem)o;
             var chunk = new Chunk(preSymbol, symbol.Font);
             chunk.Append(GreekAlphabetFactory.GetString(first + list.Count, lowercase));
             chunk.Append(postSymbol);
@@ -53,15 +46,16 @@ public class GreekList : List
             item.SetIndentationLeft(symbolIndent, autoindent);
             item.IndentationRight = 0;
             list.Add(item);
+
             return true;
         }
 
-        if (o is List)
+        if (o is List nested)
         {
-            var nested = (List)o;
             nested.IndentationLeft = nested.IndentationLeft + symbolIndent;
             first--;
             list.Add(nested);
+
             return true;
         }
 

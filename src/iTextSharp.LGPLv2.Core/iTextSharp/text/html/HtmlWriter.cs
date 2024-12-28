@@ -204,14 +204,13 @@ public class HtmlWriter : DocWriter
 
                 return true;
             case Element.MARKED:
-                if (element is MarkedSection)
+                if (element is MarkedSection ms)
                 {
-                    var ms = (MarkedSection)element;
                     AddTabs(indent: 1);
                     WriteStart(HtmlTags.DIV);
                     WriteMarkupAttributes(ms.MarkupAttributes);
                     Os.WriteByte(GT);
-                    var mo = ((MarkedSection)element).Title;
+                    var mo = ms.Title;
 
                     if (mo != null)
                     {

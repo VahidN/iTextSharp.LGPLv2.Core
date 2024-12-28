@@ -109,7 +109,7 @@ public class List : ITextElementArray
     protected string preSymbol = "";
 
     /// <summary> This is the listsymbol of a list that is not numbered. </summary>
-    protected Chunk symbol = new("-");
+    protected Chunk symbol = new(content: "-");
 
     /// <summary> The indentation of the listitems. </summary>
     protected float symbolIndent;
@@ -120,7 +120,7 @@ public class List : ITextElementArray
     /// <summary>
     ///     Constructs a  List .
     /// </summary>
-    public List() : this(false, false)
+    public List() : this(numbered: false, lettered: false)
     {
     }
 
@@ -135,7 +135,7 @@ public class List : ITextElementArray
     ///     Constructs a  List .
     /// </summary>
     /// <param name="numbered">a bool</param>
-    public List(bool numbered) : this(numbered, false)
+    public List(bool numbered) : this(numbered, lettered: false)
     {
     }
 
@@ -152,7 +152,6 @@ public class List : ITextElementArray
         alignindent = true;
     }
 
-
     /// <summary>
     ///     Constructs a List.
     /// </summary>
@@ -162,7 +161,7 @@ public class List : ITextElementArray
     /// </remarks>
     /// <param name="numbered">a bool</param>
     /// <param name="symbolIndent">the indentation that has to be used for the listsymbol</param>
-    public List(bool numbered, float symbolIndent) : this(numbered, false, symbolIndent)
+    public List(bool numbered, float symbolIndent) : this(numbered, lettered: false, symbolIndent)
     {
     }
 
@@ -323,7 +322,8 @@ public class List : ITextElementArray
                 return -1;
             }
 
-            var item = (ListItem)list[0];
+            var item = (ListItem)list[index: 0];
+
             return item.TotalLeading;
         }
     }
@@ -337,6 +337,7 @@ public class List : ITextElementArray
         get
         {
             List<Chunk> tmp = new();
+
             foreach (var ele in list)
             {
                 tmp.AddRange(ele.Chunks);
@@ -359,13 +360,13 @@ public class List : ITextElementArray
     /// <returns>true is successful</returns>
     public virtual bool Add(IElement o)
     {
-        if (o is ListItem)
+        if (o is ListItem item)
         {
-            var item = (ListItem)o;
             if (numbered || lettered)
             {
                 var chunk = new Chunk(preSymbol, symbol.Font);
                 var index = first + list.Count;
+
                 if (lettered)
                 {
                     chunk.Append(RomanAlphabetFactory.GetString(index, lowercase));
@@ -386,15 +387,16 @@ public class List : ITextElementArray
             item.SetIndentationLeft(symbolIndent, autoindent);
             item.IndentationRight = 0;
             list.Add(item);
+
             return true;
         }
 
-        if (o is List)
+        if (o is List nested)
         {
-            var nested = (List)o;
             nested.IndentationLeft = nested.IndentationLeft + symbolIndent;
             first--;
             list.Add(nested);
+
             return true;
         }
 
@@ -460,19 +462,20 @@ public class List : ITextElementArray
     public void NormalizeIndentation()
     {
         float max = 0;
+
         foreach (var o in list)
         {
-            if (o is ListItem)
+            if (o is ListItem item)
             {
-                max = Math.Max(max, ((ListItem)o).IndentationLeft);
+                max = Math.Max(max, item.IndentationLeft);
             }
         }
 
         foreach (var o in list)
         {
-            if (o is ListItem)
+            if (o is ListItem item)
             {
-                ((ListItem)o).IndentationLeft = max;
+                item.IndentationLeft = max;
             }
         }
     }
@@ -484,8 +487,5 @@ public class List : ITextElementArray
     ///     This is a shortcut for SetListSymbol(Chunk symbol).
     /// </remarks>
     /// <param name="symbol">a string</param>
-    public void SetListSymbol(string symbol)
-    {
-        this.symbol = new Chunk(symbol);
-    }
+    public void SetListSymbol(string symbol) => this.symbol = new Chunk(symbol);
 }

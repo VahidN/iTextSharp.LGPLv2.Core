@@ -41,6 +41,7 @@ public class RtfSection : RtfElement
         }
 
         Items = new List<IRtfBasicElement>();
+
         try
         {
             if (section.Title != null)
@@ -51,6 +52,7 @@ public class RtfSection : RtfElement
             if (Document.GetAutogenerateTocEntries())
             {
                 var titleText = new StringBuilder();
+
                 foreach (var element in section.Title)
                 {
                     if (element.Type == Element.CHUNK)
@@ -70,6 +72,7 @@ public class RtfSection : RtfElement
             foreach (var element in section)
             {
                 var rtfElements = doc.GetMapper().MapElement(element);
+
                 for (var i = 0; i < rtfElements.Length; i++)
                 {
                     if (rtfElements[i] != null)
@@ -94,6 +97,7 @@ public class RtfSection : RtfElement
     public override void SetInHeader(bool inHeader)
     {
         base.SetInHeader(inHeader);
+
         for (var i = 0; i < Items.Count; i++)
         {
             Items[i].SetInHeader(inHeader);
@@ -108,6 +112,7 @@ public class RtfSection : RtfElement
     public override void SetInTable(bool inTable)
     {
         base.SetInTable(inTable);
+
         for (var i = 0; i < Items.Count; i++)
         {
             Items[i].SetInTable(inTable);
@@ -124,7 +129,8 @@ public class RtfSection : RtfElement
             throw new ArgumentNullException(nameof(outp));
         }
 
-        outp.Write(RtfParagraph.Paragraph, 0, RtfParagraph.Paragraph.Length);
+        outp.Write(RtfParagraph.Paragraph, offset: 0, RtfParagraph.Paragraph.Length);
+
         if (Title != null)
         {
             Title.WriteContent(outp);
@@ -154,16 +160,15 @@ public class RtfSection : RtfElement
         for (var i = 0; i < Items.Count; i++)
         {
             var rtfElement = Items[i];
-            if (rtfElement is RtfSection)
+
+            if (rtfElement is RtfSection rtfSection)
             {
-                ((RtfSection)rtfElement).updateIndentation(indentLeft + indentContent, indentRight, 0);
+                rtfSection.updateIndentation(indentLeft + indentContent, indentRight, indentContent: 0);
             }
-            else if (rtfElement is RtfParagraph)
+            else if (rtfElement is RtfParagraph paragraph)
             {
-                ((RtfParagraph)rtfElement).SetIndentLeft((int)(((RtfParagraph)rtfElement).GetIndentLeft() +
-                                                               (indentLeft + indentContent) * TWIPS_FACTOR));
-                ((RtfParagraph)rtfElement).SetIndentRight((int)(((RtfParagraph)rtfElement).GetIndentRight() +
-                                                                indentRight * TWIPS_FACTOR));
+                paragraph.SetIndentLeft((int)(paragraph.GetIndentLeft() + (indentLeft + indentContent) * TWIPS_FACTOR));
+                paragraph.SetIndentRight((int)(paragraph.GetIndentRight() + indentRight * TWIPS_FACTOR));
             }
         }
     }

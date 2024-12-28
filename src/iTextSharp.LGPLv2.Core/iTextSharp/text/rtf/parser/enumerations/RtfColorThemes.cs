@@ -5,7 +5,7 @@ namespace iTextSharp.text.rtf.parser.enumerations;
 ///     @author Howard Shank (hgshank@yahoo.com)
 ///     @since 2.0.8
 /// </summary>
-public sealed class RtfColorThemes
+public static class RtfColorThemes
 {
     public const int THEME_UNDEFINED = -1;
     public const int THEME_MAINDARKONE = 0;

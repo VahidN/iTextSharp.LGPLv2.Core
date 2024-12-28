@@ -508,9 +508,9 @@ public class PdfContentByte
                 Content.Append(str: "\nBI\n");
                 var pimage = new PdfImage(image, name: "", maskRef: null);
 
-                if (image is ImgJbig2)
+                if (image is ImgJbig2 imgJbig2)
                 {
-                    var globals = ((ImgJbig2)image).GlobalBytes;
+                    var globals = imgJbig2.GlobalBytes;
 
                     if (globals != null)
                     {
@@ -1640,8 +1640,8 @@ public class PdfContentByte
     /// <param name="lly">the lower left y corner of the activation area</param>
     /// <param name="urx">the upper right x corner of the activation area</param>
     /// <param name="ury">the upper right y corner of the activation area</param>
-    public static void RemoteGoto(string filename, string name, float llx, float lly, float urx, float ury)
-        => RemoteGoto(filename, name, llx, lly, urx, ury);
+    public void RemoteGoto(string filename, string name, float llx, float lly, float urx, float ury)
+        => Pdf.RemoteGoto(filename, name, llx, lly, urx, ury);
 
     /// <summary>
     ///     Implements a link to another document.
@@ -2543,9 +2543,9 @@ public class PdfContentByte
         {
             var obj = arrayList[k];
 
-            if (obj is string)
+            if (obj is string s)
             {
-                showText2((string)obj);
+                showText2(s);
                 lastWasNumber = false;
             }
             else
@@ -3000,7 +3000,7 @@ public class PdfContentByte
     {
         if (Writer == null)
         {
-            throw new ArgumentNullException(paramName: "The writer in PdfContentByte is null.");
+            throw new InvalidOperationException(message: "The writer in PdfContentByte is null.");
         }
     }
 

@@ -53,16 +53,16 @@ public class XfaForm
             {
                 var ob = ar.GetDirectObject(k);
 
-                if (ob is PrStream)
+                if (ob is PrStream stream)
                 {
-                    var b = PdfReader.GetStreamBytes((PrStream)ob);
+                    var b = PdfReader.GetStreamBytes(stream);
                     bout.Write(b, offset: 0, b.Length);
                 }
             }
         }
-        else if (xfa is PrStream)
+        else if (xfa is PrStream stream)
         {
-            var b = PdfReader.GetStreamBytes((PrStream)xfa);
+            var b = PdfReader.GetStreamBytes(stream);
             bout.Write(b, offset: 0, b.Length);
         }
 
@@ -509,9 +509,9 @@ public class XfaForm
                 {
                     var obj = store.Follow[index: 0];
 
-                    if (obj is string)
+                    if (obj is string s)
                     {
-                        return (string)obj;
+                        return s;
                     }
 
                     store = (InverseStore)obj;

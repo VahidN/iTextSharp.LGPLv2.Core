@@ -427,32 +427,32 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion12 = new("1.2");
+    public static readonly PdfName PdfVersion12 = new(name: "1.2");
 
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion13 = new("1.3");
+    public static readonly PdfName PdfVersion13 = new(name: "1.3");
 
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion14 = new("1.4");
+    public static readonly PdfName PdfVersion14 = new(name: "1.4");
 
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion15 = new("1.5");
+    public static readonly PdfName PdfVersion15 = new(name: "1.5");
 
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion16 = new("1.6");
+    public static readonly PdfName PdfVersion16 = new(name: "1.6");
 
     /// <summary>
     ///     possible PDF version (catalog)
     /// </summary>
-    public static readonly PdfName PdfVersion17 = new("1.7");
+    public static readonly PdfName PdfVersion17 = new(name: "1.7");
 
     /// <summary>
     ///     action value
@@ -540,7 +540,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     body of the PDF document
     /// </summary>
-    protected internal PdfBody Body;
+    internal protected PdfBody Body;
 
     /// <summary>
     ///     The color number counter for the colors in the document.
@@ -551,7 +551,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     The compression level of the content streams.
     ///     @since   2.1.3
     /// </summary>
-    protected internal int compressionLevel = PdfStream.DEFAULT_COMPRESSION;
+    internal protected int compressionLevel = PdfStream.DEFAULT_COMPRESSION;
 
     /// <summary>
     ///     [F1] PdfEncryptionSettings interface
@@ -630,7 +630,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     Holds value of property extraCatalog.
     /// </summary>
-    protected internal PdfDictionary extraCatalog;
+    internal protected PdfDictionary extraCatalog;
 
     /// <summary>
     ///     [F3] adding fonts
@@ -716,7 +716,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     the pdfdocument object.
     /// </summary>
-    protected internal PdfDocument Pdf;
+    internal protected PdfDocument Pdf;
 
     /// <summary>
     ///     Stores the version information for the header and the catalog.
@@ -763,8 +763,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     Constructs a  PdfWriter .
     /// </summary>
-    protected PdfWriter()
-        => Root = new PdfPages(this);
+    protected PdfWriter() => Root = new PdfPages(this);
 
     protected PdfWriter(PdfDocument document, Stream os) : base(document, os)
     {
@@ -860,7 +859,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         {
             if (!open)
             {
-                throw new InvalidOperationException("The document is not open.");
+                throw new InvalidOperationException(message: "The document is not open.");
             }
 
             return directContent;
@@ -879,7 +878,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         {
             if (!open)
             {
-                throw new InvalidOperationException("The document is not open.");
+                throw new InvalidOperationException(message: "The document is not open.");
             }
 
             return directContentUnder;
@@ -938,7 +937,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     {
         get
         {
-            FillOcProperties(true);
+            FillOcProperties(erase: true);
 
             return VOcProperties;
         }
@@ -986,9 +985,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             {
                 _pageEvent = value;
             }
-            else if (_pageEvent is PdfPageEventForwarder)
+            else if (_pageEvent is PdfPageEventForwarder pdfPageEventForwarder)
             {
-                ((PdfPageEventForwarder)_pageEvent).AddPageEvent(value);
+                pdfPageEventForwarder.AddPageEvent(value);
             }
             else
             {
@@ -1162,7 +1161,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         {
             if (value < 1f || value > 75000f)
             {
-                throw new DocumentException("UserUnit should be a value between 1 and 75000.");
+                throw new DocumentException(message: "UserUnit should be a value between 1 and 75000.");
             }
 
             userunit = value;
@@ -1226,16 +1225,14 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     needs to be added.
     /// </summary>
     /// <param name="annot">the  PdfAnnotation  or the  PdfFormField  to add</param>
-    public virtual void AddAnnotation(PdfAnnotation annot)
-        => Pdf.AddAnnotation(annot);
+    public virtual void AddAnnotation(PdfAnnotation annot) => Pdf.AddAnnotation(annot);
 
     /// <summary>
     ///     Adds the  PdfAnnotation  to the calculation order
     ///     array.
     /// </summary>
     /// <param name="annot">the  PdfAnnotation  to be added</param>
-    public virtual void AddCalculationOrder(PdfFormField annot)
-        => Pdf.AddCalculationOrder(annot);
+    public virtual void AddCalculationOrder(PdfFormField annot) => Pdf.AddCalculationOrder(annot);
 
     /// <summary>
     ///     Additional-actions defining the actions to be taken in
@@ -1268,16 +1265,14 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     this name.
     /// </summary>
     /// <param name="name">the name of the destination to jump to</param>
-    public virtual void SetOpenAction(string name)
-        => Pdf.SetOpenAction(name);
+    public virtual void SetOpenAction(string name) => Pdf.SetOpenAction(name);
 
     /// <summary>
     ///     When the document opens this  action  will be
     ///     invoked.
     /// </summary>
     /// <param name="action">the action to be invoked</param>
-    public virtual void SetOpenAction(PdfAction action)
-        => Pdf.SetOpenAction(action);
+    public virtual void SetOpenAction(PdfAction action) => Pdf.SetOpenAction(action);
 
     /// <summary>
     ///     Sets the encryption options for this document. The userPassword and the
@@ -1300,11 +1295,11 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     {
         if (Pdf.IsOpen())
         {
-            throw new DocumentException("Encryption can only be added before opening the document.");
+            throw new DocumentException(message: "Encryption can only be added before opening the document.");
         }
 
         Crypto = new PdfEncryption();
-        Crypto.SetCryptoMode(encryptionType, 0);
+        Crypto.SetCryptoMode(encryptionType, kl: 0);
         Crypto.SetupAllKeys(userPassword, ownerPassword, permissions);
     }
 
@@ -1333,7 +1328,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
         if (Pdf.IsOpen())
         {
-            throw new DocumentException("Encryption can only be added before opening the document.");
+            throw new DocumentException(message: "Encryption can only be added before opening the document.");
         }
 
         Crypto = new PdfEncryption();
@@ -1346,7 +1341,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             }
         }
 
-        Crypto.SetCryptoMode(encryptionType, 0);
+        Crypto.SetCryptoMode(encryptionType, kl: 0);
         Crypto.GetEncryptionDictionary();
     }
 
@@ -1427,20 +1422,17 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     @see com.lowagie.text.pdf.interfaces.PdfVersion#addDeveloperExtension(com.lowagie.text.pdf.PdfDeveloperExtension)
     ///     @since   2.1.6
     /// </summary>
-    public void AddDeveloperExtension(PdfDeveloperExtension de)
-        => pdf_version.AddDeveloperExtension(de);
+    public void AddDeveloperExtension(PdfDeveloperExtension de) => pdf_version.AddDeveloperExtension(de);
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfVersion#setAtLeastPdfVersion(char)
     /// </summary>
-    public void SetAtLeastPdfVersion(char version)
-        => pdf_version.SetAtLeastPdfVersion(version);
+    public void SetAtLeastPdfVersion(char version) => pdf_version.SetAtLeastPdfVersion(version);
 
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfVersion#setPdfVersion(com.lowagie.text.pdf.PdfName)
     /// </summary>
-    public void SetPdfVersion(PdfName version)
-        => pdf_version.SetPdfVersion(version);
+    public void SetPdfVersion(PdfName version) => pdf_version.SetPdfVersion(version);
 
     /// <summary>
     ///     Sets the viewer preferences as the sum of several constants.
@@ -1455,8 +1447,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     Adds a viewer preference
     ///     @see PdfViewerPreferences#addViewerPreference
     /// </summary>
-    public virtual void AddViewerPreference(PdfName key, PdfObject value)
-        => Pdf.AddViewerPreference(key, value);
+    public virtual void AddViewerPreference(PdfName key, PdfObject value) => Pdf.AddViewerPreference(key, value);
 
     /// <summary>
     ///     Sets the PDFX conformance level. Allowed values are PDFX1A2001 and PDFX32002. It
@@ -1473,12 +1464,12 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
             if (Pdf.IsOpen())
             {
-                throw new PdfXConformanceException("PDFX conformance can only be set before opening the document.");
+                throw new PdfXConformanceException(s: "PDFX conformance can only be set before opening the document.");
             }
 
             if (Crypto != null)
             {
-                throw new PdfXConformanceException("A PDFX conforming document cannot be encrypted.");
+                throw new PdfXConformanceException(s: "A PDFX conforming document cannot be encrypted.");
             }
 
             if (value == PDFA1A || value == PDFA1B)
@@ -1498,8 +1489,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     @see com.lowagie.text.pdf.interfaces.PdfXConformance#isPdfX()
     /// </summary>
-    public bool IsPdfX()
-        => _pdfxConformance.IsPdfX();
+    public bool IsPdfX() => _pdfxConformance.IsPdfX();
 
     public static PdfWriter GetInstance(Document document, Stream os)
     {
@@ -1540,8 +1530,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="image">the  Image  to add</param>
     /// <returns>the name of the image added</returns>
-    public PdfName AddDirectImageSimple(Image image)
-        => AddDirectImageSimple(image, null);
+    public PdfName AddDirectImageSimple(Image image) => AddDirectImageSimple(image, fixedRef: null);
 
     /// <summary>
     ///     Adds an image to the document but not to the page resources. It is used with
@@ -1577,7 +1566,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
                 if (image is ImgWmf wmf)
                 {
-                    wmf.ReadWmf(PdfTemplate.CreateTemplate(this, 0, 0));
+                    wmf.ReadWmf(PdfTemplate.CreateTemplate(this, width: 0, height: 0));
                 }
             }
             else
@@ -1604,9 +1593,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
                 var i = new PdfImage(image, "img" + _images.Count, maskRef);
 
-                if (image is ImgJbig2)
+                if (image is ImgJbig2 imgJbig2)
                 {
-                    var globals = ((ImgJbig2)image).GlobalBytes;
+                    var globals = imgJbig2.GlobalBytes;
 
                     if (globals != null)
                     {
@@ -1627,9 +1616,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
                     if (colorspace != null)
                     {
-                        if (colorspace.Size > 1 && PdfName.Indexed.Equals(colorspace[0]))
+                        if (colorspace.Size > 1 && PdfName.Indexed.Equals(colorspace[idx: 0]))
                         {
-                            colorspace[1] = iccArray;
+                            colorspace[idx: 1] = iccArray;
                         }
                         else
                         {
@@ -1691,7 +1680,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             throw new ArgumentNullException(nameof(fs));
         }
 
-        Pdf.AddFileAttachment(null, fs);
+        Pdf.AddFileAttachment(description: null, fs);
     }
 
     /// <summary>
@@ -1731,8 +1720,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     opens all this JavaScript runs.
     /// </summary>
     /// <param name="code">the JavaScript code</param>
-    public virtual void AddJavaScript(string code)
-        => AddJavaScript(code, false);
+    public virtual void AddJavaScript(string code) => AddJavaScript(code, unicode: false);
 
     /// <summary>
     ///     Use this method to add a JavaScript action at the document level.
@@ -1768,8 +1756,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="name">The name of the JS Action in the name tree</param>
     /// <param name="code">the JavaScript code</param>
-    public void AddJavaScript(string name, string code)
-        => AddJavaScript(name, code, false);
+    public void AddJavaScript(string name, string code) => AddJavaScript(name, code, unicode: false);
 
     /// <summary>
     ///     Sets a collection of optional content groups whose states are intended to follow
@@ -1913,8 +1900,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     Method suggested by Pelikan Stephan
     ///     @throws DocumentException
     /// </summary>
-    public void ClearTextWrap()
-        => Pdf.ClearTextWrap();
+    public void ClearTextWrap() => Pdf.ClearTextWrap();
 
     /// <summary>
     ///     Signals that the  Document  was closed and that no other
@@ -1974,13 +1960,13 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
                 catalog.MergeDifferent(extraCatalog);
             }
 
-            WriteOutlines(catalog, false);
+            WriteOutlines(catalog, namedAsNames: false);
 
             // add the Catalog to the body
-            var indirectCatalog = AddToBody(catalog, false);
+            var indirectCatalog = AddToBody(catalog, inObjStm: false);
 
             // add the info-object to the body
-            var infoObj = AddToBody(Info, false);
+            var infoObj = AddToBody(Info, inObjStm: false);
 
             // [F1] encryption
             PdfIndirectReference encryption = null;
@@ -1989,7 +1975,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
             if (Crypto != null)
             {
-                var encryptionObject = AddToBody(Crypto.GetEncryptionDictionary(), false);
+                var encryptionObject = AddToBody(Crypto.GetEncryptionDictionary(), inObjStm: false);
                 encryption = encryptionObject.IndirectReference;
                 fileId = Crypto.FileId;
             }
@@ -2006,12 +1992,12 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             // [F2] full compression
             if (fullCompression)
             {
-                var tmp = GetIsoBytes("startxref\n");
-                base.Os.Write(tmp, 0, tmp.Length);
+                var tmp = GetIsoBytes(text: "startxref\n");
+                base.Os.Write(tmp, offset: 0, tmp.Length);
                 tmp = GetIsoBytes(Body.Offset.ToString(CultureInfo.InvariantCulture));
-                base.Os.Write(tmp, 0, tmp.Length);
-                tmp = GetIsoBytes("\n%%EOF\n");
-                base.Os.Write(tmp, 0, tmp.Length);
+                base.Os.Write(tmp, offset: 0, tmp.Length);
+                tmp = GetIsoBytes(text: "\n%%EOF\n");
+                base.Os.Write(tmp, offset: 0, tmp.Length);
             }
             else
             {
@@ -2028,8 +2014,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     Creates XMP Metadata based on the metadata in the PdfDocument.
     /// </summary>
-    public void CreateXmpMetadata()
-        => XmpMetadata = createXmpMetadataBytes();
+    public void CreateXmpMetadata() => XmpMetadata = createXmpMetadataBytes();
 
     /// <summary>
     ///     Checks if a  Table  fits the current page of the  PdfDocument .
@@ -2037,8 +2022,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <param name="table">the table that has to be checked</param>
     /// <param name="margin">a certain margin</param>
     /// <returns> true  if the  Table  fits the page,  false  otherwise.</returns>
-    public bool FitsPage(Table table, float margin)
-        => Pdf.GetBottom(table) > Pdf.IndentBottom + margin;
+    public bool FitsPage(Table table, float margin) => Pdf.GetBottom(table) > Pdf.IndentBottom + margin;
 
     /// <summary>
     ///     [M4] Old table functionality; do we still need it?
@@ -2048,8 +2032,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="table">the table that has to be checked</param>
     /// <returns> true  if the  Table  fits the page,  false  otherwise.</returns>
-    public bool FitsPage(Table table)
-        => FitsPage(table, 0);
+    public bool FitsPage(Table table) => FitsPage(table, margin: 0);
 
     /// <summary>
     ///     Writes the reader to the document and frees the memory used by it.
@@ -2076,8 +2059,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     Gives the size of a trim, art, crop or bleed box, or null if not defined.
     /// </summary>
     /// <param name="boxName">crop, trim, art or bleed</param>
-    public Rectangle GetBoxSize(string boxName)
-        => Pdf.GetBoxSize(boxName);
+    public Rectangle GetBoxSize(string boxName) => Pdf.GetBoxSize(boxName);
 
     /// <summary>
     ///     [F5] adding pages imported form other PDF documents
@@ -2123,7 +2105,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
         if (page < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(page), "The page numbers start at 1.");
+            throw new ArgumentOutOfRangeException(nameof(page), message: "The page numbers start at 1.");
         }
 
         PdfIndirectReference refa;
@@ -2144,7 +2126,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
             for (var k = 0; k < empty; ++k)
             {
-                PageReferences.Add(null);
+                PageReferences.Add(item: null);
             }
 
             refa = Body.PdfIndirectReference;
@@ -2161,15 +2143,13 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="ensureNewLine">Tells whether a new line shall be enforced. This may cause side effects</param>
     /// <returns>The current vertical page position.</returns>
-    public float GetVerticalPosition(bool ensureNewLine)
-        => Pdf.GetVerticalPosition(ensureNewLine);
+    public float GetVerticalPosition(bool ensureNewLine) => Pdf.GetVerticalPosition(ensureNewLine);
 
     /// <summary>
     ///     Check if the document is marked for tagging.
     /// </summary>
     /// <returns> true  if the document is marked for tagging</returns>
-    public bool IsTagged()
-        => Tagged;
+    public bool IsTagged() => Tagged;
 
     /// <summary>
     ///     Use this method to lock an optional content group.
@@ -2268,8 +2248,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="order">an array with the new page sequence. It must have the</param>
     /// <returns>the total number of pages</returns>
-    public int ReorderPages(int[] order)
-        => Root.ReorderPages(order);
+    public int ReorderPages(int[] order) => Root.ReorderPages(order);
 
     /// <summary>
     ///     [U1] page size
@@ -2279,8 +2258,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="boxName">the box size</param>
     /// <param name="size">the size</param>
-    public void SetBoxSize(string boxName, Rectangle size)
-        => Pdf.SetBoxSize(boxName, size);
+    public void SetBoxSize(string boxName, Rectangle size) => Pdf.SetBoxSize(boxName, size);
 
     /// <summary>
     ///     Miscellaneous topics
@@ -2377,8 +2355,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     (every leave is attached directly to the root).
     ///     Use this method to allow page reordering with method reorderPages.
     /// </summary>
-    public void SetLinearPageMode()
-        => Root.SetLinearMode(null);
+    public void SetLinearPageMode() => Root.SetLinearMode(topParent: null);
 
     /// <summary>
     ///     Sets the values of the output intent dictionary. Null values are allowed to
@@ -2493,7 +2470,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             return false;
         }
 
-        var outa = outs.GetAsDict(0);
+        var outa = outs.GetAsDict(idx: 0);
         var obj = PdfReader.GetPdfObject(outa.Get(PdfName.S));
 
         if (obj == null || !PdfName.GtsPdfx.Equals(obj))
@@ -2531,7 +2508,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     {
         if (open)
         {
-            throw new ArgumentException("Tagging must be set before opening the document.");
+            throw new ArgumentException(message: "Tagging must be set before opening the document.");
         }
 
         Tagged = true;
@@ -2550,7 +2527,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     {
         if (!open)
         {
-            throw new PdfException("The document isn't open.");
+            throw new PdfException(message: "The document isn't open.");
         }
 
         PdfIndirectObject objecta;
@@ -2590,10 +2567,11 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         {
             PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_IMAGE, pdfImage);
 
-            if (fixedRef is PrIndirectReference)
+            if (fixedRef is PrIndirectReference prIndirectReference)
             {
-                var r2 = (PrIndirectReference)fixedRef;
-                fixedRef = new PdfIndirectReference(0, GetNewObjectNumber(r2.Reader, r2.Number, r2.Generation));
+                fixedRef = new PdfIndirectReference(type: 0,
+                    GetNewObjectNumber(prIndirectReference.Reader, prIndirectReference.Number,
+                        prIndirectReference.Generation));
             }
 
             if (fixedRef == null)
@@ -2613,8 +2591,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         return (PdfIndirectReference)ImageDictionary.Get(pdfImage.Name);
     }
 
-    internal virtual void AddAnnotation(PdfAnnotation annot, int page)
-        => AddAnnotation(annot);
+    internal virtual void AddAnnotation(PdfAnnotation annot, int page) => AddAnnotation(annot);
 
     /// <summary>
     ///     Adds a template to the document but not to the page resources.
@@ -2788,7 +2765,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         if (type == ExtendedColor.TYPE_PATTERN || type == ExtendedColor.TYPE_SHADING)
         {
             throw new InvalidOperationException(
-                "An uncolored tile pattern can not have another pattern or shading as color.");
+                message: "An uncolored tile pattern can not have another pattern or shading as color.");
         }
 
         switch (type)
@@ -2796,7 +2773,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             case ExtendedColor.TYPE_RGB:
                 if (PatternColorspaceRgb == null)
                 {
-                    PatternColorspaceRgb = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, null);
+                    PatternColorspaceRgb =
+                        new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, scolor: null);
+
                     var array = new PdfArray(PdfName.Pattern);
                     array.Add(PdfName.Devicergb);
                     AddToBody(array, PatternColorspaceRgb.IndirectReference);
@@ -2806,7 +2785,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             case ExtendedColor.TYPE_CMYK:
                 if (PatternColorspaceCmyk == null)
                 {
-                    PatternColorspaceCmyk = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, null);
+                    PatternColorspaceCmyk =
+                        new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, scolor: null);
+
                     var array = new PdfArray(PdfName.Pattern);
                     array.Add(PdfName.Devicecmyk);
                     AddToBody(array, PatternColorspaceCmyk.IndirectReference);
@@ -2816,7 +2797,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             case ExtendedColor.TYPE_GRAY:
                 if (PatternColorspaceGray == null)
                 {
-                    PatternColorspaceGray = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, null);
+                    PatternColorspaceGray =
+                        new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, scolor: null);
+
                     var array = new PdfArray(PdfName.Pattern);
                     array.Add(PdfName.Devicegray);
                     AddToBody(array, PatternColorspaceGray.IndirectReference);
@@ -2830,7 +2813,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
                 if (patternDetails == null)
                 {
-                    patternDetails = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, null);
+                    patternDetails = new ColorDetails(GetColorspaceName(), Body.PdfIndirectReference, scolor: null);
                     var array = new PdfArray(PdfName.Pattern);
                     array.Add(details.IndirectReference);
                     AddToBody(array, patternDetails.IndirectReference);
@@ -2840,7 +2823,8 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
                 return patternDetails;
             }
             default:
-                throw new InvalidOperationException("Invalid color type in PdfWriter.AddSimplePatternColorspace().");
+                throw new InvalidOperationException(
+                    message: "Invalid color type in PdfWriter.AddSimplePatternColorspace().");
         }
     }
 
@@ -2856,7 +2840,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
         if (prop is IPdfOcg)
         {
-            PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, null);
+            PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, obj1: null);
         }
 
         value = new PdfObject[]
@@ -2909,8 +2893,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     [F6] spot colors
     /// </summary>
-    internal PdfName GetColorspaceName()
-        => new("CS" + ColorNumber++);
+    internal PdfName GetColorspaceName() => new("CS" + ColorNumber++);
 
     /// <summary>
     ///     return the  PdfIndirectReference  to the image with a given name.
@@ -2923,18 +2906,15 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     Returns the version information.
     /// </summary>
-    internal PdfVersionImp GetPdfVersion()
-        => pdf_version;
+    internal PdfVersionImp GetPdfVersion() => pdf_version;
 
-    internal virtual RandomAccessFileOrArray GetReaderFile(PdfReader reader)
-        => CurrentPdfReaderInstance.ReaderFile;
+    internal virtual RandomAccessFileOrArray GetReaderFile(PdfReader reader) => CurrentPdfReaderInstance.ReaderFile;
 
-    internal bool PropertyExists(object prop)
-        => DocumentProperties.ContainsKey(prop);
+    internal bool PropertyExists(object prop) => DocumentProperties.ContainsKey(prop);
 
     internal void RegisterLayer(IPdfOcg layer)
     {
-        PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, null);
+        PdfXConformanceImp.CheckPdfxConformance(this, PdfXConformanceImp.PDFXKEY_LAYER, obj1: null);
 
         if (layer is PdfLayer la)
         {
@@ -2953,7 +2933,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         }
         else
         {
-            throw new ArgumentException("Only PdfLayer is accepted.");
+            throw new ArgumentException(message: "Only PdfLayer is accepted.");
         }
     }
 
@@ -2967,7 +2947,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         directContentUnder.Reset();
     }
 
-    protected internal virtual int GetNewObjectNumber(PdfReader reader, int number, int generation)
+    internal protected virtual int GetNewObjectNumber(PdfReader reader, int number, int generation)
     {
         if (reader == null)
         {
@@ -2988,7 +2968,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     @since  2.1.5
     /// </summary>
     /// <param name="content">a byte array that may already been added to the writer inside a stream object.</param>
-    protected internal PdfIndirectReference GetReferenceJbig2Globals(byte[] content)
+    internal protected PdfIndirectReference GetReferenceJbig2Globals(byte[] content)
     {
         if (content == null)
         {
@@ -3023,7 +3003,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     [C1] Outlines (bookmarks)
     /// </summary>
-    protected internal void WriteOutlines(PdfDictionary catalog, bool namedAsNames)
+    internal protected void WriteOutlines(PdfDictionary catalog, bool namedAsNames)
     {
         if (catalog == null)
         {
@@ -3124,10 +3104,9 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             var prop = entry.Key;
             var obj = entry.Value;
 
-            if (prop is PdfLayerMembership)
+            if (prop is PdfLayerMembership pdfLayerMembership)
             {
-                var layer = (PdfLayerMembership)prop;
-                AddToBody(layer.PdfObject, layer.Ref);
+                AddToBody(pdfLayerMembership.PdfObject, pdfLayerMembership.Ref);
             }
             else if (prop is PdfDictionary && !(prop is PdfLayer))
             {
@@ -3248,7 +3227,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         // [F13] OCG
         if (DocumentOcg.Count != 0)
         {
-            FillOcProperties(false);
+            FillOcProperties(erase: false);
             catalog.Put(PdfName.Ocproperties, VOcProperties);
         }
 
@@ -3414,7 +3393,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         internal PdfBody(PdfWriter writer)
         {
             _xrefs = new OrderedTree();
-            _xrefs[new PdfCrossReference(0, 0, GENERATION_MAX)] = null;
+            _xrefs[new PdfCrossReference(refnum: 0, offset: 0, GENERATION_MAX)] = null;
             Offset = writer.Os.Counter;
             _refnum = 1;
             _writer = writer;
@@ -3425,7 +3404,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             get
             {
                 var n = _refnum++;
-                _xrefs[new PdfCrossReference(n, 0, GENERATION_MAX)] = null;
+                _xrefs[new PdfCrossReference(n, offset: 0, GENERATION_MAX)] = null;
 
                 return n;
             }
@@ -3436,7 +3415,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         /// </summary>
         internal int Offset { get; private set; }
 
-        internal PdfIndirectReference PdfIndirectReference => new(0, IndirectReferenceNumber);
+        internal PdfIndirectReference PdfIndirectReference => new(type: 0, IndirectReferenceNumber);
 
         internal int Refnum
         {
@@ -3445,8 +3424,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
         internal int Size => Math.Max(((PdfCrossReference)_xrefs.GetMaxKey()).Refnum + 1, _refnum);
 
-        internal PdfIndirectObject Add(PdfObject objecta)
-            => Add(objecta, IndirectReferenceNumber);
+        internal PdfIndirectObject Add(PdfObject objecta) => Add(objecta, IndirectReferenceNumber);
 
         /// <summary>
         ///     Adds a  PdfObject  to the body.
@@ -3461,8 +3439,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         internal PdfIndirectObject Add(PdfObject objecta, bool inObjStm)
             => Add(objecta, IndirectReferenceNumber, inObjStm);
 
-        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa)
-            => Add(objecta, refa.Number);
+        internal PdfIndirectObject Add(PdfObject objecta, PdfIndirectReference refa) => Add(objecta, refa.Number);
 
         /// <summary>
         ///     Gets a PdfIndirectReference for an object that will be created in the future.
@@ -3483,7 +3460,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             => Add(objecta, refa.Number, inObjStm);
 
         internal PdfIndirectObject Add(PdfObject objecta, int refNumber)
-            => Add(objecta, refNumber, true); // to false
+            => Add(objecta, refNumber, inObjStm: true); // to false
 
         internal PdfIndirectObject Add(PdfObject objecta, int refNumber, bool inObjStm)
         {
@@ -3638,8 +3615,8 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             }
             else
             {
-                var tmp = GetIsoBytes("xref\n");
-                os.Write(tmp, 0, tmp.Length);
+                var tmp = GetIsoBytes(text: "xref\n");
+                os.Write(tmp, offset: 0, tmp.Length);
                 var i = _xrefs.Keys;
                 i.MoveNext();
 
@@ -3648,10 +3625,10 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
                     first = sections[k];
                     len = sections[k + 1];
                     tmp = GetIsoBytes(first.ToString(CultureInfo.InvariantCulture));
-                    os.Write(tmp, 0, tmp.Length);
+                    os.Write(tmp, offset: 0, tmp.Length);
                     os.WriteByte((byte)' ');
                     tmp = GetIsoBytes(len.ToString(CultureInfo.InvariantCulture));
-                    os.Write(tmp, 0, tmp.Length);
+                    os.Write(tmp, offset: 0, tmp.Length);
                     os.WriteByte((byte)'\n');
 
                     while (len-- > 0)
@@ -3690,10 +3667,10 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             _writer.Crypto = null;
             obj.ToPdf(_writer, _streamObjects);
             _writer.Crypto = enc;
-            _streamObjects.Append(' ');
-            _index.Append(nObj).Append(' ').Append(p).Append(' ');
+            _streamObjects.Append(c: ' ');
+            _index.Append(nObj).Append(c: ' ').Append(p).Append(c: ' ');
 
-            return new PdfCrossReference(2, nObj, _currentObjNum, idx);
+            return new PdfCrossReference(type: 2, nObj, _currentObjNum, idx);
         }
 
         internal class PdfCrossReference : IComparable
@@ -3766,35 +3743,32 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             /// </summary>
             public override bool Equals(object obj)
             {
-                if (obj is PdfCrossReference)
+                if (obj is PdfCrossReference pdfCrossReference)
                 {
-                    var other = (PdfCrossReference)obj;
-
-                    return Refnum == other.Refnum;
+                    return Refnum == pdfCrossReference.Refnum;
                 }
 
                 return false;
             }
 
-            public override int GetHashCode()
-                => Refnum;
+            public override int GetHashCode() => Refnum;
 
             public void ToPdf(Stream os)
             {
-                var s1 = _offset.ToString(CultureInfo.InvariantCulture).PadLeft(10, '0');
-                var s2 = _generation.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
-                var buf = new ByteBuffer(40);
+                var s1 = _offset.ToString(CultureInfo.InvariantCulture).PadLeft(totalWidth: 10, paddingChar: '0');
+                var s2 = _generation.ToString(CultureInfo.InvariantCulture).PadLeft(totalWidth: 5, paddingChar: '0');
+                var buf = new ByteBuffer(size: 40);
 
                 if (_generation == GENERATION_MAX)
                 {
-                    buf.Append(s1).Append(' ').Append(s2).Append(" f \n");
+                    buf.Append(s1).Append(c: ' ').Append(s2).Append(str: " f \n");
                 }
                 else
                 {
-                    buf.Append(s1).Append(' ').Append(s2).Append(" n \n");
+                    buf.Append(s1).Append(c: ' ').Append(s2).Append(str: " n \n");
                 }
 
-                os.Write(buf.Buffer, 0, buf.Size);
+                os.Write(buf.Buffer, offset: 0, buf.Size);
             }
 
             /// <summary>
@@ -3884,15 +3858,15 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
         /// <param name="os"></param>
         public override void ToPdf(PdfWriter writer, Stream os)
         {
-            var tmp = GetIsoBytes("trailer\n");
-            os.Write(tmp, 0, tmp.Length);
-            base.ToPdf(null, os);
-            tmp = GetIsoBytes("\nstartxref\n");
-            os.Write(tmp, 0, tmp.Length);
+            var tmp = GetIsoBytes(text: "trailer\n");
+            os.Write(tmp, offset: 0, tmp.Length);
+            base.ToPdf(writer: null, os);
+            tmp = GetIsoBytes(text: "\nstartxref\n");
+            os.Write(tmp, offset: 0, tmp.Length);
             tmp = GetIsoBytes(Offset.ToString(CultureInfo.InvariantCulture));
-            os.Write(tmp, 0, tmp.Length);
-            tmp = GetIsoBytes("\n%%EOF\n");
-            os.Write(tmp, 0, tmp.Length);
+            os.Write(tmp, offset: 0, tmp.Length);
+            tmp = GetIsoBytes(text: "\n%%EOF\n");
+            os.Write(tmp, offset: 0, tmp.Length);
         }
     }
 }

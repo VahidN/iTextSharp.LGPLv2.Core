@@ -232,10 +232,10 @@ public class RtfFont : Font, IRtfExtendedElement
 
         if (font != null)
         {
-            if (font is RtfFont)
+            if (font is RtfFont rtfFont)
             {
-                _fontName = ((RtfFont)font).GetFontName();
-                _charset = ((RtfFont)font).GetCharset();
+                _fontName = rtfFont.GetFontName();
+                _charset = rtfFont.GetCharset();
             }
             else
             {
@@ -405,14 +405,14 @@ public class RtfFont : Font, IRtfExtendedElement
             return -1;
         }
 
-        if (obj is RtfFont)
+        if (obj is RtfFont rtfFont)
         {
-            if (!string.Equals(GetFontName(), ((RtfFont)obj).GetFontName(), StringComparison.Ordinal))
+            if (!string.Equals(GetFontName(), rtfFont.GetFontName(), StringComparison.Ordinal))
             {
                 return 1;
             }
 
-            return base.CompareTo(obj);
+            return base.CompareTo(rtfFont);
         }
 
         if (obj is Font)
@@ -475,9 +475,9 @@ public class RtfFont : Font, IRtfExtendedElement
 
         var dCharset = _charset;
 
-        if (font is RtfFont)
+        if (font is RtfFont rtfFont)
         {
-            dCharset = ((RtfFont)font).GetCharset();
+            dCharset = rtfFont.GetCharset();
         }
 
         return new RtfFont(dFamilyname, dSize, dStyle, dColor, dCharset);

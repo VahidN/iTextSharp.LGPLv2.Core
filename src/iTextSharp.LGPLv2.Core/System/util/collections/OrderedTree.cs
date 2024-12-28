@@ -42,15 +42,18 @@ public class OrderedTree
 
             // traverse tree - find where node belongs
             int result;
+
             while (temp != _sentinelNode)
             {
                 // find Parent
                 node.Parent = temp;
                 result = key.CompareTo(temp.Key);
+
                 if (result == 0)
                 {
                     _lastNodeFound = temp;
                     temp.Data = value;
+
                     return;
                 }
 
@@ -74,6 +77,7 @@ public class OrderedTree
             if (node.Parent != null)
             {
                 result = node.Key.CompareTo(node.Parent.Key);
+
                 if (result > 0)
                 {
                     node.Parent.Right = node;
@@ -101,13 +105,13 @@ public class OrderedTree
     ///     if(ascending is true, the keys will be returned in ascending order, else
     ///     the keys will be returned in descending order.
     /// </summary>
-    public virtual OrderedTreeEnumerator Keys => KeyElements(true);
+    public virtual OrderedTreeEnumerator Keys => KeyElements(ascending: true);
 
     /// <summary>
     ///     Values
     ///     Provided for .NET compatibility.
     /// </summary>
-    public virtual OrderedTreeEnumerator Values => Elements(true);
+    public virtual OrderedTreeEnumerator Values => Elements(ascending: true);
 
     public virtual int Count => _intCount;
 
@@ -130,14 +134,16 @@ public class OrderedTree
 
         // traverse tree - find where node belongs
         int result;
+
         while (temp != _sentinelNode)
         {
             // find Parent
             node.Parent = temp;
             result = key.CompareTo(temp.Key);
+
             if (result == 0)
             {
-                throw new ArgumentException("Key duplicated");
+                throw new ArgumentException(message: "Key duplicated");
             }
 
             if (result > 0)
@@ -160,6 +166,7 @@ public class OrderedTree
         if (node.Parent != null)
         {
             result = node.Key.CompareTo(node.Parent.Key);
+
             if (result > 0)
             {
                 node.Parent.Right = node;
@@ -203,11 +210,13 @@ public class OrderedTree
                 // determine traversal path
                 // is it on the Left or Right subtree?
                 y = x.Parent.Parent.Right; // get uncle
+
                 if (y?.Color == OrderedTreeNode.RED)
                 {
                     // uncle is red; change x's Parent and uncle to black
                     x.Parent.Color = OrderedTreeNode.BLACK;
                     y.Color = OrderedTreeNode.BLACK;
+
                     // grandparent must be red. Why? Every red node that is not
                     // a leaf has only black children
                     x.Parent.Parent.Color = OrderedTreeNode.RED;
@@ -235,6 +244,7 @@ public class OrderedTree
                 // x's Parent is on the Right subtree
                 // this code is the same as above with "Left" and "Right" swapped
                 y = x.Parent.Parent.Left;
+
                 if (y?.Color == OrderedTreeNode.RED)
                 {
                     x.Parent.Color = OrderedTreeNode.BLACK;
@@ -270,6 +280,7 @@ public class OrderedTree
         {
             throw new ArgumentNullException(nameof(x));
         }
+
         // pushing node x down and to the Left to balance the tree. x's Right child (y)
         // replaces x (since y > x), and y's Left child becomes x's Right child
         // (since it's < y but > x).
@@ -309,6 +320,7 @@ public class OrderedTree
 
         // link x and y
         y.Left = x; // put x on y's Left
+
         if (x != _sentinelNode) // set y as x's Parent
         {
             x.Parent = y;
@@ -325,6 +337,7 @@ public class OrderedTree
         {
             throw new ArgumentNullException(nameof(x));
         }
+
         // pushing node x down and to the Right to balance the tree. x's Left child (y)
         // replaces x (since x < y), and y's Right child becomes x's Left child
         // (since it's < x but > y).
@@ -365,6 +378,7 @@ public class OrderedTree
 
         // link x and y
         y.Right = x; // put x on y's Right
+
         if (x != _sentinelNode) // set y as x's Parent
         {
             x.Parent = y;
@@ -379,13 +393,16 @@ public class OrderedTree
         }
 
         var treeNode = _rbTree; // begin at root
+
         // traverse tree until node is found
         while (treeNode != _sentinelNode)
         {
             var result = key.CompareTo(treeNode.Key);
+
             if (result == 0)
             {
                 _lastNodeFound = treeNode;
+
                 return true;
             }
 
@@ -421,9 +438,11 @@ public class OrderedTree
         while (treeNode != _sentinelNode)
         {
             result = key.CompareTo(treeNode.Key);
+
             if (result == 0)
             {
                 _lastNodeFound = treeNode;
+
                 return treeNode.Data;
             }
 
@@ -450,7 +469,7 @@ public class OrderedTree
 
         if (treeNode == null || treeNode == _sentinelNode)
         {
-            throw new InvalidOperationException("Tree is empty");
+            throw new InvalidOperationException(message: "Tree is empty");
         }
 
         // traverse to the extreme left to find the smallest key
@@ -474,7 +493,7 @@ public class OrderedTree
 
         if (treeNode == null || treeNode == _sentinelNode)
         {
-            throw new InvalidOperationException("Tree is empty");
+            throw new InvalidOperationException(message: "Tree is empty");
         }
 
         // traverse to the extreme right to find the largest key
@@ -504,12 +523,15 @@ public class OrderedTree
     ///     GetEnumerator
     ///     return an enumerator that returns the tree nodes in order
     /// </summary>
-    public virtual OrderedTreeEnumerator GetEnumerator() =>
-        // elements is simply a generic name to refer to the
-        // data objects the nodes contain
-        Elements(true);
+    public virtual OrderedTreeEnumerator GetEnumerator()
+        =>
 
-    public virtual OrderedTreeEnumerator KeyElements(bool ascending) => new(_rbTree, true, ascending, _sentinelNode);
+            // elements is simply a generic name to refer to the
+            // data objects the nodes contain
+            Elements(ascending: true);
+
+    public virtual OrderedTreeEnumerator KeyElements(bool ascending)
+        => new(_rbTree, keys: true, ascending, _sentinelNode);
 
     /// <summary>
     ///     Elements
@@ -517,9 +539,10 @@ public class OrderedTree
     ///     if(ascending is true, the objects will be returned in ascending order,
     ///     else the objects will be returned in descending order.
     /// </summary>
-    public virtual OrderedTreeEnumerator Elements() => Elements(true);
+    public virtual OrderedTreeEnumerator Elements() => Elements(ascending: true);
 
-    public virtual OrderedTreeEnumerator Elements(bool ascending) => new(_rbTree, false, ascending, _sentinelNode);
+    public virtual OrderedTreeEnumerator Elements(bool ascending)
+        => new(_rbTree, keys: false, ascending, _sentinelNode);
 
     /// <summary>
     ///     IsEmpty
@@ -545,6 +568,7 @@ public class OrderedTree
         // see if node to be deleted was the last one found,
         //check for null to avoid null reference exception
         result = _lastNodeFound.Key == null ? -1 : key.CompareTo(_lastNodeFound.Key);
+
         if (result == 0)
         {
             node = _lastNodeFound;
@@ -553,9 +577,11 @@ public class OrderedTree
         {
             // not found, must search
             node = _rbTree;
+
             while (node != _sentinelNode)
             {
                 result = key.CompareTo(node.Key);
+
                 if (result == 0)
                 {
                     break;
@@ -609,6 +635,7 @@ public class OrderedTree
             // z has two children, find replacement node which will
             // be the leftmost node greater than z
             y = z.Right; // traverse right subtree
+
             while (y.Left != _sentinelNode) // to find next node in sequence
             {
                 y = y.Left;
@@ -632,6 +659,7 @@ public class OrderedTree
         // link x to proper subtree in parent
         // this removes y from the chain
         x.Parent = y.Parent;
+
         if (y.Parent != null)
         {
             if (y == y.Parent.Left)
@@ -682,6 +710,7 @@ public class OrderedTree
             {
                 // determine sub tree from parent
                 y = x.Parent.Right; // y is x's sibling
+
                 if (y.Color == OrderedTreeNode.RED)
                 {
                     // x is black, y is red - make both black and rotate
@@ -691,8 +720,7 @@ public class OrderedTree
                     y = x.Parent.Right;
                 }
 
-                if (y.Left.Color == OrderedTreeNode.BLACK &&
-                    y.Right.Color == OrderedTreeNode.BLACK)
+                if (y.Left.Color == OrderedTreeNode.BLACK && y.Right.Color == OrderedTreeNode.BLACK)
                 {
                     // children are both black
                     y.Color = OrderedTreeNode.RED; // change parent to red
@@ -719,6 +747,7 @@ public class OrderedTree
             {
                 // right subtree - same as code above with right and left swapped
                 y = x.Parent.Left;
+
                 if (y.Color == OrderedTreeNode.RED)
                 {
                     y.Color = OrderedTreeNode.BLACK;
@@ -727,8 +756,7 @@ public class OrderedTree
                     y = x.Parent.Left;
                 }
 
-                if (y.Right.Color == OrderedTreeNode.BLACK &&
-                    y.Left.Color == OrderedTreeNode.BLACK)
+                if (y.Right.Color == OrderedTreeNode.BLACK && y.Left.Color == OrderedTreeNode.BLACK)
                 {
                     y.Color = OrderedTreeNode.RED;
                     x = x.Parent;
@@ -792,226 +820,4 @@ public class OrderedTree
         _rbTree = _sentinelNode;
         _intCount = 0;
     }
-}
-
-public class OrderedTreeEnumerator : IEnumerator<object>
-{
-    // return in ascending order (true) or descending (false)
-    private readonly bool _ascending;
-
-    // return the keys
-    private readonly bool _keys;
-
-    private readonly OrderedTreeNode _sentinelNode;
-
-    // the treap uses the stack to order the nodes
-    private readonly Stack<OrderedTreeNode> _stack;
-
-    private bool _pre = true;
-
-    private OrderedTreeNode _tNode;
-
-    private OrderedTreeEnumerator()
-    {
-    }
-
-    /// <summary>
-    ///     Determine order, walk the tree and push the nodes onto the stack
-    /// </summary>
-    public OrderedTreeEnumerator(OrderedTreeNode tNode, bool keys, bool ascending, OrderedTreeNode sentinelNode)
-    {
-        _sentinelNode = sentinelNode;
-        _stack = new Stack<OrderedTreeNode>();
-        _keys = keys;
-        _ascending = ascending;
-        _tNode = tNode;
-        Reset();
-    }
-
-    /// <summary>
-    ///     Key
-    /// </summary>
-    public virtual IComparable Key { get; set; }
-
-    /// <summary>
-    ///     Data
-    /// </summary>
-    public virtual object Value { get; set; }
-
-    public virtual void Reset()
-    {
-        _pre = true;
-        _stack.Clear();
-        // use depth-first traversal to push nodes into stack
-        // the lowest node will be at the top of the stack
-        if (_ascending)
-        {
-            // find the lowest node
-            while (_tNode != _sentinelNode)
-            {
-                _stack.Push(_tNode);
-                _tNode = _tNode.Left;
-            }
-        }
-        else
-        {
-            // the highest node will be at top of stack
-            while (_tNode != _sentinelNode)
-            {
-                _stack.Push(_tNode);
-                _tNode = _tNode.Right;
-            }
-        }
-    }
-
-    public virtual object Current
-    {
-        get
-        {
-            if (_pre)
-            {
-                throw new InvalidOperationException("Current");
-            }
-
-            return _keys ? Key : Value;
-        }
-    }
-
-    /// <summary>
-    ///     MoveNext
-    ///     For .NET compatibility
-    /// </summary>
-    public virtual bool MoveNext()
-    {
-        if (HasMoreElements())
-        {
-            NextElement();
-            _pre = false;
-            return true;
-        }
-
-        _pre = true;
-        return false;
-    }
-
-    public void Dispose()
-    {
-    }
-
-    /// <summary>
-    ///     HasMoreElements
-    /// </summary>
-    public virtual bool HasMoreElements() => _stack.Count > 0;
-
-    /// <summary>
-    ///     NextElement
-    /// </summary>
-    public virtual object NextElement()
-    {
-        if (_stack.Count == 0)
-        {
-            throw new InvalidOperationException("Element not found");
-        }
-
-        // the top of stack will always have the next item
-        // get top of stack but don't remove it as the next nodes in sequence
-        // may be pushed onto the top
-        // the stack will be popped after all the nodes have been returned
-        var node = _stack.Peek(); //next node in sequence
-
-        if (_ascending)
-        {
-            if (node.Right == _sentinelNode)
-            {
-                // yes, top node is lowest node in subtree - pop node off stack
-                var tn = _stack.Pop();
-                // peek at right node's parent
-                // get rid of it if it has already been used
-                while (HasMoreElements() && _stack.Peek().Right == tn)
-                {
-                    tn = _stack.Pop();
-                }
-            }
-            else
-            {
-                // find the next items in the sequence
-                // traverse to left; find lowest and push onto stack
-                var tn = node.Right;
-                while (tn != _sentinelNode)
-                {
-                    _stack.Push(tn);
-                    tn = tn.Left;
-                }
-            }
-        }
-        else
-        {
-            // descending, same comments as above apply
-            if (node.Left == _sentinelNode)
-            {
-                // walk the tree
-                var tn = _stack.Pop();
-                while (HasMoreElements() && _stack.Peek().Left == tn)
-                {
-                    tn = _stack.Pop();
-                }
-            }
-            else
-            {
-                // determine next node in sequence
-                // traverse to left subtree and find greatest node - push onto stack
-                var tn = node.Left;
-                while (tn != _sentinelNode)
-                {
-                    _stack.Push(tn);
-                    tn = tn.Right;
-                }
-            }
-        }
-
-        // the following is for .NET compatibility (see MoveNext())
-        Key = node.Key;
-        Value = node.Data;
-        // ******** testing only ********
-
-        return _keys ? node.Key : node.Data;
-    }
-
-    public virtual OrderedTreeEnumerator GetEnumerator() => this;
-}
-
-public class OrderedTreeNode
-{
-    // tree node colors
-    public const bool RED = false;
-    public const bool BLACK = true;
-
-    public OrderedTreeNode() => Color = RED;
-
-    /// <summary>
-    ///     Key
-    /// </summary>
-    public virtual IComparable Key { get; set; }
-
-    /// <summary>
-    ///     Data
-    /// </summary>
-    public virtual object Data { get; set; }
-
-    /// <summary>
-    ///     Color
-    /// </summary>
-    public virtual bool Color { get; set; }
-
-    /// <summary>
-    ///     Left
-    /// </summary>
-    public virtual OrderedTreeNode Left { get; set; }
-
-    /// <summary>
-    ///     Right
-    /// </summary>
-    public virtual OrderedTreeNode Right { get; set; }
-
-    public virtual OrderedTreeNode Parent { get; set; }
 }

@@ -15,11 +15,11 @@ public class SimplePatternParser : ISimpleXmlDocHandler
     internal const int ELEM_EXCEPTIONS = 2;
     internal const int ELEM_HYPHEN = 4;
     internal const int ELEM_PATTERNS = 3;
+    internal readonly StringBuilder Token;
     internal IPatternConsumer Consumer;
     internal int CurrElement;
     internal List<object> Exception;
     internal char HyphenChar;
-    internal readonly StringBuilder Token;
 
     /// <summary>
     ///     Creates a new instance of PatternParser2
@@ -39,20 +39,22 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         if (Token.Length > 0)
         {
             var word = Token.ToString();
+
             switch (CurrElement)
             {
                 case ELEM_CLASSES:
                     Consumer.AddClass(word);
+
                     break;
                 case ELEM_EXCEPTIONS:
                     Exception.Add(word);
                     Exception = NormalizeException(Exception);
-                    Consumer.AddException(GetExceptionWord(Exception),
-                                          new List<object>(Exception));
+                    Consumer.AddException(GetExceptionWord(Exception), new List<object>(Exception));
+
                     break;
                 case ELEM_PATTERNS:
-                    Consumer.AddPattern(GetPattern(word),
-                                        GetInterletterValues(word));
+                    Consumer.AddPattern(GetPattern(word), GetInterletterValues(word));
+
                     break;
                 case ELEM_HYPHEN:
                     // nothing to do
@@ -82,25 +84,28 @@ public class SimplePatternParser : ISimpleXmlDocHandler
     public void Text(string str)
     {
         var tk = new StringTokenizer(str);
+
         while (tk.HasMoreTokens())
         {
             var word = tk.NextToken();
+
             // System.out.Println("\"" + word + "\"");
             switch (CurrElement)
             {
                 case ELEM_CLASSES:
                     Consumer.AddClass(word);
+
                     break;
                 case ELEM_EXCEPTIONS:
                     Exception.Add(word);
                     Exception = NormalizeException(Exception);
-                    Consumer.AddException(GetExceptionWord(Exception),
-                                          new List<object>(Exception));
+                    Consumer.AddException(GetExceptionWord(Exception), new List<object>(Exception));
                     Exception.Clear();
+
                     break;
                 case ELEM_PATTERNS:
-                    Consumer.AddPattern(GetPattern(word),
-                                        GetInterletterValues(word));
+                    Consumer.AddPattern(GetPattern(word), GetInterletterValues(word));
+
                     break;
             }
         }
@@ -118,37 +123,36 @@ public class SimplePatternParser : ISimpleXmlDocHandler
             throw new ArgumentNullException(nameof(h));
         }
 
-        if (tag.Equals("hyphen-char", StringComparison.Ordinal))
+        if (tag.Equals(value: "hyphen-char", StringComparison.Ordinal))
         {
-            var hh = h["value"];
+            var hh = h[key: "value"];
+
             if (hh != null && hh.Length == 1)
             {
-                HyphenChar = hh[0];
+                HyphenChar = hh[index: 0];
             }
         }
-        else if (tag.Equals("classes", StringComparison.Ordinal))
+        else if (tag.Equals(value: "classes", StringComparison.Ordinal))
         {
             CurrElement = ELEM_CLASSES;
         }
-        else if (tag.Equals("patterns", StringComparison.Ordinal))
+        else if (tag.Equals(value: "patterns", StringComparison.Ordinal))
         {
             CurrElement = ELEM_PATTERNS;
         }
-        else if (tag.Equals("exceptions", StringComparison.Ordinal))
+        else if (tag.Equals(value: "exceptions", StringComparison.Ordinal))
         {
             CurrElement = ELEM_EXCEPTIONS;
             Exception = new List<object>();
         }
-        else if (tag.Equals("hyphen", StringComparison.Ordinal))
+        else if (tag.Equals(value: "hyphen", StringComparison.Ordinal))
         {
             if (Token.Length > 0)
             {
                 Exception.Add(Token.ToString());
             }
 
-            Exception.Add(new Hyphen(h[HtmlTags.PRE],
-                                     h["no"],
-                                     h["post"]));
+            Exception.Add(new Hyphen(h[HtmlTags.PRE], h[key: "no"], h[key: "post"]));
             CurrElement = ELEM_HYPHEN;
         }
 
@@ -163,6 +167,7 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         }
 
         Consumer = consumer;
+
         try
         {
             SimpleXmlParser.Parse(this, stream);
@@ -184,9 +189,11 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         var il = new StringBuilder();
         var word = pat + "a"; // add dummy letter to serve as sentinel
         var len = word.Length;
+
         for (var i = 0; i < len; i++)
         {
             var c = word[i];
+
             if (char.IsDigit(c))
             {
                 il.Append(c);
@@ -194,7 +201,7 @@ public class SimplePatternParser : ISimpleXmlDocHandler
             }
             else
             {
-                il.Append('0');
+                il.Append(value: '0');
             }
         }
 
@@ -210,6 +217,7 @@ public class SimplePatternParser : ISimpleXmlDocHandler
 
         var pat = new StringBuilder();
         var len = word.Length;
+
         for (var i = 0; i < len; i++)
         {
             if (!char.IsDigit(word[i]))
@@ -229,12 +237,14 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         }
 
         var res = new StringBuilder();
+
         for (var i = 0; i < ex.Count; i++)
         {
             var item = ex[i];
-            if (item is string)
+
+            if (item is string s)
             {
-                res.Append((string)item);
+                res.Append(s);
             }
             else
             {
@@ -256,16 +266,19 @@ public class SimplePatternParser : ISimpleXmlDocHandler
         }
 
         var res = new List<object>();
+
         for (var i = 0; i < ex.Count; i++)
         {
             var item = ex[i];
-            if (item is string)
+
+            if (item is string str)
             {
-                var str = (string)item;
                 var buf = new StringBuilder();
+
                 for (var j = 0; j < str.Length; j++)
                 {
                     var c = str[j];
+
                     if (c != HyphenChar)
                     {
                         buf.Append(c);
@@ -276,9 +289,10 @@ public class SimplePatternParser : ISimpleXmlDocHandler
                         buf.Length = 0;
                         var h = new char[1];
                         h[0] = HyphenChar;
+
                         // we use here hyphenChar which is not necessarily
                         // the one to be printed
-                        res.Add(new Hyphen(new string(h), null, null));
+                        res.Add(new Hyphen(new string(h), no: null, post: null));
                     }
                 }
 

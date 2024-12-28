@@ -120,11 +120,11 @@ public static class PdfEncodings
             }
         }
 
-        AddExtraEncoding("Wingdings", new WingdingsConversion());
-        AddExtraEncoding("Symbol", new SymbolConversion(true));
-        AddExtraEncoding("ZapfDingbats", new SymbolConversion(false));
-        AddExtraEncoding("SymbolTT", new SymbolTtConversion());
-        AddExtraEncoding("Cp437", new Cp437Conversion());
+        AddExtraEncoding(name: "Wingdings", new WingdingsConversion());
+        AddExtraEncoding(name: "Symbol", new SymbolConversion(symbol: true));
+        AddExtraEncoding(name: "ZapfDingbats", new SymbolConversion(symbol: false));
+        AddExtraEncoding(name: "SymbolTT", new SymbolTtConversion());
+        AddExtraEncoding(name: "Cp437", new Cp437Conversion());
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public static class PdfEncodings
             throw new ArgumentNullException(nameof(seq));
         }
 
-        return ConvertCmap(name, seq, 0, seq.Length);
+        return ConvertCmap(name, seq, start: 0, seq.Length);
     }
 
     /// <summary>
@@ -305,7 +305,7 @@ public static class PdfEncodings
             }
 
             var b2 = new byte[ptr];
-            Array.Copy(b, 0, b2, 0, ptr);
+            Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, ptr);
 
             return b2;
         }
@@ -320,8 +320,8 @@ public static class PdfEncodings
 
         var encoded = encw.GetBytes(text);
         var total = new byte[encoded.Length + preamble.Length];
-        Array.Copy(preamble, 0, total, 0, preamble.Length);
-        Array.Copy(encoded, 0, total, preamble.Length, encoded.Length);
+        Array.Copy(preamble, sourceIndex: 0, total, destinationIndex: 0, preamble.Length);
+        Array.Copy(encoded, sourceIndex: 0, total, preamble.Length, encoded.Length);
 
         return total;
     }
@@ -405,8 +405,8 @@ public static class PdfEncodings
 
         var encoded = encw.GetBytes(text);
         var total = new byte[encoded.Length + preamble.Length];
-        Array.Copy(preamble, 0, total, 0, preamble.Length);
-        Array.Copy(encoded, 0, total, preamble.Length, encoded.Length);
+        Array.Copy(preamble, sourceIndex: 0, total, destinationIndex: 0, preamble.Length);
+        Array.Copy(encoded, sourceIndex: 0, total, preamble.Length, encoded.Length);
 
         return total;
     }
@@ -489,16 +489,16 @@ public static class PdfEncodings
 
         UnicodeEncoding enc = null;
 
-        if (nameU.Equals("UNICODEBIGUNMARKED", StringComparison.Ordinal) ||
-            nameU.Equals("UNICODEBIG", StringComparison.Ordinal))
+        if (nameU.Equals(value: "UNICODEBIGUNMARKED", StringComparison.Ordinal) ||
+            nameU.Equals(value: "UNICODEBIG", StringComparison.Ordinal))
         {
-            enc = new UnicodeEncoding(marker ? big : true, false);
+            enc = new UnicodeEncoding(!marker || big, byteOrderMark: false);
         }
 
-        if (nameU.Equals("UNICODELITTLEUNMARKED", StringComparison.Ordinal) ||
-            nameU.Equals("UNICODELITTLE", StringComparison.Ordinal))
+        if (nameU.Equals(value: "UNICODELITTLEUNMARKED", StringComparison.Ordinal) ||
+            nameU.Equals(value: "UNICODELITTLE", StringComparison.Ordinal))
         {
-            enc = new UnicodeEncoding(marker ? big : false, false);
+            enc = new UnicodeEncoding(marker && big, byteOrderMark: false);
         }
 
         if (enc != null)
@@ -607,7 +607,7 @@ public static class PdfEncodings
 
             if (c != 0 && (c & 0x8000) == 0)
             {
-                throw new InvalidOperationException("Inconsistent mapping.");
+                throw new InvalidOperationException(message: "Inconsistent mapping.");
             }
 
             if (c == 0)
@@ -626,7 +626,7 @@ public static class PdfEncodings
 
         if ((cc & 0x8000) != 0)
         {
-            throw new InvalidOperationException("Inconsistent mapping.");
+            throw new InvalidOperationException(message: "Inconsistent mapping.");
         }
 
         plane[ones] = cid;
@@ -650,26 +650,26 @@ public static class PdfEncodings
             {
                 case CIDNONE:
                 {
-                    if (line.IndexOf("begincidrange", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (line.IndexOf(value: "begincidrange", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         state = CIDRANGE;
                     }
-                    else if (line.IndexOf("begincidchar", StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (line.IndexOf(value: "begincidchar", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         state = CIDCHAR;
                     }
-                    else if (line.IndexOf("usecmap", StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (line.IndexOf(value: "usecmap", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         var tk = new StringTokenizer(line);
                         var t = tk.NextToken();
-                        ReadCmap(t.Substring(1), planes);
+                        ReadCmap(t.Substring(startIndex: 1), planes);
                     }
 
                     break;
                 }
                 case CIDRANGE:
                 {
-                    if (line.IndexOf("endcidrange", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (line.IndexOf(value: "endcidrange", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         state = CIDNONE;
 
@@ -680,12 +680,12 @@ public static class PdfEncodings
                     var t = tk.NextToken();
                     var size = t.Length / 2 - 1;
 
-                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var start = long.Parse(t.Substring(startIndex: 1, t.Length - 2), NumberStyles.HexNumber,
                         CultureInfo.InvariantCulture);
 
                     t = tk.NextToken();
 
-                    var end = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var end = long.Parse(t.Substring(startIndex: 1, t.Length - 2), NumberStyles.HexNumber,
                         CultureInfo.InvariantCulture);
 
                     t = tk.NextToken();
@@ -702,7 +702,7 @@ public static class PdfEncodings
                 }
                 case CIDCHAR:
                 {
-                    if (line.IndexOf("endcidchar", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (line.IndexOf(value: "endcidchar", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         state = CIDNONE;
 
@@ -713,7 +713,7 @@ public static class PdfEncodings
                     var t = tk.NextToken();
                     var size = t.Length / 2 - 1;
 
-                    var start = long.Parse(t.Substring(1, t.Length - 2), NumberStyles.HexNumber,
+                    var start = long.Parse(t.Substring(startIndex: 1, t.Length - 2), NumberStyles.HexNumber,
                         CultureInfo.InvariantCulture);
 
                     t = tk.NextToken();
@@ -742,7 +742,7 @@ public static class PdfEncodings
         }
 
         var ret = new char[planes.Count][];
-        planes.CopyTo(ret, 0);
+        planes.CopyTo(ret, arrayIndex: 0);
 
         return ret;
     }
@@ -760,7 +760,7 @@ public static class PdfEncodings
         EncodeStream(inp, planes);
     }
 
-    private class Cp437Conversion : IExtraEncoding
+    private sealed class Cp437Conversion : IExtraEncoding
     {
         private static readonly NullValueDictionary<int, int> _c2B = new();
 
@@ -815,7 +815,7 @@ public static class PdfEncodings
                 }
             }
 
-            return new string(cc, 0, ptr);
+            return new string(cc, startIndex: 0, ptr);
         }
 
         public byte[] CharToByte(string text, string encoding)
@@ -850,7 +850,7 @@ public static class PdfEncodings
             }
 
             var b2 = new byte[ptr];
-            Array.Copy(b, 0, b2, 0, ptr);
+            Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, ptr);
 
             return b2;
         }
@@ -879,7 +879,7 @@ public static class PdfEncodings
         }
     }
 
-    private class SymbolConversion : IExtraEncoding
+    private sealed class SymbolConversion : IExtraEncoding
     {
         private static readonly NullValueDictionary<int, int> _t1 = new();
         private static readonly NullValueDictionary<int, int> _t2 = new();
@@ -969,8 +969,7 @@ public static class PdfEncodings
             }
         }
 
-        public string ByteToChar(byte[] b, string encoding)
-            => null;
+        public string ByteToChar(byte[] b, string encoding) => null;
 
         public byte[] CharToByte(string text, string encoding)
         {
@@ -996,7 +995,7 @@ public static class PdfEncodings
             }
 
             var b2 = new byte[ptr];
-            Array.Copy(b, 0, b2, 0, ptr);
+            Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, ptr);
 
             return b2;
         }
@@ -1017,10 +1016,9 @@ public static class PdfEncodings
         }
     }
 
-    private class SymbolTtConversion : IExtraEncoding
+    private sealed class SymbolTtConversion : IExtraEncoding
     {
-        public string ByteToChar(byte[] b, string encoding)
-            => null;
+        public string ByteToChar(byte[] b, string encoding) => null;
 
         public byte[] CharToByte(char char1, string encoding)
         {
@@ -1058,13 +1056,13 @@ public static class PdfEncodings
             }
 
             var b2 = new byte[ptr];
-            Array.Copy(b, 0, b2, 0, ptr);
+            Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, ptr);
 
             return b2;
         }
     }
 
-    private class WingdingsConversion : IExtraEncoding
+    private sealed class WingdingsConversion : IExtraEncoding
     {
         private static readonly byte[] _table =
         {
@@ -1079,8 +1077,7 @@ public static class PdfEncodings
             256 - 60, 256 - 58, 0, 0, 256 - 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256 - 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         };
 
-        public string ByteToChar(byte[] b, string encoding)
-            => null;
+        public string ByteToChar(byte[] b, string encoding) => null;
 
         public byte[] CharToByte(char char1, string encoding)
         {
@@ -1140,7 +1137,7 @@ public static class PdfEncodings
             }
 
             var b2 = new byte[ptr];
-            Array.Copy(b, 0, b2, 0, ptr);
+            Array.Copy(b, sourceIndex: 0, b2, destinationIndex: 0, ptr);
 
             return b2;
         }

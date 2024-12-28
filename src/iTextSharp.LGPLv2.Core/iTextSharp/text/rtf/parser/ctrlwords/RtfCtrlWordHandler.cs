@@ -250,7 +250,8 @@ public class RtfCtrlWordHandler
                 // set the destination
                 var x = 0;
 
-                if (CtrlWord == "shppict" || CtrlWord == "nonshppict")
+                if (string.Equals(CtrlWord, b: "shppict", StringComparison.Ordinal) ||
+                    string.Equals(CtrlWord, b: "nonshppict", StringComparison.Ordinal))
                 {
                     x++;
                 }

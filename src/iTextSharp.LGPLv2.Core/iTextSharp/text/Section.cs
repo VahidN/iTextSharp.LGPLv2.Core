@@ -90,7 +90,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     ///     membervariables
     /// </summary>
     /// <summary> This is the complete list of sectionnumbers of this section and the parents of this section. </summary>
-    protected internal List<int> Numbers;
+    internal protected List<int> Numbers;
 
     /// <summary>
     ///     The style for sectionnumbers.
@@ -118,7 +118,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <overloads>
     ///     Has 2 overloads.
     /// </overloads>
-    protected internal Section()
+    internal protected Section()
     {
         title = new Paragraph();
         numberDepth = 1;
@@ -129,7 +129,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// </summary>
     /// <param name="title">a Paragraph</param>
     /// <param name="numberDepth">the numberDepth</param>
-    protected internal Section(Paragraph title, int numberDepth)
+    internal protected Section(Paragraph title, int numberDepth)
     {
         this.numberDepth = numberDepth;
         this.title = title;
@@ -276,19 +276,21 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     {
         NotAddedYet = false;
         title = null;
+
         for (var k = 0; k < Count; ++k)
         {
             var element = this[k];
-            if (element is Section)
+
+            if (element is Section sec)
             {
-                var s = (Section)element;
-                if (!s.ElementComplete && Count == 1)
+                if (!sec.ElementComplete && Count == 1)
                 {
-                    s.FlushContent();
+                    sec.FlushContent();
+
                     return;
                 }
 
-                s.AddedCompletely = true;
+                sec.AddedCompletely = true;
             }
 
             RemoveAt(k);
@@ -305,6 +307,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         get
         {
             var tmp = new List<Chunk>();
+
             foreach (var ele in this)
             {
                 tmp.AddRange(ele.Chunks);
@@ -339,11 +342,13 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         try
         {
             var element = o;
+
             if (element.Type == Element.SECTION)
             {
                 var section = (Section)o;
                 section.setNumbers(++Subsections, Numbers);
                 base.Add(section);
+
                 return true;
             }
 
@@ -353,12 +358,14 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
                 var section = (Section)mo.Element;
                 section.setNumbers(++Subsections, Numbers);
                 base.Add(mo);
+
                 return true;
             }
 
             if (element.IsNestable())
             {
                 base.Add(o);
+
                 return true;
             }
 
@@ -432,25 +439,28 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         }
 
         var depth = Math.Min(numbers.Count, numberDepth);
+
         if (depth < 1)
         {
             return title;
         }
 
-        var buf = new StringBuilder(" ");
+        var buf = new StringBuilder(value: " ");
+
         for (var i = 0; i < depth; i++)
         {
-            buf.Insert(0, ".");
-            buf.Insert(0, numbers[i]);
+            buf.Insert(index: 0, value: ".");
+            buf.Insert(index: 0, numbers[i]);
         }
 
         if (numberStyle == NUMBERSTYLE_DOTTED_WITHOUT_FINAL_DOT)
         {
-            buf.Remove(buf.Length - 2, 1);
+            buf.Remove(buf.Length - 2, length: 1);
         }
 
         var result = new Paragraph(title);
-        result.Insert(0, new Chunk(buf.ToString(), title.Font));
+        result.Insert(index: 0, new Chunk(buf.ToString(), title.Font));
+
         return result;
     }
 
@@ -483,12 +493,13 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
 
         if (AddedCompletely)
         {
-            throw new InvalidOperationException("This LargeElement has already been added to the Document.");
+            throw new InvalidOperationException(message: "This LargeElement has already been added to the Document.");
         }
 
         try
         {
             var element = (IElement)o;
+
             if (element.IsNestable())
             {
                 Insert(index, element);
@@ -510,7 +521,8 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// </summary>
     /// <param name="collection">a collection of Paragraphs, Lists and/or Tables</param>
     /// <returns>true if the action succeeded, false if not.</returns>
-    public bool AddAll<T>(ICollection<T> collection) where T : IElement
+    public bool AddAll<T>(ICollection<T> collection)
+        where T : IElement
     {
         if (collection == null)
         {
@@ -530,8 +542,9 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// </summary>
     public MarkedSection AddMarkedSection()
     {
-        var section = new MarkedSection(new Section(null, numberDepth + 1));
+        var section = new MarkedSection(new Section(title: null, numberDepth + 1));
         Add(section);
+
         return section;
     }
 
@@ -546,12 +559,13 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     {
         if (AddedCompletely)
         {
-            throw new InvalidOperationException("This LargeElement has already been added to the Document.");
+            throw new InvalidOperationException(message: "This LargeElement has already been added to the Document.");
         }
 
         var section = new Section(title, numberDepth);
         section.Indentation = indentation;
         Add(section);
+
         return section;
     }
 
@@ -564,8 +578,8 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <param name="indentation">the indentation of the new section</param>
     /// <param name="title">the title of the new section</param>
     /// <returns>the newly added Section</returns>
-    public virtual Section AddSection(float indentation, Paragraph title) =>
-        AddSection(indentation, title, numberDepth + 1);
+    public virtual Section AddSection(float indentation, Paragraph title)
+        => AddSection(indentation, title, numberDepth + 1);
 
     /// <summary>
     ///     Creates a Section, add it to this Section and returns it.
@@ -573,14 +587,15 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <param name="title">the title of the new section</param>
     /// <param name="numberDepth">the numberDepth of the section</param>
     /// <returns>the newly added Section</returns>
-    public virtual Section AddSection(Paragraph title, int numberDepth) => AddSection(0, title, numberDepth);
+    public virtual Section AddSection(Paragraph title, int numberDepth)
+        => AddSection(indentation: 0, title, numberDepth);
 
     /// <summary>
     ///     Creates a Section, adds it to this Section and returns it.
     /// </summary>
     /// <param name="title">the title of the new section</param>
     /// <returns>the newly added Section</returns>
-    public virtual Section AddSection(Paragraph title) => AddSection(0, title, numberDepth + 1);
+    public virtual Section AddSection(Paragraph title) => AddSection(indentation: 0, title, numberDepth + 1);
 
     /// <summary>
     ///     Adds a Section to this Section and returns it.
@@ -589,8 +604,8 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     /// <param name="title">the title of the new section</param>
     /// <param name="numberDepth">the numberDepth of the section</param>
     /// <returns>the newly added Section</returns>
-    public virtual Section AddSection(float indentation, string title, int numberDepth) =>
-        AddSection(indentation, new Paragraph(title), numberDepth);
+    public virtual Section AddSection(float indentation, string title, int numberDepth)
+        => AddSection(indentation, new Paragraph(title), numberDepth);
 
     /// <summary>
     ///     Adds a Section to this Section and returns it.
@@ -654,10 +669,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     ///     Adds a new page to the section.
     ///     @since   2.1.1
     /// </summary>
-    public void NewPage()
-    {
-        Add(Chunk.Nextpage);
-    }
+    public void NewPage() => Add(Chunk.Nextpage);
 
     /// <summary>
     ///     Alters the attributes of this Section.
@@ -671,6 +683,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         }
 
         string value;
+
         if ((value = attributes.Remove(ElementTags.NUMBERDEPTH)) != null)
         {
             NumberDepth = int.Parse(value, CultureInfo.InvariantCulture);
@@ -698,11 +711,12 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
     public void SetChapterNumber(int number)
     {
         Numbers[Numbers.Count - 1] = number;
+
         foreach (var s in this)
         {
-            if (s is Section)
+            if (s is Section section)
             {
-                ((Section)s).SetChapterNumber(number);
+                section.SetChapterNumber(number);
             }
         }
     }

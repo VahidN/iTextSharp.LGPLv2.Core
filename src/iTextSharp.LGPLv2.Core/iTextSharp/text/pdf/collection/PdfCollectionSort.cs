@@ -8,10 +8,7 @@ public class PdfCollectionSort : PdfDictionary
     ///     Constructs a PDF Collection Sort Dictionary.
     /// </summary>
     /// <param name="key">the key of the field that will be used to sort entries</param>
-    public PdfCollectionSort(string key) : base(PdfName.Collectionsort)
-    {
-        Put(PdfName.S, new PdfName(key));
-    }
+    public PdfCollectionSort(string key) : base(PdfName.Collectionsort) => Put(PdfName.S, new PdfName(key));
 
     /// <summary>
     ///     Constructs a PDF Collection Sort Dictionary.
@@ -25,6 +22,7 @@ public class PdfCollectionSort : PdfDictionary
         }
 
         var array = new PdfArray();
+
         for (var i = 0; i < keys.Length; i++)
         {
             array.Add(new PdfName(keys[i]));
@@ -40,13 +38,15 @@ public class PdfCollectionSort : PdfDictionary
     public void SetSortOrder(bool ascending)
     {
         var o = Get(PdfName.S);
+
         if (o is PdfName)
         {
             Put(PdfName.A, new PdfBoolean(ascending));
         }
         else
         {
-            throw new InvalidOperationException("You have to define a bool array for this collection sort dictionary.");
+            throw new InvalidOperationException(
+                message: "You have to define a bool array for this collection sort dictionary.");
         }
     }
 
@@ -62,15 +62,17 @@ public class PdfCollectionSort : PdfDictionary
         }
 
         var o = Get(PdfName.S);
-        if (o is PdfArray)
+
+        if (o is PdfArray pdfArray)
         {
-            if (((PdfArray)o).Size != ascending.Length)
+            if (pdfArray.Size != ascending.Length)
             {
-                throw new
-                    InvalidOperationException("The number of booleans in this array doesn't correspond with the number of fields.");
+                throw new InvalidOperationException(
+                    message: "The number of booleans in this array doesn't correspond with the number of fields.");
             }
 
             var array = new PdfArray();
+
             for (var i = 0; i < ascending.Length; i++)
             {
                 array.Add(new PdfBoolean(ascending[i]));
@@ -80,7 +82,7 @@ public class PdfCollectionSort : PdfDictionary
         }
         else
         {
-            throw new InvalidOperationException("You need a single bool for this collection sort dictionary.");
+            throw new InvalidOperationException(message: "You need a single bool for this collection sort dictionary.");
         }
     }
 }

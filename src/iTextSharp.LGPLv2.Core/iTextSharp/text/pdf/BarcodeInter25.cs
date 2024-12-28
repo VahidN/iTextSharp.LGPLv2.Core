@@ -27,16 +27,46 @@ public class BarcodeInter25 : Barcode
     /// </summary>
     private static readonly byte[][] _bars =
     {
-        new byte[] { 0, 0, 1, 1, 0 },
-        new byte[] { 1, 0, 0, 0, 1 },
-        new byte[] { 0, 1, 0, 0, 1 },
-        new byte[] { 1, 1, 0, 0, 0 },
-        new byte[] { 0, 0, 1, 0, 1 },
-        new byte[] { 1, 0, 1, 0, 0 },
-        new byte[] { 0, 1, 1, 0, 0 },
-        new byte[] { 0, 0, 0, 1, 1 },
-        new byte[] { 1, 0, 0, 1, 0 },
-        new byte[] { 0, 1, 0, 1, 0 },
+        new byte[]
+        {
+            0, 0, 1, 1, 0
+        },
+        new byte[]
+        {
+            1, 0, 0, 0, 1
+        },
+        new byte[]
+        {
+            0, 1, 0, 0, 1
+        },
+        new byte[]
+        {
+            1, 1, 0, 0, 0
+        },
+        new byte[]
+        {
+            0, 0, 1, 0, 1
+        },
+        new byte[]
+        {
+            1, 0, 1, 0, 0
+        },
+        new byte[]
+        {
+            0, 1, 1, 0, 0
+        },
+        new byte[]
+        {
+            0, 0, 0, 1, 1
+        },
+        new byte[]
+        {
+            1, 0, 0, 1, 0
+        },
+        new byte[]
+        {
+            0, 1, 0, 1, 0
+        }
     };
 
     /// <summary>
@@ -46,7 +76,7 @@ public class BarcodeInter25 : Barcode
     {
         x = 0.8f;
         n = 2;
-        font = BaseFont.CreateFont("Helvetica", "winansi", false);
+        font = BaseFont.CreateFont(name: "Helvetica", encoding: "winansi", embedded: false);
         size = 8;
         baseline = size;
         barHeight = size * 3;
@@ -66,6 +96,7 @@ public class BarcodeInter25 : Barcode
         {
             float fontX = 0;
             float fontY = 0;
+
             if (font != null)
             {
                 if (baseline > 0)
@@ -78,6 +109,7 @@ public class BarcodeInter25 : Barcode
                 }
 
                 var fullCode = code;
+
                 if (generateChecksum && checksumText)
                 {
                     fullCode += GetChecksum(fullCode);
@@ -88,6 +120,7 @@ public class BarcodeInter25 : Barcode
 
             var fCode = KeepNumbers(code);
             var len = fCode.Length;
+
             if (generateChecksum)
             {
                 ++len;
@@ -96,6 +129,7 @@ public class BarcodeInter25 : Barcode
             var fullWidth = len * (3 * x + 2 * x * n) + (6 + n) * x;
             fullWidth = Math.Max(fullWidth, fontX);
             var fullHeight = barHeight + fontY;
+
             return new Rectangle(fullWidth, fullHeight);
         }
     }
@@ -108,9 +142,10 @@ public class BarcodeInter25 : Barcode
     public static byte[] GetBarsInter25(string text)
     {
         text = KeepNumbers(text);
+
         if ((text.Length & 1) != 0)
         {
-            throw new ArgumentException("The text length must be even.");
+            throw new ArgumentException(message: "The text length must be even.");
         }
 
         var bars = new byte[text.Length * 5 + 7];
@@ -120,12 +155,14 @@ public class BarcodeInter25 : Barcode
         bars[pb++] = 0;
         bars[pb++] = 0;
         var len = text.Length / 2;
+
         for (var k = 0; k < len; ++k)
         {
             var c1 = text[k * 2] - '0';
             var c2 = text[k * 2 + 1] - '0';
             var b1 = _bars[c1];
             var b2 = _bars[c2];
+
             for (var j = 0; j < 5; ++j)
             {
                 bars[pb++] = b1[j];
@@ -136,6 +173,7 @@ public class BarcodeInter25 : Barcode
         bars[pb++] = 1;
         bars[pb++] = 0;
         bars[pb++] = 0;
+
         return bars;
     }
 
@@ -153,10 +191,11 @@ public class BarcodeInter25 : Barcode
 
         var mul = 3;
         var total = 0;
+
         for (var k = text.Length - 1; k >= 0; --k)
         {
-            var n = text[k] - '0';
-            total += mul * n;
+            var i = text[k] - '0';
+            total += mul * i;
             mul ^= 2;
         }
 
@@ -176,9 +215,11 @@ public class BarcodeInter25 : Barcode
         }
 
         var sb = new StringBuilder();
+
         for (var k = 0; k < text.Length; ++k)
         {
             var c = text[k];
+
             if (c >= '0' && c <= '9')
             {
                 sb.Append(c);
@@ -191,6 +232,7 @@ public class BarcodeInter25 : Barcode
     public override SKBitmap CreateDrawingImage(Color foreground, Color background)
     {
         var bCode = KeepNumbers(code);
+
         if (generateChecksum)
         {
             bCode += GetChecksum(bCode);
@@ -202,20 +244,24 @@ public class BarcodeInter25 : Barcode
         var bars = GetBarsInter25(bCode);
         var height = (int)barHeight;
         var bmp = new SKBitmap(fullWidth, height);
+
         for (var h = 0; h < height; ++h)
         {
             var print = true;
             var ptr = 0;
+
             for (var k = 0; k < bars.Length; ++k)
             {
                 var w = bars[k] == 0 ? 1 : nn;
                 var c = background;
+
                 if (print)
                 {
                     c = foreground;
                 }
 
                 print = !print;
+
                 for (var j = 0; j < w; ++j)
                 {
                     bmp.SetPixel(ptr++, h, c.ToSKColor());
@@ -260,6 +306,7 @@ public class BarcodeInter25 : Barcode
 
         var fullCode = code;
         float fontX = 0;
+
         if (font != null)
         {
             if (generateChecksum && checksumText)
@@ -271,6 +318,7 @@ public class BarcodeInter25 : Barcode
         }
 
         var bCode = KeepNumbers(code);
+
         if (generateChecksum)
         {
             bCode += GetChecksum(bCode);
@@ -280,6 +328,7 @@ public class BarcodeInter25 : Barcode
         var fullWidth = len * (3 * x + 2 * x * n) + (6 + n) * x;
         float barStartX = 0;
         float textStartX = 0;
+
         switch (textAlignment)
         {
             case Element.ALIGN_LEFT:
@@ -310,6 +359,7 @@ public class BarcodeInter25 : Barcode
 
         float barStartY = 0;
         float textStartY = 0;
+
         if (font != null)
         {
             if (baseline <= 0)
@@ -325,6 +375,7 @@ public class BarcodeInter25 : Barcode
 
         var bars = GetBarsInter25(bCode);
         var print = true;
+
         if (barColor != null)
         {
             cb.SetColorFill(barColor);
@@ -333,6 +384,7 @@ public class BarcodeInter25 : Barcode
         for (var k = 0; k < bars.Length; ++k)
         {
             var w = bars[k] == 0 ? x : x * n;
+
             if (print)
             {
                 cb.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
@@ -343,6 +395,7 @@ public class BarcodeInter25 : Barcode
         }
 
         cb.Fill();
+
         if (font != null)
         {
             if (textColor != null)

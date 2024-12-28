@@ -17,7 +17,7 @@ public class ZapfDingbatsNumberList : List
     ///     Creates a ZapdDingbatsNumberList
     /// </summary>
     /// <param name="type">the type of list</param>
-    public ZapfDingbatsNumberList(int type) : base(true)
+    public ZapfDingbatsNumberList(int type) : base(numbered: true)
     {
         this.type = type;
         var fontsize = symbol.Font.Size;
@@ -30,7 +30,7 @@ public class ZapfDingbatsNumberList : List
     /// </summary>
     /// <param name="type">the type of list</param>
     /// <param name="symbolIndent">indent</param>
-    public ZapfDingbatsNumberList(int type, int symbolIndent) : base(true, symbolIndent)
+    public ZapfDingbatsNumberList(int type, int symbolIndent) : base(numbered: true, symbolIndent)
     {
         this.type = type;
         var fontsize = symbol.Font.Size;
@@ -55,23 +55,27 @@ public class ZapfDingbatsNumberList : List
     /// <returns>true if adding the object succeeded</returns>
     public override bool Add(IElement o)
     {
-        if (o is ListItem)
+        if (o is ListItem item)
         {
-            var item = (ListItem)o;
             var chunk = new Chunk(preSymbol, symbol.Font);
+
             switch (type)
             {
                 case 0:
                     chunk.Append(((char)(first + list.Count + 171)).ToString());
+
                     break;
                 case 1:
                     chunk.Append(((char)(first + list.Count + 181)).ToString());
+
                     break;
                 case 2:
                     chunk.Append(((char)(first + list.Count + 191)).ToString());
+
                     break;
                 default:
                     chunk.Append(((char)(first + list.Count + 201)).ToString());
+
                     break;
             }
 
@@ -80,15 +84,16 @@ public class ZapfDingbatsNumberList : List
             item.SetIndentationLeft(symbolIndent, autoindent);
             item.IndentationRight = 0;
             list.Add(item);
+
             return true;
         }
 
-        if (o is List)
+        if (o is List nested)
         {
-            var nested = (List)o;
-            nested.IndentationLeft = nested.IndentationLeft + symbolIndent;
+            nested.IndentationLeft += symbolIndent;
             first--;
             list.Add(nested);
+
             return true;
         }
 

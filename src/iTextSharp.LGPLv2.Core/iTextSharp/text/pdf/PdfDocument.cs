@@ -862,9 +862,9 @@ public class PdfDocument : Document
             }
             case Element.TABLE:
             {
-                if (element is SimpleTable)
+                if (element is SimpleTable simpleTable)
                 {
-                    var ptable = ((SimpleTable)element).CreatePdfPTable();
+                    var ptable = simpleTable.CreatePdfPTable();
 
                     if (ptable.Size <= ptable.HeaderRows)
                     {
@@ -880,11 +880,11 @@ public class PdfDocument : Document
                     break;
                 }
 
-                if (element is Table)
+                if (element is Table table)
                 {
                     try
                     {
-                        var ptable = ((Table)element).CreatePdfPTable();
+                        var ptable = table.CreatePdfPTable();
 
                         if (ptable.Size <= ptable.HeaderRows)
                         {
@@ -901,7 +901,7 @@ public class PdfDocument : Document
                     {
                         // constructing the PdfTable
                         // Before the table, add a blank line using offset or default leading
-                        var offset = ((Table)element).Offset;
+                        var offset = table.Offset;
 
                         if (float.IsNaN(offset))
                         {
@@ -911,7 +911,7 @@ public class PdfDocument : Document
                         CarriageReturn();
                         Lines.Add(new PdfLine(IndentLeft, IndentRight, Alignment, offset));
                         CurrentHeight += offset;
-                        addPdfTable((Table)element);
+                        addPdfTable(table);
                     }
                 }
                 else
@@ -947,9 +947,9 @@ public class PdfDocument : Document
             {
                 MarkedObject mo;
 
-                if (element is MarkedSection)
+                if (element is MarkedSection markedSection)
                 {
-                    mo = ((MarkedSection)element).Title;
+                    mo = markedSection.Title;
 
                     if (mo != null)
                     {
@@ -3351,7 +3351,7 @@ public class PdfDocument : Document
             {
                 var row = iterator.Next();
                 AnalyzeRow(rows, ctx);
-                RenderCells(ctx, row, table.HasToFitPageCells() & atLeastOneFits);
+                RenderCells(ctx, row, table.HasToFitPageCells() && atLeastOneFits);
 
                 if (!MayBeRemoved(row))
                 {

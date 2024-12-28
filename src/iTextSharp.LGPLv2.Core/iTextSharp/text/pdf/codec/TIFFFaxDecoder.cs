@@ -7,38 +7,23 @@ public class TiffFaxDecoder
     /// </summary>
     internal static readonly byte[] FlipTable =
     {
-        0, 256 - 128, 64, 256 - 64, 32, 256 - 96, 96, 256 - 32,
-        16, 256 - 112, 80, 256 - 48, 48, 256 - 80, 112, 256 - 16,
-        8, 256 - 120, 72, 256 - 56, 40, 256 - 88, 104, 256 - 24,
-        24, 256 - 104, 88, 256 - 40, 56, 256 - 72, 120, 256 - 8,
-        4, 256 - 124, 68, 256 - 60, 36, 256 - 92, 100, 256 - 28,
-        20, 256 - 108, 84, 256 - 44, 52, 256 - 76, 116, 256 - 12,
-        12, 256 - 116, 76, 256 - 52, 44, 256 - 84, 108, 256 - 20,
-        28, 256 - 100, 92, 256 - 36, 60, 256 - 68, 124, 256 - 4,
-        2, 256 - 126, 66, 256 - 62, 34, 256 - 94, 98, 256 - 30,
-        18, 256 - 110, 82, 256 - 46, 50, 256 - 78, 114, 256 - 14,
-        10, 256 - 118, 74, 256 - 54, 42, 256 - 86, 106, 256 - 22,
-        26, 256 - 102, 90, 256 - 38, 58, 256 - 70, 122, 256 - 6,
-        6, 256 - 122, 70, 256 - 58, 38, 256 - 90, 102, 256 - 26,
-        22, 256 - 106, 86, 256 - 42, 54, 256 - 74, 118, 256 - 10,
-        14, 256 - 114, 78, 256 - 50, 46, 256 - 82, 110, 256 - 18,
-        30, 256 - 98, 94, 256 - 34, 62, 256 - 66, 126, 256 - 2,
-        1, 256 - 127, 65, 256 - 63, 33, 256 - 95, 97, 256 - 31,
-        17, 256 - 111, 81, 256 - 47, 49, 256 - 79, 113, 256 - 15,
-        9, 256 - 119, 73, 256 - 55, 41, 256 - 87, 105, 256 - 23,
-        25, 256 - 103, 89, 256 - 39, 57, 256 - 71, 121, 256 - 7,
-        5, 256 - 123, 69, 256 - 59, 37, 256 - 91, 101, 256 - 27,
-        21, 256 - 107, 85, 256 - 43, 53, 256 - 75, 117, 256 - 11,
-        13, 256 - 115, 77, 256 - 51, 45, 256 - 83, 109, 256 - 19,
-        29, 256 - 99, 93, 256 - 35, 61, 256 - 67, 125, 256 - 3,
-        3, 256 - 125, 67, 256 - 61, 35, 256 - 93, 99, 256 - 29,
-        19, 256 - 109, 83, 256 - 45, 51, 256 - 77, 115, 256 - 13,
-        11, 256 - 117, 75, 256 - 53, 43, 256 - 85, 107, 256 - 21,
-        27, 256 - 101, 91, 256 - 37, 59, 256 - 69, 123, 256 - 5,
-        7, 256 - 121, 71, 256 - 57, 39, 256 - 89, 103, 256 - 25,
-        23, 256 - 105, 87, 256 - 41, 55, 256 - 73, 119, 256 - 9,
-        15, 256 - 113, 79, 256 - 49, 47, 256 - 81, 111, 256 - 17,
-        31, 256 - 97, 95, 256 - 33, 63, 256 - 65, 127, 256 - 1,
+        0, 256 - 128, 64, 256 - 64, 32, 256 - 96, 96, 256 - 32, 16, 256 - 112, 80, 256 - 48, 48, 256 - 80, 112,
+        256 - 16, 8, 256 - 120, 72, 256 - 56, 40, 256 - 88, 104, 256 - 24, 24, 256 - 104, 88, 256 - 40, 56, 256 - 72,
+        120, 256 - 8, 4, 256 - 124, 68, 256 - 60, 36, 256 - 92, 100, 256 - 28, 20, 256 - 108, 84, 256 - 44, 52,
+        256 - 76, 116, 256 - 12, 12, 256 - 116, 76, 256 - 52, 44, 256 - 84, 108, 256 - 20, 28, 256 - 100, 92, 256 - 36,
+        60, 256 - 68, 124, 256 - 4, 2, 256 - 126, 66, 256 - 62, 34, 256 - 94, 98, 256 - 30, 18, 256 - 110, 82, 256 - 46,
+        50, 256 - 78, 114, 256 - 14, 10, 256 - 118, 74, 256 - 54, 42, 256 - 86, 106, 256 - 22, 26, 256 - 102, 90,
+        256 - 38, 58, 256 - 70, 122, 256 - 6, 6, 256 - 122, 70, 256 - 58, 38, 256 - 90, 102, 256 - 26, 22, 256 - 106,
+        86, 256 - 42, 54, 256 - 74, 118, 256 - 10, 14, 256 - 114, 78, 256 - 50, 46, 256 - 82, 110, 256 - 18, 30,
+        256 - 98, 94, 256 - 34, 62, 256 - 66, 126, 256 - 2, 1, 256 - 127, 65, 256 - 63, 33, 256 - 95, 97, 256 - 31, 17,
+        256 - 111, 81, 256 - 47, 49, 256 - 79, 113, 256 - 15, 9, 256 - 119, 73, 256 - 55, 41, 256 - 87, 105, 256 - 23,
+        25, 256 - 103, 89, 256 - 39, 57, 256 - 71, 121, 256 - 7, 5, 256 - 123, 69, 256 - 59, 37, 256 - 91, 101,
+        256 - 27, 21, 256 - 107, 85, 256 - 43, 53, 256 - 75, 117, 256 - 11, 13, 256 - 115, 77, 256 - 51, 45, 256 - 83,
+        109, 256 - 19, 29, 256 - 99, 93, 256 - 35, 61, 256 - 67, 125, 256 - 3, 3, 256 - 125, 67, 256 - 61, 35, 256 - 93,
+        99, 256 - 29, 19, 256 - 109, 83, 256 - 45, 51, 256 - 77, 115, 256 - 13, 11, 256 - 117, 75, 256 - 53, 43,
+        256 - 85, 107, 256 - 21, 27, 256 - 101, 91, 256 - 37, 59, 256 - 69, 123, 256 - 5, 7, 256 - 121, 71, 256 - 57,
+        39, 256 - 89, 103, 256 - 25, 23, 256 - 105, 87, 256 - 41, 55, 256 - 73, 119, 256 - 9, 15, 256 - 113, 79,
+        256 - 49, 47, 256 - 81, 111, 256 - 17, 31, 256 - 97, 95, 256 - 33, 63, 256 - 65, 127, 256 - 1
     };
 
     /// <summary>
@@ -46,12 +31,9 @@ public class TiffFaxDecoder
     /// </summary>
     private static readonly short[] _additionalMakeup =
     {
-        28679, 28679, 31752, unchecked((short)32777),
-        unchecked((short)33801), unchecked((short)34825),
-        unchecked((short)35849), unchecked((short)36873),
-        29703, 29703, 30727, 30727,
-        unchecked((short)37897), unchecked((short)38921),
-        unchecked((short)39945), unchecked((short)40969),
+        28679, 28679, 31752, unchecked((short)32777), unchecked((short)33801), unchecked((short)34825),
+        unchecked((short)35849), unchecked((short)36873), 29703, 29703, 30727, 30727, unchecked((short)37897),
+        unchecked((short)38921), unchecked((short)39945), unchecked((short)40969)
     };
 
     /// <summary>
@@ -61,132 +43,195 @@ public class TiffFaxDecoder
     {
         // 0 - 7
         62, 62, 30, 30, 0, 0, 0, 0,
+
         // 8 - 15
         0, 0, 0, 0, 0, 0, 0, 0,
+
         // 16 - 23
         0, 0, 0, 0, 0, 0, 0, 0,
+
         // 24 - 31
         0, 0, 0, 0, 0, 0, 0, 0,
+
         // 32 - 39
         3225, 3225, 3225, 3225, 3225, 3225, 3225, 3225,
+
         // 40 - 47
         3225, 3225, 3225, 3225, 3225, 3225, 3225, 3225,
+
         // 48 - 55
         3225, 3225, 3225, 3225, 3225, 3225, 3225, 3225,
+
         // 56 - 63
         3225, 3225, 3225, 3225, 3225, 3225, 3225, 3225,
+
         // 64 - 71
         588, 588, 588, 588, 588, 588, 588, 588,
+
         // 72 - 79
         1680, 1680, 20499, 22547, 24595, 26643, 1776, 1776,
+
         // 80 - 87
         1808, 1808, -24557, -22509, -20461, -18413, 1904, 1904,
+
         // 88 - 95
         1936, 1936, -16365, -14317, 782, 782, 782, 782,
+
         // 96 - 103
         814, 814, 814, 814, -12269, -10221, 10257, 10257,
+
         // 104 - 111
         12305, 12305, 14353, 14353, 16403, 18451, 1712, 1712,
+
         // 112 - 119
         1744, 1744, 28691, 30739, -32749, -30701, -28653, -26605,
+
         // 120 - 127
         2061, 2061, 2061, 2061, 2061, 2061, 2061, 2061,
+
         // 128 - 135
         424, 424, 424, 424, 424, 424, 424, 424,
+
         // 136 - 143
         424, 424, 424, 424, 424, 424, 424, 424,
+
         // 144 - 151
         424, 424, 424, 424, 424, 424, 424, 424,
+
         // 152 - 159
         424, 424, 424, 424, 424, 424, 424, 424,
+
         // 160 - 167
         750, 750, 750, 750, 1616, 1616, 1648, 1648,
+
         // 168 - 175
         1424, 1424, 1456, 1456, 1488, 1488, 1520, 1520,
+
         // 176 - 183
         1840, 1840, 1872, 1872, 1968, 1968, 8209, 8209,
+
         // 184 - 191
         524, 524, 524, 524, 524, 524, 524, 524,
+
         // 192 - 199
         556, 556, 556, 556, 556, 556, 556, 556,
+
         // 200 - 207
         1552, 1552, 1584, 1584, 2000, 2000, 2032, 2032,
+
         // 208 - 215
         976, 976, 1008, 1008, 1040, 1040, 1072, 1072,
+
         // 216 - 223
         1296, 1296, 1328, 1328, 718, 718, 718, 718,
+
         // 224 - 231
         456, 456, 456, 456, 456, 456, 456, 456,
+
         // 232 - 239
         456, 456, 456, 456, 456, 456, 456, 456,
+
         // 240 - 247
         456, 456, 456, 456, 456, 456, 456, 456,
+
         // 248 - 255
         456, 456, 456, 456, 456, 456, 456, 456,
+
         // 256 - 263
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 264 - 271
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 272 - 279
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 280 - 287
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 288 - 295
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 296 - 303
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 304 - 311
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 312 - 319
         326, 326, 326, 326, 326, 326, 326, 326,
+
         // 320 - 327
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 328 - 335
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 336 - 343
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 344 - 351
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 352 - 359
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 360 - 367
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 368 - 375
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 376 - 383
         358, 358, 358, 358, 358, 358, 358, 358,
+
         // 384 - 391
         490, 490, 490, 490, 490, 490, 490, 490,
+
         // 392 - 399
         490, 490, 490, 490, 490, 490, 490, 490,
+
         // 400 - 407
         4113, 4113, 6161, 6161, 848, 848, 880, 880,
+
         // 408 - 415
         912, 912, 944, 944, 622, 622, 622, 622,
+
         // 416 - 423
         654, 654, 654, 654, 1104, 1104, 1136, 1136,
+
         // 424 - 431
         1168, 1168, 1200, 1200, 1232, 1232, 1264, 1264,
+
         // 432 - 439
         686, 686, 686, 686, 1360, 1360, 1392, 1392,
+
         // 440 - 447
         12, 12, 12, 12, 12, 12, 12, 12,
+
         // 448 - 455
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 456 - 463
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 464 - 471
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 472 - 479
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 480 - 487
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 488 - 495
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 496 - 503
         390, 390, 390, 390, 390, 390, 390, 390,
+
         // 504 - 511
-        390, 390, 390, 390, 390, 390, 390, 390,
+        390, 390, 390, 390, 390, 390, 390, 390
     };
 
     /// <summary>
@@ -196,8 +241,9 @@ public class TiffFaxDecoder
     {
         // 0 - 7
         3226, 6412, 200, 168, 38, 38, 134, 134,
+
         // 8 - 15
-        100, 100, 100, 100, 68, 68, 68, 68,
+        100, 100, 100, 100, 68, 68, 68, 68
     };
 
     private static readonly int[] _table1 =
@@ -210,7 +256,7 @@ public class TiffFaxDecoder
         0x1f, // 5 bits are left in first byte
         0x3f, // 6 bits are left in first byte
         0x7f, // 7 bits are left in first byte
-        0xff, // 8 bits are left in first byte
+        0xff // 8 bits are left in first byte
     };
 
     private static readonly int[] _table2 =
@@ -223,48 +269,66 @@ public class TiffFaxDecoder
         0xf8, // 5
         0xfc, // 6
         0xfe, // 7
-        0xff, // 8
+        0xff // 8
     };
 
     /// <summary>
     /// </summary>
-    private static readonly short[] _twoBitBlack = { 292, 260, 226, 226 };
+    private static readonly short[] _twoBitBlack =
+    {
+        292, 260, 226, 226
+    };
 
     // 0 - 3
     private static readonly byte[] _twoDCodes =
     {
         // 0 - 7
         80, 88, 23, 71, 30, 30, 62, 62,
+
         // 8 - 15
         4, 4, 4, 4, 4, 4, 4, 4,
+
         // 16 - 23
         11, 11, 11, 11, 11, 11, 11, 11,
+
         // 24 - 31
         11, 11, 11, 11, 11, 11, 11, 11,
+
         // 32 - 39
         35, 35, 35, 35, 35, 35, 35, 35,
+
         // 40 - 47
         35, 35, 35, 35, 35, 35, 35, 35,
+
         // 48 - 55
         51, 51, 51, 51, 51, 51, 51, 51,
+
         // 56 - 63
         51, 51, 51, 51, 51, 51, 51, 51,
+
         // 64 - 71
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 72 - 79
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 80 - 87
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 88 - 95
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 96 - 103
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 104 - 111
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 112 - 119
         41, 41, 41, 41, 41, 41, 41, 41,
+
         // 120 - 127
-        41, 41, 41, 41, 41, 41, 41, 41,
+        41, 41, 41, 41, 41, 41, 41, 41
     };
 
     /// <summary>
@@ -274,263 +338,391 @@ public class TiffFaxDecoder
     {
         // 0 - 7
         6430, 6400, 6400, 6400, 3225, 3225, 3225, 3225,
+
         // 8 - 15
         944, 944, 944, 944, 976, 976, 976, 976,
+
         // 16 - 23
         1456, 1456, 1456, 1456, 1488, 1488, 1488, 1488,
+
         // 24 - 31
         718, 718, 718, 718, 718, 718, 718, 718,
+
         // 32 - 39
         750, 750, 750, 750, 750, 750, 750, 750,
+
         // 40 - 47
         1520, 1520, 1520, 1520, 1552, 1552, 1552, 1552,
+
         // 48 - 55
         428, 428, 428, 428, 428, 428, 428, 428,
+
         // 56 - 63
         428, 428, 428, 428, 428, 428, 428, 428,
+
         // 64 - 71
         654, 654, 654, 654, 654, 654, 654, 654,
+
         // 72 - 79
         1072, 1072, 1072, 1072, 1104, 1104, 1104, 1104,
+
         // 80 - 87
         1136, 1136, 1136, 1136, 1168, 1168, 1168, 1168,
+
         // 88 - 95
         1200, 1200, 1200, 1200, 1232, 1232, 1232, 1232,
+
         // 96 - 103
         622, 622, 622, 622, 622, 622, 622, 622,
+
         // 104 - 111
         1008, 1008, 1008, 1008, 1040, 1040, 1040, 1040,
+
         // 112 - 119
         44, 44, 44, 44, 44, 44, 44, 44,
+
         // 120 - 127
         44, 44, 44, 44, 44, 44, 44, 44,
+
         // 128 - 135
         396, 396, 396, 396, 396, 396, 396, 396,
+
         // 136 - 143
         396, 396, 396, 396, 396, 396, 396, 396,
+
         // 144 - 151
         1712, 1712, 1712, 1712, 1744, 1744, 1744, 1744,
+
         // 152 - 159
         846, 846, 846, 846, 846, 846, 846, 846,
+
         // 160 - 167
         1264, 1264, 1264, 1264, 1296, 1296, 1296, 1296,
+
         // 168 - 175
         1328, 1328, 1328, 1328, 1360, 1360, 1360, 1360,
+
         // 176 - 183
         1392, 1392, 1392, 1392, 1424, 1424, 1424, 1424,
+
         // 184 - 191
         686, 686, 686, 686, 686, 686, 686, 686,
+
         // 192 - 199
         910, 910, 910, 910, 910, 910, 910, 910,
+
         // 200 - 207
         1968, 1968, 1968, 1968, 2000, 2000, 2000, 2000,
+
         // 208 - 215
         2032, 2032, 2032, 2032, 16, 16, 16, 16,
+
         // 216 - 223
         10257, 10257, 10257, 10257, 12305, 12305, 12305, 12305,
+
         // 224 - 231
         330, 330, 330, 330, 330, 330, 330, 330,
+
         // 232 - 239
         330, 330, 330, 330, 330, 330, 330, 330,
+
         // 240 - 247
         330, 330, 330, 330, 330, 330, 330, 330,
+
         // 248 - 255
         330, 330, 330, 330, 330, 330, 330, 330,
+
         // 256 - 263
         362, 362, 362, 362, 362, 362, 362, 362,
+
         // 264 - 271
         362, 362, 362, 362, 362, 362, 362, 362,
+
         // 272 - 279
         362, 362, 362, 362, 362, 362, 362, 362,
+
         // 280 - 287
         362, 362, 362, 362, 362, 362, 362, 362,
+
         // 288 - 295
         878, 878, 878, 878, 878, 878, 878, 878,
+
         // 296 - 303
         1904, 1904, 1904, 1904, 1936, 1936, 1936, 1936,
+
         // 304 - 311
         -18413, -18413, -16365, -16365, -14317, -14317, -10221, -10221,
+
         // 312 - 319
         590, 590, 590, 590, 590, 590, 590, 590,
+
         // 320 - 327
         782, 782, 782, 782, 782, 782, 782, 782,
+
         // 328 - 335
         1584, 1584, 1584, 1584, 1616, 1616, 1616, 1616,
+
         // 336 - 343
         1648, 1648, 1648, 1648, 1680, 1680, 1680, 1680,
+
         // 344 - 351
         814, 814, 814, 814, 814, 814, 814, 814,
+
         // 352 - 359
         1776, 1776, 1776, 1776, 1808, 1808, 1808, 1808,
+
         // 360 - 367
         1840, 1840, 1840, 1840, 1872, 1872, 1872, 1872,
+
         // 368 - 375
         6157, 6157, 6157, 6157, 6157, 6157, 6157, 6157,
+
         // 376 - 383
         6157, 6157, 6157, 6157, 6157, 6157, 6157, 6157,
+
         // 384 - 391
         -12275, -12275, -12275, -12275, -12275, -12275, -12275, -12275,
+
         // 392 - 399
         -12275, -12275, -12275, -12275, -12275, -12275, -12275, -12275,
+
         // 400 - 407
         14353, 14353, 14353, 14353, 16401, 16401, 16401, 16401,
+
         // 408 - 415
         22547, 22547, 24595, 24595, 20497, 20497, 20497, 20497,
+
         // 416 - 423
         18449, 18449, 18449, 18449, 26643, 26643, 28691, 28691,
+
         // 424 - 431
         30739, 30739, -32749, -32749, -30701, -30701, -28653, -28653,
+
         // 432 - 439
         -26605, -26605, -24557, -24557, -22509, -22509, -20461, -20461,
+
         // 440 - 447
         8207, 8207, 8207, 8207, 8207, 8207, 8207, 8207,
+
         // 448 - 455
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 456 - 463
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 464 - 471
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 472 - 479
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 480 - 487
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 488 - 495
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 496 - 503
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 504 - 511
         72, 72, 72, 72, 72, 72, 72, 72,
+
         // 512 - 519
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 520 - 527
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 528 - 535
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 536 - 543
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 544 - 551
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 552 - 559
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 560 - 567
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 568 - 575
         104, 104, 104, 104, 104, 104, 104, 104,
+
         // 576 - 583
         4107, 4107, 4107, 4107, 4107, 4107, 4107, 4107,
+
         // 584 - 591
         4107, 4107, 4107, 4107, 4107, 4107, 4107, 4107,
+
         // 592 - 599
         4107, 4107, 4107, 4107, 4107, 4107, 4107, 4107,
+
         // 600 - 607
         4107, 4107, 4107, 4107, 4107, 4107, 4107, 4107,
+
         // 608 - 615
         266, 266, 266, 266, 266, 266, 266, 266,
+
         // 616 - 623
         266, 266, 266, 266, 266, 266, 266, 266,
+
         // 624 - 631
         266, 266, 266, 266, 266, 266, 266, 266,
+
         // 632 - 639
         266, 266, 266, 266, 266, 266, 266, 266,
+
         // 640 - 647
         298, 298, 298, 298, 298, 298, 298, 298,
+
         // 648 - 655
         298, 298, 298, 298, 298, 298, 298, 298,
+
         // 656 - 663
         298, 298, 298, 298, 298, 298, 298, 298,
+
         // 664 - 671
         298, 298, 298, 298, 298, 298, 298, 298,
+
         // 672 - 679
         524, 524, 524, 524, 524, 524, 524, 524,
+
         // 680 - 687
         524, 524, 524, 524, 524, 524, 524, 524,
+
         // 688 - 695
         556, 556, 556, 556, 556, 556, 556, 556,
+
         // 696 - 703
         556, 556, 556, 556, 556, 556, 556, 556,
+
         // 704 - 711
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 712 - 719
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 720 - 727
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 728 - 735
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 736 - 743
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 744 - 751
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 752 - 759
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 760 - 767
         136, 136, 136, 136, 136, 136, 136, 136,
+
         // 768 - 775
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 776 - 783
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 784 - 791
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 792 - 799
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 800 - 807
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 808 - 815
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 816 - 823
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 824 - 831
         168, 168, 168, 168, 168, 168, 168, 168,
+
         // 832 - 839
         460, 460, 460, 460, 460, 460, 460, 460,
+
         // 840 - 847
         460, 460, 460, 460, 460, 460, 460, 460,
+
         // 848 - 855
         492, 492, 492, 492, 492, 492, 492, 492,
+
         // 856 - 863
         492, 492, 492, 492, 492, 492, 492, 492,
+
         // 864 - 871
         2059, 2059, 2059, 2059, 2059, 2059, 2059, 2059,
+
         // 872 - 879
         2059, 2059, 2059, 2059, 2059, 2059, 2059, 2059,
+
         // 880 - 887
         2059, 2059, 2059, 2059, 2059, 2059, 2059, 2059,
+
         // 888 - 895
         2059, 2059, 2059, 2059, 2059, 2059, 2059, 2059,
+
         // 896 - 903
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 904 - 911
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 912 - 919
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 920 - 927
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 928 - 935
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 936 - 943
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 944 - 951
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 952 - 959
         200, 200, 200, 200, 200, 200, 200, 200,
+
         // 960 - 967
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 968 - 975
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 976 - 983
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 984 - 991
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 992 - 999
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 1000 - 1007
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 1008 - 1015
         232, 232, 232, 232, 232, 232, 232, 232,
+
         // 1016 - 1023
-        232, 232, 232, 232, 232, 232, 232, 232,
+        232, 232, 232, 232, 232, 232, 232, 232
     };
 
     private readonly int _fillOrder;
+    private readonly int _h;
     private readonly int _w;
     private int _bitPointer, _bytePointer;
 
@@ -546,7 +738,6 @@ public class TiffFaxDecoder
     private int[] _currChangingElems;
     private byte[] _data;
     private int _fillBits;
-    private readonly int _h;
 
     /// <summary>
     ///     Element at which to start search in getNextChangingElement
@@ -591,12 +782,10 @@ public class TiffFaxDecoder
         }
     }
 
-
     /// <summary>
     ///     One-dimensional decoding methods
     /// </summary>
-    public void Decode1D(byte[] buffer, byte[] compData,
-                         int startX, int height)
+    public void Decode1D(byte[] buffer, byte[] compData, int startX, int height)
     {
         _data = compData;
 
@@ -613,11 +802,7 @@ public class TiffFaxDecoder
         }
     }
 
-    public void Decode2D(byte[] buffer,
-                         byte[] compData,
-                         int startX,
-                         int height,
-                         long tiffT4Options)
+    public void Decode2D(byte[] buffer, byte[] compData, int startX, int height, long tiffT4Options)
     {
         if (buffer == null)
         {
@@ -644,15 +829,14 @@ public class TiffFaxDecoder
 
         // uncompressedMode - haven't dealt with this yet.
 
-
         _oneD = (int)(tiffT4Options & 0x01);
         _uncompressedMode = (int)((tiffT4Options & 0x02) >> 1);
         _fillBits = (int)((tiffT4Options & 0x04) >> 2);
 
         // The data must start with an EOL code
-        if (readEol(true) != 1)
+        if (readEol(isFirstEol: true) != 1)
         {
-            throw new InvalidOperationException("First scanline must be 1D encoded.");
+            throw new InvalidOperationException(message: "First scanline must be 1D encoded.");
         }
 
         var lineOffset = 0;
@@ -667,7 +851,7 @@ public class TiffFaxDecoder
         {
             // Every line must begin with an EOL followed by a bit which
             // indicates whether the following scanline is 1D or 2D encoded.
-            if (readEol(false) == 0)
+            if (readEol(isFirstEol: false) == 0)
             {
                 // 2D encoded scanline follows
 
@@ -694,7 +878,7 @@ public class TiffFaxDecoder
                     b2 = b[1];
 
                     // Get the next seven bits
-                    entry = nextLesserThan8Bits(7);
+                    entry = nextLesserThan8Bits(bitsToGet: 7);
 
                     // Run these through the 2DCodes table
                     entry = _twoDCodes[entry] & 0xff;
@@ -707,8 +891,7 @@ public class TiffFaxDecoder
                     {
                         if (!isWhite)
                         {
-                            setToBlack(buffer, lineOffset, bitOffset,
-                                       b2 - bitOffset);
+                            setToBlack(buffer, lineOffset, bitOffset, b2 - bitOffset);
                         }
 
                         bitOffset = a0 = b2;
@@ -723,6 +906,7 @@ public class TiffFaxDecoder
 
                         // identify the next 2 codes.
                         int number;
+
                         if (isWhite)
                         {
                             number = decodeWhiteCodeWord();
@@ -759,8 +943,7 @@ public class TiffFaxDecoder
                         // since a1 is where the next color starts
                         if (!isWhite)
                         {
-                            setToBlack(buffer, lineOffset, bitOffset,
-                                       a1 - bitOffset);
+                            setToBlack(buffer, lineOffset, bitOffset, a1 - bitOffset);
                         }
 
                         bitOffset = a0 = a1;
@@ -770,8 +953,8 @@ public class TiffFaxDecoder
                     }
                     else
                     {
-                        throw new
-                            InvalidOperationException("Invalid code encountered while decoding 2D group 3 compressed data.");
+                        throw new InvalidOperationException(
+                            message: "Invalid code encountered while decoding 2D group 3 compressed data.");
                     }
                 }
 
@@ -790,8 +973,7 @@ public class TiffFaxDecoder
         }
     }
 
-    public void DecodeNextScanline(byte[] buffer,
-                                   int lineOffset, int bitOffset)
+    public void DecodeNextScanline(byte[] buffer, int lineOffset, int bitOffset)
     {
         if (buffer == null)
         {
@@ -811,7 +993,7 @@ public class TiffFaxDecoder
             while (isWhite)
             {
                 // White run
-                current = nextNBits(10);
+                current = nextNBits(bitsToGet: 10);
                 entry = _white[current];
 
                 // Get the 3 fields from the entry
@@ -822,7 +1004,8 @@ public class TiffFaxDecoder
                 {
                     // Additional Make up code
                     // Get the next 2 bits
-                    twoBits = nextLesserThan8Bits(2);
+                    twoBits = nextLesserThan8Bits(bitsToGet: 2);
+
                     // Consolidate the 2 new bits and last 2 bits into 4 bits
                     current = ((current << 2) & 0x000c) | twoBits;
                     entry = _additionalMakeup[current];
@@ -835,12 +1018,12 @@ public class TiffFaxDecoder
                 else if (bits == 0)
                 {
                     // ERROR
-                    throw new InvalidOperationException("Invalid code encountered.");
+                    throw new InvalidOperationException(message: "Invalid code encountered.");
                 }
                 else if (bits == 15)
                 {
                     // EOL
-                    throw new InvalidOperationException("EOL code word encountered in White run.");
+                    throw new InvalidOperationException(message: "EOL code word encountered in White run.");
                 }
                 else
                 {
@@ -849,6 +1032,7 @@ public class TiffFaxDecoder
                     bitOffset += code;
 
                     updatePointer(10 - bits);
+
                     if (isT == 0)
                     {
                         isWhite = false;
@@ -869,10 +1053,10 @@ public class TiffFaxDecoder
                 break;
             }
 
-            while (isWhite == false)
+            while (!isWhite)
             {
                 // Black run
-                current = nextLesserThan8Bits(4);
+                current = nextLesserThan8Bits(bitsToGet: 4);
                 entry = _initBlack[current];
 
                 // Get the 3 fields from the entry
@@ -882,7 +1066,7 @@ public class TiffFaxDecoder
 
                 if (code == 100)
                 {
-                    current = nextNBits(9);
+                    current = nextNBits(bitsToGet: 9);
                     entry = _black[current];
 
                     // Get the 3 fields from the entry
@@ -893,8 +1077,8 @@ public class TiffFaxDecoder
                     if (bits == 12)
                     {
                         // Additional makeup codes
-                        updatePointer(5);
-                        current = nextLesserThan8Bits(4);
+                        updatePointer(bitsToMoveBack: 5);
+                        current = nextLesserThan8Bits(bitsToGet: 4);
                         entry = _additionalMakeup[current];
                         bits = (entry >> 1) & 0x07; // 3 bits 0000 0111
                         code = (entry >> 4) & 0x0fff; // 12 bits
@@ -907,7 +1091,7 @@ public class TiffFaxDecoder
                     else if (bits == 15)
                     {
                         // EOL code
-                        throw new InvalidOperationException("EOL code word encountered in Black run.");
+                        throw new InvalidOperationException(message: "EOL code word encountered in Black run.");
                     }
                     else
                     {
@@ -915,6 +1099,7 @@ public class TiffFaxDecoder
                         bitOffset += code;
 
                         updatePointer(9 - bits);
+
                         if (isT == 0)
                         {
                             isWhite = true;
@@ -925,7 +1110,7 @@ public class TiffFaxDecoder
                 else if (code == 200)
                 {
                     // Is a Terminating code
-                    current = nextLesserThan8Bits(2);
+                    current = nextLesserThan8Bits(bitsToGet: 2);
                     entry = _twoBitBlack[current];
                     code = (entry >> 5) & 0x07ff;
                     bits = (entry >> 1) & 0x0f;
@@ -967,11 +1152,7 @@ public class TiffFaxDecoder
     /// <summary>
     ///     Two-dimensional decoding methods
     /// </summary>
-    public void DecodeT6(byte[] buffer,
-                         byte[] compData,
-                         int startX,
-                         int height,
-                         long tiffT6Options)
+    public void DecodeT6(byte[] buffer, byte[] compData, int startX, int height, long tiffT6Options)
     {
         if (buffer == null)
         {
@@ -1042,7 +1223,8 @@ public class TiffFaxDecoder
                 b2 = b[1];
 
                 // Get the next seven bits
-                entry = nextLesserThan8Bits(7);
+                entry = nextLesserThan8Bits(bitsToGet: 7);
+
                 // Run these through the 2DCodes table
                 entry = _twoDCodes[entry] & 0xff;
 
@@ -1056,8 +1238,7 @@ public class TiffFaxDecoder
                     // We always assume WhiteIsZero format for fax.
                     if (!isWhite)
                     {
-                        setToBlack(buffer, lineOffset, bitOffset,
-                                   b2 - bitOffset);
+                        setToBlack(buffer, lineOffset, bitOffset, b2 - bitOffset);
                     }
 
                     bitOffset = a0 = b2;
@@ -1073,6 +1254,7 @@ public class TiffFaxDecoder
 
                     // identify the next 2 alternating color codes.
                     int number;
+
                     if (isWhite)
                     {
                         // Following are white and black runs
@@ -1110,8 +1292,7 @@ public class TiffFaxDecoder
                     // since a1 is where the next color starts
                     if (!isWhite)
                     {
-                        setToBlack(buffer, lineOffset, bitOffset,
-                                   a1 - bitOffset);
+                        setToBlack(buffer, lineOffset, bitOffset, a1 - bitOffset);
                     }
 
                     bitOffset = a0 = a1;
@@ -1121,10 +1302,10 @@ public class TiffFaxDecoder
                 }
                 else if (code == 11)
                 {
-                    if (nextLesserThan8Bits(3) != 7)
+                    if (nextLesserThan8Bits(bitsToGet: 3) != 7)
                     {
-                        throw new
-                            InvalidOperationException("Invalid code encountered while decoding 2D group 4 compressed data.");
+                        throw new InvalidOperationException(
+                            message: "Invalid code encountered while decoding 2D group 4 compressed data.");
                     }
 
                     var zeros = 0;
@@ -1132,7 +1313,7 @@ public class TiffFaxDecoder
 
                     while (!exit)
                     {
-                        while (nextLesserThan8Bits(1) != 1)
+                        while (nextLesserThan8Bits(bitsToGet: 1) != 1)
                         {
                             zeros++;
                         }
@@ -1151,6 +1332,7 @@ public class TiffFaxDecoder
 
                             // Zeros before the exit code
                             bitOffset += zeros;
+
                             if (zeros > 0)
                             {
                                 // Some zeros have been written
@@ -1159,7 +1341,7 @@ public class TiffFaxDecoder
 
                             // Read in the bit which specifies the color of
                             // the following run
-                            if (nextLesserThan8Bits(1) == 0)
+                            if (nextLesserThan8Bits(bitsToGet: 1) == 0)
                             {
                                 if (!isWhite)
                                 {
@@ -1198,7 +1380,7 @@ public class TiffFaxDecoder
                             bitOffset += zeros;
 
                             cce[currIndex++] = bitOffset;
-                            setToBlack(buffer, lineOffset, bitOffset, 1);
+                            setToBlack(buffer, lineOffset, bitOffset, numBits: 1);
                             ++bitOffset;
 
                             // Last thing written was black
@@ -1257,7 +1439,7 @@ public class TiffFaxDecoder
 
         while (!isWhite)
         {
-            current = nextLesserThan8Bits(4);
+            current = nextLesserThan8Bits(bitsToGet: 4);
             entry = _initBlack[current];
 
             // Get the 3 fields from the entry
@@ -1267,7 +1449,7 @@ public class TiffFaxDecoder
 
             if (code == 100)
             {
-                current = nextNBits(9);
+                current = nextNBits(bitsToGet: 9);
                 entry = _black[current];
 
                 // Get the 3 fields from the entry
@@ -1278,8 +1460,8 @@ public class TiffFaxDecoder
                 if (bits == 12)
                 {
                     // Additional makeup codes
-                    updatePointer(5);
-                    current = nextLesserThan8Bits(4);
+                    updatePointer(bitsToMoveBack: 5);
+                    current = nextLesserThan8Bits(bitsToGet: 4);
                     entry = _additionalMakeup[current];
                     bits = (entry >> 1) & 0x07; // 3 bits 0000 0111
                     code = (entry >> 4) & 0x0fff; // 12 bits
@@ -1290,12 +1472,13 @@ public class TiffFaxDecoder
                 else if (bits == 15)
                 {
                     // EOL code
-                    throw new InvalidOperationException("EOL code word encountered in Black run.");
+                    throw new InvalidOperationException(message: "EOL code word encountered in Black run.");
                 }
                 else
                 {
                     runLength += code;
                     updatePointer(9 - bits);
+
                     if (isT == 0)
                     {
                         isWhite = true;
@@ -1305,7 +1488,7 @@ public class TiffFaxDecoder
             else if (code == 200)
             {
                 // Is a Terminating code
-                current = nextLesserThan8Bits(2);
+                current = nextLesserThan8Bits(bitsToGet: 2);
                 entry = _twoBitBlack[current];
                 code = (entry >> 5) & 0x07ff;
                 runLength += code;
@@ -1336,7 +1519,7 @@ public class TiffFaxDecoder
 
         while (isWhite)
         {
-            current = nextNBits(10);
+            current = nextNBits(bitsToGet: 10);
             entry = _white[current];
 
             // Get the 3 fields from the entry
@@ -1347,7 +1530,8 @@ public class TiffFaxDecoder
             {
                 // Additional Make up code
                 // Get the next 2 bits
-                twoBits = nextLesserThan8Bits(2);
+                twoBits = nextLesserThan8Bits(bitsToGet: 2);
+
                 // Consolidate the 2 new bits and last 2 bits into 4 bits
                 current = ((current << 2) & 0x000c) | twoBits;
                 entry = _additionalMakeup[current];
@@ -1359,12 +1543,12 @@ public class TiffFaxDecoder
             else if (bits == 0)
             {
                 // ERROR
-                throw new InvalidOperationException("Invalid code encountered.");
+                throw new InvalidOperationException(message: "Invalid code encountered.");
             }
             else if (bits == 15)
             {
                 // EOL
-                throw new InvalidOperationException("EOL code word encountered in White run.");
+                throw new InvalidOperationException(message: "EOL code word encountered in White run.");
             }
             else
             {
@@ -1372,6 +1556,7 @@ public class TiffFaxDecoder
                 code = (entry >> 5) & 0x07ff;
                 runLength += code;
                 updatePointer(10 - bits);
+
                 if (isT == 0)
                 {
                     isWhite = false;
@@ -1392,6 +1577,7 @@ public class TiffFaxDecoder
         // have to search the preceeding element.
         // int start = lastChangingElement & ~0x1;
         var start = _lastChangingElement > 0 ? _lastChangingElement - 1 : 0;
+
         if (isWhite)
         {
             start &= ~0x1; // Search even numbered elements
@@ -1402,13 +1588,16 @@ public class TiffFaxDecoder
         }
 
         var i = start;
+
         for (; i < ces; i += 2)
         {
             var temp = pce[i];
+
             if (temp > a0)
             {
                 _lastChangingElement = i;
                 ret[0] = temp;
+
                 break;
             }
         }
@@ -1428,6 +1617,7 @@ public class TiffFaxDecoder
         if (_fillOrder == 1)
         {
             b = _data[bp];
+
             if (bp == l)
             {
                 next = 0x00;
@@ -1440,6 +1630,7 @@ public class TiffFaxDecoder
         else if (_fillOrder == 2)
         {
             b = FlipTable[_data[bp] & 0xff];
+
             if (bp == l)
             {
                 next = 0x00;
@@ -1451,7 +1642,7 @@ public class TiffFaxDecoder
         }
         else
         {
-            throw new InvalidOperationException("TIFF_FILL_ORDER tag must be either 1 or 2.");
+            throw new InvalidOperationException(message: "TIFF_FILL_ORDER tag must be either 1 or 2.");
         }
 
         var bitsLeft = 8 - _bitPointer;
@@ -1459,10 +1650,12 @@ public class TiffFaxDecoder
 
         var shift = bitsLeft - bitsToGet;
         int i1, i2;
+
         if (shift >= 0)
         {
             i1 = (b & _table1[bitsLeft]) >> shift;
             _bitPointer += bitsToGet;
+
             if (_bitPointer == 8)
             {
                 _bitPointer = 0;
@@ -1530,12 +1723,13 @@ public class TiffFaxDecoder
         }
         else
         {
-            throw new InvalidOperationException("TIFF_FILL_ORDER tag must be either 1 or 2.");
+            throw new InvalidOperationException(message: "TIFF_FILL_ORDER tag must be either 1 or 2.");
         }
 
         var bitsLeft = 8 - _bitPointer;
         var bitsFromNextByte = bitsToGet - bitsLeft;
         var bitsFromNext2NextByte = 0;
+
         if (bitsFromNextByte > 8)
         {
             bitsFromNext2NextByte = bitsFromNextByte - 8;
@@ -1548,11 +1742,11 @@ public class TiffFaxDecoder
         var i2 = (next & _table2[bitsFromNextByte]) >> (8 - bitsFromNextByte);
 
         var i3 = 0;
+
         if (bitsFromNext2NextByte != 0)
         {
             i2 <<= bitsFromNext2NextByte;
-            i3 = (next2Next & _table2[bitsFromNext2NextByte]) >>
-                 (8 - bitsFromNext2NextByte);
+            i3 = (next2Next & _table2[bitsFromNext2NextByte]) >> (8 - bitsFromNext2NextByte);
             i2 |= i3;
             _bytePointer++;
             _bitPointer = bitsFromNext2NextByte;
@@ -1571,6 +1765,7 @@ public class TiffFaxDecoder
         }
 
         var i = i1 | i2;
+
         return i;
     }
 
@@ -1578,7 +1773,8 @@ public class TiffFaxDecoder
     {
         if (_fillBits == 0)
         {
-            var next12Bits = nextNBits(12);
+            var next12Bits = nextNBits(bitsToGet: 12);
+
             if (isFirstEol && next12Bits == 0)
             {
                 // Might have the case of EOL padding being used even
@@ -1586,18 +1782,19 @@ public class TiffFaxDecoder
                 // This was observed to be the case in TIFFs produced
                 // by a well known vendor who shall remain nameless.
 
-                if (nextNBits(4) == 1)
+                if (nextNBits(bitsToGet: 4) == 1)
                 {
                     // EOL must be padded: reset the fillBits flag.
 
                     _fillBits = 1;
+
                     return 1;
                 }
             }
 
             if (next12Bits != 1)
             {
-                throw new InvalidOperationException("Scanline must begin with EOL code word.");
+                throw new InvalidOperationException(message: "Scanline must begin with EOL code word.");
             }
         }
         else if (_fillBits == 1)
@@ -1610,7 +1807,7 @@ public class TiffFaxDecoder
 
             if (nextNBits(bitsLeft) != 0)
             {
-                throw new InvalidOperationException("All fill bits preceding EOL code must be 0.");
+                throw new InvalidOperationException(message: "All fill bits preceding EOL code must be 0.");
             }
 
             // If the number of bitsLeft is less than 8, then to have a 12
@@ -1619,9 +1816,9 @@ public class TiffFaxDecoder
             // that.
             if (bitsLeft < 4)
             {
-                if (nextNBits(8) != 0)
+                if (nextNBits(bitsToGet: 8) != 0)
                 {
-                    throw new InvalidOperationException("All fill bits preceding EOL code must be 0.");
+                    throw new InvalidOperationException(message: "All fill bits preceding EOL code must be 0.");
                 }
             }
 
@@ -1629,12 +1826,13 @@ public class TiffFaxDecoder
             // loop till the EOL of 0000 0001 is found, as long as all
             // the bytes preceding it are 0's.
             int n;
-            while ((n = nextNBits(8)) != 1)
+
+            while ((n = nextNBits(bitsToGet: 8)) != 1)
             {
                 // If not all zeros
                 if (n != 0)
                 {
-                    throw new InvalidOperationException("All fill bits preceding EOL code must be 0.");
+                    throw new InvalidOperationException(message: "All fill bits preceding EOL code must be 0.");
                 }
             }
         }
@@ -1647,12 +1845,10 @@ public class TiffFaxDecoder
 
         // Otherwise for 2D encoding mode,
         // The next one bit signifies 1D/2D encoding of next line.
-        return nextLesserThan8Bits(1);
+        return nextLesserThan8Bits(bitsToGet: 1);
     }
 
-    private static void setToBlack(byte[] buffer,
-                                   int lineOffset, int bitOffset,
-                                   int numBits)
+    private static void setToBlack(byte[] buffer, int lineOffset, int bitOffset, int numBits)
     {
         var bitNum = 8 * lineOffset + bitOffset;
         var lastBit = bitNum + numBits;
@@ -1661,10 +1857,12 @@ public class TiffFaxDecoder
 
         // Handle bits in first byte
         var shift = bitNum & 0x7;
+
         if (shift > 0)
         {
             var maskVal = 1 << (7 - shift);
             var val = buffer[byteNum];
+
             while (maskVal > 0 && bitNum < lastBit)
             {
                 val |= (byte)maskVal;
@@ -1677,6 +1875,7 @@ public class TiffFaxDecoder
 
         // Fill in 8 bits at a time
         byteNum = bitNum >> 3;
+
         while (bitNum < lastBit - 7)
         {
             buffer[byteNum++] = 255;

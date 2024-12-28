@@ -253,9 +253,9 @@ internal class PdfCopyFieldsImp : PdfWriter
                     continue;
                 }
 
-                if (obj is NullValueDictionary<string, object>)
+                if (obj is NullValueDictionary<string, object> objects)
                 {
-                    map = (NullValueDictionary<string, object>)obj;
+                    map = objects;
                 }
                 else
                 {
@@ -563,7 +563,7 @@ internal class PdfCopyFieldsImp : PdfWriter
 
             name = "." + name;
 
-            if (_calculationOrder.Contains(name))
+            if (_calculationOrder.Contains(name, StringComparer.Ordinal))
             {
                 continue;
             }
@@ -597,9 +597,9 @@ internal class PdfCopyFieldsImp : PdfWriter
                 _calculationOrderRefs[coidx] = ind;
             }
 
-            if (obj is INullValueDictionary<string, object>)
+            if (obj is INullValueDictionary<string, object> objects)
             {
-                dic.Put(PdfName.Kids, BranchForm((INullValueDictionary<string, object>)obj, ind, fname2));
+                dic.Put(PdfName.Kids, BranchForm(objects, ind, fname2));
                 arr.Add(ind);
                 AddToBody(dic, ind);
             }
@@ -759,9 +759,9 @@ internal class PdfCopyFieldsImp : PdfWriter
         {
             var obj = _calculationOrderRefs[k];
 
-            if (obj is PdfIndirectReference)
+            if (obj is PdfIndirectReference reference)
             {
-                co.Add((PdfIndirectReference)obj);
+                co.Add(reference);
             }
         }
 

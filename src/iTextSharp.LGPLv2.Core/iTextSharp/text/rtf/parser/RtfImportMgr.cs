@@ -20,6 +20,12 @@ namespace iTextSharp.text.rtf.parser;
 public class RtfImportMgr
 {
     /// <summary>
+    ///     The Document.
+    ///     Used for conversions, but not imports.
+    /// </summary>
+    private readonly Document _doc;
+
+    /// <summary>
     ///     The Hashtable storing the color number mapings.
     /// </summary>
     private readonly NullValueDictionary<string, string> _importColorMapping;
@@ -46,12 +52,6 @@ public class RtfImportMgr
     ///     The RtfDocument to get font and color numbers from.
     /// </summary>
     private readonly RtfDocument _rtfDoc;
-
-    /// <summary>
-    ///     The Document.
-    ///     Used for conversions, but not imports.
-    /// </summary>
-    private Document _doc;
 
     /// <summary>
     ///     Constructs a new RtfImportHeader.
@@ -156,8 +156,7 @@ public class RtfImportMgr
     ///     Imports a List value. The List number for the List defined
     ///     is determined and then the resulting mapping is added.
     /// </summary>
-    public void ImportList(string origListNr, string newListNr)
-        => _importListMapping[origListNr] = newListNr;
+    public void ImportList(string origListNr, string newListNr) => _importListMapping[origListNr] = newListNr;
 
     /// <summary>
     ///     Imports a stylesheet list value. The stylesheet number for the stylesheet defined

@@ -91,7 +91,7 @@ public class PdfDate : PdfString
             }
         }
 
-        var d = new DateTime(year, month, day, hour, minute, second);
+        var d = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Local);
 
         if (date.Length <= 14)
         {

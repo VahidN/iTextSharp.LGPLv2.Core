@@ -277,9 +277,9 @@ public class RtfList : RtfElement, IRtfExtendedElement
                     element = new ListItem((Chunk)element);
                 }
 
-                if (element is ListItem)
+                if (element is ListItem listItem)
                 {
-                    ll.SetAlignment(((ListItem)element).Alignment);
+                    ll.SetAlignment(listItem.Alignment);
                 }
 
                 var rtfElements = doc.GetMapper().MapElement(element);
@@ -288,13 +288,13 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 {
                     var rtfElement = rtfElements[j];
 
-                    if (rtfElement is RtfList)
+                    if (rtfElement is RtfList rtfList)
                     {
-                        ((RtfList)rtfElement).SetParentList(this);
+                        rtfList.SetParentList(this);
                     }
-                    else if (rtfElement is RtfListItem)
+                    else if (rtfElement is RtfListItem item)
                     {
-                        ((RtfListItem)rtfElement).SetParent(ll);
+                        item.SetParent(ll);
                     }
 
                     ll.SetFontNumber(new RtfFont(Document,
@@ -388,10 +388,9 @@ public class RtfList : RtfElement, IRtfExtendedElement
                 var thisRtfElement = (RtfElement)_items[i];
 
                 //thisRtfElement.WriteContent(result);
-                if (thisRtfElement is RtfListItem)
+                if (thisRtfElement is RtfListItem rtfElement)
                 {
                     itemNr++;
-                    var rtfElement = (RtfListItem)thisRtfElement;
                     var listLevel = rtfElement.GetParent();
 
                     if (listLevel.GetListLevel() == 0)
@@ -417,9 +416,9 @@ public class RtfList : RtfElement, IRtfExtendedElement
 
                     Document.OutputDebugLinebreak(outp);
                 }
-                else if (thisRtfElement is RtfList)
+                else if (thisRtfElement is RtfList list)
                 {
-                    ((RtfList)thisRtfElement).WriteContent(outp);
+                    list.WriteContent(outp);
 
                     //              ((RtfList)thisRtfElement).WriteListBeginning(result);
                     WriteListNumbers(outp);
@@ -506,18 +505,15 @@ public class RtfList : RtfElement, IRtfExtendedElement
             {
                 var rtfElement = (RtfElement)_items[i];
 
-                if (rtfElement is RtfList)
+                if (rtfElement is RtfList rl)
                 {
-                    var rl = (RtfList)rtfElement;
                     rl.WriteDefinition(outp);
 
                     break;
                 }
 
-                if (rtfElement is RtfListItem)
+                if (rtfElement is RtfListItem rli)
                 {
-                    var rli = (RtfListItem)rtfElement;
-
                     if (rli.WriteDefinition(outp))
                     {
                         break;
@@ -647,13 +643,13 @@ public class RtfList : RtfElement, IRtfExtendedElement
         //        }
         for (var i = 0; i < _items.Count; i++)
         {
-            if (_items[i] is RtfList)
+            if (_items[i] is RtfList list)
             {
-                ((RtfList)_items[i]).CorrectIndentation();
+                list.CorrectIndentation();
             }
-            else if (_items[i] is RtfListItem)
+            else if (_items[i] is RtfListItem item)
             {
-                ((RtfListItem)_items[i]).CorrectIndentation();
+                item.CorrectIndentation();
             }
         }
     }

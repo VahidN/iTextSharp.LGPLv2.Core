@@ -229,10 +229,7 @@ public class RtfProperty
     ///     the new RtfPropertyListener.
     /// </summary>
     /// <param name="listener"></param>
-    public void AddRtfPropertyListener(IRtfPropertyListener listener)
-    {
-        _listeners.Add(listener);
-    }
+    public void AddRtfPropertyListener(IRtfPropertyListener listener) => _listeners.Add(listener);
 
     public void AfterChange(string propertyName)
     {
@@ -322,6 +319,7 @@ public class RtfProperty
     public INullValueDictionary<string, object> GetProperties(string propertyGroup)
     {
         var props = new NullValueDictionary<string, object>();
+
         if (Properties.Count != 0)
         {
             //properties.get
@@ -374,10 +372,7 @@ public class RtfProperty
     ///     the new RtfPropertyListener.
     /// </summary>
     /// <param name="listener"></param>
-    public void RemoveRtfPropertyListener(IRtfPropertyListener listener)
-    {
-        _listeners.Remove(listener);
-    }
+    public void RemoveRtfPropertyListener(IRtfPropertyListener listener) => _listeners.Remove(listener);
 
     /// <summary>
     /// </summary>
@@ -420,34 +415,22 @@ public class RtfProperty
     /// <summary>
     /// </summary>
     /// <param name="modifiedCharacter">the modifiedCharacter to set</param>
-    public void SetModifiedCharacter(bool modifiedCharacter)
-    {
-        _modifiedCharacter = modifiedCharacter;
-    }
+    public void SetModifiedCharacter(bool modifiedCharacter) => _modifiedCharacter = modifiedCharacter;
 
     /// <summary>
     /// </summary>
     /// <param name="modifiedDocument">the modifiedDocument to set</param>
-    public void SetModifiedDocument(bool modifiedDocument)
-    {
-        _modifiedDocument = modifiedDocument;
-    }
+    public void SetModifiedDocument(bool modifiedDocument) => _modifiedDocument = modifiedDocument;
 
     /// <summary>
     /// </summary>
     /// <param name="modifiedParagraph">the modifiedParagraph to set</param>
-    public void SetModifiedParagraph(bool modifiedParagraph)
-    {
-        _modifiedParagraph = modifiedParagraph;
-    }
+    public void SetModifiedParagraph(bool modifiedParagraph) => _modifiedParagraph = modifiedParagraph;
 
     /// <summary>
     /// </summary>
     /// <param name="modifiedSection">the modifiedSection to set</param>
-    public void SetModifiedSection(bool modifiedSection)
-    {
-        _modifiedSection = modifiedSection;
-    }
+    public void SetModifiedSection(bool modifiedSection) => _modifiedSection = modifiedSection;
 
     /// <summary>
     ///     Set the value of the property identified by the parameter.
@@ -464,10 +447,12 @@ public class RtfProperty
         //String propertyName, Object propertyValueNew) {
         var propertyName = ctrlWordData.SpecialHandler;
         object propertyValueNew = ctrlWordData.Param;
+
         // depending on the control word, set mulitiple or reset settings, etc.
         //if pard then reset settings
         //
         setProperty(propertyName, propertyValueNew);
+
         return true;
     }
 
@@ -493,57 +478,60 @@ public class RtfProperty
     {
         if (COLOR.Equals(propertyGroup, StringComparison.Ordinal))
         {
-            setProperty(COLOR_FG, new BaseColor(0, 0, 0));
-            setProperty(COLOR_BG, new BaseColor(255, 255, 255));
+            setProperty(COLOR_FG, new BaseColor(red: 0, green: 0, blue: 0));
+            setProperty(COLOR_BG, new BaseColor(red: 255, green: 255, blue: 255));
+
             return;
         }
 
         if (CHARACTER.Equals(propertyGroup, StringComparison.Ordinal))
         {
-            setProperty(CHARACTER_BOLD, 0);
-            setProperty(CHARACTER_UNDERLINE, 0);
-            setProperty(CHARACTER_ITALIC, 0);
-            setProperty(CHARACTER_SIZE, 24); // 1/2 pt sizes
-            setProperty(CHARACTER_FONT, 0);
+            setProperty(CHARACTER_BOLD, propertyValueNew: 0);
+            setProperty(CHARACTER_UNDERLINE, propertyValueNew: 0);
+            setProperty(CHARACTER_ITALIC, propertyValueNew: 0);
+            setProperty(CHARACTER_SIZE, propertyValueNew: 24); // 1/2 pt sizes
+            setProperty(CHARACTER_FONT, propertyValueNew: 0);
+
             return;
         }
 
         if (PARAGRAPH.Equals(propertyGroup, StringComparison.Ordinal))
         {
-            setProperty(PARAGRAPH_INDENT_LEFT, 0);
-            setProperty(PARAGRAPH_INDENT_RIGHT, 0);
-            setProperty(PARAGRAPH_INDENT_FIRST_LINE, 0);
+            setProperty(PARAGRAPH_INDENT_LEFT, propertyValueNew: 0);
+            setProperty(PARAGRAPH_INDENT_RIGHT, propertyValueNew: 0);
+            setProperty(PARAGRAPH_INDENT_FIRST_LINE, propertyValueNew: 0);
             setProperty(PARAGRAPH_JUSTIFICATION, JUSTIFY_LEFT);
             setProperty(PARAGRAPH_BORDER, PARAGRAPH_BORDER_NIL);
             setProperty(PARAGRAPH_BORDER_CELL, PARAGRAPH_BORDER_NIL);
+
             return;
         }
 
         if (SECTION.Equals(propertyGroup, StringComparison.Ordinal))
         {
-            setProperty(SECTION_NUMBER_OF_COLUMNS, 0);
+            setProperty(SECTION_NUMBER_OF_COLUMNS, propertyValueNew: 0);
             setProperty(SECTION_BREAK_TYPE, SBK_NONE);
-            setProperty(SECTION_PAGE_NUMBER_POSITION_X, 0);
-            setProperty(SECTION_PAGE_NUMBER_POSITION_Y, 0);
+            setProperty(SECTION_PAGE_NUMBER_POSITION_X, propertyValueNew: 0);
+            setProperty(SECTION_PAGE_NUMBER_POSITION_Y, propertyValueNew: 0);
             setProperty(SECTION_PAGE_NUMBER_FORMAT, PGN_DECIMAL);
+
             return;
         }
 
         if (DOCUMENT.Equals(propertyGroup, StringComparison.Ordinal))
         {
-            setProperty(DOCUMENT_PAGE_WIDTH_TWIPS, 12240);
-            setProperty(DOCUMENT_PAGE_HEIGHT_TWIPS, 15480);
-            setProperty(DOCUMENT_MARGIN_LEFT_TWIPS, 1800);
-            setProperty(DOCUMENT_MARGIN_TOP_TWIPS, 1440);
-            setProperty(DOCUMENT_MARGIN_RIGHT_TWIPS, 1800);
-            setProperty(DOCUMENT_MARGIN_BOTTOM_TWIPS, 1440);
-            setProperty(DOCUMENT_PAGE_NUMBER_START, 1);
-            setProperty(DOCUMENT_ENABLE_FACING_PAGES, 1);
+            setProperty(DOCUMENT_PAGE_WIDTH_TWIPS, propertyValueNew: 12240);
+            setProperty(DOCUMENT_PAGE_HEIGHT_TWIPS, propertyValueNew: 15480);
+            setProperty(DOCUMENT_MARGIN_LEFT_TWIPS, propertyValueNew: 1800);
+            setProperty(DOCUMENT_MARGIN_TOP_TWIPS, propertyValueNew: 1440);
+            setProperty(DOCUMENT_MARGIN_RIGHT_TWIPS, propertyValueNew: 1800);
+            setProperty(DOCUMENT_MARGIN_BOTTOM_TWIPS, propertyValueNew: 1440);
+            setProperty(DOCUMENT_PAGE_NUMBER_START, propertyValueNew: 1);
+            setProperty(DOCUMENT_ENABLE_FACING_PAGES, propertyValueNew: 1);
             setProperty(DOCUMENT_PAGE_ORIENTATION, PAGE_PORTRAIT);
-            setProperty(DOCUMENT_DEFAULT_FONT_NUMER, 0);
+            setProperty(DOCUMENT_DEFAULT_FONT_NUMER, propertyValueNew: 0);
         }
     }
-
 
     /// <summary>
     ///     Toggle the value of the property identified by the  RtfCtrlWordData.specialHandler  parameter.
@@ -557,6 +545,7 @@ public class RtfProperty
         {
             throw new ArgumentNullException(nameof(ctrlWordData));
         }
+
         //String propertyName) {
 
         var propertyName = ctrlWordData.SpecialHandler;
@@ -567,15 +556,15 @@ public class RtfProperty
         }
 
         var propertyValue = GetProperty(propertyName);
+
         if (propertyValue == null)
         {
             propertyValue = ON;
         }
         else
         {
-            if (propertyValue is int)
+            if (propertyValue is int value)
             {
-                var value = (int)propertyValue;
                 if (value != 0)
                 {
                     removeProperty(propertyName);
@@ -584,10 +573,9 @@ public class RtfProperty
                 return true;
             }
 
-            if (propertyValue is long)
+            if (propertyValue is long l)
             {
-                var value = (long)propertyValue;
-                if (value != 0)
+                if (l != 0)
                 {
                     removeProperty(propertyName);
                 }
@@ -597,6 +585,7 @@ public class RtfProperty
         }
 
         setProperty(propertyName, propertyValue);
+
         return true;
     }
 
@@ -614,6 +603,7 @@ public class RtfProperty
         }
 
         var value = (int)Properties[propertyName];
+
         if ((value | propertyValue) == value)
         {
             return true;
@@ -623,7 +613,8 @@ public class RtfProperty
         BeforeChange(propertyName);
         Properties[propertyName] = value;
         AfterChange(propertyName);
-        SetModified(propertyName, true);
+        SetModified(propertyName, modified: true);
+
         return true;
     }
 
@@ -641,6 +632,7 @@ public class RtfProperty
         }
 
         var value = (long)Properties[propertyName];
+
         if ((value | propertyValue) == value)
         {
             return true;
@@ -650,7 +642,8 @@ public class RtfProperty
         BeforeChange(propertyName);
         Properties[propertyName] = value;
         AfterChange(propertyName);
-        SetModified(propertyName, true);
+        SetModified(propertyName, modified: true);
+
         return true;
     }
 
@@ -666,7 +659,7 @@ public class RtfProperty
             BeforeChange(propertyName);
             Properties.Remove(propertyName);
             AfterChange(propertyName);
-            SetModified(propertyName, true);
+            SetModified(propertyName, modified: true);
         }
 
         return true;
@@ -686,10 +679,12 @@ public class RtfProperty
         }
 
         var propertyValueOld = GetProperty(propertyName);
+
         if (propertyValueOld is int && propertyValueNew is int)
         {
             var valueOld = (int)propertyValueOld;
             var valueNew = (int)propertyValueNew;
+
             if (valueOld == valueNew)
             {
                 return true;
@@ -701,6 +696,7 @@ public class RtfProperty
             {
                 var valueOld = (long)propertyValueOld;
                 var valueNew = (long)propertyValueNew;
+
                 if (valueOld == valueNew)
                 {
                     return true;
@@ -711,7 +707,8 @@ public class RtfProperty
         BeforeChange(propertyName);
         Properties[propertyName] = propertyValueNew;
         AfterChange(propertyName);
-        SetModified(propertyName, true);
+        SetModified(propertyName, modified: true);
+
         return true;
     }
 
@@ -729,9 +726,9 @@ public class RtfProperty
         }
 
         var propertyValueOld = GetProperty(propertyName);
-        if (propertyValueOld is int)
+
+        if (propertyValueOld is int valueOld)
         {
-            var valueOld = (int)propertyValueOld;
             if (valueOld == propertyValueNew)
             {
                 return true;
@@ -741,7 +738,8 @@ public class RtfProperty
         BeforeChange(propertyName);
         Properties[propertyName] = propertyValueNew;
         AfterChange(propertyName);
-        SetModified(propertyName, true);
+        SetModified(propertyName, modified: true);
+
         return true;
     }
 
@@ -759,9 +757,9 @@ public class RtfProperty
         }
 
         var propertyValueOld = GetProperty(propertyName);
-        if (propertyValueOld is long)
+
+        if (propertyValueOld is long valueOld)
         {
-            var valueOld = (long)propertyValueOld;
             if (valueOld == propertyValueNew)
             {
                 return true;
@@ -771,7 +769,8 @@ public class RtfProperty
         BeforeChange(propertyName);
         Properties[propertyName] = propertyValueNew;
         AfterChange(propertyName);
-        SetModified(propertyName, true);
+        SetModified(propertyName, modified: true);
+
         return true;
     }
 }

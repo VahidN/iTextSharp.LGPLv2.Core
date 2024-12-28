@@ -491,6 +491,7 @@ public class RtfParser
     public static void OutputDebug(object doc, int groupLevel, string str)
     {
         Console.Out.WriteLine(str);
+
         if (doc == null)
         {
             return;
@@ -501,16 +502,17 @@ public class RtfParser
             groupLevel = 0;
         }
 
-        var spaces = new string(' ', groupLevel * 2);
-        if (doc is RtfDocument)
+        var spaces = new string(c: ' ', groupLevel * 2);
+
+        if (doc is RtfDocument rtfDocument)
         {
-            ((RtfDocument)doc).Add(new RtfDirectContent("\n" + spaces + str));
+            rtfDocument.Add(new RtfDirectContent("\n" + spaces + str));
         }
-        else if (doc is Document)
+        else if (doc is Document document)
         {
             try
             {
-                ((Document)doc).Add(new RtfDirectContent("\n" + spaces + str));
+                document.Add(new RtfDirectContent("\n" + spaces + str));
             }
             catch (DocumentException)
             {
@@ -523,10 +525,7 @@ public class RtfParser
     ///     the new EventListener.
     /// </summary>
     /// <param name="listener"></param>
-    public void AddListener(IEventListener listener)
-    {
-        _listeners.Add(listener);
-    }
+    public void AddListener(IEventListener listener) => _listeners.Add(listener);
 
     /// <summary>
     ///     Converts an RTF document to an iText document.
@@ -545,7 +544,7 @@ public class RtfParser
             return;
         }
 
-        init(TYPE_CONVERT, null, readerIn, doc, null);
+        init(TYPE_CONVERT, rtfDoc: null, readerIn, doc, elem: null);
         SetCurrentDestination(RtfDestinationMgr.DESTINATION_DOCUMENT);
         _startDate = DateTime.Now;
         _startTime = _startDate.Ticks / 10000L;
@@ -654,6 +653,7 @@ public class RtfParser
         var handled = false;
 
         var dest = GetCurrentDestination();
+
         if (dest != null)
         {
             handled = dest.HandleCharacter(nextChar);
@@ -718,6 +718,7 @@ public class RtfParser
         if (GetTokeniserState() == TOKENISER_SKIP_GROUP)
         {
             _ctrlWordSkippedCount++;
+
             return result;
         }
 
@@ -752,6 +753,7 @@ public class RtfParser
         _openGroupCount++; // stats
         _groupLevel++; // current group level in tokeniser
         _docGroupLevel++; // current group level in document
+
         if (GetTokeniserState() == TOKENISER_SKIP_GROUP)
         {
             _groupSkippedCount++;
@@ -767,6 +769,7 @@ public class RtfParser
 
         _stackState.Push(_currentState);
         _currentState = new RtfParserState(_currentState);
+
         // do not set this true until after the state is pushed
         // otherwise it inserts a { where one does not belong.
         _currentState.NewGroup = true;
@@ -798,11 +801,12 @@ public class RtfParser
             return;
         }
 
-        init(TYPE_IMPORT_FULL, rtfDoc, readerIn, _document, null);
+        init(TYPE_IMPORT_FULL, rtfDoc, readerIn, _document, elem: null);
         SetCurrentDestination(RtfDestinationMgr.DESTINATION_NULL);
         _startDate = DateTime.Now;
         _startTime = _startDate.Ticks / 10000L;
         _groupLevel = 0;
+
         try
         {
             Tokenise();
@@ -837,6 +841,7 @@ public class RtfParser
         _startDate = DateTime.Now;
         _startTime = _startDate.Ticks / 10000L;
         _groupLevel = 0;
+
         try
         {
             Tokenise();
@@ -868,7 +873,7 @@ public class RtfParser
             return;
         }
 
-        init(TYPE_IMPORT_FRAGMENT, rtfDoc, readerIn, null, null);
+        init(TYPE_IMPORT_FRAGMENT, rtfDoc, readerIn, doc: null, elem: null);
         handleImportMappings(importMappings);
         SetCurrentDestination(RtfDestinationMgr.DESTINATION_DOCUMENT);
         _groupLevel = 1;
@@ -934,10 +939,7 @@ public class RtfParser
     ///     the EventListener that has to be removed.
     /// </summary>
     /// <param name="listener"></param>
-    public void RemoveListener(IEventListener listener)
-    {
-        _listeners.Remove(listener);
-    }
+    public void RemoveListener(IEventListener listener) => _listeners.Remove(listener);
 
     /// <summary>
     ///     Set the current destination object for the current state.
@@ -946,13 +948,16 @@ public class RtfParser
     public bool SetCurrentDestination(string destination)
     {
         var dest = RtfDestinationMgr.GetDestination(destination);
+
         if (dest != null)
         {
             _currentState.Destination = dest;
+
             return false;
         }
 
         SetTokeniserStateSkipGroup();
+
         return false;
     }
 
@@ -964,25 +969,20 @@ public class RtfParser
     public bool SetExtendedDestination(bool value)
     {
         _currentState.IsExtendedDestination = value;
+
         return _currentState.IsExtendedDestination;
     }
 
     /// <summary>
     /// </summary>
     /// <param name="logAppend">the logAppend to set</param>
-    public void SetLogAppend(bool logAppend)
-    {
-        _logAppend = logAppend;
-    }
+    public void SetLogAppend(bool logAppend) => _logAppend = logAppend;
 
     /// <summary>
     ///     Set the logFile name
     /// </summary>
     /// <param name="logFile">the logFile to set</param>
-    public void SetLogFile(string logFile)
-    {
-        _logFile = logFile;
-    }
+    public void SetLogFile(string logFile) => _logFile = logFile;
 
     /// <summary>
     ///     Set the logFile name
@@ -999,10 +999,7 @@ public class RtfParser
     ///     Set flag indicating if logging is on or off
     /// </summary>
     /// <param name="logging"> true  to turn on logging,  false  to turn off logging.</param>
-    public void SetLogging(bool logging)
-    {
-        _logging = logging;
-    }
+    public void SetLogging(bool logging) => _logging = logging;
 
     /// <summary>
     ///     Helper method to set the new group flag
@@ -1012,6 +1009,7 @@ public class RtfParser
     public bool SetNewGroup(bool value)
     {
         _currentState.NewGroup = value;
+
         return _currentState.NewGroup;
     }
 
@@ -1033,6 +1031,7 @@ public class RtfParser
     public int SetParserState(int newState)
     {
         _currentState.ParserState = newState;
+
         return _currentState.ParserState;
     }
 
@@ -1055,6 +1054,7 @@ public class RtfParser
     public int SetTokeniserState(int value)
     {
         _currentState.TokeniserState = value;
+
         return _currentState.TokeniserState;
     }
 
@@ -1084,10 +1084,7 @@ public class RtfParser
     ///     Set the tokeniser state to skip to the end of the group.
     ///     Sets the state to TOKENISER_SKIP_GROUP and skipGroupLevel to the current group level.
     /// </summary>
-    public void SetTokeniserStateNormal()
-    {
-        SetTokeniserState(TOKENISER_NORMAL);
-    }
+    public void SetTokeniserStateNormal() => SetTokeniserState(TOKENISER_NORMAL);
 
     /// <summary>
     ///     Set the tokeniser state to skip to the end of the group.
@@ -1109,7 +1106,6 @@ public class RtfParser
         var nextChar = 0;
         SetTokeniserState(TOKENISER_NORMAL); // set initial tokeniser state
 
-
         while ((nextChar = _pbReader.ReadByte()) != -1)
         {
             _byteCount++;
@@ -1127,9 +1123,11 @@ public class RtfParser
                 {
                     case '{': // scope delimiter - Open
                         HandleOpenGroup();
+
                         break;
                     case '}': // scope delimiter - Close
                         HandleCloseGroup();
+
                         break;
                     case '\n': // noise character
                     case '\r': // noise character
@@ -1156,6 +1154,7 @@ public class RtfParser
                         {
                             var hexChars = new StringBuilder();
                             hexChars.Append(nextChar);
+
                             if ((nextChar = _pbReader.ReadByte()) == -1)
                             {
                                 return;
@@ -1163,10 +1162,11 @@ public class RtfParser
 
                             _byteCount++;
                             hexChars.Append(nextChar);
+
                             try
                             {
                                 nextChar = int.Parse(hexChars.ToString(), NumberStyles.HexNumber,
-                                                     CultureInfo.InvariantCulture);
+                                    CultureInfo.InvariantCulture);
                             }
                             catch
                             {
@@ -1179,6 +1179,7 @@ public class RtfParser
                         if ((errorCode = parseChar(nextChar)) != errOK)
                         {
                             return; // some error occurred. we should send a
+
                             // real error
                         }
 
@@ -1192,6 +1193,7 @@ public class RtfParser
         } // end while (reader.Read(nextChar) != -1)
 
         var dest = GetCurrentDestination();
+
         if (dest != null)
         {
             dest.CloseDestination();
@@ -1214,6 +1216,7 @@ public class RtfParser
         _groupSkippedCount = 0;
         _startTime = 0;
         _endTime = 0;
+
         //startDate = null;
         //endDate = null;
     }
@@ -1261,6 +1264,7 @@ public class RtfParser
     private void init(int type, RtfDocument rtfDoc, Stream readerIn, Document doc, IElement elem)
     {
         Init_stats();
+
         // initialize reader to a PushbackReader
         _pbReader = Init_Reader(readerIn);
 
@@ -1275,9 +1279,9 @@ public class RtfParser
 
         // get destination Mgr
         _destinationMgr = RtfDestinationMgr.GetInstance(this);
+
         // set the parser
         RtfDestinationMgr.SetParser(this);
-
 
         // DEBUG INFO for timing and memory usage of RtfCtrlWordMgr object
         // create multiple new RtfCtrlWordMgr objects to check timing and memory usage
@@ -1295,11 +1299,12 @@ public class RtfParser
 
         foreach (var listener in _listeners)
         {
-            if (listener is IRtfCtrlWordListener)
+            if (listener is IRtfCtrlWordListener wordListener)
             {
-                _rtfKeywordMgr.AddRtfCtrlWordListener((IRtfCtrlWordListener)listener);
+                _rtfKeywordMgr.AddRtfCtrlWordListener(wordListener);
             }
         }
+
         //      endFree = Runtime.GetRuntime().FreeMemory();
         //      endTime = System.CurrentTimeMillis();
         //      endDate = new Date();
@@ -1401,9 +1406,9 @@ public class RtfParser
     /// <returns></returns>
     private static PushbackStream Init_Reader(Stream readerIn)
     {
-        if (readerIn is PushbackStream)
+        if (readerIn is PushbackStream stream)
         {
-            return (PushbackStream)readerIn;
+            return stream;
         }
 
         // return the proper reader object to the parser setup
@@ -1426,13 +1431,13 @@ public class RtfParser
         // needs to handle group levels for parsing
         // examples
         /*
-        * {\f3\froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}
-        * {\f7\fswiss\fcharset0\fprq2{\*\panose 020b0604020202030204}Helv{\*\falt Arial};} <- special case!!!!
-        * {\f5\froman\fcharset0 Tahoma;}
-        * {\f6\froman\fcharset0 Arial Black;}
-        * {\info(\author name}{\company company name}}
-        * ... document text ...
-        */
+         * {\f3\froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}
+         * {\f7\fswiss\fcharset0\fprq2{\*\panose 020b0604020202030204}Helv{\*\falt Arial};} <- special case!!!!
+         * {\f5\froman\fcharset0 Tahoma;}
+         * {\f6\froman\fcharset0 Arial Black;}
+         * {\info(\author name}{\company company name}}
+         * ... document text ...
+         */
         if (GetTokeniserState() == TOKENISER_BINARY && --_binByteCount <= 0)
         {
             SetTokeniserStateNormal();
@@ -1477,6 +1482,7 @@ public class RtfParser
             ctrlWordParam.CtrlWord = parsedCtrlWord.ToString();
             result = HandleCtrlWord(ctrlWordParam);
             _lastCtrlWordParam = ctrlWordParam;
+
             return result;
         }
 
@@ -1486,16 +1492,19 @@ public class RtfParser
         do
         {
             parsedCtrlWord.Append((char)nextChar);
+
             //TODO: catch EOF
             nextChar = reader.ReadByte();
             _byteCount++;
-        } while (char.IsLetter((char)nextChar));
+        }
+        while (char.IsLetter((char)nextChar));
 
         ctrlWordParam.CtrlWord = parsedCtrlWord.ToString();
 
         if ((char)nextChar == '-')
         {
             ctrlWordParam.IsNeg = true;
+
             if ((nextChar = reader.ReadByte()) == -1)
             {
                 return errEndOfFile;
@@ -1507,16 +1516,19 @@ public class RtfParser
         if (char.IsDigit((char)nextChar))
         {
             ctrlWordParam.HasParam = true;
+
             //          for ( ; Character.IsDigit(nextChar[0]); reader.Read(nextChar) ) {
             //              parsedParam.Append(nextChar[0]);
             //          }
             do
             {
                 parsedParam.Append((char)nextChar);
+
                 //TODO: catch EOF
                 nextChar = reader.ReadByte();
                 _byteCount++;
-            } while (char.IsDigit((char)nextChar));
+            }
+            while (char.IsDigit((char)nextChar));
 
             ctrlWordParam.Param = parsedParam.ToString();
         }
@@ -1530,6 +1542,7 @@ public class RtfParser
 
         result = HandleCtrlWord(ctrlWordParam);
         _lastCtrlWordParam = ctrlWordParam;
+
         return result;
     }
 }

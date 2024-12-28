@@ -16,7 +16,7 @@ public class ZapfDingbatsList : List
     ///     Creates a ZapfDingbatsList
     /// </summary>
     /// <param name="zn">a char-number</param>
-    public ZapfDingbatsList(int zn) : base(true)
+    public ZapfDingbatsList(int zn) : base(numbered: true)
     {
         Zn = zn;
         var fontsize = symbol.Font.Size;
@@ -29,7 +29,7 @@ public class ZapfDingbatsList : List
     /// </summary>
     /// <param name="zn">a char-number</param>
     /// <param name="symbolIndent">indent</param>
-    public ZapfDingbatsList(int zn, int symbolIndent) : base(true, symbolIndent)
+    public ZapfDingbatsList(int zn, int symbolIndent) : base(numbered: true, symbolIndent)
     {
         Zn = zn;
         var fontsize = symbol.Font.Size;
@@ -53,9 +53,8 @@ public class ZapfDingbatsList : List
     /// <returns>true if adding the object succeeded</returns>
     public override bool Add(IElement o)
     {
-        if (o is ListItem)
+        if (o is ListItem item)
         {
-            var item = (ListItem)o;
             var chunk = new Chunk(preSymbol, symbol.Font);
             chunk.Append(((char)Zn).ToString());
             chunk.Append(postSymbol);
@@ -63,15 +62,16 @@ public class ZapfDingbatsList : List
             item.SetIndentationLeft(symbolIndent, autoindent);
             item.IndentationRight = 0;
             list.Add(item);
+
             return true;
         }
 
-        if (o is List)
+        if (o is List nested)
         {
-            var nested = (List)o;
-            nested.IndentationLeft = nested.IndentationLeft + symbolIndent;
+            nested.IndentationLeft += symbolIndent;
             first--;
             list.Add(nested);
+
             return true;
         }
 

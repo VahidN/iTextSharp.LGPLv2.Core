@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace iTextSharp;
@@ -11,17 +10,13 @@ namespace iTextSharp;
 public sealed class MD5BouncyCastle : HashAlgorithm
 {
 #if NET40
-        public static new HashAlgorithm Create() =>	MD5.Create();
+    public new static HashAlgorithm Create() => MD5.Create();
 #else
-    public new static HashAlgorithm Create() =>
-        string.Equals(RuntimeInformation.OSDescription, "Browser", StringComparison.OrdinalIgnoreCase)
+    public new static HashAlgorithm Create()
+        => string.Equals(System.Runtime.InteropServices.RuntimeInformation.OSDescription, b: "Browser", StringComparison.OrdinalIgnoreCase)
             ? new MD5BouncyCastle()
             : MD5.Create();
 #endif
-
-    private MD5BouncyCastle()
-    {
-    }
 
     private readonly MD5Digest _digestInternal = new();
 
@@ -30,14 +25,13 @@ public sealed class MD5BouncyCastle : HashAlgorithm
     }
 
     protected override void HashCore(byte[] array, int ibStart, int cbSize)
-    {
-        _digestInternal.BlockUpdate(array, ibStart, cbSize);
-    }
+        => _digestInternal.BlockUpdate(array, ibStart, cbSize);
 
     protected override byte[] HashFinal()
     {
         var output = new byte[_digestInternal.GetByteLength()];
-        _digestInternal.DoFinal(output, 0);
+        _digestInternal.DoFinal(output, outOff: 0);
+
         return output;
     }
 }

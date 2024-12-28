@@ -8,15 +8,18 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfReaderInstance
 {
-    internal static readonly PdfLiteral Identitymatrix = new("[1 0 0 1 0 0]");
-    internal static readonly PdfNumber One = new(1);
+    internal static readonly PdfLiteral Identitymatrix = new(text: "[1 0 0 1 0 0]");
+    internal static readonly PdfNumber One = new(value: 1);
     internal readonly RandomAccessFileOrArray File;
-    internal readonly INullValueDictionary<int, PdfImportedPage> ImportedPages = new NullValueDictionary<int, PdfImportedPage>();
+
+    internal readonly INullValueDictionary<int, PdfImportedPage> ImportedPages =
+        new NullValueDictionary<int, PdfImportedPage>();
+
     internal readonly int[] MyXref;
-    internal List<int> NextRound = new();
     internal readonly PdfReader reader;
     internal readonly INullValueDictionary<int, object> Visited = new NullValueDictionary<int, object>();
     internal readonly PdfWriter Writer;
+    internal List<int> NextRound = new();
 
     internal PdfReaderInstance(PdfReader reader, PdfWriter writer)
     {
@@ -43,6 +46,7 @@ public class PdfReaderInstance
         var contents = PdfReader.GetPdfObjectRelease(page.Get(PdfName.Contents));
         var dic = new PdfDictionary();
         byte[] bout = null;
+
         if (contents != null)
         {
             if (contents.IsStream())
@@ -65,6 +69,7 @@ public class PdfReaderInstance
         var impPage = ImportedPages[pageNumber];
         dic.Put(PdfName.Bbox, new PdfRectangle(impPage.BoundingBox));
         var matrix = impPage.Matrix;
+
         if (matrix == null)
         {
             dic.Put(PdfName.Matrix, Identitymatrix);
@@ -76,6 +81,7 @@ public class PdfReaderInstance
 
         dic.Put(PdfName.Formtype, One);
         PrStream stream;
+
         if (bout == null)
         {
             stream = new PrStream((PrStream)contents, dic);
@@ -93,15 +99,16 @@ public class PdfReaderInstance
     {
         if (!reader.IsOpenedWithFullPermissions)
         {
-            throw new ArgumentException("PdfReader not opened with owner password");
+            throw new InvalidOperationException(message: "PdfReader not opened with owner password");
         }
 
         if (pageNumber < 1 || pageNumber > reader.NumberOfPages)
         {
-            throw new ArgumentException("Invalid page number: " + pageNumber);
+            throw new InvalidOperationException("Invalid page number: " + pageNumber);
         }
 
         var pageT = ImportedPages[pageNumber];
+
         if (pageT == null)
         {
             pageT = new PdfImportedPage(this, Writer, pageNumber);
@@ -125,6 +132,7 @@ public class PdfReaderInstance
     internal PdfObject GetResources(int pageNumber)
     {
         var obj = PdfReader.GetPdfObjectRelease(reader.GetPageNRelease(pageNumber).Get(PdfName.Resources));
+
         return obj;
     }
 
@@ -133,6 +141,7 @@ public class PdfReaderInstance
         try
         {
             File.ReOpen();
+
             foreach (var ip in ImportedPages.Values)
             {
                 Writer.AddToBody(ip.GetFormXObject(Writer.CompressionLevel), ip.IndirectReference);
@@ -160,9 +169,11 @@ public class PdfReaderInstance
         {
             var vec = NextRound;
             NextRound = new List<int>();
+
             for (var k = 0; k < vec.Count; ++k)
             {
                 var i = vec[k];
+
                 if (!Visited.ContainsKey(i))
                 {
                     Visited[i] = null;

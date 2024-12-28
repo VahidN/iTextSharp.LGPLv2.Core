@@ -24,7 +24,7 @@ public class RtfDiskCache : IRtfDataCache
     /// </summary>
     public RtfDiskCache()
     {
-        _tempFile = Path.GetTempFileName();
+        _tempFile = Path.GetRandomFileName();
         _data = new BufferedStream(new FileStream(_tempFile, FileMode.Create));
     }
 

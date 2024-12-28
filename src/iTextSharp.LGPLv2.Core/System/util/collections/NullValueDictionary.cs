@@ -3,16 +3,6 @@ namespace System.util;
 /// <summary>
 ///     This custom IDictionary doesn't throw a KeyNotFoundException while accessing its value by a given key
 /// </summary>
-public interface INullValueDictionary<TKey, TValue> : IDictionary<TKey, TValue>
-{
-    new TValue this[TKey key] { get; set; }
-
-    INullValueDictionary<TKey, TValue> Clone();
-}
-
-/// <summary>
-///     This custom IDictionary doesn't throw a KeyNotFoundException while accessing its value by a given key
-/// </summary>
 public class NullValueDictionary<TKey, TValue> : Dictionary<TKey, TValue>, INullValueDictionary<TKey, TValue>
 {
     public NullValueDictionary()
@@ -23,8 +13,7 @@ public class NullValueDictionary<TKey, TValue> : Dictionary<TKey, TValue>, INull
     {
     }
 
-    public NullValueDictionary(IDictionary<TKey, TValue> dictionary)
-        : base(dictionary, null)
+    public NullValueDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary, comparer: null)
     {
     }
 
@@ -38,10 +27,7 @@ public class NullValueDictionary<TKey, TValue> : Dictionary<TKey, TValue>, INull
 
     public INullValueDictionary<TKey, TValue> Clone() => new NullValueDictionary<TKey, TValue>(this);
 
-    public IList<TKey> ToOrderedKeys()
-    {
-        return Keys.OrderBy(key => key).ToList();
-    }
+    public IList<TKey> ToOrderedKeys() => Keys.OrderBy(key => key).ToList();
 
     public IList<TKey> GetKeys() => Keys.ToList();
 

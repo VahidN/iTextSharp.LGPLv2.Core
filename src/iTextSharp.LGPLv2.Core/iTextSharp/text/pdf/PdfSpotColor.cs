@@ -41,40 +41,72 @@ public class PdfSpotColor
 
     public float Tint => tint;
 
-    protected internal PdfObject GetSpotObject(PdfWriter writer)
+    internal protected PdfObject GetSpotObject(PdfWriter writer)
     {
         var array = new PdfArray(PdfName.Separation);
         array.Add(Name);
         PdfFunction func = null;
-        if (Altcs is ExtendedColor)
+
+        if (Altcs is ExtendedColor extendedColor)
         {
-            var type = ((ExtendedColor)Altcs).Type;
+            var type = extendedColor.Type;
+
             switch (type)
             {
                 case ExtendedColor.TYPE_GRAY:
                     array.Add(PdfName.Devicegray);
-                    func = PdfFunction.Type2(writer, new float[] { 0, 1 }, null, new float[] { 0 },
-                                             new[] { ((GrayColor)Altcs).Gray }, 1);
+
+                    func = PdfFunction.Type2(writer, new float[]
+                    {
+                        0, 1
+                    }, range: null, new float[]
+                    {
+                        0
+                    }, new[]
+                    {
+                        ((GrayColor)extendedColor).Gray
+                    }, n: 1);
+
                     break;
                 case ExtendedColor.TYPE_CMYK:
                     array.Add(PdfName.Devicecmyk);
-                    var cmyk = (CmykColor)Altcs;
-                    func = PdfFunction.Type2(writer, new float[] { 0, 1 }, null, new float[] { 0, 0, 0, 0 },
-                                             new[] { cmyk.Cyan, cmyk.Magenta, cmyk.Yellow, cmyk.Black }, 1);
+                    var cmyk = (CmykColor)extendedColor;
+
+                    func = PdfFunction.Type2(writer, new float[]
+                    {
+                        0, 1
+                    }, range: null, new float[]
+                    {
+                        0, 0, 0, 0
+                    }, new[]
+                    {
+                        cmyk.Cyan, cmyk.Magenta, cmyk.Yellow, cmyk.Black
+                    }, n: 1);
+
                     break;
                 default:
-                    throw new
-                        NotSupportedException("Only RGB, Gray and CMYK are supported as alternative color spaces.");
+                    throw new NotSupportedException(
+                        message: "Only RGB, Gray and CMYK are supported as alternative color spaces.");
             }
         }
         else
         {
             array.Add(PdfName.Devicergb);
-            func = PdfFunction.Type2(writer, new float[] { 0, 1 }, null, new float[] { 1, 1, 1 },
-                                     new[] { (float)Altcs.R / 255, (float)Altcs.G / 255, (float)Altcs.B / 255 }, 1);
+
+            func = PdfFunction.Type2(writer, new float[]
+            {
+                0, 1
+            }, range: null, new float[]
+            {
+                1, 1, 1
+            }, new[]
+            {
+                (float)Altcs.R / 255, (float)Altcs.G / 255, (float)Altcs.B / 255
+            }, n: 1);
         }
 
         array.Add(func.Reference);
+
         return array;
     }
 }

@@ -12,7 +12,7 @@ namespace iTextSharp.text.rtf.parser.ctrlwords;
 ///     @author Howard Shank (hgshank@yahoo.com)
 ///     @since 2.0.8
 /// </summary>
-public sealed class RtfCtrlWordType
+public static class RtfCtrlWordType
 {
     /// <summary>
     ///     Control word is a destination.

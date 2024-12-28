@@ -838,7 +838,7 @@ public class Barcode128 : Barcode
                     continue;
                 }
 
-                var n = 0;
+                var i = 0;
                 var idlen = 0;
 
                 for (var k = 2; k < 5; ++k)
@@ -848,7 +848,7 @@ public class Barcode128 : Barcode
                         break;
                     }
 
-                    if ((n = _ais[int.Parse(code.Substring(startIndex: 0, k), CultureInfo.InvariantCulture)]) != 0)
+                    if ((i = _ais[int.Parse(code.Substring(startIndex: 0, k), CultureInfo.InvariantCulture)]) != 0)
                     {
                         idlen = k;
 
@@ -864,17 +864,17 @@ public class Barcode128 : Barcode
                 buf.Append(value: '(').Append(code.Substring(startIndex: 0, idlen)).Append(value: ')');
                 code = code.Substring(idlen);
 
-                if (n > 0)
+                if (i > 0)
                 {
-                    n -= idlen;
+                    i -= idlen;
 
-                    if (code.Length <= n)
+                    if (code.Length <= i)
                     {
                         break;
                     }
 
-                    buf.Append(RemoveFnc1(code.Substring(startIndex: 0, n)));
-                    code = code.Substring(n);
+                    buf.Append(RemoveFnc1(code.Substring(startIndex: 0, i)));
+                    code = code.Substring(i);
                 }
                 else
                 {
@@ -1412,14 +1412,14 @@ public class Barcode128 : Barcode
                 continue;
             }
 
-            var n = Math.Min(val1: 2, numDigits);
+            var min = Math.Min(val1: 2, numDigits);
 
-            if (textIndex + n > len)
+            if (textIndex + min > len)
             {
                 return false;
             }
 
-            while (n-- > 0)
+            while (min-- > 0)
             {
                 var c = text[textIndex++];
 
