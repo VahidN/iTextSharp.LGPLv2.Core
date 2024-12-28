@@ -15,6 +15,9 @@ jobs:
         dotnet-version: 9.0.x
     - name: Build iTextSharp.LGPLv2.Core lib
       run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
+
+    - name: Run iTextSharp.LGPLv2.Core lib functional tests
+      run: dotnet test ./src/iTextSharp.LGPLv2.Core.FunctionalTests/iTextSharp.LGPLv2.Core.FunctionalTests.csproj
       
     - name: Push Package to NuGet.org
       if: github.event_name == 'push'
