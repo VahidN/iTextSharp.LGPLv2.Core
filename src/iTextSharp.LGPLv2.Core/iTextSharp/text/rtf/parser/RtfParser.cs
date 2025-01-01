@@ -490,8 +490,6 @@ public class RtfParser
 
     public static void OutputDebug(object doc, int groupLevel, string str)
     {
-        Console.Out.WriteLine(str);
-
         if (doc == null)
         {
             return;

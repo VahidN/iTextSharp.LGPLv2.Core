@@ -11,13 +11,13 @@ namespace iTextSharp.text.pdf;
 public class RandomAccessFileOrArray
 {
     internal readonly byte[] ArrayIn;
+    internal readonly string Filename;
     internal int ArrayInPtr;
     internal byte Back;
-    internal readonly string Filename;
     internal bool IsBack;
     internal FileStream Rf;
 
-    public RandomAccessFileOrArray(string filename) : this(filename, false)
+    public RandomAccessFileOrArray(string filename) : this(filename, forceRead: false)
     {
     }
 
@@ -29,34 +29,28 @@ public class RandomAccessFileOrArray
         }
 
         var cachedBytes = PdfResourceFileCache.Get(filename);
+
         if (cachedBytes != null)
         {
             ArrayIn = cachedBytes;
+
             return;
         }
 
         if (!File.Exists(filename))
         {
-            if (filename.StartsWith("file:/", StringComparison.OrdinalIgnoreCase) ||
-                filename.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                filename.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            if (filename.StartsWith(value: "file:/", StringComparison.OrdinalIgnoreCase) ||
+                filename.StartsWith(value: "http://", StringComparison.OrdinalIgnoreCase) ||
+                filename.StartsWith(value: "https://", StringComparison.OrdinalIgnoreCase))
             {
                 using var isp = filename.GetResponseStream();
                 ArrayIn = InputStreamToArray(isp);
+
                 return;
             }
             else
             {
-                //Stream isp = BaseFont.GetResourceStream(filename);
-                Stream isp = null;
-                if ("-".Equals(filename, StringComparison.Ordinal))
-                {
-                    isp = ((StreamReader)Console.In).BaseStream;
-                }
-                else
-                {
-                    isp = BaseFont.GetResourceStream(filename);
-                }
+                var isp = BaseFont.GetResourceStream(filename);
 
                 if (isp == null)
                 {
@@ -66,6 +60,7 @@ public class RandomAccessFileOrArray
                 try
                 {
                     ArrayIn = InputStreamToArray(isp);
+
                     return;
                 }
                 finally
@@ -85,6 +80,7 @@ public class RandomAccessFileOrArray
         {
             using var s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
             ArrayIn = InputStreamToArray(s);
+
             return;
         }
 
@@ -131,6 +127,7 @@ public class RandomAccessFileOrArray
         {
             InsureOpen();
             var n = IsBack ? 1 : 0;
+
             if (ArrayIn == null)
             {
                 return (int)Rf.Position - n - StartOffset;
@@ -147,6 +144,7 @@ public class RandomAccessFileOrArray
             if (ArrayIn == null)
             {
                 InsureOpen();
+
                 return (int)Rf.Length - StartOffset;
             }
 
@@ -168,15 +166,17 @@ public class RandomAccessFileOrArray
 
         var b = new byte[8192];
         using var outp = new MemoryStream();
+
         while (true)
         {
-            var read = isp.Read(b, 0, b.Length);
+            var read = isp.Read(b, offset: 0, b.Length);
+
             if (read < 1)
             {
                 break;
             }
 
-            outp.Write(b, 0, read);
+            outp.Write(b, offset: 0, read);
         }
 
         return outp.ToArray();
@@ -185,6 +185,7 @@ public class RandomAccessFileOrArray
     public void Close()
     {
         IsBack = false;
+
         if (Rf != null)
         {
             Rf.Dispose();
@@ -205,6 +206,7 @@ public class RandomAccessFileOrArray
         if (IsBack)
         {
             IsBack = false;
+
             return Back & 0xff;
         }
 
@@ -234,12 +236,15 @@ public class RandomAccessFileOrArray
         }
 
         var n = 0;
+
         if (IsBack)
         {
             IsBack = false;
+
             if (len == 1)
             {
                 b[off] = Back;
+
                 return 1;
             }
 
@@ -265,6 +270,7 @@ public class RandomAccessFileOrArray
 
         Array.Copy(ArrayIn, ArrayInPtr, b, off, len);
         ArrayInPtr += len;
+
         return len + n;
     }
 
@@ -275,12 +281,13 @@ public class RandomAccessFileOrArray
             throw new ArgumentNullException(nameof(b));
         }
 
-        return Read(b, 0, b.Length);
+        return Read(b, off: 0, b.Length);
     }
 
     public bool ReadBoolean()
     {
         var ch = Read();
+
         if (ch < 0)
         {
             throw new EndOfStreamException();
@@ -292,6 +299,7 @@ public class RandomAccessFileOrArray
     public byte ReadByte()
     {
         var ch = Read();
+
         if (ch < 0)
         {
             throw new EndOfStreamException();
@@ -304,6 +312,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -327,6 +336,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -337,33 +347,69 @@ public class RandomAccessFileOrArray
 
     public double ReadDouble()
     {
-        long[] a = { ReadLong() };
-        double[] b = { 0 };
-        Buffer.BlockCopy(a, 0, b, 0, 8);
+        long[] a =
+        {
+            ReadLong()
+        };
+
+        double[] b =
+        {
+            0
+        };
+
+        Buffer.BlockCopy(a, srcOffset: 0, b, dstOffset: 0, count: 8);
+
         return b[0];
     }
 
     public double ReadDoubleLe()
     {
-        long[] a = { ReadLongLe() };
-        double[] b = { 0 };
-        Buffer.BlockCopy(a, 0, b, 0, 8);
+        long[] a =
+        {
+            ReadLongLe()
+        };
+
+        double[] b =
+        {
+            0
+        };
+
+        Buffer.BlockCopy(a, srcOffset: 0, b, dstOffset: 0, count: 8);
+
         return b[0];
     }
 
     public float ReadFloat()
     {
-        int[] a = { ReadInt() };
-        float[] b = { 0 };
-        Buffer.BlockCopy(a, 0, b, 0, 4);
+        int[] a =
+        {
+            ReadInt()
+        };
+
+        float[] b =
+        {
+            0
+        };
+
+        Buffer.BlockCopy(a, srcOffset: 0, b, dstOffset: 0, count: 4);
+
         return b[0];
     }
 
     public float ReadFloatLe()
     {
-        int[] a = { ReadIntLe() };
-        float[] b = { 0 };
-        Buffer.BlockCopy(a, 0, b, 0, 4);
+        int[] a =
+        {
+            ReadIntLe()
+        };
+
+        float[] b =
+        {
+            0
+        };
+
+        Buffer.BlockCopy(a, srcOffset: 0, b, dstOffset: 0, count: 4);
+
         return b[0];
     }
 
@@ -374,7 +420,7 @@ public class RandomAccessFileOrArray
             throw new ArgumentNullException(nameof(b));
         }
 
-        ReadFully(b, 0, b.Length);
+        ReadFully(b, off: 0, b.Length);
     }
 
     public void ReadFully(byte[] b, int off, int len)
@@ -385,16 +431,19 @@ public class RandomAccessFileOrArray
         }
 
         var n = 0;
+
         do
         {
             var count = Read(b, off + n, len - n);
+
             if (count <= 0)
             {
                 throw new EndOfStreamException();
             }
 
             n += count;
-        } while (n < len);
+        }
+        while (n < len);
     }
 
     public int ReadInt()
@@ -403,6 +452,7 @@ public class RandomAccessFileOrArray
         var ch2 = Read();
         var ch3 = Read();
         var ch4 = Read();
+
         if ((ch1 | ch2 | ch3 | ch4) < 0)
         {
             throw new EndOfStreamException();
@@ -429,6 +479,7 @@ public class RandomAccessFileOrArray
         var ch2 = Read();
         var ch3 = Read();
         var ch4 = Read();
+
         if ((ch1 | ch2 | ch3 | ch4) < 0)
         {
             throw new EndOfStreamException();
@@ -450,10 +501,12 @@ public class RandomAccessFileOrArray
                 case -1:
                 case '\n':
                     eol = true;
+
                     break;
                 case '\r':
                     eol = true;
                     var cur = FilePointer;
+
                     if (Read() != '\n')
                     {
                         Seek(cur);
@@ -462,6 +515,7 @@ public class RandomAccessFileOrArray
                     break;
                 default:
                     input.Append((char)c);
+
                     break;
             }
         }
@@ -480,6 +534,7 @@ public class RandomAccessFileOrArray
     {
         var i1 = ReadIntLe();
         var i2 = ReadIntLe();
+
         return ((long)i2 << 32) + (i1 & 0xFFFFFFFFL);
     }
 
@@ -487,6 +542,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -516,6 +572,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -527,6 +584,7 @@ public class RandomAccessFileOrArray
     public int ReadUnsignedByte()
     {
         var ch = Read();
+
         if (ch < 0)
         {
             throw new EndOfStreamException();
@@ -552,6 +610,7 @@ public class RandomAccessFileOrArray
         long ch2 = Read();
         long ch3 = Read();
         long ch4 = Read();
+
         if ((ch1 | ch2 | ch3 | ch4) < 0)
         {
             throw new EndOfStreamException();
@@ -566,6 +625,7 @@ public class RandomAccessFileOrArray
         long ch2 = Read();
         long ch3 = Read();
         long ch4 = Read();
+
         if ((ch1 | ch2 | ch3 | ch4) < 0)
         {
             throw new EndOfStreamException();
@@ -578,6 +638,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -602,6 +663,7 @@ public class RandomAccessFileOrArray
     {
         var ch1 = Read();
         var ch2 = Read();
+
         if ((ch1 | ch2) < 0)
         {
             throw new EndOfStreamException();
@@ -617,13 +679,14 @@ public class RandomAccessFileOrArray
             Rf = new FileStream(Filename, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
-        Seek(0);
+        Seek(pos: 0);
     }
 
     public void Seek(int pos)
     {
         pos += StartOffset;
         IsBack = false;
+
         if (ArrayIn == null)
         {
             InsureOpen();
@@ -635,10 +698,7 @@ public class RandomAccessFileOrArray
         }
     }
 
-    public void Seek(long pos)
-    {
-        Seek((int)pos);
-    }
+    public void Seek(long pos) => Seek((int)pos);
 
     public long Skip(long n) => SkipBytes((int)n);
 
@@ -650,9 +710,11 @@ public class RandomAccessFileOrArray
         }
 
         var adj = 0;
+
         if (IsBack)
         {
             IsBack = false;
+
             if (n == 1)
             {
                 return 1;
@@ -669,6 +731,7 @@ public class RandomAccessFileOrArray
         pos = FilePointer;
         len = Length;
         newpos = pos + n;
+
         if (newpos > len)
         {
             newpos = len;

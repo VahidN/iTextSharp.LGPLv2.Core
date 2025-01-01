@@ -556,10 +556,4 @@ public class HyphenationTree : TernaryTree, IPatternConsumer
 
         return null;
     }
-
-    public override void PrintStats()
-    {
-        Console.WriteLine("Value space size = " + Vspace.Length);
-        base.PrintStats();
-    }
 }

@@ -18,7 +18,7 @@ public sealed class RtfDestinationDocument : RtfDestination, IRtfPropertyListene
         "deflang", "deflangfe", "adeflang", "adeflangfe"
     });
 
-    private static List<string> _convertIgnoredCtrlwords = new(new[]
+    private static readonly List<string> _convertIgnoredCtrlwords = new(new[]
     {
         "rtf"
     });

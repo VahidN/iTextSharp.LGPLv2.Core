@@ -143,23 +143,10 @@ public sealed class RtfCtrlWordMgr
             if (ctrlWord != null)
             {
                 ctrlWord.HandleControlword(ctrlWordData);
-
-                if (Debug && DebugFound)
-                {
-                    Console.Out.WriteLine("Keyword found:" + " New:" + ctrlWordData.CtrlWord + " Param:" +
-                                          ctrlWordData.Param + " bParam=" + ctrlWordData.HasParam);
-                }
             }
             else
             {
                 result = RtfParser.errCtrlWordNotFound;
-
-                //result = RtfParser2.errAssertion;
-                if (Debug && DebugNotFound)
-                {
-                    Console.Out.WriteLine("Keyword unknown:" + " New:" + ctrlWordData.CtrlWord + " Param:" +
-                                          ctrlWordData.Param + " bParam=" + ctrlWordData.HasParam);
-                }
             }
         }
 

@@ -313,16 +313,5 @@ public class RtfCtrlWordHandler
     ///     @since 2.0.8
     /// </summary>
     /// <returns> true  if control word was handled,  false  if it was not handled.</returns>
-    protected static bool OnControlWord()
-        =>
-
-            // TODO: This is where events would be triggered
-            false;
-
-    /// <summary>
-    ///     Debug function to print class/method
-    ///     @since 2.0.8
-    /// </summary>
-    /// <param name="txt">The  String  to output.</param>
-    private void printDebug(string txt) => Console.Out.WriteLine(GetType().Name + " : " + txt);
+    protected static bool OnControlWord() => false;
 }

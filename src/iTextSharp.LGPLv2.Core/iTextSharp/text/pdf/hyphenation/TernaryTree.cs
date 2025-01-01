@@ -360,22 +360,6 @@ public class TernaryTree : ICloneable
 
     public virtual void PrintStats()
     {
-        Console.Error.WriteLine("Number of keys = " + Length);
-        Console.Error.WriteLine("Node count = " + Freenode);
-
-        // Console.Error.WriteLine("Array length = " + int.ToString(eq.Length));
-        Console.Error.WriteLine("Key Array length = " + Kv.Length);
-
-        /*
-         * for (int i=0; i<kv.Length; i++)
-         * if ( kv[i] != 0 )
-         * System.out.Print(kv[i]);
-         * else
-         * System.out.Println("");
-         * System.out.Println("Keys:");
-         * for (Enumeration enum = Keys(); enum.HasMoreElements(); )
-         * System.out.Println(enum.NextElement());
-         */
     }
 
     /// <summary>

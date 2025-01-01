@@ -5,3 +5,4 @@ T:System.Collections.ArrayList;Don't use a non-generic data structure.
 T:System.Collections.SortedList;Don't use a non-generic data structure.
 T:System.Collections.Stack;Don't use a non-generic data structure.
 T:System.Collections.Queue;Don't use a non-generic data structure.
+T:System.Console;Libraries should not use STDIO streams. Leave that to the application.

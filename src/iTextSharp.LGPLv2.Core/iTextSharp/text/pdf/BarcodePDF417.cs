@@ -1298,8 +1298,6 @@ public class BarcodePdf417
                     c[j] = '\n';
                 }
             }
-
-            Console.WriteLine("" + v.Type + new string(c));
         }
     }
 

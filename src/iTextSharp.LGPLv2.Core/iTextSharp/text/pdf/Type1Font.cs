@@ -198,8 +198,6 @@ internal class Type1Font : BaseFont
 
                 if (istr == null)
                 {
-                    Console.Error.WriteLine(afmFile + " not found as resource.");
-
                     throw new DocumentException(afmFile + " not found as resource.");
                 }
 
