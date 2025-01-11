@@ -66,6 +66,9 @@ public static class ElementTags
     /// <summary> attribute of the root tag </summary>
     public const string AUTHOR = "author";
 
+    /// <summary> attribute of the root tag </summary>
+    public const string CREATOR = "creator";
+
     /// <summary>
     ///     a possible list attribute
     /// </summary>

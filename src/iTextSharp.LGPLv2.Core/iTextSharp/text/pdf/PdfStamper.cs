@@ -2,6 +2,7 @@ using System.util;
 using iTextSharp.text.pdf.collection;
 using iTextSharp.text.pdf.interfaces;
 using Org.BouncyCastle.X509;
+using ArgumentNullException = System.ArgumentNullException;
 
 namespace iTextSharp.text.pdf;
 
@@ -39,6 +40,7 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
         }
 
         Stamper = new PdfStamperImp(reader, os, pdfVersion: '\0', append: false);
+        MoreInfo = Stamper.Reader.Info;
     }
 
     /// <summary>
@@ -59,6 +61,7 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
         }
 
         Stamper = new PdfStamperImp(reader, os, pdfVersion, append: false);
+        MoreInfo = Stamper.Reader.Info;
     }
 
     /// <summary>
@@ -81,6 +84,7 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
         }
 
         Stamper = new PdfStamperImp(reader, os, pdfVersion, append);
+        MoreInfo = Stamper.Reader.Info;
     }
 
     /// <summary>
@@ -721,4 +725,50 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
     /// <param name="transition">the transition object. A  null  removes the transition</param>
     /// <param name="page">the page where the transition will be applied. The first page is 1</param>
     public void SetTransition(PdfTransition transition, int page) => Stamper.SetTransition(transition, page);
+
+    /// <summary>
+    ///     Adds the author to a Document.
+    /// </summary>
+    /// <param name="author">the name of the author</param>
+    public void AddAuthor(string author) => MoreInfo[PdfName.Author.Key] = author;
+
+    /// <summary>
+    ///     Adds the current date and time to a Document.
+    /// </summary>
+    public void AddCreationDate(DateTime? dateTime = null)
+        => MoreInfo[PdfName.Creationdate.Key] = dateTime.HasValue
+            ? dateTime.Value.ToString(format: "ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture)
+            : DateTime.Now.ToString(format: "ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture);
+
+    /// <summary>
+    ///     Adds the creator to a Document.
+    /// </summary>
+    /// <param name="creator">the name of the creator</param>
+    public void AddCreator(string creator) => MoreInfo[PdfName.Creator.Key] = creator;
+
+    /// <summary>
+    ///     Adds the keywords to a Document.
+    /// </summary>
+    /// <param name="keywords">keywords to add</param>
+    public void AddKeywords(string keywords) => MoreInfo[PdfName.Keywords.Key] = keywords;
+
+    /// <summary>
+    ///     Adds the producer to a Document.
+    /// </summary>
+    public void AddProducer(string producer = null) => MoreInfo[PdfName.Producer.Key] = producer ?? Document.Version;
+
+    /// <summary>
+    ///     Adds the subject to a Document.
+    /// </summary>
+    /// <param name="subject">the subject</param>
+    public void AddSubject(string subject) => MoreInfo[PdfName.Subject.Key] = subject;
+
+    /// <summary>
+    ///     methods concerning the header or some meta information
+    /// </summary>
+    /// <summary>
+    ///     Adds the title to a Document.
+    /// </summary>
+    /// <param name="title">the title</param>
+    public void AddTitle(string title) => MoreInfo[PdfName.Title.Key] = title;
 }

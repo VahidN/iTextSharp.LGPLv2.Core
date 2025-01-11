@@ -3681,12 +3681,6 @@ public class PdfDocument : Document
         /// </summary>
         internal void Addkey(string key, string value)
         {
-            if (key.Equals(value: "Producer", StringComparison.Ordinal) ||
-                key.Equals(value: "CreationDate", StringComparison.Ordinal))
-            {
-                return;
-            }
-
             Put(new PdfName(key), new PdfString(value, TEXT_UNICODE));
         }
 

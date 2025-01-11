@@ -26,3302 +26,3302 @@ public class PdfName : PdfObject, IComparable
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName _3D = new("3D");
+    public static readonly PdfName _3D = new(name: "3D");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName A = new("A");
+    public static readonly PdfName A = new(name: "A");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Aa = new("AA");
+    public static readonly PdfName Aa = new(name: "AA");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.5 renamed from ABSOLUTECALORIMETRIC
     /// </summary>
-    public static readonly PdfName Absolutecolorimetric = new("AbsoluteColorimetric");
+    public static readonly PdfName Absolutecolorimetric = new(name: "AbsoluteColorimetric");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ac = new("AC");
+    public static readonly PdfName Ac = new(name: "AC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Acroform = new("AcroForm");
+    public static readonly PdfName Acroform = new(name: "AcroForm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Action = new("Action");
+    public static readonly PdfName Action = new(name: "Action");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Activation = new("Activation");
+    public static readonly PdfName Activation = new(name: "Activation");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Adbe = new("ADBE");
+    public static readonly PdfName Adbe = new(name: "ADBE");
 
     /// <summary>
     ///     a name used in PDF structure
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Actualtext = new("ActualText");
+    public static readonly PdfName Actualtext = new(name: "ActualText");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdbePkcs7Detached = new("adbe.pkcs7.detached");
+    public static readonly PdfName AdbePkcs7Detached = new(name: "adbe.pkcs7.detached");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdbePkcs7S4 = new("adbe.pkcs7.s4");
+    public static readonly PdfName AdbePkcs7S4 = new(name: "adbe.pkcs7.s4");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdbePkcs7S5 = new("adbe.pkcs7.s5");
+    public static readonly PdfName AdbePkcs7S5 = new(name: "adbe.pkcs7.s5");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdbePkcs7Sha1 = new("adbe.pkcs7.sha1");
+    public static readonly PdfName AdbePkcs7Sha1 = new(name: "adbe.pkcs7.sha1");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdbeX509RsaSha1 = new("adbe.x509.rsa_sha1");
+    public static readonly PdfName AdbeX509RsaSha1 = new(name: "adbe.x509.rsa_sha1");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdobePpklite = new("Adobe.PPKLite");
+    public static readonly PdfName AdobePpklite = new(name: "Adobe.PPKLite");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AdobePpkms = new("Adobe.PPKMS");
+    public static readonly PdfName AdobePpkms = new(name: "Adobe.PPKMS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Aesv2 = new("AESV2");
+    public static readonly PdfName Aesv2 = new(name: "AESV2");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ais = new("AIS");
+    public static readonly PdfName Ais = new(name: "AIS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Allpages = new("AllPages");
+    public static readonly PdfName Allpages = new(name: "AllPages");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Alt = new("Alt");
+    public static readonly PdfName Alt = new(name: "Alt");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Alternate = new("Alternate");
+    public static readonly PdfName Alternate = new(name: "Alternate");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Animation = new("Animation");
+    public static readonly PdfName Animation = new(name: "Animation");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Annot = new("Annot");
+    public static readonly PdfName Annot = new(name: "Annot");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Annots = new("Annots");
+    public static readonly PdfName Annots = new(name: "Annots");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Antialias = new("AntiAlias");
+    public static readonly PdfName Antialias = new(name: "AntiAlias");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ap = new("AP");
+    public static readonly PdfName Ap = new(name: "AP");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Appdefault = new("AppDefault");
+    public static readonly PdfName Appdefault = new(name: "AppDefault");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Art = new("Art");
+    public static readonly PdfName Art = new(name: "Art");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Artbox = new("ArtBox");
+    public static readonly PdfName Artbox = new(name: "ArtBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ascent = new("Ascent");
+    public static readonly PdfName Ascent = new(name: "Ascent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName As = new("AS");
+    public static readonly PdfName As = new(name: "AS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ascii85Decode = new("ASCII85Decode");
+    public static readonly PdfName Ascii85Decode = new(name: "ASCII85Decode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Asciihexdecode = new("ASCIIHexDecode");
+    public static readonly PdfName Asciihexdecode = new(name: "ASCIIHexDecode");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Asset = new("Asset");
+    public static readonly PdfName Asset = new(name: "Asset");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Assets = new("Assets");
+    public static readonly PdfName Assets = new(name: "Assets");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Authevent = new("AuthEvent");
+    public static readonly PdfName Authevent = new(name: "AuthEvent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Author = new("Author");
+    public static readonly PdfName Author = new(name: "Author");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName B = new("B");
+    public static readonly PdfName B = new(name: "B");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Background = new("Background");
+    public static readonly PdfName Background = new(name: "Background");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Baseencoding = new("BaseEncoding");
+    public static readonly PdfName Baseencoding = new(name: "BaseEncoding");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Basefont = new("BaseFont");
+    public static readonly PdfName Basefont = new(name: "BaseFont");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Baseversion = new("BaseVersion");
+    public static readonly PdfName Baseversion = new(name: "BaseVersion");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bbox = new("BBox");
+    public static readonly PdfName Bbox = new(name: "BBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bc = new("BC");
+    public static readonly PdfName Bc = new(name: "BC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bg = new("BG");
+    public static readonly PdfName Bg = new(name: "BG");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Bibentry = new("BibEntry");
+    public static readonly PdfName Bibentry = new(name: "BibEntry");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bigfive = new("BigFive");
+    public static readonly PdfName Bigfive = new(name: "BigFive");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Binding = new("Binding");
+    public static readonly PdfName Binding = new(name: "Binding");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Bindingmaterialname = new("BindingMaterialName");
+    public static readonly PdfName Bindingmaterialname = new(name: "BindingMaterialName");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bitspercomponent = new("BitsPerComponent");
+    public static readonly PdfName Bitspercomponent = new(name: "BitsPerComponent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bitspersample = new("BitsPerSample");
+    public static readonly PdfName Bitspersample = new(name: "BitsPerSample");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Bl = new("Bl");
+    public static readonly PdfName Bl = new(name: "Bl");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Blackis1 = new("BlackIs1");
+    public static readonly PdfName Blackis1 = new(name: "BlackIs1");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Blackpoint = new("BlackPoint");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Blockquote = new("BlockQuote");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Bleedbox = new("BleedBox");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Blinds = new("Blinds");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Bm = new("BM");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Border = new("Border");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Bounds = new("Bounds");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Box = new("Box");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Bs = new("BS");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Btn = new("Btn");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Byterange = new("ByteRange");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName C = new("C");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName C0 = new("C0");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName C1 = new("C1");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName CA = new("CA");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName CA_ = new("ca");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Calgray = new("CalGray");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Calrgb = new("CalRGB");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Capheight = new("CapHeight");
+    public static readonly PdfName Blackpoint = new(name: "BlackPoint");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Caption = new("Caption");
+    public static readonly PdfName Blockquote = new(name: "BlockQuote");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Catalog = new("Catalog");
+    public static readonly PdfName Bleedbox = new(name: "BleedBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Category = new("Category");
+    public static readonly PdfName Blinds = new(name: "Blinds");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ccittfaxdecode = new("CCITTFaxDecode");
+    public static readonly PdfName Bm = new(name: "BM");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Border = new(name: "Border");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Bounds = new(name: "Bounds");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Box = new(name: "Box");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Bs = new(name: "BS");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Btn = new(name: "Btn");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Byterange = new(name: "ByteRange");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName C = new(name: "C");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName C0 = new(name: "C0");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName C1 = new(name: "C1");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName CA = new(name: "CA");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName CA_ = new(name: "ca");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Calgray = new(name: "CalGray");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Calrgb = new(name: "CalRGB");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Capheight = new(name: "CapHeight");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Caption = new(name: "Caption");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Catalog = new(name: "Catalog");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Category = new(name: "Category");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Ccittfaxdecode = new(name: "CCITTFaxDecode");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Center = new("Center");
+    public static readonly PdfName Center = new(name: "Center");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Centerwindow = new("CenterWindow");
+    public static readonly PdfName Centerwindow = new(name: "CenterWindow");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cert = new("Cert");
+    public static readonly PdfName Cert = new(name: "Cert");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cf = new("CF");
+    public static readonly PdfName Cf = new(name: "CF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cfm = new("CFM");
+    public static readonly PdfName Cfm = new(name: "CFM");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ch = new("Ch");
+    public static readonly PdfName Ch = new(name: "Ch");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Charprocs = new("CharProcs");
+    public static readonly PdfName Charprocs = new(name: "CharProcs");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ci = new("CI");
+    public static readonly PdfName Ci = new(name: "CI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cidfonttype0 = new("CIDFontType0");
+    public static readonly PdfName Cidfonttype0 = new(name: "CIDFontType0");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cidfonttype2 = new("CIDFontType2");
+    public static readonly PdfName Cidfonttype2 = new(name: "CIDFontType2");
 
     /// <summary>
     ///     A name
     ///     @since 2.0.7
     /// </summary>
-    public static readonly PdfName Cidset = new("CIDSet");
+    public static readonly PdfName Cidset = new(name: "CIDSet");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cidsysteminfo = new("CIDSystemInfo");
+    public static readonly PdfName Cidsysteminfo = new(name: "CIDSystemInfo");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cidtogidmap = new("CIDToGIDMap");
+    public static readonly PdfName Cidtogidmap = new(name: "CIDToGIDMap");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Circle = new("Circle");
+    public static readonly PdfName Circle = new(name: "Circle");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Cmd = new("CMD");
+    public static readonly PdfName Cmd = new(name: "CMD");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Co = new("CO");
+    public static readonly PdfName Co = new(name: "CO");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Code = new("Code");
+    public static readonly PdfName Code = new(name: "Code");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Colors = new("Colors");
+    public static readonly PdfName Colors = new(name: "Colors");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Colorspace = new("ColorSpace");
+    public static readonly PdfName Colorspace = new(name: "ColorSpace");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collection = new("Collection");
+    public static readonly PdfName Collection = new(name: "Collection");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collectionfield = new("CollectionField");
+    public static readonly PdfName Collectionfield = new(name: "CollectionField");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collectionitem = new("CollectionItem");
+    public static readonly PdfName Collectionitem = new(name: "CollectionItem");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collectionschema = new("CollectionSchema");
+    public static readonly PdfName Collectionschema = new(name: "CollectionSchema");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collectionsort = new("CollectionSort");
+    public static readonly PdfName Collectionsort = new(name: "CollectionSort");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Collectionsubitem = new("CollectionSubitem");
+    public static readonly PdfName Collectionsubitem = new(name: "CollectionSubitem");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Columns = new("Columns");
+    public static readonly PdfName Columns = new(name: "Columns");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Condition = new("Condition");
+    public static readonly PdfName Condition = new(name: "Condition");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Configuration = new("Configuration");
+    public static readonly PdfName Configuration = new(name: "Configuration");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Configurations = new("Configurations");
+    public static readonly PdfName Configurations = new(name: "Configurations");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Contactinfo = new("ContactInfo");
+    public static readonly PdfName Contactinfo = new(name: "ContactInfo");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName CONTENT = new("Content");
+    public static readonly PdfName CONTENT = new(name: "Content");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Contents = new("Contents");
+    public static readonly PdfName Contents = new(name: "Contents");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Coords = new("Coords");
+    public static readonly PdfName Coords = new(name: "Coords");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Count = new("Count");
+    public static readonly PdfName Count = new(name: "Count");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName Courier = new("Courier");
+    public static readonly PdfName Courier = new(name: "Courier");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName CourierBold = new("Courier-Bold");
+    public static readonly PdfName CourierBold = new(name: "Courier-Bold");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName CourierOblique = new("Courier-Oblique");
+    public static readonly PdfName CourierOblique = new(name: "Courier-Oblique");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName CourierBoldoblique = new("Courier-BoldOblique");
+    public static readonly PdfName CourierBoldoblique = new(name: "Courier-BoldOblique");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Creationdate = new("CreationDate");
+    public static readonly PdfName Creationdate = new(name: "CreationDate");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Creator = new("Creator");
+    public static readonly PdfName Creator = new(name: "Creator");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Creatorinfo = new("CreatorInfo");
+    public static readonly PdfName Creatorinfo = new(name: "CreatorInfo");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cropbox = new("CropBox");
+    public static readonly PdfName Cropbox = new(name: "CropBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Crypt = new("Crypt");
+    public static readonly PdfName Crypt = new(name: "Crypt");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Cs = new("CS");
+    public static readonly PdfName Cs = new(name: "CS");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Cuepoint = new("CuePoint");
+    public static readonly PdfName Cuepoint = new(name: "CuePoint");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Cuepoints = new("CuePoints");
+    public static readonly PdfName Cuepoints = new(name: "CuePoints");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName D = new("D");
+    public static readonly PdfName D = new(name: "D");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Da = new("DA");
+    public static readonly PdfName Da = new(name: "DA");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Data = new("Data");
+    public static readonly PdfName Data = new(name: "Data");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dc = new("DC");
+    public static readonly PdfName Dc = new(name: "DC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dctdecode = new("DCTDecode");
+    public static readonly PdfName Dctdecode = new(name: "DCTDecode");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Deactivation = new("Deactivation");
+    public static readonly PdfName Deactivation = new(name: "Deactivation");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Decode = new("Decode");
+    public static readonly PdfName Decode = new(name: "Decode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Decodeparms = new("DecodeParms");
+    public static readonly PdfName Decodeparms = new(name: "DecodeParms");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Default = new("Default");
+    public static readonly PdfName Default = new(name: "Default");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.5 renamed from DEFAULTCRYPTFILER
     /// </summary>
-    public static readonly PdfName Defaultcryptfilter = new("DefaultCryptFilter");
+    public static readonly PdfName Defaultcryptfilter = new(name: "DefaultCryptFilter");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Defaultcmyk = new("DefaultCMYK");
+    public static readonly PdfName Defaultcmyk = new(name: "DefaultCMYK");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Defaultgray = new("DefaultGray");
+    public static readonly PdfName Defaultgray = new(name: "DefaultGray");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Defaultrgb = new("DefaultRGB");
+    public static readonly PdfName Defaultrgb = new(name: "DefaultRGB");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Desc = new("Desc");
+    public static readonly PdfName Desc = new(name: "Desc");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Descendantfonts = new("DescendantFonts");
+    public static readonly PdfName Descendantfonts = new(name: "DescendantFonts");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Descent = new("Descent");
+    public static readonly PdfName Descent = new(name: "Descent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dest = new("Dest");
+    public static readonly PdfName Dest = new(name: "Dest");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Destoutputprofile = new("DestOutputProfile");
+    public static readonly PdfName Destoutputprofile = new(name: "DestOutputProfile");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dests = new("Dests");
+    public static readonly PdfName Dests = new(name: "Dests");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Devicegray = new("DeviceGray");
+    public static readonly PdfName Devicegray = new(name: "DeviceGray");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Devicergb = new("DeviceRGB");
+    public static readonly PdfName Devicergb = new(name: "DeviceRGB");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Devicecmyk = new("DeviceCMYK");
+    public static readonly PdfName Devicecmyk = new(name: "DeviceCMYK");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Di = new("Di");
+    public static readonly PdfName Di = new(name: "Di");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Differences = new("Differences");
+    public static readonly PdfName Differences = new(name: "Differences");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dissolve = new("Dissolve");
+    public static readonly PdfName Dissolve = new(name: "Dissolve");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Direction = new("Direction");
+    public static readonly PdfName Direction = new(name: "Direction");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Displaydoctitle = new("DisplayDocTitle");
+    public static readonly PdfName Displaydoctitle = new(name: "DisplayDocTitle");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Div = new("Div");
+    public static readonly PdfName Div = new(name: "Div");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dm = new("Dm");
+    public static readonly PdfName Dm = new(name: "Dm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Docmdp = new("DocMDP");
+    public static readonly PdfName Docmdp = new(name: "DocMDP");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Docopen = new("DocOpen");
+    public static readonly PdfName Docopen = new(name: "DocOpen");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName AESV3 = new("AESV3");
+    public static readonly PdfName AESV3 = new(name: "AESV3");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Document = new("Document");
+    public static readonly PdfName Document = new(name: "Document");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Domain = new("Domain");
+    public static readonly PdfName Domain = new(name: "Domain");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dp = new("DP");
+    public static readonly PdfName Dp = new(name: "DP");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dr = new("DR");
+    public static readonly PdfName Dr = new(name: "DR");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ds = new("DS");
+    public static readonly PdfName Ds = new(name: "DS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dur = new("Dur");
+    public static readonly PdfName Dur = new(name: "Dur");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Duplex = new("Duplex");
+    public static readonly PdfName Duplex = new(name: "Duplex");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Duplexflipshortedge = new("DuplexFlipShortEdge");
+    public static readonly PdfName Duplexflipshortedge = new(name: "DuplexFlipShortEdge");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Duplexfliplongedge = new("DuplexFlipLongEdge");
+    public static readonly PdfName Duplexfliplongedge = new(name: "DuplexFlipLongEdge");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dv = new("DV");
+    public static readonly PdfName Dv = new(name: "DV");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Dw = new("DW");
+    public static readonly PdfName Dw = new(name: "DW");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName E = new("E");
+    public static readonly PdfName E = new(name: "E");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Earlychange = new("EarlyChange");
+    public static readonly PdfName Earlychange = new(name: "EarlyChange");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName EF = new("EF");
+    public static readonly PdfName EF = new(name: "EF");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.3
     /// </summary>
-    public static readonly PdfName Eff = new("EFF");
+    public static readonly PdfName Eff = new(name: "EFF");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.3
     /// </summary>
-    public static readonly PdfName Efopen = new("EFOpen");
+    public static readonly PdfName Efopen = new(name: "EFOpen");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Embedded = new("Embedded");
+    public static readonly PdfName Embedded = new(name: "Embedded");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Embeddedfile = new("EmbeddedFile");
+    public static readonly PdfName Embeddedfile = new(name: "EmbeddedFile");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Embeddedfiles = new("EmbeddedFiles");
+    public static readonly PdfName Embeddedfiles = new(name: "EmbeddedFiles");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Encode = new("Encode");
+    public static readonly PdfName Encode = new(name: "Encode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Encodedbytealign = new("EncodedByteAlign");
+    public static readonly PdfName Encodedbytealign = new(name: "EncodedByteAlign");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Encoding = new("Encoding");
+    public static readonly PdfName Encoding = new(name: "Encoding");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Encrypt = new("Encrypt");
+    public static readonly PdfName Encrypt = new(name: "Encrypt");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Encryptmetadata = new("EncryptMetadata");
+    public static readonly PdfName Encryptmetadata = new(name: "EncryptMetadata");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Endofblock = new("EndOfBlock");
+    public static readonly PdfName Endofblock = new(name: "EndOfBlock");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Endofline = new("EndOfLine");
+    public static readonly PdfName Endofline = new(name: "EndOfLine");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Extend = new("Extend");
-
-    /// <summary>
-    ///     A name
-    ///     @since	2.1.6
-    /// </summary>
-    public static readonly PdfName Extensions = new("Extensions");
+    public static readonly PdfName Extend = new(name: "Extend");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Extensionlevel = new("ExtensionLevel");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Extgstate = new("ExtGState");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Export = new("Export");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Exportstate = new("ExportState");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Event = new("Event");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName F = new("F");
-
-    /// <summary>
-    ///     A name.
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Far = new("Far");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fb = new("FB");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fdecodeparms = new("FDecodeParms");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fdf = new("FDF");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Ff = new("Ff");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Ffilter = new("FFilter");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fields = new("Fields");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Figure = new("Figure");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fileattachment = new("FileAttachment");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Filespec = new("Filespec");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Filter = new("Filter");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName First = new("First");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Firstchar = new("FirstChar");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Firstpage = new("FirstPage");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fit = new("Fit");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fith = new("FitH");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitv = new("FitV");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitr = new("FitR");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitb = new("FitB");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitbh = new("FitBH");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitbv = new("FitBV");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fitwindow = new("FitWindow");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Flags = new("Flags");
-
-    /// <summary>
-    ///     A name.
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Flash = new("Flash");
-
-    /// <summary>
-    ///     A name.
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Flashvars = new("FlashVars");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Flatedecode = new("FlateDecode");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fo = new("Fo");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Font = new("Font");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontbbox = new("FontBBox");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontdescriptor = new("FontDescriptor");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontfile = new("FontFile");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontfile2 = new("FontFile2");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontfile3 = new("FontFile3");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontmatrix = new("FontMatrix");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fontname = new("FontName");
+    public static readonly PdfName Extensions = new(name: "Extensions");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Foreground = new("Foreground");
+    public static readonly PdfName Extensionlevel = new(name: "ExtensionLevel");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Form = new("Form");
+    public static readonly PdfName Extgstate = new(name: "ExtGState");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Formtype = new("FormType");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Formula = new("Formula");
+    public static readonly PdfName Export = new(name: "Export");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Freetext = new("FreeText");
+    public static readonly PdfName Exportstate = new(name: "ExportState");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Frm = new("FRM");
+    public static readonly PdfName Event = new(name: "Event");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Fs = new("FS");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Ft = new("FT");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Fullscreen = new("FullScreen");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Function = new("Function");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Functions = new("Functions");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Functiontype = new("FunctionType");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Gamma = new("Gamma");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Gbk = new("GBK");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Glitter = new("Glitter");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Goto = new("GoTo");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Gotoe = new("GoToE");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName OE = new("OE");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName UE = new("UE");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Gotor = new("GoToR");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Group = new("Group");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName GtsPdfa1 = new("GTS_PDFA1");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName GtsPdfx = new("GTS_PDFX");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName GtsPdfxversion = new("GTS_PDFXVersion");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName H = new("H");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H1 = new("H1");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H2 = new("H2");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H3 = new("H3");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H4 = new("H4");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H5 = new("H5");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName H6 = new("H6");
+    public static readonly PdfName F = new(name: "F");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Halign = new("HAlign");
-
-    /// <summary>
-    ///     A name of an attribute.
-    /// </summary>
-    public static readonly PdfName Height = new("Height");
+    public static readonly PdfName Far = new(name: "Far");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Helv = new("Helv");
+    public static readonly PdfName Fb = new(name: "FB");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fdecodeparms = new(name: "FDecodeParms");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fdf = new(name: "FDF");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Ff = new(name: "Ff");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Ffilter = new(name: "FFilter");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fields = new(name: "Fields");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Figure = new(name: "Figure");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fileattachment = new(name: "FileAttachment");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Filespec = new(name: "Filespec");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Filter = new(name: "Filter");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName First = new(name: "First");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Firstchar = new(name: "FirstChar");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Firstpage = new(name: "FirstPage");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fit = new(name: "Fit");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fith = new(name: "FitH");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitv = new(name: "FitV");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitr = new(name: "FitR");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitb = new(name: "FitB");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitbh = new(name: "FitBH");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitbv = new(name: "FitBV");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fitwindow = new(name: "FitWindow");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Flags = new(name: "Flags");
+
+    /// <summary>
+    ///     A name.
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Flash = new(name: "Flash");
+
+    /// <summary>
+    ///     A name.
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Flashvars = new(name: "FlashVars");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Flatedecode = new(name: "FlateDecode");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fo = new(name: "Fo");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Font = new(name: "Font");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontbbox = new(name: "FontBBox");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontdescriptor = new(name: "FontDescriptor");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontfile = new(name: "FontFile");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontfile2 = new(name: "FontFile2");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontfile3 = new(name: "FontFile3");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontmatrix = new(name: "FontMatrix");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fontname = new(name: "FontName");
+
+    /// <summary>
+    ///     A name
+    ///     @since	2.1.6
+    /// </summary>
+    public static readonly PdfName Foreground = new(name: "Foreground");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Form = new(name: "Form");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Formtype = new(name: "FormType");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Formula = new(name: "Formula");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Freetext = new(name: "FreeText");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Frm = new(name: "FRM");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fs = new(name: "FS");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Ft = new(name: "FT");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Fullscreen = new(name: "FullScreen");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Function = new(name: "Function");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Functions = new(name: "Functions");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Functiontype = new(name: "FunctionType");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Gamma = new(name: "Gamma");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Gbk = new(name: "GBK");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Glitter = new(name: "Glitter");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Goto = new(name: "GoTo");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Gotoe = new(name: "GoToE");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName OE = new(name: "OE");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName UE = new(name: "UE");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Gotor = new(name: "GoToR");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Group = new(name: "Group");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName GtsPdfa1 = new(name: "GTS_PDFA1");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName GtsPdfx = new(name: "GTS_PDFX");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName GtsPdfxversion = new(name: "GTS_PDFXVersion");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName H = new(name: "H");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H1 = new(name: "H1");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H2 = new(name: "H2");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H3 = new(name: "H3");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H4 = new(name: "H4");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H5 = new(name: "H5");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName H6 = new(name: "H6");
+
+    /// <summary>
+    ///     A name.
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Halign = new(name: "HAlign");
+
+    /// <summary>
+    ///     A name of an attribute.
+    /// </summary>
+    public static readonly PdfName Height = new(name: "Height");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Helv = new(name: "Helv");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName Helvetica = new("Helvetica");
+    public static readonly PdfName Helvetica = new(name: "Helvetica");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName HelveticaBold = new("Helvetica-Bold");
+    public static readonly PdfName HelveticaBold = new(name: "Helvetica-Bold");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName HelveticaOblique = new("Helvetica-Oblique");
+    public static readonly PdfName HelveticaOblique = new(name: "Helvetica-Oblique");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName HelveticaBoldoblique = new("Helvetica-BoldOblique");
+    public static readonly PdfName HelveticaBoldoblique = new(name: "Helvetica-BoldOblique");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Hid = new("Hid");
+    public static readonly PdfName Hid = new(name: "Hid");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Hide = new("Hide");
+    public static readonly PdfName Hide = new(name: "Hide");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Hidemenubar = new("HideMenubar");
+    public static readonly PdfName Hidemenubar = new(name: "HideMenubar");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Hidetoolbar = new("HideToolbar");
+    public static readonly PdfName Hidetoolbar = new(name: "HideToolbar");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Hidewindowui = new("HideWindowUI");
+    public static readonly PdfName Hidewindowui = new(name: "HideWindowUI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Highlight = new("Highlight");
+    public static readonly PdfName Highlight = new(name: "Highlight");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Hoffset = new("HOffset");
+    public static readonly PdfName Hoffset = new(name: "HOffset");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName I = new("I");
+    public static readonly PdfName I = new(name: "I");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Iccbased = new("ICCBased");
+    public static readonly PdfName Iccbased = new(name: "ICCBased");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Id = new("ID");
+    public static readonly PdfName Id = new(name: "ID");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Identity = new("Identity");
+    public static readonly PdfName Identity = new(name: "Identity");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName If = new("IF");
+    public static readonly PdfName If = new(name: "IF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Image = new("Image");
+    public static readonly PdfName Image = new(name: "Image");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Imageb = new("ImageB");
+    public static readonly PdfName Imageb = new(name: "ImageB");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Imagec = new("ImageC");
+    public static readonly PdfName Imagec = new(name: "ImageC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Imagei = new("ImageI");
+    public static readonly PdfName Imagei = new(name: "ImageI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Imagemask = new("ImageMask");
+    public static readonly PdfName Imagemask = new(name: "ImageMask");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Index = new("Index");
+    public static readonly PdfName Index = new(name: "Index");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Indexed = new("Indexed");
+    public static readonly PdfName Indexed = new(name: "Indexed");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Info = new("Info");
+    public static readonly PdfName Info = new(name: "Info");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ink = new("Ink");
+    public static readonly PdfName Ink = new(name: "Ink");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Inklist = new("InkList");
+    public static readonly PdfName Inklist = new(name: "InkList");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Instances = new("Instances");
+    public static readonly PdfName Instances = new(name: "Instances");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Importdata = new("ImportData");
+    public static readonly PdfName Importdata = new(name: "ImportData");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Intent = new("Intent");
+    public static readonly PdfName Intent = new(name: "Intent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Interpolate = new("Interpolate");
+    public static readonly PdfName Interpolate = new(name: "Interpolate");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ismap = new("IsMap");
+    public static readonly PdfName Ismap = new(name: "IsMap");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Irt = new("IRT");
+    public static readonly PdfName Irt = new(name: "IRT");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Italicangle = new("ItalicAngle");
+    public static readonly PdfName Italicangle = new(name: "ItalicAngle");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Itxt = new("ITXT");
+    public static readonly PdfName Itxt = new(name: "ITXT");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ix = new("IX");
+    public static readonly PdfName Ix = new(name: "IX");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Javascript = new("JavaScript");
+    public static readonly PdfName Javascript = new(name: "JavaScript");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.5
     /// </summary>
-    public static readonly PdfName Jbig2Decode = new("JBIG2Decode");
+    public static readonly PdfName Jbig2Decode = new(name: "JBIG2Decode");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.5
     /// </summary>
-    public static readonly PdfName Jbig2Globals = new("JBIG2Globals");
+    public static readonly PdfName Jbig2Globals = new(name: "JBIG2Globals");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Jpxdecode = new("JPXDecode");
+    public static readonly PdfName Jpxdecode = new(name: "JPXDecode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Js = new("JS");
+    public static readonly PdfName Js = new(name: "JS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName K = new("K");
+    public static readonly PdfName K = new(name: "K");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Keywords = new("Keywords");
+    public static readonly PdfName Keywords = new(name: "Keywords");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Kids = new("Kids");
+    public static readonly PdfName Kids = new(name: "Kids");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName L = new("L");
+    public static readonly PdfName L = new(name: "L");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName L2R = new("L2R");
+    public static readonly PdfName L2R = new(name: "L2R");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Lang = new("Lang");
+    public static readonly PdfName Lang = new(name: "Lang");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Language = new("Language");
+    public static readonly PdfName Language = new(name: "Language");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Last = new("Last");
+    public static readonly PdfName Last = new(name: "Last");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Lastchar = new("LastChar");
+    public static readonly PdfName Lastchar = new(name: "LastChar");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Lastpage = new("LastPage");
+    public static readonly PdfName Lastpage = new(name: "LastPage");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Launch = new("Launch");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Lbl = new("Lbl");
+    public static readonly PdfName Launch = new(name: "Launch");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Lbody = new("LBody");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName LENGTH = new("Length");
-
-    /// <summary>
-    ///     A name
-    /// </summary>
-    public static readonly PdfName Length1 = new("Length1");
+    public static readonly PdfName Lbl = new(name: "Lbl");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Li = new("LI");
+    public static readonly PdfName Lbody = new(name: "LBody");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Limits = new("Limits");
+    public static readonly PdfName LENGTH = new(name: "Length");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Line = new("Line");
+    public static readonly PdfName Length1 = new(name: "Length1");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Li = new(name: "LI");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Limits = new(name: "Limits");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
+    public static readonly PdfName Line = new(name: "Line");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Linear = new("Linear");
+    public static readonly PdfName Linear = new(name: "Linear");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Link = new("Link");
+    public static readonly PdfName Link = new(name: "Link");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Listmode = new("ListMode");
+    public static readonly PdfName Listmode = new(name: "ListMode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Location = new("Location");
+    public static readonly PdfName Location = new(name: "Location");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Lock = new("Lock");
+    public static readonly PdfName Lock = new(name: "Lock");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.2
     /// </summary>
-    public static readonly PdfName Locked = new("Locked");
+    public static readonly PdfName Locked = new(name: "Locked");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Lzwdecode = new("LZWDecode");
+    public static readonly PdfName Lzwdecode = new(name: "LZWDecode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName M = new("M");
+    public static readonly PdfName M = new(name: "M");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Material = new("Material");
+    public static readonly PdfName Material = new(name: "Material");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Matrix = new("Matrix");
+    public static readonly PdfName Matrix = new(name: "Matrix");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName MacExpertEncoding = new("MacExpertEncoding");
+    public static readonly PdfName MacExpertEncoding = new(name: "MacExpertEncoding");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName MacRomanEncoding = new("MacRomanEncoding");
+    public static readonly PdfName MacRomanEncoding = new(name: "MacRomanEncoding");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Marked = new("Marked");
+    public static readonly PdfName Marked = new(name: "Marked");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Markinfo = new("MarkInfo");
+    public static readonly PdfName Markinfo = new(name: "MarkInfo");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mask = new("Mask");
+    public static readonly PdfName Mask = new(name: "Mask");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6 renamed from MAX
     /// </summary>
-    public static readonly PdfName MaxLowerCase = new("max");
+    public static readonly PdfName MaxLowerCase = new(name: "max");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName MaxCamelCase = new("Max");
+    public static readonly PdfName MaxCamelCase = new(name: "Max");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Maxlen = new("MaxLen");
+    public static readonly PdfName Maxlen = new(name: "MaxLen");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mediabox = new("MediaBox");
+    public static readonly PdfName Mediabox = new(name: "MediaBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mcid = new("MCID");
+    public static readonly PdfName Mcid = new(name: "MCID");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mcr = new("MCR");
+    public static readonly PdfName Mcr = new(name: "MCR");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Metadata = new("Metadata");
+    public static readonly PdfName Metadata = new(name: "Metadata");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6 renamed from MIN
     /// </summary>
-    public static readonly PdfName MinLowerCase = new("min");
+    public static readonly PdfName MinLowerCase = new(name: "min");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName MinCamelCase = new("Min");
+    public static readonly PdfName MinCamelCase = new(name: "Min");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mk = new("MK");
+    public static readonly PdfName Mk = new(name: "MK");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Mmtype1 = new("MMType1");
+    public static readonly PdfName Mmtype1 = new(name: "MMType1");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Moddate = new("ModDate");
+    public static readonly PdfName Moddate = new(name: "ModDate");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N = new("N");
+    public static readonly PdfName N = new(name: "N");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N0 = new("n0");
+    public static readonly PdfName N0 = new(name: "n0");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N1 = new("n1");
+    public static readonly PdfName N1 = new(name: "n1");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N2 = new("n2");
+    public static readonly PdfName N2 = new(name: "n2");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N3 = new("n3");
+    public static readonly PdfName N3 = new(name: "n3");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName N4 = new("n4");
+    public static readonly PdfName N4 = new(name: "n4");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Name = new("Name");
+    public static readonly PdfName Name = new(name: "Name");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Named = new("Named");
+    public static readonly PdfName Named = new(name: "Named");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Names = new("Names");
+    public static readonly PdfName Names = new(name: "Names");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Navigation = new("Navigation");
+    public static readonly PdfName Navigation = new(name: "Navigation");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Navigationpane = new("NavigationPane");
+    public static readonly PdfName Navigationpane = new(name: "NavigationPane");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Near = new("Near");
+    public static readonly PdfName Near = new(name: "Near");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Needappearances = new("NeedAppearances");
+    public static readonly PdfName Needappearances = new(name: "NeedAppearances");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Newwindow = new("NewWindow");
+    public static readonly PdfName Newwindow = new(name: "NewWindow");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Next = new("Next");
+    public static readonly PdfName Next = new(name: "Next");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Nextpage = new("NextPage");
+    public static readonly PdfName Nextpage = new(name: "NextPage");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Nm = new("NM");
+    public static readonly PdfName Nm = new(name: "NM");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName None = new("None");
+    public static readonly PdfName None = new(name: "None");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Nonfullscreenpagemode = new("NonFullScreenPageMode");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Nonstruct = new("NonStruct");
+    public static readonly PdfName Nonfullscreenpagemode = new(name: "NonFullScreenPageMode");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Note = new("Note");
+    public static readonly PdfName Nonstruct = new(name: "NonStruct");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Note = new(name: "Note");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Numcopies = new("NumCopies");
+    public static readonly PdfName Numcopies = new(name: "NumCopies");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Nums = new("Nums");
+    public static readonly PdfName Nums = new(name: "Nums");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName O = new("O");
+    public static readonly PdfName O = new(name: "O");
 
     /// <summary>
     ///     A name used with Document Structure
     ///     @since 2.1.5
     /// </summary>
-    public static readonly PdfName Obj = new("Obj");
+    public static readonly PdfName Obj = new(name: "Obj");
 
     /// <summary>
     ///     a name used with Doucment Structure
     ///     @since 2.1.5
     /// </summary>
-    public static readonly PdfName Objr = new("OBJR");
+    public static readonly PdfName Objr = new(name: "OBJR");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Objstm = new("ObjStm");
+    public static readonly PdfName Objstm = new(name: "ObjStm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Oc = new("OC");
+    public static readonly PdfName Oc = new(name: "OC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ocg = new("OCG");
+    public static readonly PdfName Ocg = new(name: "OCG");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ocgs = new("OCGs");
+    public static readonly PdfName Ocgs = new(name: "OCGs");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ocmd = new("OCMD");
+    public static readonly PdfName Ocmd = new(name: "OCMD");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ocproperties = new("OCProperties");
+    public static readonly PdfName Ocproperties = new(name: "OCProperties");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Off = new("Off");
+    public static readonly PdfName Off = new(name: "Off");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName OFF = new("OFF");
+    public static readonly PdfName OFF = new(name: "OFF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName On = new("ON");
+    public static readonly PdfName On = new(name: "ON");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Onecolumn = new("OneColumn");
+    public static readonly PdfName Onecolumn = new(name: "OneColumn");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Open = new("Open");
+    public static readonly PdfName Open = new(name: "Open");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Openaction = new("OpenAction");
+    public static readonly PdfName Openaction = new(name: "OpenAction");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Op = new("OP");
+    public static readonly PdfName Op = new(name: "OP");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Op_ = new("op");
+    public static readonly PdfName Op_ = new(name: "op");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Opm = new("OPM");
+    public static readonly PdfName Opm = new(name: "OPM");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Opt = new("Opt");
+    public static readonly PdfName Opt = new(name: "Opt");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Order = new("Order");
+    public static readonly PdfName Order = new(name: "Order");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ordering = new("Ordering");
+    public static readonly PdfName Ordering = new(name: "Ordering");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Oscillating = new("Oscillating");
+    public static readonly PdfName Oscillating = new(name: "Oscillating");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Outlines = new("Outlines");
+    public static readonly PdfName Outlines = new(name: "Outlines");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Outputcondition = new("OutputCondition");
+    public static readonly PdfName Outputcondition = new(name: "OutputCondition");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Outputconditionidentifier = new("OutputConditionIdentifier");
+    public static readonly PdfName Outputconditionidentifier = new(name: "OutputConditionIdentifier");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Outputintent = new("OutputIntent");
+    public static readonly PdfName Outputintent = new(name: "OutputIntent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Outputintents = new("OutputIntents");
+    public static readonly PdfName Outputintents = new(name: "OutputIntents");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName P = new("P");
+    public static readonly PdfName P = new(name: "P");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Page = new("Page");
+    public static readonly PdfName Page = new(name: "Page");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pagelabels = new("PageLabels");
+    public static readonly PdfName Pagelabels = new(name: "PageLabels");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pagelayout = new("PageLayout");
+    public static readonly PdfName Pagelayout = new(name: "PageLayout");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pagemode = new("PageMode");
+    public static readonly PdfName Pagemode = new(name: "PageMode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pages = new("Pages");
+    public static readonly PdfName Pages = new(name: "Pages");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Painttype = new("PaintType");
+    public static readonly PdfName Painttype = new(name: "PaintType");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Panose = new("Panose");
+    public static readonly PdfName Panose = new(name: "Panose");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Params = new("Params");
+    public static readonly PdfName Params = new(name: "Params");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Parent = new("Parent");
+    public static readonly PdfName Parent = new(name: "Parent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Parenttree = new("ParentTree");
+    public static readonly PdfName Parenttree = new(name: "ParentTree");
 
     /// <summary>
     ///     A name used in defining Document Structure.
     ///     @since 2.1.5
     /// </summary>
-    public static readonly PdfName Parenttreenextkey = new("ParentTreeNextKey");
+    public static readonly PdfName Parenttreenextkey = new(name: "ParentTreeNextKey");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Part = new("Part");
+    public static readonly PdfName Part = new(name: "Part");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Passcontextclick = new("PassContextClick");
+    public static readonly PdfName Passcontextclick = new(name: "PassContextClick");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pattern = new("Pattern");
+    public static readonly PdfName Pattern = new(name: "Pattern");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Patterntype = new("PatternType");
+    public static readonly PdfName Patterntype = new(name: "PatternType");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Pc = new("PC");
+    public static readonly PdfName Pc = new(name: "PC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pdf = new("PDF");
+    public static readonly PdfName Pdf = new(name: "PDF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pdfdocencoding = new("PDFDocEncoding");
+    public static readonly PdfName Pdfdocencoding = new(name: "PDFDocEncoding");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Perceptual = new("Perceptual");
+    public static readonly PdfName Perceptual = new(name: "Perceptual");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Perms = new("Perms");
+    public static readonly PdfName Perms = new(name: "Perms");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pg = new("Pg");
+    public static readonly PdfName Pg = new(name: "Pg");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Pi = new("PI");
+    public static readonly PdfName Pi = new(name: "PI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Picktraybypdfsize = new("PickTrayByPDFSize");
+    public static readonly PdfName Picktraybypdfsize = new(name: "PickTrayByPDFSize");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Playcount = new("PlayCount");
+    public static readonly PdfName Playcount = new(name: "PlayCount");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Po = new("PO");
+    public static readonly PdfName Po = new(name: "PO");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Popup = new("Popup");
+    public static readonly PdfName Popup = new(name: "Popup");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Position = new("Position");
+    public static readonly PdfName Position = new(name: "Position");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Predictor = new("Predictor");
+    public static readonly PdfName Predictor = new(name: "Predictor");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Preferred = new("Preferred");
+    public static readonly PdfName Preferred = new(name: "Preferred");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Presentation = new("Presentation");
+    public static readonly PdfName Presentation = new(name: "Presentation");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Preserverb = new("PreserveRB");
+    public static readonly PdfName Preserverb = new(name: "PreserveRB");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Prev = new("Prev");
+    public static readonly PdfName Prev = new(name: "Prev");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Prevpage = new("PrevPage");
+    public static readonly PdfName Prevpage = new(name: "PrevPage");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Print = new("Print");
+    public static readonly PdfName Print = new(name: "Print");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Printarea = new("PrintArea");
+    public static readonly PdfName Printarea = new(name: "PrintArea");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Printclip = new("PrintClip");
+    public static readonly PdfName Printclip = new(name: "PrintClip");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Printpagerange = new("PrintPageRange");
+    public static readonly PdfName Printpagerange = new(name: "PrintPageRange");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Printscaling = new("PrintScaling");
+    public static readonly PdfName Printscaling = new(name: "PrintScaling");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Printstate = new("PrintState");
+    public static readonly PdfName Printstate = new(name: "PrintState");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Private = new("Private");
+    public static readonly PdfName Private = new(name: "Private");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Procset = new("ProcSet");
+    public static readonly PdfName Procset = new(name: "ProcSet");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Producer = new("Producer");
+    public static readonly PdfName Producer = new(name: "Producer");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Properties = new("Properties");
+    public static readonly PdfName Properties = new(name: "Properties");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ps = new("PS");
+    public static readonly PdfName Ps = new(name: "PS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Pubsec = new("Adobe.PubSec");
+    public static readonly PdfName Pubsec = new(name: "Adobe.PubSec");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Pv = new("PV");
+    public static readonly PdfName Pv = new(name: "PV");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Q = new("Q");
+    public static readonly PdfName Q = new(name: "Q");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Quadpoints = new("QuadPoints");
+    public static readonly PdfName Quadpoints = new(name: "QuadPoints");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Quote = new("Quote");
+    public static readonly PdfName Quote = new(name: "Quote");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName R = new("R");
+    public static readonly PdfName R = new(name: "R");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName R2L = new("R2L");
+    public static readonly PdfName R2L = new(name: "R2L");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Range = new("Range");
+    public static readonly PdfName Range = new(name: "Range");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rc = new("RC");
+    public static readonly PdfName Rc = new(name: "RC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rbgroups = new("RBGroups");
+    public static readonly PdfName Rbgroups = new(name: "RBGroups");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Reason = new("Reason");
+    public static readonly PdfName Reason = new(name: "Reason");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Recipients = new("Recipients");
+    public static readonly PdfName Recipients = new(name: "Recipients");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rect = new("Rect");
+    public static readonly PdfName Rect = new(name: "Rect");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Reference = new("Reference");
+    public static readonly PdfName Reference = new(name: "Reference");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Registry = new("Registry");
+    public static readonly PdfName Registry = new(name: "Registry");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Registryname = new("RegistryName");
+    public static readonly PdfName Registryname = new(name: "RegistryName");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.5 renamed from RELATIVECALORIMETRIC
     /// </summary>
-    public static readonly PdfName Relativecolorimetric = new("RelativeColorimetric");
+    public static readonly PdfName Relativecolorimetric = new(name: "RelativeColorimetric");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rendition = new("Rendition");
+    public static readonly PdfName Rendition = new(name: "Rendition");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Resetform = new("ResetForm");
+    public static readonly PdfName Resetform = new(name: "ResetForm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Resources = new("Resources");
+    public static readonly PdfName Resources = new(name: "Resources");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ri = new("RI");
+    public static readonly PdfName Ri = new(name: "RI");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmedia = new("RichMedia");
+    public static readonly PdfName Richmedia = new(name: "RichMedia");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaactivation = new("RichMediaActivation");
+    public static readonly PdfName Richmediaactivation = new(name: "RichMediaActivation");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaanimation = new("RichMediaAnimation");
+    public static readonly PdfName Richmediaanimation = new(name: "RichMediaAnimation");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Richmediacommand = new("RichMediaCommand");
+    public static readonly PdfName Richmediacommand = new(name: "RichMediaCommand");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaconfiguration = new("RichMediaConfiguration");
+    public static readonly PdfName Richmediaconfiguration = new(name: "RichMediaConfiguration");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediacontent = new("RichMediaContent");
+    public static readonly PdfName Richmediacontent = new(name: "RichMediaContent");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediadeactivation = new("RichMediaDeactivation");
+    public static readonly PdfName Richmediadeactivation = new(name: "RichMediaDeactivation");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaexecute = new("RichMediaExecute");
+    public static readonly PdfName Richmediaexecute = new(name: "RichMediaExecute");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediainstance = new("RichMediaInstance");
+    public static readonly PdfName Richmediainstance = new(name: "RichMediaInstance");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaparams = new("RichMediaParams");
+    public static readonly PdfName Richmediaparams = new(name: "RichMediaParams");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediaposition = new("RichMediaPosition");
+    public static readonly PdfName Richmediaposition = new(name: "RichMediaPosition");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediapresentation = new("RichMediaPresentation");
+    public static readonly PdfName Richmediapresentation = new(name: "RichMediaPresentation");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediasettings = new("RichMediaSettings");
+    public static readonly PdfName Richmediasettings = new(name: "RichMediaSettings");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Richmediawindow = new("RichMediaWindow");
+    public static readonly PdfName Richmediawindow = new(name: "RichMediaWindow");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rolemap = new("RoleMap");
+    public static readonly PdfName Rolemap = new(name: "RoleMap");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Root = new("Root");
+    public static readonly PdfName Root = new(name: "Root");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rotate = new("Rotate");
+    public static readonly PdfName Rotate = new(name: "Rotate");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rows = new("Rows");
+    public static readonly PdfName Rows = new(name: "Rows");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Ruby = new("Ruby");
+    public static readonly PdfName Ruby = new(name: "Ruby");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Runlengthdecode = new("RunLengthDecode");
+    public static readonly PdfName Runlengthdecode = new(name: "RunLengthDecode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Rv = new("RV");
+    public static readonly PdfName Rv = new(name: "RV");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName S = new("S");
+    public static readonly PdfName S = new(name: "S");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Saturation = new("Saturation");
+    public static readonly PdfName Saturation = new(name: "Saturation");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Schema = new("Schema");
+    public static readonly PdfName Schema = new(name: "Schema");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Screen = new("Screen");
+    public static readonly PdfName Screen = new(name: "Screen");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Scripts = new("Scripts");
+    public static readonly PdfName Scripts = new(name: "Scripts");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sect = new("Sect");
+    public static readonly PdfName Sect = new(name: "Sect");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Separation = new("Separation");
+    public static readonly PdfName Separation = new(name: "Separation");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Setocgstate = new("SetOCGState");
+    public static readonly PdfName Setocgstate = new(name: "SetOCGState");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Settings = new("Settings");
+    public static readonly PdfName Settings = new(name: "Settings");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Shading = new("Shading");
+    public static readonly PdfName Shading = new(name: "Shading");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Shadingtype = new("ShadingType");
+    public static readonly PdfName Shadingtype = new(name: "ShadingType");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName ShiftJis = new("Shift-JIS");
+    public static readonly PdfName ShiftJis = new(name: "Shift-JIS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sig = new("Sig");
+    public static readonly PdfName Sig = new(name: "Sig");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sigflags = new("SigFlags");
+    public static readonly PdfName Sigflags = new(name: "SigFlags");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sigref = new("SigRef");
+    public static readonly PdfName Sigref = new(name: "SigRef");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Simplex = new("Simplex");
+    public static readonly PdfName Simplex = new(name: "Simplex");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Singlepage = new("SinglePage");
+    public static readonly PdfName Singlepage = new(name: "SinglePage");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Size = new("Size");
+    public static readonly PdfName Size = new(name: "Size");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Smask = new("SMask");
+    public static readonly PdfName Smask = new(name: "SMask");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sort = new("Sort");
+    public static readonly PdfName Sort = new(name: "Sort");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Sound = new("Sound");
+    public static readonly PdfName Sound = new(name: "Sound");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Span = new("Span");
+    public static readonly PdfName Span = new(name: "Span");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Speed = new("Speed");
+    public static readonly PdfName Speed = new(name: "Speed");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Split = new("Split");
+    public static readonly PdfName Split = new(name: "Split");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Square = new("Square");
+    public static readonly PdfName Square = new(name: "Square");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.3
     /// </summary>
-    public static readonly PdfName Squiggly = new("Squiggly");
+    public static readonly PdfName Squiggly = new(name: "Squiggly");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName St = new("St");
+    public static readonly PdfName St = new(name: "St");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Stamp = new("Stamp");
+    public static readonly PdfName Stamp = new(name: "Stamp");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Standard = new("Standard");
+    public static readonly PdfName Standard = new(name: "Standard");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName State = new("State");
+    public static readonly PdfName State = new(name: "State");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Stdcf = new("StdCF");
+    public static readonly PdfName Stdcf = new(name: "StdCF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Stemv = new("StemV");
+    public static readonly PdfName Stemv = new(name: "StemV");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Stmf = new("StmF");
+    public static readonly PdfName Stmf = new(name: "StmF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Strf = new("StrF");
+    public static readonly PdfName Strf = new(name: "StrF");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Strikeout = new("StrikeOut");
+    public static readonly PdfName Strikeout = new(name: "StrikeOut");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Structparent = new("StructParent");
+    public static readonly PdfName Structparent = new(name: "StructParent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Structparents = new("StructParents");
+    public static readonly PdfName Structparents = new(name: "StructParents");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Structtreeroot = new("StructTreeRoot");
+    public static readonly PdfName Structtreeroot = new(name: "StructTreeRoot");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Style = new("Style");
+    public static readonly PdfName Style = new(name: "Style");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Subfilter = new("SubFilter");
+    public static readonly PdfName Subfilter = new(name: "SubFilter");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Subject = new("Subject");
+    public static readonly PdfName Subject = new(name: "Subject");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Submitform = new("SubmitForm");
+    public static readonly PdfName Submitform = new(name: "SubmitForm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Subtype = new("Subtype");
+    public static readonly PdfName Subtype = new(name: "Subtype");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Supplement = new("Supplement");
+    public static readonly PdfName Supplement = new(name: "Supplement");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sv = new("SV");
+    public static readonly PdfName Sv = new(name: "SV");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Sw = new("SW");
+    public static readonly PdfName Sw = new(name: "SW");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName Symbol = new("Symbol");
+    public static readonly PdfName Symbol = new(name: "Symbol");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName T = new("T");
+    public static readonly PdfName T = new(name: "T");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Ta = new("TA");
+    public static readonly PdfName Ta = new(name: "TA");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Table = new("Table");
+    public static readonly PdfName Table = new(name: "Table");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.5
     /// </summary>
-    public static readonly PdfName Tabs = new("Tabs");
+    public static readonly PdfName Tabs = new(name: "Tabs");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Tbody = new("TBody");
+    public static readonly PdfName Tbody = new(name: "TBody");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Td = new("TD");
+    public static readonly PdfName Td = new(name: "TD");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Text = new("Text");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Tfoot = new("TFoot");
+    public static readonly PdfName Text = new(name: "Text");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Th = new("TH");
+    public static readonly PdfName Tfoot = new(name: "TFoot");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Thead = new("THead");
+    public static readonly PdfName Th = new(name: "TH");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Thead = new(name: "THead");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Thumb = new("Thumb");
+    public static readonly PdfName Thumb = new(name: "Thumb");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Threads = new("Threads");
+    public static readonly PdfName Threads = new(name: "Threads");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ti = new("TI");
+    public static readonly PdfName Ti = new(name: "TI");
 
     /// <summary>
     ///     A name
     ///     @since	2.1.6
     /// </summary>
-    public static readonly PdfName Time = new("Time");
+    public static readonly PdfName Time = new(name: "Time");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tilingtype = new("TilingType");
+    public static readonly PdfName Tilingtype = new(name: "TilingType");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName TimesRoman = new("Times-Roman");
+    public static readonly PdfName TimesRoman = new(name: "Times-Roman");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName TimesBold = new("Times-Bold");
+    public static readonly PdfName TimesBold = new(name: "Times-Bold");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName TimesItalic = new("Times-Italic");
+    public static readonly PdfName TimesItalic = new(name: "Times-Italic");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName TimesBolditalic = new("Times-BoldItalic");
+    public static readonly PdfName TimesBolditalic = new(name: "Times-BoldItalic");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Title = new("Title");
+    public static readonly PdfName Title = new(name: "Title");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tk = new("TK");
+    public static readonly PdfName Tk = new(name: "TK");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tm = new("TM");
-
-    /// <summary>
-    ///     A name
-    ///     @since 2.1.6
-    /// </summary>
-    public static readonly PdfName Toc = new("TOC");
+    public static readonly PdfName Tm = new(name: "TM");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Toci = new("TOCI");
+    public static readonly PdfName Toc = new(name: "TOC");
+
+    /// <summary>
+    ///     A name
+    ///     @since 2.1.6
+    /// </summary>
+    public static readonly PdfName Toci = new(name: "TOCI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Toggle = new("Toggle");
+    public static readonly PdfName Toggle = new(name: "Toggle");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Toolbar = new("Toolbar");
+    public static readonly PdfName Toolbar = new(name: "Toolbar");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tounicode = new("ToUnicode");
+    public static readonly PdfName Tounicode = new(name: "ToUnicode");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tp = new("TP");
+    public static readonly PdfName Tp = new(name: "TP");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Tablerow = new("TR");
+    public static readonly PdfName Tablerow = new(name: "TR");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Trans = new("Trans");
+    public static readonly PdfName Trans = new(name: "Trans");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Transformparams = new("TransformParams");
+    public static readonly PdfName Transformparams = new(name: "TransformParams");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Transformmethod = new("TransformMethod");
+    public static readonly PdfName Transformmethod = new(name: "TransformMethod");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Transparency = new("Transparency");
+    public static readonly PdfName Transparency = new(name: "Transparency");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Transparent = new("Transparent");
+    public static readonly PdfName Transparent = new(name: "Transparent");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Trapped = new("Trapped");
+    public static readonly PdfName Trapped = new(name: "Trapped");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Trimbox = new("TrimBox");
+    public static readonly PdfName Trimbox = new(name: "TrimBox");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Truetype = new("TrueType");
+    public static readonly PdfName Truetype = new(name: "TrueType");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tu = new("TU");
+    public static readonly PdfName Tu = new(name: "TU");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Twocolumnleft = new("TwoColumnLeft");
+    public static readonly PdfName Twocolumnleft = new(name: "TwoColumnLeft");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Twocolumnright = new("TwoColumnRight");
+    public static readonly PdfName Twocolumnright = new(name: "TwoColumnRight");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Twopageleft = new("TwoPageLeft");
+    public static readonly PdfName Twopageleft = new(name: "TwoPageLeft");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Twopageright = new("TwoPageRight");
+    public static readonly PdfName Twopageright = new(name: "TwoPageRight");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Tx = new("Tx");
+    public static readonly PdfName Tx = new(name: "Tx");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName TYPE = new("Type");
+    public static readonly PdfName TYPE = new(name: "Type");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName TYPES = new("Types");
+    public static readonly PdfName TYPES = new(name: "Types");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Type0 = new("Type0");
+    public static readonly PdfName Type0 = new(name: "Type0");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Type1 = new("Type1");
+    public static readonly PdfName Type1 = new(name: "Type1");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Type3 = new("Type3");
+    public static readonly PdfName Type3 = new(name: "Type3");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName U = new("U");
+    public static readonly PdfName U = new(name: "U");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Uf = new("UF");
+    public static readonly PdfName Uf = new(name: "UF");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Uhc = new("UHC");
+    public static readonly PdfName Uhc = new(name: "UHC");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Underline = new("Underline");
+    public static readonly PdfName Underline = new(name: "Underline");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ur = new("UR");
+    public static readonly PdfName Ur = new(name: "UR");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ur3 = new("UR3");
+    public static readonly PdfName Ur3 = new(name: "UR3");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Uri = new("URI");
+    public static readonly PdfName Uri = new(name: "URI");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Url = new("URL");
+    public static readonly PdfName Url = new(name: "URL");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Usage = new("Usage");
+    public static readonly PdfName Usage = new(name: "Usage");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Useattachments = new("UseAttachments");
+    public static readonly PdfName Useattachments = new(name: "UseAttachments");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Usenone = new("UseNone");
+    public static readonly PdfName Usenone = new(name: "UseNone");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Useoc = new("UseOC");
+    public static readonly PdfName Useoc = new(name: "UseOC");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Useoutlines = new("UseOutlines");
+    public static readonly PdfName Useoutlines = new(name: "UseOutlines");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName User = new("User");
+    public static readonly PdfName User = new(name: "User");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Userproperties = new("UserProperties");
+    public static readonly PdfName Userproperties = new(name: "UserProperties");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Userunit = new("UserUnit");
+    public static readonly PdfName Userunit = new(name: "UserUnit");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Usethumbs = new("UseThumbs");
+    public static readonly PdfName Usethumbs = new(name: "UseThumbs");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName V = new("V");
+    public static readonly PdfName V = new(name: "V");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName V2 = new("V2");
+    public static readonly PdfName V2 = new(name: "V2");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Valign = new("VAlign");
+    public static readonly PdfName Valign = new(name: "VAlign");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName VerisignPpkvs = new("VeriSign.PPKVS");
+    public static readonly PdfName VerisignPpkvs = new(name: "VeriSign.PPKVS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Version = new("Version");
+    public static readonly PdfName Version = new(name: "Version");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Video = new("Video");
+    public static readonly PdfName Video = new(name: "Video");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName View = new("View");
+    public static readonly PdfName View = new(name: "View");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Views = new("Views");
+    public static readonly PdfName Views = new(name: "Views");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Viewarea = new("ViewArea");
+    public static readonly PdfName Viewarea = new(name: "ViewArea");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Viewclip = new("ViewClip");
+    public static readonly PdfName Viewclip = new(name: "ViewClip");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Viewerpreferences = new("ViewerPreferences");
+    public static readonly PdfName Viewerpreferences = new(name: "ViewerPreferences");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Viewstate = new("ViewState");
+    public static readonly PdfName Viewstate = new(name: "ViewState");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Visiblepages = new("VisiblePages");
+    public static readonly PdfName Visiblepages = new(name: "VisiblePages");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Voffset = new("VOffset");
+    public static readonly PdfName Voffset = new(name: "VOffset");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName W = new("W");
+    public static readonly PdfName W = new(name: "W");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName W2 = new("W2");
+    public static readonly PdfName W2 = new(name: "W2");
 
     /// <summary>
     ///     A name
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Warichu = new("Warichu");
+    public static readonly PdfName Warichu = new(name: "Warichu");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Wc = new("WC");
+    public static readonly PdfName Wc = new(name: "WC");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Widget = new("Widget");
+    public static readonly PdfName Widget = new(name: "Widget");
 
     /// <summary>
     ///     A name of an attribute.
     /// </summary>
-    public static readonly PdfName Width = new("Width");
+    public static readonly PdfName Width = new(name: "Width");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Widths = new("Widths");
+    public static readonly PdfName Widths = new(name: "Widths");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName Win = new("Win");
+    public static readonly PdfName Win = new(name: "Win");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName WinAnsiEncoding = new("WinAnsiEncoding");
+    public static readonly PdfName WinAnsiEncoding = new(name: "WinAnsiEncoding");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Window = new("Window");
+    public static readonly PdfName Window = new(name: "Window");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Windowed = new("Windowed");
+    public static readonly PdfName Windowed = new(name: "Windowed");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName Wipe = new("Wipe");
+    public static readonly PdfName Wipe = new(name: "Wipe");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Whitepoint = new("WhitePoint");
+    public static readonly PdfName Whitepoint = new(name: "WhitePoint");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Wp = new("WP");
+    public static readonly PdfName Wp = new(name: "WP");
 
     /// <summary>
     ///     A name of an encoding
     /// </summary>
-    public static readonly PdfName Ws = new("WS");
+    public static readonly PdfName Ws = new(name: "WS");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName X = new("X");
+    public static readonly PdfName X = new(name: "X");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Xa = new("XA");
+    public static readonly PdfName Xa = new(name: "XA");
 
     /// <summary>
     ///     A name.
     ///     @since 2.1.6
     /// </summary>
-    public static readonly PdfName Xd = new("XD");
+    public static readonly PdfName Xd = new(name: "XD");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xfa = new("XFA");
+    public static readonly PdfName Xfa = new(name: "XFA");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xml = new("XML");
+    public static readonly PdfName Xml = new(name: "XML");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xobject = new("XObject");
+    public static readonly PdfName Xobject = new(name: "XObject");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xstep = new("XStep");
+    public static readonly PdfName Xstep = new(name: "XStep");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xref = new("XRef");
+    public static readonly PdfName Xref = new(name: "XRef");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xrefstm = new("XRefStm");
+    public static readonly PdfName Xrefstm = new(name: "XRefStm");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Xyz = new("XYZ");
+    public static readonly PdfName Xyz = new(name: "XYZ");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Ystep = new("YStep");
+    public static readonly PdfName Ystep = new(name: "YStep");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Zadb = new("ZaDb");
+    public static readonly PdfName Zadb = new(name: "ZaDb");
 
     /// <summary>
     ///     A name of a base 14 type 1 font
     /// </summary>
-    public static readonly PdfName Zapfdingbats = new("ZapfDingbats");
+    public static readonly PdfName Zapfdingbats = new(name: "ZapfDingbats");
 
     /// <summary>
     ///     A name
     /// </summary>
-    public static readonly PdfName Zoom = new("Zoom");
+    public static readonly PdfName Zoom = new(name: "Zoom");
 
     /// <summary>
     ///     map strings to all known static names
@@ -3340,14 +3340,16 @@ public class PdfName : PdfObject, IComparable
     {
         var fields = typeof(PdfName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
         StaticNames = new NullValueDictionary<string, PdfName>(fields.Length);
+
         try
         {
             for (var fldIdx = 0; fldIdx < fields.Length; ++fldIdx)
             {
                 var curFld = fields[fldIdx];
+
                 if (curFld.FieldType == typeof(PdfName))
                 {
-                    var name = (PdfName)curFld.GetValue(null);
+                    var name = (PdfName)curFld.GetValue(obj: null);
                     StaticNames[DecodeName(name.ToString())] = name;
                 }
             }
@@ -3364,9 +3366,7 @@ public class PdfName : PdfObject, IComparable
     ///     Constructs a new  PdfName . The name length will be checked.
     /// </summary>
     /// <param name="name">the new name</param>
-    public PdfName(string name) : this(name, true)
-    {
-    }
+    public PdfName(string name) : this(name, lengthCheck: true) => Key = name;
 
     /// <summary>
     ///     Constructs a new  PdfName .
@@ -3381,8 +3381,11 @@ public class PdfName : PdfObject, IComparable
             throw new ArgumentNullException(nameof(name));
         }
 
+        Key = name;
+
         // The minimum number of characters in a name is 0, the maximum is 127 (the '/' not included)
         var length = name.Length;
+
         if (lengthCheck && length > 127)
         {
             throw new ArgumentException("The name '" + name + "' is too long (" + length + " characters).");
@@ -3391,9 +3394,12 @@ public class PdfName : PdfObject, IComparable
         Bytes = EncodeName(name);
     }
 
-    public PdfName(byte[] bytes) : base(NAME, bytes)
-    {
-    }
+    public PdfName(byte[] bytes) : base(NAME, bytes) => Key = PdfEncodings.ConvertToString(Bytes, encoding: null);
+
+    /// <summary>
+    ///     Name of this object
+    /// </summary>
+    public string Key { get; private set; }
 
     /// <summary>
     ///     methods
@@ -3420,6 +3426,7 @@ public class PdfName : PdfObject, IComparable
         var myBytes = Bytes;
         var objBytes = name.Bytes;
         var len = Math.Min(myBytes.Length, objBytes.Length);
+
         for (var i = 0; i < len; i++)
         {
             if (myBytes[i] > objBytes[i])
@@ -3478,6 +3485,7 @@ public class PdfName : PdfObject, IComparable
         var ptr = 0;
         var len = Bytes.Length;
         var h = 0;
+
         for (var i = 0; i < len; i++)
         {
             h = 31 * h + (Bytes[ptr++] & 0xff);
@@ -3500,15 +3508,18 @@ public class PdfName : PdfObject, IComparable
         }
 
         var length = name.Length;
+
         // every special character has to be substituted
         var pdfName = new ByteBuffer(length + 20);
-        pdfName.Append('/');
+        pdfName.Append(c: '/');
         var chars = name.ToCharArray();
         char character;
+
         // loop over all the characters
         foreach (var cc in chars)
         {
             character = (char)(cc & 0xff);
+
             // special characters are escaped (reference manual p.39)
             switch (character)
             {
@@ -3524,19 +3535,21 @@ public class PdfName : PdfObject, IComparable
                 case '}':
                 case '/':
                 case '#':
-                    pdfName.Append('#');
-                    pdfName.Append(Convert.ToString(character, 16));
+                    pdfName.Append(c: '#');
+                    pdfName.Append(Convert.ToString(character, toBase: 16));
+
                     break;
                 default:
                     if (character > 126 || character < 32)
                     {
-                        pdfName.Append('#');
+                        pdfName.Append(c: '#');
+
                         if (character < 16)
                         {
-                            pdfName.Append('0');
+                            pdfName.Append(c: '0');
                         }
 
-                        pdfName.Append(Convert.ToString(character, 16));
+                        pdfName.Append(Convert.ToString(character, toBase: 16));
                     }
                     else
                     {
@@ -3564,9 +3577,11 @@ public class PdfName : PdfObject, IComparable
 
         var buf = new StringBuilder();
         var len = name.Length;
+
         for (var k = 1; k < len; ++k)
         {
             var c = name[k];
+
             if (c == '#')
             {
                 c = (char)((PrTokeniser.GetHex(name[k + 1]) << 4) + PrTokeniser.GetHex(name[k + 2]));

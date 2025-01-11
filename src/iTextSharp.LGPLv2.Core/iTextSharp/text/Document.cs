@@ -520,9 +520,11 @@ public class Document : IDocListener
     ///     Adds the current date and time to a Document.
     /// </summary>
     /// <returns>true if successful, false otherwise</returns>
-    public bool AddCreationDate()
+    public bool AddCreationDate(DateTime? dateTime = null)
         => Add(new Meta(Element.CREATIONDATE,
-            DateTime.Now.ToString(format: "ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture)));
+            dateTime.HasValue
+                ? dateTime.Value.ToString(format: "ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture)
+                : DateTime.Now.ToString(format: "ddd MMM dd HH:mm:ss zzz yyyy", CultureInfo.InvariantCulture)));
 
     /// <summary>
     ///     Adds the creator to a Document.
@@ -556,7 +558,7 @@ public class Document : IDocListener
     ///     Adds the producer to a Document.
     /// </summary>
     /// <returns>true if successful, false otherwise</returns>
-    public bool AddProducer() => Add(new Meta(Element.PRODUCER, Version));
+    public bool AddProducer(string producer = null) => Add(new Meta(Element.PRODUCER, producer ?? Version));
 
     /// <summary>
     ///     Adds the subject to a Document.
