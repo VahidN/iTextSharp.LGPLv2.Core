@@ -81,6 +81,12 @@ public class PdfNumber : PdfObject
     public int IntValue => (int)_value;
 
     /// <summary>
+    ///     Returns the primitive  long  value of this object.
+    /// </summary>
+    /// <returns>a value</returns>
+    public long LongValue => (long)_value;
+
+    /// <summary>
     ///     other methods
     /// </summary>
     /// <summary>

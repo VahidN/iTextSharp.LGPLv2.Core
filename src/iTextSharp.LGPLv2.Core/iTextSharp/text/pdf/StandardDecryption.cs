@@ -4,8 +4,6 @@ namespace iTextSharp.text.pdf.crypto;
 /// </summary>
 public class StandardDecryption
 {
-    private const int Aes128 = 4;
-    private const int AES_256_V3 = 6;
     private readonly bool _aes;
     private readonly byte[] _iv = new byte[16];
     private readonly byte[] _key;
@@ -19,11 +17,12 @@ public class StandardDecryption
     /// </summary>
     public StandardDecryption(byte[] key, int off, int len, int revision)
     {
-        _aes = revision == Aes128 || revision == AES_256_V3;
+        _aes = revision is PdfEncryption.AES_128 or PdfEncryption.AES_256_V3 or PdfEncryption.AES_256;
+
         if (_aes)
         {
             _key = new byte[len];
-            Array.Copy(key, off, _key, 0, len);
+            Array.Copy(key, off, _key, destinationIndex: 0, len);
         }
         else
         {
@@ -32,15 +31,7 @@ public class StandardDecryption
         }
     }
 
-    public byte[] Finish()
-    {
-        if (_aes && Cipher != null)
-        {
-            return Cipher.DoFinal();
-        }
-
-        return null;
-    }
+    public byte[] Finish() => _aes && Cipher != null ? Cipher.DoFinal() : null;
 
     public byte[] Update(byte[] b, int off, int len)
     {
@@ -56,10 +47,12 @@ public class StandardDecryption
             off += left;
             len -= left;
             _ivptr += left;
+
             if (_ivptr == _iv.Length)
             {
-                Cipher = new AesCipher(false, _key, _iv);
+                Cipher = new AesCipher(forEncryption: false, _key, _iv);
                 _initiated = true;
+
                 if (len > 0)
                 {
                     return Cipher.Update(b, off, len);
@@ -70,7 +63,8 @@ public class StandardDecryption
         }
 
         var b2 = new byte[len];
-        Arcfour.EncryptArcfour(b, off, len, b2, 0);
+        Arcfour.EncryptArcfour(b, off, len, b2, offOut: 0);
+
         return b2;
     }
 }

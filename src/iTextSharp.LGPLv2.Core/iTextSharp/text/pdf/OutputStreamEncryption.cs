@@ -8,6 +8,7 @@ public class OutputStreamEncryption : Stream
     protected AesCipher Cipher;
     protected Stream Outc;
     private const int Aes128 = 4;
+    private const int AES_256 = 5;
     private const int AES_256_V3 = 6;
     private readonly bool _aes;
     private readonly byte[] _buf = new byte[1];
@@ -16,14 +17,15 @@ public class OutputStreamEncryption : Stream
     public OutputStreamEncryption(Stream outc, byte[] key, int off, int len, int revision)
     {
         Outc = outc;
-        _aes = revision == Aes128 || revision == AES_256_V3;
+        _aes = revision is Aes128 or AES_256_V3 or AES_256;
+
         if (_aes)
         {
             var iv = IvGenerator.GetIv();
             var nkey = new byte[len];
-            Array.Copy(key, off, nkey, 0, len);
-            Cipher = new AesCipher(true, nkey, iv);
-            Write(iv, 0, iv.Length);
+            Array.Copy(key, off, nkey, destinationIndex: 0, len);
+            Cipher = new AesCipher(forEncryption: true, nkey, iv);
+            Write(iv, offset: 0, iv.Length);
         }
         else
         {
@@ -32,8 +34,8 @@ public class OutputStreamEncryption : Stream
         }
     }
 
-    public OutputStreamEncryption(Stream outc, byte[] key, int revision) :
-        this(outc, key, 0, key?.Length ?? throw new ArgumentNullException(nameof(key)), revision)
+    public OutputStreamEncryption(Stream outc, byte[] key, int revision) : this(outc, key, off: 0,
+        key?.Length ?? throw new ArgumentNullException(nameof(key)), revision)
     {
     }
 
@@ -65,48 +67,45 @@ public class OutputStreamEncryption : Stream
         if (!_finished)
         {
             _finished = true;
+
             if (_aes)
             {
                 var b = Cipher.DoFinal();
-                Outc.Write(b, 0, b.Length);
+                Outc.Write(b, offset: 0, b.Length);
             }
         }
     }
 
-    public override void Flush()
-    {
-        Outc.Flush();
-    }
+    public override void Flush() => Outc.Flush();
 
     public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
     public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
-    public override void SetLength(long value)
-    {
-        throw new NotSupportedException();
-    }
+    public override void SetLength(long value) => throw new NotSupportedException();
 
     public override void Write(byte[] buffer, int offset, int count)
     {
         if (_aes)
         {
             var b2 = Cipher.Update(buffer, offset, count);
+
             if (b2 == null || b2.Length == 0)
             {
                 return;
             }
 
-            Outc.Write(b2, 0, b2.Length);
+            Outc.Write(b2, offset: 0, b2.Length);
         }
         else
         {
-            var b2 = new byte[Math.Min(count, 4192)];
+            var b2 = new byte[Math.Min(count, val2: 4192)];
+
             while (count > 0)
             {
                 var sz = Math.Min(count, b2.Length);
-                Arcfour.EncryptArcfour(buffer, offset, sz, b2, 0);
-                Outc.Write(b2, 0, sz);
+                Arcfour.EncryptArcfour(buffer, offset, sz, b2, offOut: 0);
+                Outc.Write(b2, offset: 0, sz);
                 count -= sz;
                 offset += sz;
             }
@@ -116,6 +115,6 @@ public class OutputStreamEncryption : Stream
     public override void WriteByte(byte value)
     {
         _buf[0] = value;
-        Write(_buf, 0, 1);
+        Write(_buf, offset: 0, count: 1);
     }
 }

@@ -146,7 +146,22 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <summary>
     ///     Type of encryption
     /// </summary>
+    public const int STANDARD_ENCRYPTION_40 = 0;
+
+    /// <summary>
+    ///     Type of encryption
+    /// </summary>
+    public const int STANDARD_ENCRYPTION_128 = 1;
+
+    /// <summary>
+    ///     Type of encryption
+    /// </summary>
     public const int ENCRYPTION_AES_128 = 2;
+
+    /// <summary>
+    ///     Type of encryption
+    /// </summary>
+    public const int ENCRYPTION_AES_256 = 3;
 
     /// <summary>
     ///     Type of encryption
@@ -348,16 +363,6 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     ///     The default space-char ratio.
     /// </summary>
     public const float SPACE_CHAR_RATIO_DEFAULT = 2.5f;
-
-    /// <summary>
-    ///     Type of encryption
-    /// </summary>
-    public const int STANDARD_ENCRYPTION_128 = 1;
-
-    /// <summary>
-    ///     Type of encryption
-    /// </summary>
-    public const int STANDARD_ENCRYPTION_40 = 0;
 
     /// <summary>
     ///     @deprecated As of iText 2.0.7, use {@link #STANDARD_ENCRYPTION_128} instead. Scheduled for removal at or after
@@ -1289,7 +1294,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <param name="permissions">the user permissions</param>
     /// <param name="encryptionType">
     ///     the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128
-    ///     or ENCRYPTION_AES128.
+    ///     or ENCRYPTION_AES128 or ENCRYPTION_AES_256 or ENCRYPTION_AES_256_V3.
     /// </param>
     public void SetEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType)
     {
@@ -1317,7 +1322,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// <param name="permissions">the user permissions for each of the certicates</param>
     /// <param name="encryptionType">
     ///     the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128
-    ///     or ENCRYPTION_AES128.
+    ///     or ENCRYPTION_AES128 or ENCRYPTION_AES_256 or ENCRYPTION_AES_256_V3.
     /// </param>
     public void SetEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
     {
@@ -2328,7 +2333,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
     /// </summary>
     /// <param name="encryptionType">
     ///     the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128
-    ///     or ENCRYPTION_AES128.
+    ///     or ENCRYPTION_AES128 or ENCRYPTION_AES_256 or ENCRYPTION_AES_256_V3.
     /// </param>
     /// <param name="userPassword">the user password. Can be null or empty</param>
     /// <param name="ownerPassword">the owner password. Can be null or empty</param>
