@@ -57,11 +57,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Meziantou.Analyzer" Version="2.0.186">
+        <PackageReference Include="Meziantou.Analyzer" Version="2.0.188">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.5.0.109200">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.6.0.109712">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -82,7 +82,7 @@
 
     <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="3.116.1"/>
-        <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0"/>
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.1"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 
