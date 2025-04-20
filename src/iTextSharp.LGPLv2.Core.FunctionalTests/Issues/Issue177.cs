@@ -24,7 +24,7 @@ public class Issue177
     {
         var inputFile = TestUtils.GetPdfsPath(fileName: "issue177.pdf");
         using var outStream = new FileStream(TestUtils.GetOutputFileName(), FileMode.Create);
-        PdfReader.AllowOpenWithFullPermissions = true;
+        // PdfReader.AllowOpenWithFullPermissions = true;
         using var pdfReader = new PdfReader(inputFile);
         using var pdfStamper = new PdfStamper(pdfReader, outStream);
 
