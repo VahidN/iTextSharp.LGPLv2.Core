@@ -23,10 +23,34 @@ public class Issue177
     public void Test_Issue177_Verify_PdfStamper_Works()
     {
         var inputFile = TestUtils.GetPdfsPath(fileName: "issue177.pdf");
-        using var outStream = new FileStream(TestUtils.GetOutputFileName(), FileMode.Create);
-        // PdfReader.AllowOpenWithFullPermissions = true;
+        var outputFile = TestUtils.GetOutputFileName();
+
+        var userPassword = "user";
+        var ownerPassword = "owner";
+
+        ReadEncryptedFileModifyItEncryptItAgain(outputFile, inputFile, userPassword, ownerPassword);
+        ReadOutputEncryptedFile(outputFile, ownerPassword);
+    }
+
+    private static void ReadOutputEncryptedFile(string outputFile, string ownerPassword)
+    {
+        using var reader = new PdfReader(outputFile, ownerPassword);
+        Assert.AreEqual(expected: 1, reader.NumberOfPages);
+    }
+
+    private static void ReadEncryptedFileModifyItEncryptItAgain(string outputFile,
+        string inputFile,
+        string userPassword,
+        string ownerPassword)
+    {
+        using var outStream = new FileStream(outputFile, FileMode.Create);
+
+        PdfReader.AllowOpenWithFullPermissions = true;
         using var pdfReader = new PdfReader(inputFile);
         using var pdfStamper = new PdfStamper(pdfReader, outStream);
+
+        pdfStamper.SetEncryption(PdfWriter.ENCRYPTION_AES_256_V3, userPassword, ownerPassword,
+            PdfWriter.ALLOW_PRINTING | PdfWriter.ALLOW_COPY);
 
         var box = pdfReader.GetPageSize(index: 1);
         var canvas = pdfStamper.GetOverContent(pageNum: 1);
