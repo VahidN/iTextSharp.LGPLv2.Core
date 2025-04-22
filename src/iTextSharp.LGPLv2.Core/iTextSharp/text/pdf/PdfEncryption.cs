@@ -14,11 +14,11 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class PdfEncryption
 {
-    public const int STANDARD_ENCRYPTION_40 = 2;
-    public const int STANDARD_ENCRYPTION_128 = 3;
-    public const int AES_128 = 4;
-    public const int AES_256 = 5;
-    public const int AES_256_V3 = 6;
+    internal const int STANDARD_ENCRYPTION_40 = 2;
+    internal const int STANDARD_ENCRYPTION_128 = 3;
+    internal const int AES_128 = 4;
+    internal const int AES_256 = 5;
+    internal const int AES_256_V3 = 6;
 
     private const int VALIDATION_SALT_OFFSET = 32;
     private const int KEY_SALT_OFFSET = 40;
