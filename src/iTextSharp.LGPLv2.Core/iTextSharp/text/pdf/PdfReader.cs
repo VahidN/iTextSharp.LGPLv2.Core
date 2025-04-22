@@ -143,7 +143,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
     ///     @throws IOException on error
     /// </summary>
     /// <param name="filename">the file name of the document</param>
-    public PdfReader(string filename) : this(filename, ownerPassword: null)
+    public PdfReader(string filename) : this(filename, (byte[])null)
     {
     }
 
@@ -158,6 +158,16 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         Password = ownerPassword;
         Tokens = new PrTokeniser(filename);
         ReadPdf();
+    }
+
+    /// <summary>
+    ///     Reads and parses a PDF document.
+    ///     @throws IOException on error
+    /// </summary>
+    /// <param name="filename">the file name of the document</param>
+    /// <param name="ownerPassword">the password to read the document</param>
+    public PdfReader(string filename, string ownerPassword) : this(filename, ownerPassword.GetIsoBytes())
+    {
     }
 
     /// <summary>
