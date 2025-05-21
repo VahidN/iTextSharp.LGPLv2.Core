@@ -1137,7 +1137,7 @@ public class PdfPkcs7
         //                }
 
         // Only allow one signerInfo
-        body.Add(new DerSet(new DerSequence(signerinfo)));
+        body.Add(DerSet.FromElement(new DerSequence(signerinfo)));
 
         // Now we have the body, wrap it in it's PKCS7Signed shell
         // and return it
@@ -1391,7 +1391,7 @@ public class PdfPkcs7
         var v = new Asn1EncodableVector();
         v.Add(new DerObjectIdentifier(idTimeStampToken)); // id-aa-timeStampToken
         var seq = (Asn1Sequence)tempstream.ReadObject();
-        v.Add(new DerSet(seq));
+        v.Add(DerSet.FromElement(seq));
 
         unauthAttributes.Add(new DerSequence(v));
 
@@ -1524,7 +1524,7 @@ public class PdfPkcs7
             v3.Add(den);
             v3.Add(new DerTaggedObject(isExplicit: true, tagNo: 0, new DerSequence(v2)));
             vo1.Add(new DerSequence(v3));
-            v.Add(new DerSet(new DerSequence(new DerTaggedObject(isExplicit: true, tagNo: 1, new DerSequence(vo1)))));
+            v.Add(DerSet.FromElement(new DerSequence(new DerTaggedObject(isExplicit: true, tagNo: 1, new DerSequence(vo1)))));
             attribute.Add(new DerSequence(v));
         }
 

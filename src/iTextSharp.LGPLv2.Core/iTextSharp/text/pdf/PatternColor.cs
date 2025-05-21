@@ -14,7 +14,8 @@ public class PatternColor : ExtendedColor
     ///     Creates a color representing a pattern.
     /// </summary>
     /// <param name="painter">the actual pattern</param>
-    public PatternColor(PdfPatternPainter painter) : base(TYPE_PATTERN, .5f, .5f, .5f) => _painter = painter;
+    public PatternColor(PdfPatternPainter painter) : base(TYPE_PATTERN, red: .5f, green: .5f, blue: .5f)
+        => _painter = painter;
 
     /// <summary>
     ///     Gets the pattern.
@@ -22,7 +23,7 @@ public class PatternColor : ExtendedColor
     /// <returns>the pattern</returns>
     public PdfPatternPainter Painter => _painter;
 
-    public override bool Equals(object obj) => this == obj;
+    public override bool Equals(object obj) => obj is PatternColor color && color.Painter.Equals(Painter);
 
     public override int GetHashCode() => _painter.GetHashCode();
 }

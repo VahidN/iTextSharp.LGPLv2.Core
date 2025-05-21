@@ -3460,19 +3460,7 @@ public class PdfName : PdfObject, IComparable
     /// <param name="obj">the reference object with which to compare.</param>
     /// <returns> true  if this object is the same as the obj</returns>
     public override bool Equals(object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-
-        if (obj is PdfName)
-        {
-            return CompareTo(obj) == 0;
-        }
-
-        return false;
-    }
+        => !ReferenceEquals(objA: null, obj) && (ReferenceEquals(this, obj) || (obj is PdfName && CompareTo(obj) == 0));
 
     /// <summary>
     ///     Returns a hash code value for the object. This method is

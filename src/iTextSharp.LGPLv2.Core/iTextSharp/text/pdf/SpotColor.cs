@@ -1,3 +1,5 @@
+using System.util;
+
 namespace iTextSharp.text.pdf;
 
 /// <summary>
@@ -5,11 +7,9 @@ namespace iTextSharp.text.pdf;
 /// </summary>
 public class SpotColor : ExtendedColor
 {
-    public SpotColor(PdfSpotColor spot, float tint) :
-        base(TYPE_SEPARATION,
-             ((spot?.AlternativeCs.R ?? throw new ArgumentNullException(nameof(spot))) / 255f - 1f) * tint + 1,
-             (spot.AlternativeCs.G / 255f - 1f) * tint + 1,
-             (spot.AlternativeCs.B / 255f - 1f) * tint + 1)
+    public SpotColor(PdfSpotColor spot, float tint) : base(TYPE_SEPARATION,
+        ((spot?.AlternativeCs.R ?? throw new ArgumentNullException(nameof(spot))) / 255f - 1f) * tint + 1,
+        (spot.AlternativeCs.G / 255f - 1f) * tint + 1, (spot.AlternativeCs.B / 255f - 1f) * tint + 1)
     {
         PdfSpotColor = spot;
         Tint = tint;
@@ -23,7 +23,8 @@ public class SpotColor : ExtendedColor
 
     public float Tint { get; }
 
-    public override bool Equals(object obj) => this == obj;
+    public override bool Equals(object obj)
+        => obj is SpotColor color && color.PdfSpotColor.Equals(PdfSpotColor) && color.Tint.ApproxEquals(Tint);
 
     public override int GetHashCode() => PdfSpotColor.GetHashCode() ^ Tint.GetHashCode();
 }
