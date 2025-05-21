@@ -44,8 +44,10 @@ internal static class StringExtensions
         {
             StringComparison.CurrentCulture => StringComparer.CurrentCulture.GetHashCode(str),
             StringComparison.CurrentCultureIgnoreCase => StringComparer.CurrentCultureIgnoreCase.GetHashCode(str),
+#pragma warning disable RS0030 // Do not used banned APIs			
             StringComparison.InvariantCulture => StringComparer.InvariantCulture.GetHashCode(str),
             StringComparison.InvariantCultureIgnoreCase => StringComparer.InvariantCultureIgnoreCase.GetHashCode(str),
+#pragma warning restore RS0030 // Do not used banned APIs			
             StringComparison.Ordinal => StringComparer.Ordinal.GetHashCode(str),
             StringComparison.OrdinalIgnoreCase => StringComparer.OrdinalIgnoreCase.GetHashCode(str),
             _ => throw new NotSupportedException()
