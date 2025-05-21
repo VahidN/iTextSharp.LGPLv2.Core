@@ -5,3 +5,7 @@ T:System.Collections.ArrayList;Don't use a non-generic data structure.
 T:System.Collections.SortedList;Don't use a non-generic data structure.
 T:System.Collections.Stack;Don't use a non-generic data structure.
 T:System.Collections.Queue;Don't use a non-generic data structure.
+F:System.StringComparison.InvariantCulture;Do you mean Ordinal?
+F:System.StringComparison.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
+P:System.StringComparer.InvariantCulture;Do you mean Ordinal?
+P:System.StringComparer.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
