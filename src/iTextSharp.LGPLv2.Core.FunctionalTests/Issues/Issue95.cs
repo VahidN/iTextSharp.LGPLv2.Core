@@ -38,14 +38,14 @@ public class Issue95
         // It should not be there, as its presence causes the parsing of the XFA data to fail.
         var containsXmlDeclaration = text.IndexOf(
                                                   XmlDeclarationFragment,
-                                                  StringComparison.InvariantCultureIgnoreCase) == 0;
+                                                  StringComparison.OrdinalIgnoreCase) == 0;
 
         // We should have the root element at the beginning of the serialized text ; this also
         // makes sure that we're not mstakenly adding the UTF-8 identifier to the beginning of
         // the serialized text
         var startsWithRootelement = text.IndexOf(
                                                  XmlElementRootFragment,
-                                                 StringComparison.InvariantCulture) == 0;
+                                                 StringComparison.Ordinal) == 0;
 
         Assert.IsFalse(containsXmlDeclaration);
         Assert.IsTrue(startsWithRootelement);
