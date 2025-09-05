@@ -26,7 +26,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
-    runs-on: windows-2019
+    runs-on: windows-2022
     permissions:
       actions: read
       contents: read
@@ -43,7 +43,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -64,7 +64,7 @@ jobs:
     # - name: Autobuild
     #  uses: github/codeql-action/autobuild@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 9.0.x
     - name: Build
