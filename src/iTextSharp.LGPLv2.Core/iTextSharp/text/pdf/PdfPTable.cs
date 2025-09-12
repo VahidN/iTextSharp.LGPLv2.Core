@@ -1363,7 +1363,8 @@ public class PdfPTable : ILargeElement
             lastRow = Math.Max(lastRow, headerRows);
         }
 
-        var widths = new float[(includeHeaders ? headerRows : 0) + lastRow - firstRow][];
+        var numWidths = (includeHeaders ? headerRows : 0) + lastRow - firstRow;
+        var widths = new float[numWidths][];
 
         if (IsColspan)
         {
@@ -1371,7 +1372,7 @@ public class PdfPTable : ILargeElement
 
             if (includeHeaders)
             {
-                for (var k = 0; k < headerRows; ++k)
+                for (var k = 0; k < headerRows && n < numWidths; ++k)
                 {
                     var row = rows[k];
 
@@ -1386,7 +1387,7 @@ public class PdfPTable : ILargeElement
                 }
             }
 
-            for (; firstRow < lastRow; ++firstRow)
+            for (; firstRow < lastRow && n < numWidths; ++firstRow)
             {
                 var row = rows[firstRow];
 
