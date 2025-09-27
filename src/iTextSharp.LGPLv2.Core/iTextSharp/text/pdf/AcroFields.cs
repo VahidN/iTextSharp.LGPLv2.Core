@@ -1298,6 +1298,8 @@ public class AcroFields
 
         return value[1];
     }
+    
+
 
     /// <summary>
     ///     Gets the signature dictionary, the one keyed by /V.
@@ -1316,9 +1318,14 @@ public class AcroFields
         }
 
         var item = fields[name];
-        var merged = item.GetMerged(idx: 0);
+        
+        //get first merged  dicionary with /V key
+        var merged = item.Merged.FirstOrDefault(x=>x.Contains(PdfName.V));
 
+        if (merged == null) return null;
         return merged.GetAsDict(PdfName.V);
+
+
     }
 
     /// <summary>
@@ -2966,8 +2973,15 @@ public class AcroFields
         foreach (var entry in fields)
         {
             var item = entry.Value;
-            var merged = item.GetMerged(idx: 0);
-
+            
+            // find first merged dictionary with /V
+            var merged = item.Merged.FirstOrDefault(x => x.Contains(PdfName.V));
+            
+            if (merged== null)
+            {
+                continue;
+            }
+          
             if (!PdfName.Sig.Equals(merged.Get(PdfName.Ft)))
             {
                 continue;
@@ -3242,6 +3256,7 @@ public class AcroFields
         /// <param name="idx">instance index</param>
         /// <returns>the merged dictionary for the given instance</returns>
         public PdfDictionary GetMerged(int idx) => Merged[idx];
+        
 
         /// <summary>
         ///     Retrieve the page number of the given instance
