@@ -57,7 +57,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Meziantou.Analyzer" Version="2.0.218">
+        <PackageReference Include="Meziantou.Analyzer" Version="2.0.224">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -81,7 +81,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="3.119.0"/>
+        <PackageReference Include="SkiaSharp" Version="3.119.1"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
