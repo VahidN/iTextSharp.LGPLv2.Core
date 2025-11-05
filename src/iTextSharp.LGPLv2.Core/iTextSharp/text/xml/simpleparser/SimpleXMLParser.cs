@@ -616,6 +616,7 @@ public sealed class SimpleXmlParser
                         saveState(State);
                         entity.Length = 0;
                         State = Entity;
+                        Nowhite = true;
                     }
                     else if (char.IsWhiteSpace((char)Character))
                     {
