@@ -26,10 +26,10 @@ public sealed class FontFactoryImp
 
     private static readonly Properties _trueTypeFonts = new();
 
-#if !NET_9
-    private static readonly object _syncLock = new();
-#else
+#if NET_9 || NET_10
     private static readonly Lock _syncLock = new();
+#else
+    private static readonly object _syncLock = new();
 #endif
 
     private FontFactoryImp()

@@ -152,35 +152,35 @@ public class PushbuttonField : BaseField
     {
         get
         {
-            var field = PdfFormField.CreatePushButton(writer);
-            field.SetWidget(box, PdfAnnotation.HighlightInvert);
+            var formField = PdfFormField.CreatePushButton(writer);
+            formField.SetWidget(box, PdfAnnotation.HighlightInvert);
             if (fieldName != null)
             {
-                field.FieldName = fieldName;
+                formField.FieldName = fieldName;
                 if ((options & READ_ONLY) != 0)
                 {
-                    field.SetFieldFlags(PdfFormField.FF_READ_ONLY);
+                    formField.SetFieldFlags(PdfFormField.FF_READ_ONLY);
                 }
 
                 if ((options & REQUIRED) != 0)
                 {
-                    field.SetFieldFlags(PdfFormField.FF_REQUIRED);
+                    formField.SetFieldFlags(PdfFormField.FF_REQUIRED);
                 }
             }
 
             if (text != null)
             {
-                field.MkNormalCaption = text;
+                formField.MkNormalCaption = text;
             }
 
             if (rotation != 0)
             {
-                field.MkRotation = rotation;
+                formField.MkRotation = rotation;
             }
 
-            field.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(3));
+            formField.BorderStyle = new PdfBorderDictionary(borderWidth, borderStyle, new PdfDashPattern(3));
             var tpa = GetAppearance();
-            field.SetAppearance(PdfAnnotation.AppearanceNormal, tpa);
+            formField.SetAppearance(PdfAnnotation.AppearanceNormal, tpa);
             var da = (PdfAppearance)tpa.Duplicate;
             da.SetFontAndSize(RealFont, fontSize);
             if (textColor == null)
@@ -192,38 +192,38 @@ public class PushbuttonField : BaseField
                 da.SetColorFill(textColor);
             }
 
-            field.DefaultAppearanceString = da;
+            formField.DefaultAppearanceString = da;
             if (borderColor != null)
             {
-                field.MkBorderColor = borderColor;
+                formField.MkBorderColor = borderColor;
             }
 
             if (backgroundColor != null)
             {
-                field.MkBackgroundColor = backgroundColor;
+                formField.MkBackgroundColor = backgroundColor;
             }
 
             switch (visibility)
             {
                 case HIDDEN:
-                    field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_HIDDEN;
+                    formField.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_HIDDEN;
                     break;
                 case VISIBLE_BUT_DOES_NOT_PRINT:
                     break;
                 case HIDDEN_BUT_PRINTABLE:
-                    field.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_NOVIEW;
+                    formField.Flags = PdfAnnotation.FLAGS_PRINT | PdfAnnotation.FLAGS_NOVIEW;
                     break;
                 default:
-                    field.Flags = PdfAnnotation.FLAGS_PRINT;
+                    formField.Flags = PdfAnnotation.FLAGS_PRINT;
                     break;
             }
 
             if (_tp != null)
             {
-                field.MkNormalIcon = _tp;
+                formField.MkNormalIcon = _tp;
             }
 
-            field.MkTextPosition = _layout - 1;
+            formField.MkTextPosition = _layout - 1;
             var scale = PdfName.A;
             if (_scaleIcon == SCALE_ICON_IS_TOO_BIG)
             {
@@ -238,9 +238,9 @@ public class PushbuttonField : BaseField
                 scale = PdfName.N;
             }
 
-            field.SetMkIconFit(scale, _proportionalIcon ? PdfName.P : PdfName.A, _iconHorizontalAdjustment,
+            formField.SetMkIconFit(scale, _proportionalIcon ? PdfName.P : PdfName.A, _iconHorizontalAdjustment,
                                _iconVerticalAdjustment, _iconFitToBounds);
-            return field;
+            return formField;
         }
     }
 

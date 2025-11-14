@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>iTextSharp.LGPLv2.Core is an unofficial port of the last LGPL version of the iTextSharp (V4.1.6) to .NET Core.</Description>
-        <VersionPrefix>3.7.8</VersionPrefix>
+        <VersionPrefix>3.7.9</VersionPrefix>
         <Authors>Vahid Nasiri</Authors>
-        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;netstandard2.0;net462;</TargetFrameworks>
+        <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.0;net462;</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>iTextSharp.LGPLv2.Core</AssemblyName>
         <PackageId>iTextSharp.LGPLv2.Core</PackageId>
@@ -57,7 +57,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Meziantou.Analyzer" Version="2.0.218">
+        <PackageReference Include="Meziantou.Analyzer" Version="2.0.253">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -81,7 +81,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="3.119.0"/>
+        <PackageReference Include="SkiaSharp" Version="3.119.1"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
@@ -119,5 +119,11 @@
         <DefineConstants>NET_9</DefineConstants>
     </PropertyGroup>
     <ItemGroup Condition="('$(TargetFramework)' == 'net9.0')">
+    </ItemGroup>
+
+    <PropertyGroup Condition="('$(TargetFramework)' == 'net10.0')">
+        <DefineConstants>NET_10</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="('$(TargetFramework)' == 'net10.0')">
     </ItemGroup>
 </Project>
