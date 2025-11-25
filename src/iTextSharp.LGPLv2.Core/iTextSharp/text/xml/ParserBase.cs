@@ -34,7 +34,11 @@ public abstract class ParserBase
         var xml = xDoc.OuterXml;
         var stringReader = new StringReader(xml);
 
-        var reader = XmlReader.Create(stringReader);
+        var reader = XmlReader.Create(stringReader, new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Prohibit,
+            XmlResolver = null
+        });
         Parse(reader);
     }
 
@@ -116,7 +120,11 @@ public abstract class ParserBase
     public void Parse(string url)
     {
         var stringReader = new StringReader(File.ReadAllText(url));
-        var reader = XmlReader.Create(stringReader);
+        var reader = XmlReader.Create(stringReader, new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Prohibit,
+            XmlResolver = null
+        });
         Parse(reader);
     }
 
