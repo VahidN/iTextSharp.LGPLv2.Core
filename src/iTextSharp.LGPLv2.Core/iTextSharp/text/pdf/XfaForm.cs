@@ -67,7 +67,7 @@ public class XfaForm
         }
 
         bout.Seek(offset: 0, SeekOrigin.Begin);
-        using var xtr = XmlReader.Create(bout);
+        using var xtr = XmlReader.Create(bout, xml.ParserBase.SecureXmlReaderSettings);
         _domDocument = new XmlDocument();
         _domDocument.PreserveWhitespace = true;
         _domDocument.Load(xtr);
