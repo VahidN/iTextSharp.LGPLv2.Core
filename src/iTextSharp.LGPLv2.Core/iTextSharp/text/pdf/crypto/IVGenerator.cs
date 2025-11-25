@@ -1,27 +1,14 @@
+using System.Security.Cryptography;
+
 namespace iTextSharp.text.pdf.crypto;
 
 /// <summary>
-///     An initialization vector generator for a CBC block encryption. It's a random generator based on RC4.
+///     An initialization vector generator for a CBC block encryption.
+///     Uses cryptographically secure random number generation.
 ///     @author Paulo Soares (psoares@consiste.pt)
 /// </summary>
 public static class IvGenerator
 {
-    private static readonly ArcfourEncryption _rc4;
-
-    static IvGenerator()
-    {
-        _rc4 = new ArcfourEncryption();
-        var longBytes = new byte[8];
-        var val = DateTime.Now.Ticks;
-        for (var i = 0; i != 8; i++)
-        {
-            longBytes[i] = (byte)val;
-            val = (long)((ulong)val >> 8);
-        }
-
-        _rc4.PrepareArcfourKey(longBytes);
-    }
-
     /// <summary>
     ///     Gets a 16 byte random initialization vector.
     /// </summary>
@@ -36,11 +23,10 @@ public static class IvGenerator
     public static byte[] GetIv(int len)
     {
         var b = new byte[len];
-        lock (_rc4)
+        using (var rng = RandomNumberGenerator.Create())
         {
-            _rc4.EncryptArcfour(b);
+            rng.GetBytes(b);
         }
-
         return b;
     }
 }
