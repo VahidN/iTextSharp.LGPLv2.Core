@@ -28,7 +28,7 @@ public class XmpReader
         using var bout = new MemoryStream();
         bout.Write(bytes, 0, bytes.Length);
         bout.Seek(0, SeekOrigin.Begin);
-        using var xtr = XmlReader.Create(bout);
+        using var xtr = XmlReader.Create(bout, ParserBase.SecureXmlReaderSettings);
         _domDocument = new XmlDocument();
         _domDocument.PreserveWhitespace = true;
         _domDocument.Load(xtr);

@@ -9,6 +9,16 @@ namespace iTextSharp.text.xml;
 public abstract class ParserBase
 {
     /// <summary>
+    /// Secure XML reader settings that prevent XXE attacks (CVE-2017-9096)
+    /// by disabling DTD processing and external entity resolution.
+    /// </summary>
+    public static readonly XmlReaderSettings SecureXmlReaderSettings = new XmlReaderSettings
+    {
+        DtdProcessing = DtdProcessing.Prohibit,
+        XmlResolver = null
+    };
+
+    /// <summary>
     ///     This method gets called when characters are encountered.
     /// </summary>
     /// <param name="content">an array of characters</param>
@@ -34,7 +44,7 @@ public abstract class ParserBase
         var xml = xDoc.OuterXml;
         var stringReader = new StringReader(xml);
 
-        var reader = XmlReader.Create(stringReader);
+        var reader = XmlReader.Create(stringReader, SecureXmlReaderSettings);
         Parse(reader);
     }
 
@@ -116,7 +126,7 @@ public abstract class ParserBase
     public void Parse(string url)
     {
         var stringReader = new StringReader(File.ReadAllText(url));
-        var reader = XmlReader.Create(stringReader);
+        var reader = XmlReader.Create(stringReader, SecureXmlReaderSettings);
         Parse(reader);
     }
 
