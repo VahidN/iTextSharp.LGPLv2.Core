@@ -278,8 +278,8 @@ public sealed class FontFactoryImp
             throw new ArgumentNullException(nameof(attributes));
         }
 
-        lock (_syncLock)
-        {
+        // Removed lock (_syncLock) to prevent inconsistent locking sequence
+
             string fontname = null;
             var encoding = DefaultEncoding;
             var embedded = DefaultEmbedding;
@@ -413,7 +413,7 @@ public sealed class FontFactoryImp
             }
 
             return GetFont(fontname, encoding, embedded, size, style, color);
-        }
+
     }
 
     /// <summary>
