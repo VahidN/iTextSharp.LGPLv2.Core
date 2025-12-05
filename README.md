@@ -10,7 +10,7 @@ Install via NuGet
 -----------------
 To install iTextSharp.LGPLv2.Core, run the following command in the Package Manager Console:
 
-[![Nuget](https://img.shields.io/nuget/v/iTextSharp.LGPLv2.Core)](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/)
+[![Nuget](https://img.shields.io/nuget/v/iTextSharp.LGPLv2.Core)](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/) [![NuGet](https://img.shields.io/nuget/dt/iTextSharp.LGPLv2.Core?logo=nuget&style=flat)](https://www.nuget.org/packages/iTextSharp.LGPLv2.Core)
 ```
 PM> Install-Package iTextSharp.LGPLv2.Core
 ```
@@ -68,3 +68,4 @@ Licensing
 You have three license choices when it comes to iTextSharp: LGPL/MPL, AGPL, or a commercial license. The LGPL/MPL license is only an option with the older 4.1.6 version (used here). After that version, they switched to a dual AGPL/Commercial.
 
 If you need a more recent version, you either have to make your project open-source or pay the license fee.
+
