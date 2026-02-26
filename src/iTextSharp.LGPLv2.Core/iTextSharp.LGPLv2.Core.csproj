@@ -57,11 +57,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Meziantou.Analyzer" Version="2.0.257">
+        <PackageReference Include="Meziantou.Analyzer" Version="2.0.302">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.16.1.129956">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.20.0.135146">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -81,13 +81,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="3.119.1"/>
+        <PackageReference Include="SkiaSharp" Version="3.119.2"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.0"/>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.3"/>
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <DefineConstants>NETSTANDARD2_0</DefineConstants>
