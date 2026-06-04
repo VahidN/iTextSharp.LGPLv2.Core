@@ -102,6 +102,11 @@ public static class MakeSignature
 
         sap.CertChain = certList.ToArray();
 
+        if (sigtype == CryptoStandard.CADES)
+        {
+            sap.AddDeveloperExtension(PdfDeveloperExtension.Esic17Extensionlevel2);
+        }
+
         var dic = new PdfSignature(
             PdfName.AdobePpklite,
             sigtype == CryptoStandard.CADES
