@@ -12,7 +12,7 @@ public class MakeSignatureTests
     [TestMethod]
     public void Verify_SignDetached_Cms()
     {
-        var (reader, pkcs7) = SignAndVerify(CryptoStandard.CMS);
+        var (reader, pkcs7) = SignAndVerify(CryptoStandard.Cms);
         using (reader)
         {
             Assert.IsNotNull(pkcs7);
@@ -23,7 +23,7 @@ public class MakeSignatureTests
     [TestMethod]
     public void Verify_SignDetached_Cades()
     {
-        var (reader, pkcs7) = SignAndVerify(CryptoStandard.CADES);
+        var (reader, pkcs7) = SignAndVerify(CryptoStandard.Cades);
         using (reader)
         {
             Assert.IsNotNull(pkcs7);
@@ -85,7 +85,7 @@ public class MakeSignatureTests
                     certs.PublicKey, certs.X509PrivateKeys, "SHA-256", "RSA");
                 MakeSignature.SignDetached(sap, extSig, certs.X509PrivateKeys,
                     crlList: null, ocspClient: null, tsaClient: null,
-                    estimatedSize: 0, CryptoStandard.CMS);
+                    estimatedSize: 0, CryptoStandard.Cms);
             }
             finally { stamper.Close(); }
         }
@@ -116,7 +116,7 @@ public class MakeSignatureTests
                 {
                     MakeSignature.SignDetached(sap, extSig, certs.X509PrivateKeys,
                         crlList: null, ocspClient: null, tsaClient: null,
-                        estimatedSize: 10, CryptoStandard.CMS);
+                        estimatedSize: 10, CryptoStandard.Cms);
                     Assert.Fail("Expected IOException was not thrown");
                 }
                 catch (IOException ex)
@@ -153,7 +153,7 @@ public class MakeSignatureTests
                     certs.PublicKey, certs.X509PrivateKeys, "SHA-256", "RSA");
                 MakeSignature.SignDetached(sap, extSig, certs.X509PrivateKeys,
                     crlList: null, ocspClient: null, tsaClient: null,
-                    estimatedSize: 0, CryptoStandard.CMS);
+                    estimatedSize: 0, CryptoStandard.Cms);
             }
             finally { stamper.Close(); }
         }

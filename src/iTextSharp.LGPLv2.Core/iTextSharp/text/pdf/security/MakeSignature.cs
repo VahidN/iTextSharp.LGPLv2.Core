@@ -1,4 +1,4 @@
-namespace iTextSharp.text.pdf.security;
+﻿namespace iTextSharp.text.pdf.security;
 
 using System.util;
 using iTextSharp.text;
@@ -102,14 +102,14 @@ public static class MakeSignature
 
         sap.CertChain = certList.ToArray();
 
-        if (sigtype == CryptoStandard.CADES)
+        if (sigtype == CryptoStandard.Cades)
         {
             sap.AddDeveloperExtension(PdfDeveloperExtension.Esic17Extensionlevel2);
         }
 
         var dic = new PdfSignature(
             PdfName.AdobePpklite,
-            sigtype == CryptoStandard.CADES
+            sigtype == CryptoStandard.Cades
                 ? PdfName.EtsiCadesDetached
                 : PdfName.AdbePkcs7Detached);
         dic.Reason = sap.Reason;

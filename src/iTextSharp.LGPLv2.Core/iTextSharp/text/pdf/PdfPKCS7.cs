@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.util;
 using iTextSharp.LGPLv2.Core.System.Encodings;
@@ -976,7 +976,7 @@ public class PdfPkcs7
         var signingTime = DateTime.Now;
         _signingTime = signingTime;
 
-        if (sigtype == CryptoStandard.CADES)
+        if (sigtype == CryptoStandard.Cades)
         {
             _cryptoStandard = sigtype;
             var certHash = DigestAlgorithms.Digest(
@@ -990,7 +990,7 @@ public class PdfPkcs7
                 .GetEncoded(Asn1Encodable.Der);
         }
 
-        _cryptoStandard = CryptoStandard.CMS;
+        _cryptoStandard = CryptoStandard.Cms;
         _signCertHash = null;
         return getAuthenticatedAttributeSet(secondDigest, signingTime, ocsp, crlBytes)
             .GetEncoded(Asn1Encodable.Der);
@@ -1148,7 +1148,7 @@ public class PdfPkcs7
         // add the authenticated attribute if present
         if (secondDigest != null /*&& signingTime != null*/)
         {
-            if (_cryptoStandard == CryptoStandard.CADES && _signCertHash != null)
+            if (_cryptoStandard == CryptoStandard.Cades && _signCertHash != null)
             {
                 signerinfo.Add(new DerTaggedObject(isExplicit: false, tagNo: 0,
                     getAuthenticatedAttributeSet(
@@ -1707,7 +1707,7 @@ public class PdfPkcs7
         v.Add(new DerSet(new DerOctetString(secondDigest)));
         attribute.Add(new DerSequence(v));
 
-        if (sigtype == CryptoStandard.CADES && signCertHash != null)
+        if (sigtype == CryptoStandard.Cades && signCertHash != null)
         {
             var hashAlgo = hashAlgorithm ?? "SHA-256";
             if (string.Equals(hashAlgo, "SHA1", StringComparison.OrdinalIgnoreCase) ||

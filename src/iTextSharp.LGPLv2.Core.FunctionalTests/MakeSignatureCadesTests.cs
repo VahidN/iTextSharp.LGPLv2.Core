@@ -14,7 +14,7 @@ public class MakeSignatureCadesTests
     {
         var outputPdfPath = TestUtils.GetOutputFileName();
         var inputPdfPath = TestUtils.CreateSimplePdf();
-        SignHelper(inputPdfPath, outputPdfPath, CryptoStandard.CADES);
+        SignHelper(inputPdfPath, outputPdfPath, CryptoStandard.Cades);
 
         using var verifyReader = new PdfReader(outputPdfPath);
         var sigNames = verifyReader.AcroFields.GetSignatureNames();
@@ -28,7 +28,7 @@ public class MakeSignatureCadesTests
     {
         var outputPdfPath = TestUtils.GetOutputFileName();
         var inputPdfPath = TestUtils.CreateSimplePdf();
-        SignHelper(inputPdfPath, outputPdfPath, CryptoStandard.CADES);
+        SignHelper(inputPdfPath, outputPdfPath, CryptoStandard.Cades);
 
         using var verifyReader = new PdfReader(outputPdfPath);
         var af = verifyReader.AcroFields;
