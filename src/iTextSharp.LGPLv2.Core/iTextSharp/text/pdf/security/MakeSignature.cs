@@ -237,11 +237,14 @@ public static class MakeSignature
 
         try
         {
+            // Convert ByteRange [start1, len1, start2, len2] to absolute positions [start1, end1, start2, end2]
+            var absGaps = new long[] { gaps[0], gaps[0] + gaps[1], gaps[2], gaps[2] + gaps[3] };
+
             // Copy up to the gap start
             CopyBytesFromFile(rf, 0, gaps[1] + 1, outs);
 
-            // Let the external container sign the range stream
-            var rangeStream = new SignedRangeStream(rf, gaps);
+            // Let the external container sign the range stream (excludes the gap)
+            var rangeStream = new SignedRangeStream(rf, absGaps);
             var signedContent = externalSignatureContainer.Sign(rangeStream);
 
             var spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
