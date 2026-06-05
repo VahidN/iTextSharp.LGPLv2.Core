@@ -150,7 +150,7 @@ public class PdfSignatureAppearance
     ///     Gets the certificate chain.
     /// </summary>
     /// <returns>the certificate chain</returns>
-    public X509Certificate[] CertChain { get; set; }
+    public X509Certificate[] CertChain { get; private set; }
 
     /// <summary>
     ///     Sets the document type to certified instead of simply signed.

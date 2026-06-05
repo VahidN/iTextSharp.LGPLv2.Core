@@ -47,11 +47,8 @@ public class OcspClientBouncyCastle : IOcspClient
     /// <summary>
     ///     @see com.lowagie.text.pdf.OcspClient#getEncoded()
     /// </summary>
-    /// <param name="checkCert">the certificate to check</param>
-    /// <param name="issuerCert">the issuer certificate</param>
-    /// <param name="url">the OCSP service URL, or null</param>
-    /// <returns>a byte array</returns>
-    public byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, string url)
+    /// <returns>	a byte array</returns>
+    public byte[] GetEncoded()
     {
         var request = generateOcspRequest(_rootCert, _checkCert.SerialNumber);
         var array = request.GetEncoded();

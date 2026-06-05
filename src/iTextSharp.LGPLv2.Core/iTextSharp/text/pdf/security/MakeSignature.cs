@@ -100,7 +100,11 @@ public static class MakeSignature
             }
         }
 
-        sap.CertChain = certList.ToArray();
+        sap.SetCrypto(
+            sap.PrivKey,
+            certList.ToArray(),
+            sap.CrlList,
+            sap.Filter);
 
         if (sigtype == CryptoStandard.Cades)
         {
@@ -129,9 +133,9 @@ public static class MakeSignature
         var hash = DigestAlgorithms.Digest(data, messageDigest);
 
         byte[] ocsp = null;
-        if (chain.Count >= 2 && ocspClient != null)
+        if (ocspClient != null)
         {
-            ocsp = ocspClient.GetEncoded(certList[0], certList[1], null);
+            ocsp = ocspClient.GetEncoded();
         }
 
         var sh = sgn.GetAuthenticatedAttributeBytes(hash, ocsp, crlBytes, sigtype);
