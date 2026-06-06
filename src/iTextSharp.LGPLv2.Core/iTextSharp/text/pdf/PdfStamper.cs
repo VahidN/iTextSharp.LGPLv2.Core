@@ -482,6 +482,13 @@ public class PdfStamper : IPdfViewerPreferences, IPdfEncryptionSettings, IDispos
             return;
         }
 
+        if (SignatureAppearance.IsPreClosed())
+        {
+            Stamper.Close(MoreInfo);
+
+            return;
+        }
+
         SignatureAppearance.PreClose();
         var sig = SignatureAppearance.SigStandard;
         var lit = (PdfLiteral)sig.Get(PdfName.Contents);

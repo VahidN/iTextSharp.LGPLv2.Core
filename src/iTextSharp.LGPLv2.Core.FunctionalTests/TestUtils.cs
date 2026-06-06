@@ -15,6 +15,18 @@ public static class TestUtils
 
     public static string Author => "VahidN";
 
+    public static string CreateSimplePdf()
+    {
+        var pdfFilePath = GetOutputFileName();
+        using var fileStream = new FileStream(pdfFilePath, FileMode.Create);
+        using var document = new Document(PageSize.A4);
+        var writer = PdfWriter.GetInstance(document, fileStream);
+        document.AddAuthor(Author);
+        document.Open();
+        document.Add(new Paragraph("Test Document"));
+        return pdfFilePath;
+    }
+
     public static string GetBaseDir()
     {
         var currentAssembly = typeof(TestUtils).GetTypeInfo().Assembly;

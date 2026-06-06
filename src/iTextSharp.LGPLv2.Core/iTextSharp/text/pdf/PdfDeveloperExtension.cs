@@ -23,6 +23,12 @@ public class PdfDeveloperExtension
         new(PdfName.Adbe, PdfWriter.PdfVersion17, 3);
 
     /// <summary>
+    ///     An instance of this class for ETSI ESIC 1.7 Extension level 2 (PAdES).
+    /// </summary>
+    public static readonly PdfDeveloperExtension Esic17Extensionlevel2 =
+        new(new PdfName("ESIC"), PdfWriter.PdfVersion17, 2);
+
+    /// <summary>
     ///     The base version.
     /// </summary>
     protected PdfName baseversion;

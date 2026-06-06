@@ -318,6 +318,11 @@ public class PdfSignatureAppearance
     public Image SignatureGraphic { get; set; }
 
     /// <summary>
+    ///     Gets or sets the signature creator.
+    /// </summary>
+    public string SignatureCreator { get; set; }
+
+    /// <summary>
     ///     Gets the signature date.
     /// </summary>
     /// <returns>the signature date</returns>
@@ -444,6 +449,16 @@ public class PdfSignatureAppearance
         }
 
         return size;
+    }
+
+    /// <summary>
+    ///     Adds a developer extension to the PDF document.
+    ///     Required for PAdES signatures.
+    /// </summary>
+    /// <param name="de">the developer extension to add</param>
+    public void AddDeveloperExtension(PdfDeveloperExtension de)
+    {
+        _writer.AddDeveloperExtension(de);
     }
 
     /// <summary>

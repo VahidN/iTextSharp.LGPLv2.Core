@@ -105,6 +105,11 @@ public class PdfName : PdfObject, IComparable
     /// <summary>
     ///     A name
     /// </summary>
+    public static readonly PdfName EtsiCadesDetached = new(name: "ETSI.CAdES.detached");
+
+    /// <summary>
+    ///     A name
+    /// </summary>
     public static readonly PdfName AdobePpklite = new(name: "Adobe.PPKLite");
 
     /// <summary>
