@@ -18,16 +18,22 @@ public static class CertificateUtil
     /// <returns>the CRL URL, or null</returns>
     public static string GetCrlUrl(X509Certificate certificate)
     {
+        if (certificate == null)
+        {
+            throw new ArgumentNullException(nameof(certificate));
+        }
+
         try
         {
             var extension = certificate.GetExtensionValue(X509Extensions.CrlDistributionPoints);
+
             if (extension is null)
             {
                 return null;
             }
 
-            var crlDistPoint = CrlDistPoint.GetInstance(
-                Asn1Object.FromByteArray(extension.GetOctets()));
+            var crlDistPoint = CrlDistPoint.GetInstance(Asn1Object.FromByteArray(extension.GetOctets()));
+
             if (crlDistPoint is null)
             {
                 return null;
@@ -36,9 +42,11 @@ public static class CertificateUtil
             foreach (var dp in crlDistPoint.GetDistributionPoints())
             {
                 var name = dp.DistributionPointName;
+
                 if (name != null && name.Type == DistributionPointName.FullName)
                 {
                     var generalNames = GeneralNames.GetInstance(name.Name);
+
                     foreach (var gn in generalNames.GetNames())
                     {
                         if (gn.TagNo == GeneralName.UniformResourceIdentifier)
@@ -65,6 +73,11 @@ public static class CertificateUtil
     /// <returns>the OCSP URL, or null</returns>
     public static string GetOcspUrl(X509Certificate certificate)
     {
+        if (certificate == null)
+        {
+            throw new ArgumentNullException(nameof(certificate));
+        }
+
         try
         {
             return GetAccessDescriptionUrl(certificate, X509ObjectIdentifiers.OcspAccessMethod);
@@ -83,6 +96,11 @@ public static class CertificateUtil
     /// <returns>the TSA URL, or null</returns>
     public static string GetTsaUrl(X509Certificate certificate)
     {
+        if (certificate == null)
+        {
+            throw new ArgumentNullException(nameof(certificate));
+        }
+
         try
         {
             return GetAccessDescriptionUrl(certificate, new DerObjectIdentifier(IdAdTimestamping));
@@ -93,18 +111,17 @@ public static class CertificateUtil
         }
     }
 
-    private static string GetAccessDescriptionUrl(
-        X509Certificate certificate,
-        DerObjectIdentifier accessMethod)
+    private static string GetAccessDescriptionUrl(X509Certificate certificate, DerObjectIdentifier accessMethod)
     {
         var extension = certificate.GetExtensionValue(X509Extensions.AuthorityInfoAccess);
+
         if (extension is null)
         {
             return null;
         }
 
-        var authInfoAccesss = AuthorityInformationAccess.GetInstance(
-            Asn1Object.FromByteArray(extension.GetOctets()));
+        var authInfoAccesss = AuthorityInformationAccess.GetInstance(Asn1Object.FromByteArray(extension.GetOctets()));
+
         if (authInfoAccesss is null)
         {
             return null;

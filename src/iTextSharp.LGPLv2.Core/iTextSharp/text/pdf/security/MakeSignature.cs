@@ -1,10 +1,8 @@
-﻿namespace iTextSharp.text.pdf.security;
-
-using System.util;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+﻿using System.util;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+
+namespace iTextSharp.text.pdf.security;
 
 /// <summary>
 ///     Provides static methods to sign PDF documents.
@@ -18,7 +16,7 @@ public static class MakeSignature
     ///     Processes a CRL list and returns the CRL bytes.
     /// </summary>
     /// <param name="cert">a certificate, used if a CRL client needs to derive the CRL URL</param>
-    /// <param name="crlList">a collection of <see cref="ICrlClient"/> implementations</param>
+    /// <param name="crlList">a collection of <see cref="ICrlClient" /> implementations</param>
     /// <returns>a collection of CRL byte arrays, or null if empty</returns>
     public static ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection<ICrlClient> crlList)
     {
@@ -28,6 +26,7 @@ public static class MakeSignature
         }
 
         var crlBytes = new List<byte[]>();
+
         foreach (var cc in crlList)
         {
             if (cc == null)
@@ -35,7 +34,8 @@ public static class MakeSignature
                 continue;
             }
 
-            var b = cc.GetEncoded(cert, null);
+            var b = cc.GetEncoded(cert, url: null);
+
             if (b == null)
             {
                 continue;
@@ -52,16 +52,15 @@ public static class MakeSignature
     ///     The actual signing is performed by an external signature implementation
     ///     (e.g. smart card, HSM, or remote signing service).
     /// </summary>
-    /// <param name="sap">the <see cref="PdfSignatureAppearance"/></param>
+    /// <param name="sap">the <see cref="PdfSignatureAppearance" /></param>
     /// <param name="externalSignature">the interface providing the actual signing</param>
     /// <param name="chain">the certificate chain</param>
-    /// <param name="crlList">a collection of <see cref="ICrlClient"/> implementations, or null</param>
+    /// <param name="crlList">a collection of <see cref="ICrlClient" /> implementations, or null</param>
     /// <param name="ocspClient">the OCSP client, or null</param>
     /// <param name="tsaClient">the timestamp client, or null</param>
     /// <param name="estimatedSize">the reserved size for the signature; estimated if 0</param>
     /// <param name="sigtype">the signature standard (CMS or CADES)</param>
-    public static void SignDetached(
-        PdfSignatureAppearance sap,
+    public static void SignDetached(PdfSignatureAppearance sap,
         IExternalSignature externalSignature,
         ICollection<X509Certificate> chain,
         ICollection<ICrlClient> crlList,
@@ -70,9 +69,20 @@ public static class MakeSignature
         int estimatedSize,
         CryptoStandard sigtype)
     {
+        if (sap == null)
+        {
+            throw new ArgumentNullException(nameof(sap));
+        }
+
+        if (externalSignature == null)
+        {
+            throw new ArgumentNullException(nameof(externalSignature));
+        }
+
         var certList = new List<X509Certificate>(chain);
         ICollection<byte[]> crlBytes = null;
         var i = 0;
+
         while (crlBytes == null && i < certList.Count)
         {
             crlBytes = ProcessCrl(certList[i++], crlList);
@@ -81,6 +91,7 @@ public static class MakeSignature
         if (estimatedSize == 0)
         {
             estimatedSize = 8192;
+
             if (crlBytes != null)
             {
                 foreach (var element in crlBytes)
@@ -100,22 +111,16 @@ public static class MakeSignature
             }
         }
 
-        sap.SetCrypto(
-            sap.PrivKey,
-            certList.ToArray(),
-            sap.CrlList,
-            sap.Filter);
+        sap.SetCrypto(sap.PrivKey, certList.ToArray(), sap.CrlList, sap.Filter);
 
         if (sigtype == CryptoStandard.Cades)
         {
             sap.AddDeveloperExtension(PdfDeveloperExtension.Esic17Extensionlevel2);
         }
 
-        var dic = new PdfSignature(
-            PdfName.AdobePpklite,
-            sigtype == CryptoStandard.Cades
-                ? PdfName.EtsiCadesDetached
-                : PdfName.AdbePkcs7Detached);
+        var dic = new PdfSignature(PdfName.AdobePpklite,
+            sigtype == CryptoStandard.Cades ? PdfName.EtsiCadesDetached : PdfName.AdbePkcs7Detached);
+
         dic.Reason = sap.Reason;
         dic.Location = sap.Location;
         dic.Contact = sap.Contact;
@@ -123,16 +128,17 @@ public static class MakeSignature
         sap.CryptoDictionary = dic;
 
         var exc = new NullValueDictionary<PdfName, int>();
-        exc[PdfName.Contents] = (estimatedSize * 2) + 2;
+        exc[PdfName.Contents] = estimatedSize * 2 + 2;
         sap.PreClose(exc);
 
         var hashAlgorithm = externalSignature.GetHashAlgorithm();
-        var sgn = new PdfPkcs7(chain, hashAlgorithm, false);
+        var sgn = new PdfPkcs7(chain, hashAlgorithm, hasRsAdata: false);
         var messageDigest = DigestUtilities.GetDigest(hashAlgorithm);
         var data = sap.RangeStream;
         var hash = DigestAlgorithms.Digest(data, messageDigest);
 
         byte[] ocsp = null;
+
         if (ocspClient != null)
         {
             ocsp = ocspClient.GetEncoded();
@@ -140,20 +146,20 @@ public static class MakeSignature
 
         var sh = sgn.GetAuthenticatedAttributeBytes(hash, ocsp, crlBytes, sigtype);
         var extSignature = externalSignature.Sign(sh);
-        sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm());
+        sgn.SetExternalDigest(extSignature, rsAdata: null, externalSignature.GetEncryptionAlgorithm());
 
         var encodedSig = sgn.GetEncodedPkcs7(hash, tsaClient, ocsp, crlBytes, sigtype);
 
         if (estimatedSize < encodedSig.Length)
         {
-            throw new IOException("Not enough space");
+            throw new IOException(message: "Not enough space");
         }
 
         var paddedSig = new byte[estimatedSize];
-        Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
+        Array.Copy(encodedSig, sourceIndex: 0, paddedSig, destinationIndex: 0, encodedSig.Length);
 
         var dic2 = new PdfDictionary();
-        dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+        dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(hexWriting: true));
         sap.Close(dic2);
     }
 
@@ -162,15 +168,24 @@ public static class MakeSignature
     ///     The signature is fully composed externally; only the final bytes
     ///     are injected into the PDF.
     /// </summary>
-    /// <param name="sap">the <see cref="PdfSignatureAppearance"/></param>
+    /// <param name="sap">the <see cref="PdfSignatureAppearance" /></param>
     /// <param name="externalSignatureContainer">the interface providing the actual signing</param>
     /// <param name="estimatedSize">the reserved size for the signature</param>
-    public static void SignExternalContainer(
-        PdfSignatureAppearance sap,
+    public static void SignExternalContainer(PdfSignatureAppearance sap,
         IExternalSignatureContainer externalSignatureContainer,
         int estimatedSize)
     {
-        var dic = new PdfSignature(null, null);
+        if (sap == null)
+        {
+            throw new ArgumentNullException(nameof(sap));
+        }
+
+        if (externalSignatureContainer == null)
+        {
+            throw new ArgumentNullException(nameof(externalSignatureContainer));
+        }
+
+        var dic = new PdfSignature(filter: null, subFilter: null);
         dic.Reason = sap.Reason;
         dic.Location = sap.Location;
         dic.Contact = sap.Contact;
@@ -179,7 +194,7 @@ public static class MakeSignature
         sap.CryptoDictionary = dic;
 
         var exc = new NullValueDictionary<PdfName, int>();
-        exc[PdfName.Contents] = (estimatedSize * 2) + 2;
+        exc[PdfName.Contents] = estimatedSize * 2 + 2;
         sap.PreClose(exc);
 
         var data = sap.RangeStream;
@@ -187,14 +202,14 @@ public static class MakeSignature
 
         if (estimatedSize < encodedSig.Length)
         {
-            throw new IOException("Not enough space");
+            throw new IOException(message: "Not enough space");
         }
 
         var paddedSig = new byte[estimatedSize];
-        Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
+        Array.Copy(encodedSig, sourceIndex: 0, paddedSig, destinationIndex: 0, encodedSig.Length);
 
         var dic2 = new PdfDictionary();
-        dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+        dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(hexWriting: true));
         sap.Close(dic2);
     }
 
@@ -206,26 +221,42 @@ public static class MakeSignature
     /// <param name="fieldName">the field to sign; must be the last field</param>
     /// <param name="outs">the output stream</param>
     /// <param name="externalSignatureContainer">the signature container producing the signature bytes</param>
-    public static void SignDeferred(
-        PdfReader reader,
+    public static void SignDeferred(PdfReader reader,
         string fieldName,
         Stream outs,
         IExternalSignatureContainer externalSignatureContainer)
     {
+        if (reader == null)
+        {
+            throw new ArgumentNullException(nameof(reader));
+        }
+
+        if (outs == null)
+        {
+            throw new ArgumentNullException(nameof(outs));
+        }
+
+        if (externalSignatureContainer == null)
+        {
+            throw new ArgumentNullException(nameof(externalSignatureContainer));
+        }
+
         var af = reader.AcroFields;
         var v = af.GetSignatureDictionary(fieldName);
+
         if (v == null)
         {
-            throw new DocumentException("No field");
+            throw new DocumentException(message: "No field");
         }
 
         if (!af.SignatureCoversWholeDocument(fieldName))
         {
-            throw new DocumentException("Not the last signature");
+            throw new DocumentException(message: "Not the last signature");
         }
 
         var b = v.GetAsArray(PdfName.Byterange);
         var gaps = new long[b.Size];
+
         for (var k = 0; k < b.Size; ++k)
         {
             gaps[k] = b.GetAsNumber(k).LongValue;
@@ -233,7 +264,7 @@ public static class MakeSignature
 
         if (b.Size != 4 || gaps[0] != 0)
         {
-            throw new DocumentException("Single exclusion space supported");
+            throw new DocumentException(message: "Single exclusion space supported");
         }
 
         var rf = reader.SafeFile;
@@ -242,34 +273,41 @@ public static class MakeSignature
         try
         {
             // Convert ByteRange [start1, len1, start2, len2] to absolute positions [start1, end1, start2, end2]
-            var absGaps = new long[] { gaps[0], gaps[0] + gaps[1], gaps[2], gaps[2] + gaps[3] };
+            var absGaps = new[]
+            {
+                gaps[0], gaps[0] + gaps[1], gaps[2], gaps[2] + gaps[3]
+            };
 
             // Copy up to the gap start
-            CopyBytesFromFile(rf, 0, gaps[1] + 1, outs);
+            CopyBytesFromFile(rf, offset: 0, gaps[1] + 1, outs);
 
             // Let the external container sign the range stream (excludes the gap)
             var rangeStream = new SignedRangeStream(rf, absGaps);
             var signedContent = externalSignatureContainer.Sign(rangeStream);
 
             var spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
+
             if ((spaceAvailable & 1) != 0)
             {
-                throw new DocumentException("Gap is not a multiple of 2");
+                throw new DocumentException(message: "Gap is not a multiple of 2");
             }
 
             spaceAvailable /= 2;
+
             if (spaceAvailable < signedContent.Length)
             {
-                throw new DocumentException("Not enough space");
+                throw new DocumentException(message: "Not enough space");
             }
 
             var bb = new ByteBuffer(spaceAvailable * 2);
+
             foreach (var bi in signedContent)
             {
                 bb.AppendHex(bi);
             }
 
             var remain = (spaceAvailable - signedContent.Length) * 2;
+
             for (var k = 0; k < remain; ++k)
             {
                 bb.Append((byte)48);
@@ -298,16 +336,18 @@ public static class MakeSignature
         rf.Seek(offset);
         var buf = new byte[8192];
         var remaining = length;
+
         while (remaining > 0)
         {
             var toRead = (int)Math.Min(buf.Length, remaining);
-            var read = rf.Read(buf, 0, toRead);
+            var read = rf.Read(buf, off: 0, toRead);
+
             if (read <= 0)
             {
                 break;
             }
 
-            outs.Write(buf, 0, read);
+            outs.Write(buf, offset: 0, read);
             remaining -= read;
         }
     }
@@ -318,10 +358,10 @@ public static class MakeSignature
     /// </summary>
     private sealed class SignedRangeStream : Stream
     {
-        private readonly RandomAccessFileOrArray _rf;
         private readonly long[] _gaps;
-        private long _position;
+        private readonly RandomAccessFileOrArray _rf;
         private int _gapIndex;
+        private long _position;
 
         public SignedRangeStream(RandomAccessFileOrArray rf, long[] gaps)
         {
@@ -332,9 +372,12 @@ public static class MakeSignature
         }
 
         public override bool CanRead => true;
+
         public override bool CanSeek => false;
+
         public override bool CanWrite => false;
-        public override long Length => (_gaps[1] - _gaps[0]) + (_gaps[3] - _gaps[2]);
+
+        public override long Length => _gaps[1] - _gaps[0] + (_gaps[3] - _gaps[2]);
 
         public override long Position
         {
@@ -354,9 +397,11 @@ public static class MakeSignature
             }
 
             var remaining = _gaps[_gapIndex + 1] - _position;
+
             if (remaining <= 0)
             {
                 _gapIndex += 2;
+
                 if (_gapIndex >= _gaps.Length)
                 {
                     return 0;
@@ -369,6 +414,7 @@ public static class MakeSignature
             var toRead = (int)Math.Min(count, remaining);
             _rf.Seek(_position);
             var read = _rf.Read(buffer, offset, toRead);
+
             if (read > 0)
             {
                 _position += read;
@@ -377,19 +423,10 @@ public static class MakeSignature
             return read;
         }
 
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
-        public override void SetLength(long value)
-        {
-            throw new NotSupportedException();
-        }
+        public override void SetLength(long value) => throw new NotSupportedException();
 
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            throw new NotSupportedException();
-        }
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }
