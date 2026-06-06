@@ -26,7 +26,8 @@ public static class CertificateUtil
                 return null;
             }
 
-            var crlDistPoint = CrlDistPoint.GetInstance(extension);
+            var crlDistPoint = CrlDistPoint.GetInstance(
+                Asn1Object.FromByteArray(extension.GetOctets()));
             if (crlDistPoint is null)
             {
                 return null;
@@ -102,7 +103,8 @@ public static class CertificateUtil
             return null;
         }
 
-        var authInfoAccesss = AuthorityInformationAccess.GetInstance(extension);
+        var authInfoAccesss = AuthorityInformationAccess.GetInstance(
+            Asn1Object.FromByteArray(extension.GetOctets()));
         if (authInfoAccesss is null)
         {
             return null;

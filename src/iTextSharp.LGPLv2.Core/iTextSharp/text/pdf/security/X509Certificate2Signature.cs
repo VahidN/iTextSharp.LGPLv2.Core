@@ -23,9 +23,18 @@ public class X509Certificate2Signature : IExternalSignature
     /// <param name="hashAlgorithm">the hash algorithm (e.g. "SHA-256")</param>
     public X509Certificate2Signature(X509Certificate2 certificate, string hashAlgorithm)
     {
+        if (hashAlgorithm == null)
+        {
+            throw new ArgumentNullException(nameof(hashAlgorithm));
+        }
+        var allowedDigest = DigestAlgorithms.GetAllowedDigests(hashAlgorithm);
+        if (allowedDigest == null)
+        {
+            throw new ArgumentException(
+                $"Unsupported hash algorithm: {hashAlgorithm}", nameof(hashAlgorithm));
+        }
         _certificate = certificate ?? throw new ArgumentNullException(nameof(certificate));
-        _hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigests(
-            hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm))));
+        _hashAlgorithm = DigestAlgorithms.GetDigest(allowedDigest);
         _encryptionAlgorithm = "RSA";
     }
 

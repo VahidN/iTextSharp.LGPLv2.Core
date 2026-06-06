@@ -1148,17 +1148,18 @@ public class PdfPkcs7
         // add the authenticated attribute if present
         if (secondDigest != null /*&& signingTime != null*/)
         {
+            var actualSigningTime = _signingTime != default ? _signingTime : signingTime;
             if (_cryptoStandard == CryptoStandard.Cades && _signCertHash != null)
             {
                 signerinfo.Add(new DerTaggedObject(isExplicit: false, tagNo: 0,
                     getAuthenticatedAttributeSet(
-                        secondDigest, _signingTime, ocsp, null,
+                        secondDigest, actualSigningTime, ocsp, null,
                         _cryptoStandard, _signCertHash, GetHashAlgorithm())));
             }
             else
             {
                 signerinfo.Add(new DerTaggedObject(isExplicit: false, tagNo: 0,
-                    getAuthenticatedAttributeSet(secondDigest, _signingTime, ocsp)));
+                    getAuthenticatedAttributeSet(secondDigest, actualSigningTime, ocsp)));
             }
         }
 
