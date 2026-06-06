@@ -10,3 +10,5 @@ F:System.StringComparison.InvariantCulture;Do you mean Ordinal?
 F:System.StringComparison.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
 P:System.StringComparer.InvariantCulture;Do you mean Ordinal?
 P:System.StringComparer.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
+M:System.Threading.Thread.Sleep(System.Int32); Use await and 'Task.Delay()' instead of 'Thread.Sleep()' and make method async
+M:System.Threading.Thread.Sleep(System.TimeSpan); Use await and 'Task.Delay()' instead of 'Thread.Sleep()' and make method async
