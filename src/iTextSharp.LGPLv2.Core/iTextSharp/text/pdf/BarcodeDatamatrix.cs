@@ -1,9 +1,7 @@
 using System.Drawing;
 using System.util;
-using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.Encodings;
 using iTextSharp.text.pdf.codec;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -248,7 +246,7 @@ public class BarcodeDatamatrix
     /// <param name="foreground">the color of the bars</param>
     /// <param name="background">the color of the background</param>
     /// <returns>the image</returns>
-    public virtual SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public virtual RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         if (BitImage == null)
         {
@@ -258,7 +256,7 @@ public class BarcodeDatamatrix
         var h = Height + 2 * Ws;
         var w = Width + 2 * Ws;
         var stride = (w + 7) / 8;
-        var bmp = new SKBitmap(w, h);
+        var bmp = new RawBitmap(w, h);
 
         for (var k = 0; k < h; ++k)
         {
@@ -268,7 +266,7 @@ public class BarcodeDatamatrix
             {
                 var b = BitImage[p + j / 8] & 0xff;
                 b <<= j % 8;
-                bmp.SetPixel(j, k, (b & 0x80) == 0 ? background.ToSKColor() : foreground.ToSKColor());
+                bmp.SetPixel(j, k, (b & 0x80) == 0 ? background : foreground);
             }
         }
 

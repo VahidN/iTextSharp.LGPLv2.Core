@@ -1,6 +1,4 @@
 using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -123,7 +121,7 @@ public class BarcodePostnet : Barcode
         return bars;
     }
 
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public override RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         var barWidth = (int)x;
 
@@ -164,7 +162,7 @@ public class BarcodePostnet : Barcode
             bars[bars.Length - 1] = 0;
         }
 
-        var bmp = new SKBitmap(width, barTall);
+        var bmp = new RawBitmap(width, barTall);
         var seg1 = barTall - barShort;
 
         for (var i = 0; i < seg1; ++i)
@@ -177,7 +175,7 @@ public class BarcodePostnet : Barcode
 
                 for (var j = 0; j < barDistance; ++j)
                 {
-                    bmp.SetPixel(idx++, i, dot && j < barWidth ? foreground.ToSKColor() : background.ToSKColor());
+                    bmp.SetPixel(idx++, i, dot && j < barWidth ? foreground : background);
                 }
             }
         }
@@ -190,7 +188,7 @@ public class BarcodePostnet : Barcode
             {
                 for (var j = 0; j < barDistance; ++j)
                 {
-                    bmp.SetPixel(idx++, i, j < barWidth ? foreground.ToSKColor() : background.ToSKColor());
+                    bmp.SetPixel(idx++, i, j < barWidth ? foreground : background);
                 }
             }
         }

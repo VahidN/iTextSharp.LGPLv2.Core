@@ -1,8 +1,6 @@
-using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.LGPLv2.Core.System.NetUtils;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
-using SkiaSharp;
 
 namespace iTextSharp.text;
 
@@ -971,38 +969,23 @@ public abstract class Image : Rectangle
     }
 
     /// <summary>
-    ///     Converts a .NET image to a Native(PNG, JPG, GIF, WMF) image
+    ///     Gets an instance of an Image from a <see cref="RawBitmap" /> (raw, lossless conversion).
     /// </summary>
-    /// <param name="image"></param>
-    /// <param name="format"></param>
-    /// <param name="quality"></param>
-    /// <returns></returns>
-    public static Image GetInstance(SKBitmap image, SKEncodedImageFormat format, int quality = 100)
-    {
-        if (image == null)
-        {
-            throw new ArgumentNullException(nameof(image));
-        }
-
-        using var data = image.Encode(format, quality);
-        using var stream = new MemoryStream();
-        data.SaveTo(stream);
-        var imageArray = stream.ToArray();
-
-        return GetInstance(imageArray);
-    }
+    /// <param name="image">the bitmap to convert</param>
+    /// <returns>an object of type ImgRaw</returns>
+    public static Image GetInstance(RawBitmap image) => GetInstance(image, color: null);
 
     /// <summary>
-    ///     Gets an instance of an Image from a SkiaSharp.SKBitmap.
+    ///     Gets an instance of an Image from a <see cref="RawBitmap" />.
     /// </summary>
-    /// <param name="image">the System.Drawing.Image to convert</param>
+    /// <param name="image">the bitmap to convert</param>
     /// <param name="color">
     ///     if different from null the transparency
     ///     pixels are replaced by this color
     /// </param>
     /// <param name="forceBw">if true the image is treated as black and white</param>
     /// <returns>an object of type ImgRaw</returns>
-    public static Image GetInstance(SKBitmap image, BaseColor color, bool forceBw)
+    public static Image GetInstance(RawBitmap image, BaseColor color, bool forceBw)
     {
         if (image == null)
         {
@@ -1039,7 +1022,7 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
-                        int alpha = bm.GetPixel(i, j).Alpha;
+                        int alpha = bm.GetPixel(i, j).A;
 
                         if (alpha < 250)
                         {
@@ -1082,7 +1065,7 @@ public abstract class Image : Rectangle
                     {
                         if (ints == null)
                         {
-                            int alpha = bm.GetPixel(i, j).Alpha;
+                            int alpha = bm.GetPixel(i, j).A;
 
                             if (alpha == 0)
                             {
@@ -1229,15 +1212,15 @@ public abstract class Image : Rectangle
     }
 
     /// <summary>
-    ///     Gets an instance of an Image from a System.Drawing.Image.
+    ///     Gets an instance of an Image from a <see cref="RawBitmap" />.
     /// </summary>
-    /// <param name="image">the System.Drawing.Image to convert</param>
+    /// <param name="image">the bitmap to convert</param>
     /// <param name="color">
     ///     if different from null the transparency
     ///     pixels are replaced by this color
     /// </param>
     /// <returns>an object of type ImgRaw</returns>
-    public static Image GetInstance(SKBitmap image, BaseColor color) => GetInstance(image, color, forceBw: false);
+    public static Image GetInstance(RawBitmap image, BaseColor color) => GetInstance(image, color, forceBw: false);
 
     /// <summary>
     ///     Gets an instance of an Image.

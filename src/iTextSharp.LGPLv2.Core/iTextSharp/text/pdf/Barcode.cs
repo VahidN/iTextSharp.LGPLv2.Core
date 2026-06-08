@@ -1,5 +1,4 @@
 using System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -326,7 +325,7 @@ public abstract class Barcode
         set => x = value;
     }
 
-    public abstract SKBitmap CreateDrawingImage(Color foreground, Color background);
+    public abstract RawBitmap CreateDrawingImage(Color foreground, Color background);
 
     /// <summary>
     ///     Creates an  Image  with the barcode.

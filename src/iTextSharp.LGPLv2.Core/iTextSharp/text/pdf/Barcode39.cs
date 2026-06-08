@@ -1,6 +1,4 @@
 using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -221,7 +219,7 @@ public class Barcode39 : Barcode
         return ret;
     }
 
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public override RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         var bCode = code;
         if (extended)
@@ -238,7 +236,7 @@ public class Barcode39 : Barcode
         var nn = (int)n;
         var fullWidth = len * (6 + 3 * nn) + (len - 1);
         var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
+        var bmp = new RawBitmap(fullWidth, height);
         var bars = GetBarsCode39(bCode);
         for (var h = 0; h < height; ++h)
         {
@@ -256,7 +254,7 @@ public class Barcode39 : Barcode
                 print = !print;
                 for (var j = 0; j < w; ++j)
                 {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
+                    bmp.SetPixel(ptr++, h, c);
                 }
             }
         }

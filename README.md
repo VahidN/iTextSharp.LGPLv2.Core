@@ -18,24 +18,6 @@ PM> Install-Package iTextSharp.LGPLv2.Core
 You can also view the [package page](http://www.nuget.org/packages/iTextSharp.LGPLv2.Core/) on NuGet.
 
 
-## Linux (and containers) support
-
-The `SkiaSharp` library needs extra dependencies to work on Linux and containers. Please install the following NuGet packages:
-
-```
-PM> Install-Package SkiaSharp.NativeAssets.Linux.NoDependencies
-PM> Install-Package HarfBuzzSharp.NativeAssets.Linux
-```
-
-You also need to modify your `.csproj` file to include some MSBuild directives that ensure the required files are in a good place. These extra steps are normally not required but seems to be some issues on how .NET loads them.
-
-```xml
-<Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
-    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />
-    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libHarfBuzzSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />    
-</Target>
-```
-
 Usage
 ------
 [Functional Tests](https://github.com/VahidN/iTextSharp.LGPLv2.Core/tree/master/src/iTextSharp.LGPLv2.Core.FunctionalTests)
@@ -62,6 +44,10 @@ FAQ
  > iTextSharp.text.html.simpleparser.HTMLWorker does not exist.
 
  It has been renamed to [HtmlWorker](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/src/iTextSharp.LGPLv2.Core.FunctionalTests/HtmlWorkerTests.cs#L42).
+
+ > I used `SKBitmap` (SkiaSharp) with barcodes or `Image.GetInstance(...)`. Why doesn't my code compile anymore?
+
+ The library no longer depends on SkiaSharp and is fully managed (no native assets). The `SKBitmap`-based APIs now use a small managed `iTextSharp.text.RawBitmap` instead. See the [migration guide](https://github.com/VahidN/iTextSharp.LGPLv2.Core/blob/master/docs/migrating-from-skiasharp.md) for the full list of breaking changes and copy-paste snippets to convert `RawBitmap` to/from `SKBitmap` and `System.Drawing.Bitmap`.
 
 Licensing
 ---------

@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using BitMiracle.LibTiff.Classic;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SkiaSharp;
 using Document = iTextSharp.text.Document;
 
 namespace iTextSharp.LGPLv2.Core.FunctionalTests;
@@ -74,8 +72,8 @@ public class TiffImageTests
                 throw new InvalidOperationException("Could not open the incoming image");
             }
 
-            var skBitmap = ConvertToSKBitmap(tiff);
-            var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
+            var rawBitmap = ConvertToRawBitmap(tiff);
+            var img = Image.GetInstance(rawBitmap);
 
             img.ScaleAbsolute(img.Width, img.Height);
             img.SetAbsolutePosition(0, 0);
@@ -125,8 +123,8 @@ public class TiffImageTests
 
                     do
                     {
-                        var skBitmap = ConvertToSKBitmap(tiff);
-                        var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
+                        var rawBitmap = ConvertToRawBitmap(tiff);
+                        var img = Image.GetInstance(rawBitmap);
                         img.ScaleAbsolute(img.Width, img.Height);
                         img.SetAbsolutePosition(0, 0);
                         img.SetDpi(img.DpiX, img.DpiY);
@@ -155,36 +153,32 @@ public class TiffImageTests
         return pageCount;
     }
 
-    // Convert a TIFF stream to a SKBitmap
-    public static SKBitmap ConvertToSKBitmap(Tiff tiff)
+    // Convert a TIFF stream to a fully-managed RawBitmap (no SkiaSharp dependency).
+    public static RawBitmap ConvertToRawBitmap(Tiff tiff)
     {
         // read the dimensions
         var width = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         var height = tiff.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 
-        // create the bitmap
-        var bitmap = new SKBitmap();
-        var info = new SKImageInfo(width, height);
-
-        // create the buffer that will hold the pixels
+        // read the image into a managed buffer
         var raster = new int[width * height];
-
-        // get a pointer to the buffer, and give it to the bitmap
-        var ptr = GCHandle.Alloc(raster, GCHandleType.Pinned);
-        bitmap.InstallPixels(info, ptr.AddrOfPinnedObject(), info.RowBytes, null, null);
-
-        // read the image into the memory buffer
         if (!tiff.ReadRGBAImageOriented(width, height, raster, Orientation.TOPLEFT))
         {
-            throw new Exception("Not a valid TIF image.");
+            throw new InvalidOperationException("Not a valid TIF image.");
         }
 
-        // swap the red and blue because SkiaSharp may differ from the tiff
-        if (SKImageInfo.PlatformColorType == SKColorType.Bgra8888)
+        // LibTiff packs pixels as ABGR (red in the low byte). Convert to the ARGB
+        // layout expected by RawBitmap / System.Drawing.Color.
+        for (var i = 0; i < raster.Length; i++)
         {
-            SKSwizzle.SwapRedBlue(ptr.AddrOfPinnedObject(), raster.Length);
+            var abgr = raster[i];
+            var r = abgr & 0xff;
+            var g = (abgr >> 8) & 0xff;
+            var b = (abgr >> 16) & 0xff;
+            var a = (abgr >> 24) & 0xff;
+            raster[i] = (a << 24) | (r << 16) | (g << 8) | b;
         }
 
-        return bitmap;
+        return RawBitmap.FromArgb(width, height, raster);
     }
 }

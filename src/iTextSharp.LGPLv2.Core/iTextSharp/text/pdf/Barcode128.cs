@@ -1,8 +1,6 @@
 using System.Drawing;
 using System.Text;
 using System.util;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -1132,7 +1130,7 @@ public class Barcode128 : Barcode
         return buf.ToString();
     }
 
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public override RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         string bCode;
 
@@ -1158,7 +1156,7 @@ public class Barcode128 : Barcode
         var fullWidth = (len + 2) * 11 + 2;
         var bars = GetBarsCode128Raw(bCode);
         var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
+        var bmp = new RawBitmap(fullWidth, height);
 
         for (var h = 0; h < height; ++h)
         {
@@ -1179,7 +1177,7 @@ public class Barcode128 : Barcode
 
                 for (var j = 0; j < w; ++j)
                 {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
+                    bmp.SetPixel(ptr++, h, c);
                 }
             }
         }

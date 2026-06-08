@@ -1,6 +1,4 @@
 using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -789,7 +787,7 @@ public class BarcodeEan : Barcode
         return bars;
     }
 
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public override RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         var width = 0;
         byte[] bars = null;
@@ -831,7 +829,7 @@ public class BarcodeEan : Barcode
         }
 
         var height = (int)barHeight;
-        var bmp = new SKBitmap(width, height);
+        var bmp = new RawBitmap(width, height);
 
         for (var h = 0; h < height; ++h)
         {
@@ -852,7 +850,7 @@ public class BarcodeEan : Barcode
 
                 for (var j = 0; j < w; ++j)
                 {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
+                    bmp.SetPixel(ptr++, h, c);
                 }
             }
         }

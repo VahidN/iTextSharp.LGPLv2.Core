@@ -1,5 +1,4 @@
 using System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -52,7 +51,7 @@ public class BarcodeEansupp : Barcode
         }
     }
 
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background) =>
+    public override RawBitmap CreateDrawingImage(Color foreground, Color background) =>
         throw new InvalidOperationException("The two barcodes must be composed externally.");
 
     /// <summary>

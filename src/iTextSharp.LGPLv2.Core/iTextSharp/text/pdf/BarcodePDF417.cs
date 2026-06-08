@@ -1,8 +1,6 @@
 using System.Drawing;
 using System.Text;
-using iTextSharp.LGPLv2.Core.System.Drawing;
 using iTextSharp.text.pdf.codec;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -627,12 +625,12 @@ public class BarcodePdf417
         get => _yHeight;
     }
 
-    public virtual SKBitmap CreateDrawingImage(Color foreground, Color background)
+    public virtual RawBitmap CreateDrawingImage(Color foreground, Color background)
     {
         PaintCode();
         var h = (int)_yHeight;
         var stride = (_bitColumns + 7) / 8;
-        var bmp = new SKBitmap(_bitColumns, _codeRows * h);
+        var bmp = new RawBitmap(_bitColumns, _codeRows * h);
         var y = 0;
 
         for (var k = 0; k < _codeRows; ++k)
@@ -645,7 +643,7 @@ public class BarcodePdf417
                 {
                     var b = _outBits[p + j / 8] & 0xff;
                     b <<= j % 8;
-                    bmp.SetPixel(j, y, (b & 0x80) == 0 ? background.ToSKColor() : foreground.ToSKColor());
+                    bmp.SetPixel(j, y, (b & 0x80) == 0 ? background : foreground);
                 }
 
                 ++y;
