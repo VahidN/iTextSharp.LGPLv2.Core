@@ -995,6 +995,7 @@ public abstract class Image : Rectangle
         var bm = image;
         var w = bm.Width;
         var h = bm.Height;
+        var pixels = bm.ArgbInternal;
         var pxv = 0;
 
         if (forceBw)
@@ -1022,7 +1023,8 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
-                        int alpha = bm.GetPixel(i, j).A;
+                        var px = pixels[(j * w) + i];
+                        int alpha = (px >> 24) & 0xff;
 
                         if (alpha < 250)
                         {
@@ -1033,7 +1035,7 @@ public abstract class Image : Rectangle
                         }
                         else
                         {
-                            if ((bm.GetPixel(i, j).ToArgb() & 0x888) != 0)
+                            if ((px & 0x888) != 0)
                             {
                                 currByte |= cbyte;
                             }
@@ -1063,18 +1065,20 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
+                        var px = pixels[(j * w) + i];
+
                         if (ints == null)
                         {
-                            int alpha = bm.GetPixel(i, j).A;
+                            int alpha = (px >> 24) & 0xff;
 
                             if (alpha == 0)
                             {
                                 ints = new int[2];
-                                ints[0] = ints[1] = (bm.GetPixel(i, j).ToArgb() & 0x888) != 0 ? 1 : 0;
+                                ints[0] = ints[1] = (px & 0x888) != 0 ? 1 : 0;
                             }
                         }
 
-                        if ((bm.GetPixel(i, j).ToArgb() & 0x888) != 0)
+                        if ((px & 0x888) != 0)
                         {
                             currByte |= cbyte;
                         }
@@ -1126,7 +1130,8 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
-                        var alpha = (bm.GetPixel(i, j).ToArgb() >> 24) & 0xff;
+                        pxv = pixels[(j * w) + i];
+                        var alpha = (pxv >> 24) & 0xff;
 
                         if (alpha < 250)
                         {
@@ -1136,7 +1141,6 @@ public abstract class Image : Rectangle
                         }
                         else
                         {
-                            pxv = bm.GetPixel(i, j).ToArgb();
                             pixelsByte[index++] = (byte)((pxv >> 16) & 0xff);
                             pixelsByte[index++] = (byte)((pxv >> 8) & 0xff);
                             pixelsByte[index++] = (byte)(pxv & 0xff);
@@ -1155,7 +1159,7 @@ public abstract class Image : Rectangle
                 {
                     for (var i = 0; i < w; i++)
                     {
-                        pxv = bm.GetPixel(i, j).ToArgb();
+                        pxv = pixels[(j * w) + i];
                         var alpha = smask[smaskPtr++] = (byte)((pxv >> 24) & 0xff);
 
                         /* bugfix by Chris Nokleberg */

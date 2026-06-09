@@ -17,6 +17,13 @@ public sealed class RawBitmap
     private readonly int[] _argb;
 
     /// <summary>
+    ///     The live internal ARGB buffer (row-major, <c>0xAARRGGBB</c>). Exposed only to
+    ///     other types in this assembly for high-performance, read-only access that avoids
+    ///     per-pixel <see cref="Color" /> allocations. Do not mutate it.
+    /// </summary>
+    internal int[] ArgbInternal => _argb;
+
+    /// <summary>
     ///     Creates a new bitmap with the given dimensions. All pixels start fully
     ///     transparent (ARGB value 0).
     /// </summary>
@@ -32,6 +39,11 @@ public sealed class RawBitmap
         if (height <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(height));
+        }
+
+        if ((long)width * height > int.MaxValue)
+        {
+            throw new ArgumentException(message: "The bitmap dimensions are too large.", nameof(height));
         }
 
         Width = width;
@@ -59,12 +71,38 @@ public sealed class RawBitmap
     /// <summary>
     ///     Sets the color of the pixel at the given coordinates.
     /// </summary>
-    public void SetPixel(int x, int y, Color color) => _argb[(y * Width) + x] = color.ToArgb();
+    public void SetPixel(int x, int y, Color color)
+    {
+        if (x < 0 || x >= Width)
+        {
+            throw new ArgumentOutOfRangeException(nameof(x));
+        }
+
+        if (y < 0 || y >= Height)
+        {
+            throw new ArgumentOutOfRangeException(nameof(y));
+        }
+
+        _argb[(y * Width) + x] = color.ToArgb();
+    }
 
     /// <summary>
     ///     Gets the color of the pixel at the given coordinates.
     /// </summary>
-    public Color GetPixel(int x, int y) => Color.FromArgb(_argb[(y * Width) + x]);
+    public Color GetPixel(int x, int y)
+    {
+        if (x < 0 || x >= Width)
+        {
+            throw new ArgumentOutOfRangeException(nameof(x));
+        }
+
+        if (y < 0 || y >= Height)
+        {
+            throw new ArgumentOutOfRangeException(nameof(y));
+        }
+
+        return Color.FromArgb(_argb[(y * Width) + x]);
+    }
 
     /// <summary>
     ///     Returns a copy of the raw pixel buffer, row-major, in ARGB order (the
@@ -86,11 +124,6 @@ public sealed class RawBitmap
     /// <param name="argbPixels">the source pixels, row-major, in ARGB order</param>
     public static RawBitmap FromArgb(int width, int height, int[] argbPixels)
     {
-        if (argbPixels == null)
-        {
-            throw new ArgumentNullException(nameof(argbPixels));
-        }
-
         if (width <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(width));
@@ -99,6 +132,16 @@ public sealed class RawBitmap
         if (height <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(height));
+        }
+
+        if ((long)width * height > int.MaxValue)
+        {
+            throw new ArgumentException(message: "The bitmap dimensions are too large.", nameof(height));
+        }
+
+        if (argbPixels == null)
+        {
+            throw new ArgumentNullException(nameof(argbPixels));
         }
 
         if (argbPixels.Length < width * height)

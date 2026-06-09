@@ -167,16 +167,15 @@ public class TiffImageTests
             throw new InvalidOperationException("Not a valid TIF image.");
         }
 
-        // LibTiff packs pixels as ABGR (red in the low byte). Convert to the ARGB
-        // layout expected by RawBitmap / System.Drawing.Color.
+        // LibTiff packs pixels as ABGR (red in the low byte). Convert to the ARGB layout
+        // expected by RawBitmap / System.Drawing.Color by swapping the R and B channels;
+        // the A and G channels keep their positions, so a single mask preserves them.
         for (var i = 0; i < raster.Length; i++)
         {
             var abgr = raster[i];
             var r = abgr & 0xff;
-            var g = (abgr >> 8) & 0xff;
             var b = (abgr >> 16) & 0xff;
-            var a = (abgr >> 24) & 0xff;
-            raster[i] = (a << 24) | (r << 16) | (g << 8) | b;
+            raster[i] = (abgr & ~0x00ff00ff) | (r << 16) | b;
         }
 
         return RawBitmap.FromArgb(width, height, raster);
