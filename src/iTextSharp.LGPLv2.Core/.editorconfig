@@ -205,6 +205,7 @@ dotnet_diagnostic.S125.severity = suggestion
 
 # MA0026 : TODO Evaluate the effect of this.
 dotnet_diagnostic.MA0026.severity = suggestion
+dotnet_diagnostic.MA0203.severity = suggestion
 
 # S1135 : Complete the task associated to this 'TODO' comment.
 dotnet_diagnostic.S1135.severity = suggestion
