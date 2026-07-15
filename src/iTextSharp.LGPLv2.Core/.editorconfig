@@ -333,6 +333,10 @@ dotnet_diagnostic.MA0016.severity = suggestion
 # S2223: Change the visibility or make it 'const' or 'readonly'.
 dotnet_diagnostic.S2223.severity = suggestion
 
+dotnet_diagnostic.S2257.severity = suggestion
+dotnet_diagnostic.S5332.severity = suggestion
+dotnet_diagnostic.S4790.severity = suggestion
+
 # MA0069: Non-constant static fields should not be visible
 dotnet_diagnostic.MA0069.severity = suggestion
 
