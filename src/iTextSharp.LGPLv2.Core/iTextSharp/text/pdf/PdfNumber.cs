@@ -78,7 +78,7 @@ public class PdfNumber : PdfObject
     /// <returns>a value</returns>
     public float FloatValue => (float)_value;
 
-    public int IntValue => (int)_value;
+    public int IntValue => unchecked((int)(long)_value);
 
     /// <summary>
     ///     Returns the primitive  long  value of this object.
