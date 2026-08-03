@@ -53,7 +53,8 @@ public class PdfPublicKeySecurityHandler
         var three = (byte)(permission >> 16);
         var four = (byte)(permission >> 24);
 
-        Array.Copy(_seed, 0, pkcs7Input, 0, 20); // put this seed in the pkcs7 input
+        Array.Copy(_seed, sourceIndex: 0, pkcs7Input, destinationIndex: 0,
+            length: 20); // put this seed in the pkcs7 input
 
         pkcs7Input[20] = four;
         pkcs7Input[21] = three;
@@ -93,7 +94,7 @@ public class PdfPublicKeySecurityHandler
 
     public int GetRecipientsSize() => _recipients.Count;
 
-    protected internal byte[] GetSeed() => (byte[])_seed.Clone();
+    internal protected byte[] GetSeed() => (byte[])_seed.Clone();
 
     private static KeyTransRecipientInfo computeRecipientInfo(X509Certificate x509Certificate, byte[] abyte0)
     {
@@ -106,11 +107,11 @@ public class PdfPublicKeySecurityHandler
             new IssuerAndSerialNumber(tbscertificatestructure.Issuer, tbscertificatestructure.SerialNumber.Value);
 
         var cipher = CipherUtilities.GetCipher(algorithmidentifier.Algorithm);
-        cipher.Init(true, x509Certificate.GetPublicKey());
+        cipher.Init(forEncryption: true, x509Certificate.GetPublicKey());
         var outp = new byte[10000];
-        var len = cipher.DoFinal(abyte0, outp, 0);
+        var len = cipher.DoFinal(abyte0, outp, outOff: 0);
         var abyte1 = new byte[len];
-        Array.Copy(outp, 0, abyte1, 0, len);
+        Array.Copy(outp, sourceIndex: 0, abyte1, destinationIndex: 0, len);
         var deroctetstring = new DerOctetString(abyte1);
         var recipId = new RecipientIdentifier(issuerandserialnumber);
 
@@ -123,21 +124,21 @@ public class PdfPublicKeySecurityHandler
 
         var outp = new byte[100];
         var derob = new DerObjectIdentifier(s);
-        var keyp = IvGenerator.GetIv(16);
+        var keyp = IvGenerator.GetIv(len: 16);
         var cf = CipherUtilities.GetCipher(derob);
         var kp = new KeyParameter(keyp);
         var iv = IvGenerator.GetIv(cf.GetBlockSize());
         var piv = new ParametersWithIV(kp, iv);
-        cf.Init(true, piv);
-        var len = cf.DoFinal(inp, outp, 0);
+        cf.Init(forEncryption: true, piv);
+        var len = cf.DoFinal(inp, outp, outOff: 0);
 
         var abyte1 = new byte[len];
-        Array.Copy(outp, 0, abyte1, 0, len);
+        Array.Copy(outp, sourceIndex: 0, abyte1, destinationIndex: 0, len);
         var deroctetstring = new DerOctetString(abyte1);
         var keytransrecipientinfo = computeRecipientInfo(cert, keyp);
         var derset = new DerSet(new RecipientInfo(keytransrecipientinfo));
         var ev = new Asn1EncodableVector();
-        ev.Add(new DerInteger(58));
+        ev.Add(DerInteger.ValueOf(value: 58));
         ev.Add(new DerOctetString(iv));
         var seq = new DerSequence(ev);
         var algorithmidentifier = new AlgorithmIdentifier(derob, seq);
@@ -145,7 +146,7 @@ public class PdfPublicKeySecurityHandler
         var encryptedcontentinfo =
             new EncryptedContentInfo(PkcsObjectIdentifiers.Data, algorithmidentifier, deroctetstring);
 
-        var env = new EnvelopedData(null, derset, encryptedcontentinfo, (Asn1Set)null);
+        var env = new EnvelopedData(originatorInfo: null, derset, encryptedcontentinfo, (Asn1Set)null);
         var contentinfo = new ContentInfo(PkcsObjectIdentifiers.EnvelopedData, env);
 
         return contentinfo.ToAsn1Object();

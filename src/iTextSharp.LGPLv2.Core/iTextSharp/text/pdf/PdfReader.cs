@@ -37,6 +37,51 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
     private readonly bool _partial;
     private readonly PdfViewerPreferencesImp _viewerPreferences = new();
 
+    internal protected bool AcroFormParsed;
+
+    protected X509Certificate Certificate;
+
+    //added by ujihara for decryption
+    protected ICipherParameters CertificateKey;
+
+    internal protected bool Encrypted;
+
+    internal protected int FreeXref;
+
+    internal protected bool NewXrefType;
+
+    internal protected INullValueDictionary<int, NullValueDictionary<int, int>> ObjStmMark;
+
+    internal protected NullValueDictionary<int, int> ObjStmToOffset;
+
+    internal protected int PValue;
+
+    internal protected byte[] Password;
+
+    internal protected int RValue;
+
+    internal protected bool Rebuilt;
+
+    internal protected bool SharedStreams = true;
+
+    internal protected List<PdfString> Strings = new();
+
+    internal protected PrTokeniser Tokens;
+
+    /// <summary>
+    ///     Each xref pair is a position
+    /// </summary>
+    /// <summary>
+    ///     type 0 -> -1, 0
+    /// </summary>
+    /// <summary>
+    ///     type 1 -> offset, 0
+    /// </summary>
+    /// <summary>
+    ///     type 2 -> index, obj num
+    /// </summary>
+    internal protected int[] Xref;
+
     /// <summary>
     ///     Holds value of property appendable.
     /// </summary>
@@ -73,68 +118,23 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
     internal protected PrAcroForm acroForm;
 
-    internal protected bool AcroFormParsed;
-
     internal protected PdfDictionary catalog;
-
-    protected X509Certificate Certificate;
-
-    //added by ujihara for decryption
-    protected ICipherParameters CertificateKey;
 
     internal protected bool consolidateNamedDestinations;
 
     internal protected PdfEncryption decrypt;
 
-    internal protected bool Encrypted;
-
     internal protected int eofPos;
-
-    internal protected int FreeXref;
 
     internal protected int lastXref;
 
-    internal protected bool NewXrefType;
-
-    internal protected INullValueDictionary<int, NullValueDictionary<int, int>> ObjStmMark;
-
-    internal protected NullValueDictionary<int, int> ObjStmToOffset;
-
     internal protected PageRefs pageRefs;
-
-    internal protected byte[] Password;
 
     internal protected char pdfVersion;
 
-    internal protected int PValue;
-
-    internal protected bool Rebuilt;
-
-    internal protected int RValue;
-
-    internal protected bool SharedStreams = true;
-
-    internal protected List<PdfString> Strings = new();
-
     internal protected bool tampered;
 
-    internal protected PrTokeniser Tokens;
-
     internal protected PdfDictionary trailer;
-
-    /// <summary>
-    ///     Each xref pair is a position
-    /// </summary>
-    /// <summary>
-    ///     type 0 -> -1, 0
-    /// </summary>
-    /// <summary>
-    ///     type 1 -> offset, 0
-    /// </summary>
-    /// <summary>
-    ///     type 2 -> index, obj num
-    /// </summary>
-    internal protected int[] Xref;
 
     internal protected List<int> xrefByteOffset = new();
 
@@ -378,6 +378,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
 
     public bool Appendable
     {
+        get => _appendable;
         set
         {
             _appendable = value;
@@ -387,7 +388,6 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                 GetPdfObject(trailer.Get(PdfName.Root));
             }
         }
-        get => _appendable;
     }
 
     /// <summary>
@@ -1915,7 +1915,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
         var jscript = PdfNameTree.ReadTree(js);
         var sortedNames = new string[jscript.Count];
         jscript.Keys.CopyTo(sortedNames, arrayIndex: 0);
-        Array.Sort(sortedNames);
+        Array.Sort(sortedNames, StringComparer.Ordinal);
         var buf = new StringBuilder();
 
         for (var k = 0; k < sortedNames.Length; ++k)
