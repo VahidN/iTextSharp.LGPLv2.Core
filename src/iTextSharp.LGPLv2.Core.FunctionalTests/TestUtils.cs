@@ -23,7 +23,8 @@ public static class TestUtils
         var writer = PdfWriter.GetInstance(document, fileStream);
         document.AddAuthor(Author);
         document.Open();
-        document.Add(new Paragraph("Test Document"));
+        document.Add(new Paragraph(str: "Test Document"));
+
         return pdfFilePath;
     }
 
@@ -32,19 +33,21 @@ public static class TestUtils
         var currentAssembly = typeof(TestUtils).GetTypeInfo().Assembly;
         var root = Path.GetDirectoryName(currentAssembly.Location);
         var idx = root.IndexOf($"{Path.DirectorySeparatorChar}bin", StringComparison.OrdinalIgnoreCase);
-        return root.Substring(0, idx);
+
+        return root.Substring(startIndex: 0, idx);
     }
 
-    public static string GetImagePath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "img", fileName);
+    public static string GetImagePath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "img", fileName);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static string GetOutputFileName([CallerMemberName] string methodName = null) =>
-        Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
+    public static string GetOutputFileName([CallerMemberName] string methodName = null)
+        => Path.Combine(GetOutputFolder(), $"{methodName}.pdf");
 
     public static string GetOutputFolder()
     {
-        var dir = Path.Combine(GetBaseDir(), "bin", "out");
+        var dir = Path.Combine(GetBaseDir(), path2: "bin", path3: "out");
+
         if (!Directory.Exists(dir))
         {
             Directory.CreateDirectory(dir);
@@ -53,34 +56,36 @@ public static class TestUtils
         return dir;
     }
 
-    public static string GetPosterPath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "posters", fileName);
+    public static string GetPosterPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "posters", fileName);
 
-    public static string GetFontPath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", fileName);
+    public static string GetFontPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "fonts", fileName);
 
-    public static string GetTahomaFontPath() => GetFontPath("tahoma.ttf");
+    public static string GetTahomaFontPath() => GetFontPath(fileName: "tahoma.ttf");
 
-    public static string GetArialUnicodeMSFontPath() => GetFontPath("arialuni.ttf");
+    public static string GetArialUnicodeMSFontPath() => GetFontPath(fileName: "arialuni.ttf");
 
-    public static string GetSimSunFontPath() => GetFontPath("simsun.ttf");
+    public static string GetSimSunFontPath() => GetFontPath(fileName: "simsun.ttf");
 
-    public static string GetThaiFontPath() => GetFontPath("thsarabunnew.ttf");
+    public static string GetThaiFontPath() => GetFontPath(fileName: "thsarabunnew.ttf");
 
-    public static string GetTxtPath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
+    public static string GetTxtPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "txt", fileName);
 
-    public static string GetPfxPath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pfx", fileName);
+    public static string GetIccPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "icc", fileName);
 
-    public static string GetPdfsPath(string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
+    public static string GetPfxPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pfx", fileName);
 
-    public static string GetIssuePdfsPath(string issueFolder, string fileName) =>
-        Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", issueFolder, fileName);
+    public static string GetPdfsPath(string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", fileName);
 
-    public static Font GetUnicodeFont(
-        string fontName, string fontFilePath, float size, int style, BaseColor color)
+    public static string GetIssuePdfsPath(string issueFolder, string fileName)
+        => Path.Combine(GetBaseDir(), ITextExamplesFolder, ResourcesFolder, "pdfs", issueFolder, fileName);
+
+    public static Font GetUnicodeFont(string fontName, string fontFilePath, float size, int style, BaseColor color)
     {
         if (!FontFactory.IsRegistered(fontName))
         {
@@ -93,13 +98,15 @@ public static class TestUtils
     public static void VerifyPdfFileIsReadable(byte[] file)
     {
         PdfReader reader = null;
+
         try
         {
             reader = new PdfReader(file);
-            var author = reader.Info["Author"];
+            var author = reader.Info[key: "Author"];
+
             if (string.IsNullOrWhiteSpace(author) || !author.Equals(Author))
             {
-                throw new InvalidPdfException("This is not a valid PDF file.");
+                throw new InvalidPdfException(message: "This is not a valid PDF file.");
             }
         }
         finally
@@ -108,8 +115,5 @@ public static class TestUtils
         }
     }
 
-    public static void VerifyPdfFileIsReadable(string filePath)
-    {
-        VerifyPdfFileIsReadable(File.ReadAllBytes(filePath));
-    }
+    public static void VerifyPdfFileIsReadable(string filePath) => VerifyPdfFileIsReadable(File.ReadAllBytes(filePath));
 }
