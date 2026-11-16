@@ -307,8 +307,7 @@ public class PdfPRow
                         break;
                 }
 
-                int status;
-                status = ct.Go(true);
+                var status = ct.Go(true);
                 var thisEmpty = ct.YLine.ApproxEquals(y);
                 if (thisEmpty)
                 {

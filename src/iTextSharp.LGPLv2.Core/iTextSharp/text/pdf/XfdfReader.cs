@@ -112,7 +112,11 @@ public class XfdfReader : ISimpleXmlDocHandler
                 fName += "." + _fieldNames[k];
             }
 
-            if (fName.StartsWith(value: '.'))
+            if (fName.StartsWith(value: '.'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																												
+			))
             {
                 fName = fName.Substring(startIndex: 1);
             }

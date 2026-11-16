@@ -692,7 +692,11 @@ public class XfaForm
                 sb.Append(s.Substring(last, idx - last));
                 sb.Append(value: '\\');
                 last = idx;
-                idx = s.IndexOf(value: '.', idx + 1);
+                idx = s.IndexOf(value: '.', idx + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																					
+				);
             }
 
             sb.Append(s.Substring(last));
@@ -725,7 +729,11 @@ public class XfaForm
             while (idx >= 0)
             {
                 sb.Append(s.Substring(last, idx - last));
-                idx = s.IndexOf(value: ']', idx + 10);
+                idx = s.IndexOf(value: ']', idx + 10
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																					
+				);
 
                 if (idx < 0)
                 {
@@ -806,7 +814,11 @@ public class XfaForm
                 throw new ArgumentNullException(nameof(name));
             }
 
-            while (name.StartsWith(value: '.'))
+            while (name.StartsWith(value: '.'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																				
+			))
             {
                 name = name.Substring(startIndex: 1);
             }
@@ -822,7 +834,11 @@ public class XfaForm
 
                 while (true)
                 {
-                    pos = name.IndexOf(value: '.', pos);
+                    pos = name.IndexOf(value: '.', pos
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																						
+					);
 
                     if (pos < 0)
                     {
@@ -846,7 +862,11 @@ public class XfaForm
 
                 part = name.Substring(last, pos - last);
 
-                if (!part.EndsWith(value: ']'))
+                if (!part.EndsWith(value: ']'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																					
+				))
                 {
                     part += "[0]";
                 }
@@ -857,7 +877,11 @@ public class XfaForm
 
             part = name.Substring(last);
 
-            if (!part.EndsWith(value: ']'))
+            if (!part.EndsWith(value: ']'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																				
+			))
             {
                 part += "[0]";
             }
@@ -893,7 +917,11 @@ public class XfaForm
             {
                 sb.Append(s.Substring(last, idx - last));
                 last = idx + 1;
-                idx = s.IndexOf(value: '\\', idx + 1);
+                idx = s.IndexOf(value: '\\', idx + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																					
+				);
             }
 
             sb.Append(s.Substring(last));
@@ -1021,7 +1049,11 @@ public class XfaForm
             for (var k = 0; k < stack.Count; ++k)
             {
                 var part = stack[k];
-                var idx = part.LastIndexOf(value: '[');
+                var idx = part.LastIndexOf(value: '['
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																					
+				);
                 var name = part.Substring(startIndex: 0, idx);
                 idx = int.Parse(part.Substring(idx + 1, part.Length - idx - 2), CultureInfo.InvariantCulture);
                 var found = -1;

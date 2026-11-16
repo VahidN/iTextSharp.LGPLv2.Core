@@ -289,9 +289,9 @@ public static class PageSize
             {
                 return (Rectangle)typeof(PageSize).GetField(name).GetValue(obj: null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new ArgumentException("Can't find page size " + name);
+                throw new ArgumentException("Can't find page size " + name, ex);
             }
         }
 
@@ -305,7 +305,7 @@ public static class PageSize
         }
         catch (Exception e)
         {
-            throw new ArgumentException(name + " is not a valid page size format: " + e.Message);
+            throw new ArgumentException(name + " is not a valid page size format: " + e.Message, e);
         }
     }
 }

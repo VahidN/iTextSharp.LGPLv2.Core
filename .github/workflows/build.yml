@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: windows-2022
+    runs-on: windows-latest
     environment: release
     permissions:
       contents: read
@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 11.0.x
     - name: Build iTextSharp.LGPLv2.Core lib
       run: dotnet build ./src/iTextSharp.LGPLv2.Core/iTextSharp.LGPLv2.Core.csproj --configuration Release
 

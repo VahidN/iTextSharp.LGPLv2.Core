@@ -741,7 +741,11 @@ public class WebColors : NullValueDictionary<string, int[]>
             0, 0, 0, 0
         };
 
-        if (name.StartsWith(value: '#'))
+        if (name.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif											
+		))
         {
             if (name.Length == 4)
             {
@@ -781,7 +785,11 @@ public class WebColors : NullValueDictionary<string, int[]>
             {
                 var v = tok.NextToken();
 
-                if (v.EndsWith(value: '%'))
+                if (v.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif													
+				))
                 {
                     c[k] = int.Parse(v.Substring(startIndex: 0, v.Length - 1), CultureInfo.InvariantCulture) * 255 /
                            100;

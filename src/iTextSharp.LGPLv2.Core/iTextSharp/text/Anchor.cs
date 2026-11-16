@@ -123,7 +123,11 @@ public class Anchor : Phrase
         get
         {
             var tmp = new List<Chunk>();
-            var localDestination = reference != null && reference.StartsWith(value: '#');
+            var localDestination = reference != null && reference.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif			
+			);
             var notGotoOk = true;
 
             foreach (Chunk chunk in this)
@@ -215,7 +219,11 @@ public class Anchor : Phrase
 
         try
         {
-            var localDestination = reference != null && reference.StartsWith(value: '#');
+            var localDestination = reference != null && reference.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif			
+			);
             var notGotoOk = true;
 
             foreach (var chunk in Chunks)

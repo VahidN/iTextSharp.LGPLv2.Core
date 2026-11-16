@@ -445,7 +445,15 @@ public class BarcodeEan : Barcode
             throw new ArgumentNullException(nameof(text));
         }
 
-        if (text.Length != 12 || !(text.StartsWith(value: '0') || text.StartsWith(value: '1')))
+        if (text.Length != 12 || !(text.StartsWith(value: '0'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																																			
+		) || text.StartsWith(value: '1'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																																			
+		)))
         {
             return null;
         }

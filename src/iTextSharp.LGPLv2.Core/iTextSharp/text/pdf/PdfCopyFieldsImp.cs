@@ -811,7 +811,11 @@ internal class PdfCopyFieldsImp : PdfWriter
             refi = (PrIndirectReference)dic.Get(PdfName.Parent);
         }
 
-        if (name.EndsWith(value: '.'))
+        if (name.EndsWith(value: '.'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																						
+		))
         {
             name = name.Substring(startIndex: 0, name.Length - 1);
         }

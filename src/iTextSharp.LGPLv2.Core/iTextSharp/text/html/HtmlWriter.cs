@@ -297,7 +297,7 @@ public class HtmlWriter : DocWriter
         }
         catch (IOException ioe)
         {
-            throw new DocumentException(ioe.Message);
+            throw new DocumentException(ioe.Message, ioe);
         }
 
         return true;
@@ -930,7 +930,11 @@ public class HtmlWriter : DocWriter
                 {
                     if (path.IndexOf(value: '/', StringComparison.Ordinal) > 0)
                     {
-                        path = Imagepath + path.Substring(path.LastIndexOf(value: '/') + 1);
+                        path = Imagepath + path.Substring(path.LastIndexOf(value: '/'
+#if NET_11
+            , StringComparison.Ordinal
+#endif													
+						) + 1);
                     }
                     else
                     {

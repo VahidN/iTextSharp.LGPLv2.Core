@@ -373,7 +373,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         }
         catch (Exception cce)
         {
-            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message, cce);
         }
     }
 
@@ -511,7 +511,7 @@ public class Section : List<IElement>, ITextElementArray, ILargeElement
         }
         catch (Exception cce)
         {
-            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message);
+            throw new InvalidOperationException("Insertion of illegal Element: " + cce.Message, cce);
         }
     }
 

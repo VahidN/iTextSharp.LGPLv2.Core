@@ -700,9 +700,9 @@ public class ColumnText
             {
                 element = simpleTable.CreatePdfPTable();
             }
-            catch (DocumentException)
+            catch (DocumentException ex)
             {
-                throw new ArgumentException(message: "Element not allowed.");
+                throw new ArgumentException(message: "Element not allowed.", ex);
             }
         }
         else if (element.Type != Element.PARAGRAPH && element.Type != Element.LIST && element.Type != Element.PTABLE &&

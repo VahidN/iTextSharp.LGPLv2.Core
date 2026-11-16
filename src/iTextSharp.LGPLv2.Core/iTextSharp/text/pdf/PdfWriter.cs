@@ -2535,8 +2535,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
             throw new PdfException(message: "The document isn't open.");
         }
 
-        PdfIndirectObject objecta;
-        objecta = AddToBody(contents);
+        PdfIndirectObject objecta = AddToBody(contents);
         page.Add(objecta.IndirectReference);
 
         if (group != null)
@@ -3032,8 +3031,7 @@ public class PdfWriter : DocWriter, IPdfViewerPreferences, IPdfEncryptionSetting
 
     protected virtual PdfIndirectReference Add(PdfIccBased icc)
     {
-        PdfIndirectObject objecta;
-        objecta = AddToBody(icc);
+        PdfIndirectObject objecta = AddToBody(icc);
 
         return objecta.IndirectReference;
     }

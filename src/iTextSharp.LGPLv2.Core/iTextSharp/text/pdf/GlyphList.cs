@@ -43,7 +43,11 @@ public static class GlyphList
             {
                 var line = tk.NextToken();
 
-                if (line.StartsWith(value: '#'))
+                if (line.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																										
+				))
                 {
                     continue;
                 }

@@ -3319,7 +3319,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                 }
                 catch (Exception ne)
                 {
-                    throw new InvalidPdfException("Rebuild failed: " + ne.Message + "; Original message: " + e.Message);
+                    throw new InvalidPdfException("Rebuild failed: " + ne.Message + "; Original message: " + e.Message, ne);
                 }
             }
 
@@ -3334,7 +3334,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
             {
                 if (ne is BadPasswordException)
                 {
-                    throw new BadPasswordException(ne.Message);
+                    throw new BadPasswordException(ne.Message, ne);
                 }
 
                 if (Rebuilt || _encryptionError)
@@ -3391,7 +3391,7 @@ public class PdfReader : IPdfViewerPreferences, IDisposable
                 }
                 catch (Exception ne)
                 {
-                    throw new InvalidPdfException("Rebuild failed: " + ne.Message + "; Original message: " + e.Message);
+                    throw new InvalidPdfException("Rebuild failed: " + ne.Message + "; Original message: " + e.Message, ne);
                 }
             }
 

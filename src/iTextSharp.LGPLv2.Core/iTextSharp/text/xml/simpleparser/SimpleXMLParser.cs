@@ -332,8 +332,16 @@ public sealed class SimpleXmlParser
             return null;
         }
 
-        var idx1 = decl.IndexOf(value: '"', idx);
-        var idx2 = decl.IndexOf(value: '\'', idx);
+        var idx1 = decl.IndexOf(value: '"', idx
+#if NET_11
+            , StringComparison.Ordinal
+#endif																											
+		);
+        var idx2 = decl.IndexOf(value: '\'', idx
+#if NET_11
+            , StringComparison.Ordinal
+#endif																											
+		);
 
         if (idx1 == idx2)
         {
@@ -342,7 +350,11 @@ public sealed class SimpleXmlParser
 
         if ((idx1 < 0 && idx2 > 0) || (idx2 > 0 && idx2 < idx1))
         {
-            var idx3 = decl.IndexOf(value: '\'', idx2 + 1);
+            var idx3 = decl.IndexOf(value: '\'', idx2 + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																												
+			);
 
             if (idx3 < 0)
             {
@@ -354,7 +366,11 @@ public sealed class SimpleXmlParser
 
         if ((idx2 < 0 && idx1 > 0) || (idx1 > 0 && idx1 < idx2))
         {
-            var idx3 = decl.IndexOf(value: '"', idx1 + 1);
+            var idx3 = decl.IndexOf(value: '"', idx1 + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																												
+			);
 
             if (idx3 < 0)
             {

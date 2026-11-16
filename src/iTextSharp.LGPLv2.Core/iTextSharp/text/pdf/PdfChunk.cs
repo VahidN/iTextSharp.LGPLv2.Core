@@ -417,7 +417,11 @@ public class PdfChunk
         var numberOfSpaces = 0;
         var idx = -1;
 
-        while ((idx = value.IndexOf(value: ' ', idx + 1)) >= 0)
+        while ((idx = value.IndexOf(value: ' ', idx + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																								
+		)) >= 0)
         {
             ++numberOfSpaces;
         }
@@ -450,7 +454,11 @@ public class PdfChunk
 
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            if (value.Length > 1 && value.StartsWith(value: '\u0001'))
+            if (value.Length > 1 && value.StartsWith(value: '\u0001'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 value = value.Substring(startIndex: 1);
 
@@ -459,7 +467,11 @@ public class PdfChunk
         }
         else
         {
-            if (value.Length > 1 && value.StartsWith(value: ' '))
+            if (value.Length > 1 && value.StartsWith(value: ' '
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 value = value.Substring(startIndex: 1);
 
@@ -476,7 +488,11 @@ public class PdfChunk
 
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            if (value.Length > 1 && value.EndsWith(value: '\u0001'))
+            if (value.Length > 1 && value.EndsWith(value: '\u0001'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 value = value.Substring(startIndex: 0, value.Length - 1);
 
@@ -485,7 +501,11 @@ public class PdfChunk
         }
         else
         {
-            if (value.Length > 1 && value.EndsWith(value: ' '))
+            if (value.Length > 1 && value.EndsWith(value: ' '
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 value = value.Substring(startIndex: 0, value.Length - 1);
 
@@ -799,14 +819,26 @@ public class PdfChunk
 
         if (ft.FontType == BaseFont.FONT_TYPE_CJK && ft.GetUnicodeEquivalent(c: ' ') != ' ')
         {
-            while (str.EndsWith(value: '\u0001'))
+            while (str.EndsWith(value: '\u0001'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 str = str.Substring(startIndex: 0, str.Length - 1);
             }
         }
         else
         {
-            while (str.EndsWith(value: ' ') || str.EndsWith(value: '\t'))
+            while (str.EndsWith(value: ' '
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			) || str.EndsWith(value: '\t'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																									
+			))
             {
                 str = str.Substring(startIndex: 0, str.Length - 1);
             }

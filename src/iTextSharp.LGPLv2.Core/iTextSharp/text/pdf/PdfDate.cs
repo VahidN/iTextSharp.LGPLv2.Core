@@ -200,7 +200,15 @@ public class PdfDate : PdfString
         sb.Append(value: ':').Append(d.Substring(startIndex: 0, length: 2)); //second
         d = d.Substring(startIndex: 2);
 
-        if (d.StartsWith(value: '-') || d.StartsWith(value: '+'))
+        if (d.StartsWith(value: '-'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																						
+		) || d.StartsWith(value: '+'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																						
+		))
         {
             var sign = d.Substring(startIndex: 0, length: 1);
             d = d.Substring(startIndex: 1);

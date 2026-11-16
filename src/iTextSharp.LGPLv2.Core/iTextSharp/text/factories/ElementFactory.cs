@@ -263,7 +263,11 @@ public static class ElementFactory
 
         value = attributes[Markup.CSS_KEY_VERTICALALIGN];
 
-        if (value != null && value.EndsWith(value: '%'))
+        if (value != null && value.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif													
+		))
         {
             var p = float.Parse(value.Substring(startIndex: 0, value.Length - 1), NumberFormatInfo.InvariantInfo) /
                     100f;
@@ -651,7 +655,11 @@ public static class ElementFactory
 
         if (value != null)
         {
-            if (value.EndsWith(value: '%'))
+            if (value.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																
+			))
             {
                 table.Width = float.Parse(value.Substring(startIndex: 0, value.Length - 1),
                     NumberFormatInfo.InvariantInfo);

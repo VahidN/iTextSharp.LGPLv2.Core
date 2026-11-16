@@ -91,7 +91,11 @@ internal class TrueTypeFontUnicode : TrueTypeFont, IComparer<int[]>
             throw new DocumentException(FileName + " " + Style + " is not a TTF font file.");
         }
 
-        _vertical = enc.EndsWith(value: 'V');
+        _vertical = enc.EndsWith(value: 'V'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																														
+		);
     }
 
     /// <summary>

@@ -381,7 +381,7 @@ public class RtfImage : RtfElement
         }
         catch (IOException ioe)
         {
-            throw new DocumentException(ioe.Message);
+            throw new DocumentException(ioe.Message, ioe);
         }
     }
 

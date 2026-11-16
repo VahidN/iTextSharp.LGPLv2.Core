@@ -278,7 +278,11 @@ public class FactoryProperties
                 var ss = prop[key].Trim();
                 var v = Markup.ParseLength(prop[key]);
 
-                if (ss.EndsWith(value: '%'))
+                if (ss.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif													
+				))
                 {
                     v /= 100;
                     h[key: "leading"] = "0," + v.ToString(NumberFormatInfo.InvariantInfo);
@@ -399,7 +403,11 @@ public class FactoryProperties
 
                 var v = Markup.ParseLength(prop[key], actualFontSize);
 
-                if (ss.EndsWith(value: '%'))
+                if (ss.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																	
+				))
                 {
                     v /= 100;
                     h[key: "leading"] = "0," + v.ToString(NumberFormatInfo.InvariantInfo);
@@ -469,12 +477,20 @@ public class FactoryProperties
             {
                 face = tok.NextToken().Trim();
 
-                if (face.StartsWith(value: '"'))
+                if (face.StartsWith(value: '"'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																	
+				))
                 {
                     face = face.Substring(startIndex: 1);
                 }
 
-                if (face.EndsWith(value: '"'))
+                if (face.EndsWith(value: '"'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																	
+				))
                 {
                     face = face.Substring(startIndex: 0, face.Length - 1);
                 }

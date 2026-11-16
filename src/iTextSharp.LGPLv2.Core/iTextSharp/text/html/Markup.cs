@@ -420,12 +420,20 @@ public static class Markup
                 continue;
             }
 
-            if (value.StartsWith(value: '"'))
+            if (value.StartsWith(value: '"'
+#if NET_11
+            , StringComparison.Ordinal
+#endif					
+			))
             {
                 value = value.Substring(startIndex: 1);
             }
 
-            if (value.EndsWith(value: '"'))
+            if (value.EndsWith(value: '"'
+#if NET_11
+            , StringComparison.Ordinal
+#endif								
+			))
             {
                 value = value.Substring(startIndex: 0, value.Length - 1);
             }

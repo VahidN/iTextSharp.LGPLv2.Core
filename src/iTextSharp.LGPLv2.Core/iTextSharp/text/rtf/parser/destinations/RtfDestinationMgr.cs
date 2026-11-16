@@ -144,8 +144,7 @@ public sealed class RtfDestinationMgr
 
     public static RtfDestination GetDestination(string destination)
     {
-        RtfDestination dest;
-        dest = _destinations.TryGetValue(destination, out var value) ? value : _destinations[DESTINATION_DOCUMENT];
+        var dest = _destinations.TryGetValue(destination, out var value) ? value : _destinations[DESTINATION_DOCUMENT];
 
         dest.SetParser(_rtfParser);
 

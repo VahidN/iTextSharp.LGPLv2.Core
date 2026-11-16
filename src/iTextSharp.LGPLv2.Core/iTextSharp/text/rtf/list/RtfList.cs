@@ -301,7 +301,11 @@ public class RtfList : RtfElement, IRtfExtendedElement
                         new Font(Font.TIMES_ROMAN, size: 10, Font.NORMAL, new BaseColor(red: 0, green: 0, blue: 0))));
 
                     if (list.Symbol != null && list.Symbol.Font != null &&
-                        !list.Symbol.Content.StartsWith(value: '-') && list.Symbol.Content.Length > 0)
+                        !list.Symbol.Content.StartsWith(value: '-'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																						
+						) && list.Symbol.Content.Length > 0)
                     {
                         // only set this to bullet symbol is not default
                         ll.SetBulletFont(list.Symbol.Font);

@@ -407,8 +407,7 @@ internal class TrueTypeFontSubSet
 
     protected void FlatGlyphs()
     {
-        int[] tableLocation;
-        tableLocation = TableDirectory["glyf"];
+        var tableLocation = TableDirectory["glyf"];
         if (tableLocation == null)
         {
             throw new DocumentException("Table 'glyf' does not exist in " + FileName);
@@ -458,8 +457,7 @@ internal class TrueTypeFontSubSet
 
     protected void ReadLoca()
     {
-        int[] tableLocation;
-        tableLocation = TableDirectory["head"];
+        var tableLocation = TableDirectory["head"];
         if (tableLocation == null)
         {
             throw new DocumentException("Table 'head' does not exist in " + FileName);

@@ -281,9 +281,7 @@ public class PngImage
     {
         for (var i = bpp; i < count; i++)
         {
-            int val;
-
-            val = curr[i] & 0xff;
+            var val = curr[i] & 0xff;
             val += curr[i - bpp] & 0xff;
 
             curr[i] = (byte)val;

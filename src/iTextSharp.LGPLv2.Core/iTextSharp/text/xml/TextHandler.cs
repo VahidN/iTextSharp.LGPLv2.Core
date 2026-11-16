@@ -377,7 +377,11 @@ public class TextHandler : ParserBase
                         cellNulls[j] = false;
                     }
                 }
-                else if (cell.Colspan == 1 && width.EndsWith(value: '%'))
+                else if (cell.Colspan == 1 && width.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																															
+				))
                 {
                     try
                     {
@@ -713,9 +717,8 @@ public class TextHandler : ParserBase
         // sections
         if (ElementTags.SECTION.Equals(name, StringComparison.Ordinal))
         {
-            var previous = Stack.Pop();
-            Section section;
-            section = ElementFactory.GetSection((Section)previous, attributes);
+            var previous = Stack.Pop();            
+            var section = ElementFactory.GetSection((Section)previous, attributes);
             Stack.Push(previous);
             Stack.Push(section);
 

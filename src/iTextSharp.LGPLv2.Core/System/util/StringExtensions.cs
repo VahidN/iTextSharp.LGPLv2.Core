@@ -1,4 +1,4 @@
-#if NET40 || NETSTANDARD2_0
+#if NET40
 namespace System;
 
 /// <summary>

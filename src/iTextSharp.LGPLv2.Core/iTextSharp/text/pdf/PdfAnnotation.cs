@@ -1043,9 +1043,9 @@ public class PdfAnnotation : PdfDictionary
                 _destination = (PdfArray)_parameters[PdfName.Dest];
                 _parameters.Remove(PdfName.Dest);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new ArgumentException(message: "You have to consolidate the named destinations of your reader.");
+                throw new ArgumentException(message: "You have to consolidate the named destinations of your reader.", ex);
             }
 
             if (_destination != null)

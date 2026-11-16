@@ -108,7 +108,7 @@ public abstract class Image : Rectangle
     /// </summary>
     private static object _serialId = 0L;
 
-#if NET_9 || NET_10
+#if NET_11 || NET_10
     private static readonly Lock _mutex = new();
 #else
     private static readonly object _mutex = new();
@@ -379,6 +379,7 @@ public abstract class Image : Rectangle
     /// </summary>
     public int CompressionLevel
     {
+        get => compressionLevel;
         set
         {
             if (value < PdfStream.NO_COMPRESSION || value > PdfStream.BEST_COMPRESSION)
@@ -390,7 +391,6 @@ public abstract class Image : Rectangle
                 compressionLevel = value;
             }
         }
-        get => compressionLevel;
     }
 
     public bool Deflated
@@ -399,7 +399,7 @@ public abstract class Image : Rectangle
         set => deflated = value;
     }
 
-    public PdfIndirectReference DirectReference { set; get; }
+    public PdfIndirectReference DirectReference { get; set; }
 
     /// <summary>
     ///     Gets the dots-per-inch in the X direction. Returns 0 if not available.
@@ -477,8 +477,8 @@ public abstract class Image : Rectangle
     /// <value>New value of property interpolation.</value>
     public bool Interpolation
     {
-        set => interpolation = value;
         get => interpolation;
+        set => interpolation = value;
     }
 
     /// <summary>
@@ -487,8 +487,8 @@ public abstract class Image : Rectangle
     /// <value>true to invert the meaning of the bits of a mask</value>
     public bool Inverted
     {
-        set => Invert = value;
         get => Invert;
+        set => Invert = value;
     }
 
     public IPdfOcg Layer
@@ -881,9 +881,11 @@ public abstract class Image : Rectangle
     /// <param name="height">the height of the image</param>
     /// <param name="data">the raw image data</param>
     /// <param name="globals">JBIG2 globals</param>
-    public static Image GetInstance(int width, int height, byte[] data, byte[] globals)
+    public static Image GetInstance(int width, int height, byte[] data,
+        byte[] globals)
     {
-        Image img = new ImgJbig2(width, height, data, globals);
+        Image img = new ImgJbig2(width, height, data,
+            globals);
 
         return img;
     }
@@ -1115,7 +1117,8 @@ public abstract class Image : Rectangle
                 }
             }
 
-            return GetInstance(w, h, components: 1, bpc: 1, pixelsByte, ints);
+            return GetInstance(w, h, components: 1,
+                bpc: 1, pixelsByte, ints);
         }
         else
         {
@@ -1215,11 +1218,14 @@ public abstract class Image : Rectangle
                 }
             }
 
-            var img = GetInstance(w, h, components: 3, bpc: 8, pixelsByte, ints);
+            var img = GetInstance(w, h, components: 3,
+                bpc: 8, pixelsByte, ints);
 
             if (smask != null)
             {
-                var sm = GetInstance(w, h, components: 1, bpc: 8, smask);
+                var sm = GetInstance(w, h, components: 1,
+                    bpc: 8, smask);
+
                 sm.MakeMask();
                 img.ImageMask = sm;
             }
@@ -1265,8 +1271,10 @@ public abstract class Image : Rectangle
     /// <param name="bpc">bits per component</param>
     /// <param name="data">the image data</param>
     /// <returns>an object of type ImgRaw</returns>
-    public static Image GetInstance(int width, int height, int components, int bpc, byte[] data)
-        => GetInstance(width, height, components, bpc, data, transparency: null);
+    public static Image GetInstance(int width, int height, int components,
+        int bpc, byte[] data)
+        => GetInstance(width, height, components,
+            bpc, data, transparency: null);
 
     /// <summary>
     ///     Reuses an existing image.
@@ -1301,7 +1309,9 @@ public abstract class Image : Rectangle
             }
         }
 
-        Image img = new ImgRaw(width, height, components: 1, bpc: 1, data: null);
+        Image img = new ImgRaw(width, height, components: 1,
+            bpc: 1, data: null);
+
         img.imageMask = imask;
         img.DirectReference = iref;
 
@@ -1325,8 +1335,11 @@ public abstract class Image : Rectangle
     /// <param name="parameters"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    public static Image GetInstance(int width, int height, bool reverseBits, int typeCcitt, int parameters, byte[] data)
-        => GetInstance(width, height, reverseBits, typeCcitt, parameters, data, transparency: null);
+    public static Image GetInstance(int width, int height, bool reverseBits,
+        int typeCcitt, int parameters, byte[] data)
+        => GetInstance(width, height, reverseBits,
+            typeCcitt, parameters, data,
+            transparency: null);
 
     /// <summary>
     /// </summary>
@@ -1338,12 +1351,8 @@ public abstract class Image : Rectangle
     /// <param name="data"></param>
     /// <param name="transparency"></param>
     /// <returns></returns>
-    public static Image GetInstance(int width,
-        int height,
-        bool reverseBits,
-        int typeCcitt,
-        int parameters,
-        byte[] data,
+    public static Image GetInstance(int width, int height, bool reverseBits,
+        int typeCcitt, int parameters, byte[] data,
         int[] transparency)
     {
         if (transparency != null && transparency.Length != 2)
@@ -1351,7 +1360,9 @@ public abstract class Image : Rectangle
             throw new BadElementException(message: "Transparency length must be equal to 2 with CCITT images");
         }
 
-        Image img = new ImgCcitt(width, height, reverseBits, typeCcitt, parameters, data);
+        Image img = new ImgCcitt(width, height, reverseBits,
+            typeCcitt, parameters, data);
+
         img.transparency = transparency;
 
         return img;
@@ -1370,7 +1381,8 @@ public abstract class Image : Rectangle
     ///     image dictionary
     /// </param>
     /// <returns>an object of type ImgRaw</returns>
-    public static Image GetInstance(int width, int height, int components, int bpc, byte[] data, int[] transparency)
+    public static Image GetInstance(int width, int height, int components,
+        int bpc, byte[] data, int[] transparency)
     {
         if (transparency != null && transparency.Length != components * 2)
         {
@@ -1381,10 +1393,14 @@ public abstract class Image : Rectangle
         {
             var g4 = Ccittg4Encoder.Compress(data, width, height);
 
-            return GetInstance(width, height, reverseBits: false, CCITTG4, CCITT_BLACKIS1, g4, transparency);
+            return GetInstance(width, height, reverseBits: false,
+                CCITTG4, CCITT_BLACKIS1, g4,
+                transparency);
         }
 
-        Image img = new ImgRaw(width, height, components, bpc, data);
+        Image img = new ImgRaw(width, height, components,
+            bpc, data);
+
         img.transparency = transparency;
 
         return img;

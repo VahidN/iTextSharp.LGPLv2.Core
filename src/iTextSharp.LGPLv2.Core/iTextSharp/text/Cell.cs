@@ -461,12 +461,12 @@ public class Cell : Rectangle, ITextElementArray
         }
         catch (BadElementException bee)
         {
-            throw new InvalidOperationException(bee.Message);
+            throw new InvalidOperationException(bee.Message, bee);
         }
-        catch
+        catch(Exception ex)
         {
             throw new InvalidOperationException(
-                message: "You can only add objects that implement the Element interface.");
+                "You can only add objects that implement the Element interface.", ex);
         }
     }
 
@@ -842,7 +842,11 @@ public class Cell : Rectangle, ITextElementArray
             throw new ArgumentNullException(nameof(value));
         }
 
-        if (value.EndsWith(value: '%'))
+        if (value.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif					
+		))
         {
             value = value.Substring(startIndex: 0, value.Length - 1);
             Percentage = true;

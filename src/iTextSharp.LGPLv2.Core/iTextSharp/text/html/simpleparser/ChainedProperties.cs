@@ -55,7 +55,15 @@ public class ChainedProperties
         {
             var s = 0;
 
-            if (value.StartsWith(value: '+') || value.StartsWith(value: '-'))
+            if (value.StartsWith(value: '+'
+#if NET_11
+            , StringComparison.Ordinal
+#endif								
+			) || value.StartsWith(value: '-'
+#if NET_11
+            , StringComparison.Ordinal
+#endif								
+			))
             {
                 var old = this[key: "basefontsize"];
 
@@ -77,7 +85,11 @@ public class ChainedProperties
                     }
                 }
 
-                var inc = int.Parse(value.StartsWith(value: '+') ? value.Substring(startIndex: 1) : value,
+                var inc = int.Parse(value.StartsWith(value: '+'
+#if NET_11
+            , StringComparison.Ordinal
+#endif									
+				) ? value.Substring(startIndex: 1) : value,
                     CultureInfo.InvariantCulture);
 
                 s += inc;

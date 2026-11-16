@@ -9,7 +9,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-2022
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
@@ -22,10 +22,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4.39.1
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         config-file: ./.github/workflows/codeql/codeql-config.yml
@@ -33,13 +33,13 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 11.0.x
 
     - name: Build
       run: dotnet build --configuration Release    
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4.39.1
+      uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
         upload: false
@@ -55,6 +55,6 @@ jobs:
         output: sarif-results/${{ matrix.language }}.sarif
 
     - name: Upload Filtered Results
-      uses: github/codeql-action/upload-sarif@v4.39.1
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: sarif-results/${{ matrix.language }}.sarif

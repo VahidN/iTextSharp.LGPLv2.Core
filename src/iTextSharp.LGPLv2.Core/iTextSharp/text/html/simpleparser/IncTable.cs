@@ -101,7 +101,11 @@ public class IncTable : IElement
         }
         else
         {
-            if (width.EndsWith(value: '%'))
+            if (width.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																				
+			))
             {
                 table.WidthPercentage = float.Parse(width.Substring(startIndex: 0, width.Length - 1),
                     NumberFormatInfo.InvariantInfo);

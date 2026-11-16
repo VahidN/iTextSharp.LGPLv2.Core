@@ -148,7 +148,11 @@ public class RtfCtrlWordHandler
                 }
                 else
                 {
-                    if (SpecialHandler.Length > 1 && SpecialHandler.EndsWith(value: '.'))
+                    if (SpecialHandler.Length > 1 && SpecialHandler.EndsWith(value: '.'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																																								
+					))
                     {
                         SpecialHandler +=
                             CtrlWord; // if string length>1 and ends with a period, it's a group. Add ctrlWord

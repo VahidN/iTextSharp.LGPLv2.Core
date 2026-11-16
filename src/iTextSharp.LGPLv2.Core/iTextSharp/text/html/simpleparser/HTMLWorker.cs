@@ -590,7 +590,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                 // Not a new paragraph
                 var numChunks = _currentParagraph.Chunks.Count;
 
-                if (numChunks == 0 || _currentParagraph.Chunks[numChunks - 1].Content.EndsWith(value: '\n'))
+                if (numChunks == 0 || _currentParagraph.Chunks[numChunks - 1].Content.EndsWith(value: '\n'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																				
+				))
                 {
                     addLeadingBreak = false;
                 }
@@ -624,7 +628,11 @@ public class HtmlWorker : ISimpleXmlDocHandler, IDocListener
                     hrWidth = tmpWidth;
                 }
 
-                if (!width.EndsWith(value: '%'))
+                if (!width.EndsWith(value: '%'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																								
+				))
                 {
                     hrWidth = 100; // Treat a pixel width as 100% for now.
                 }

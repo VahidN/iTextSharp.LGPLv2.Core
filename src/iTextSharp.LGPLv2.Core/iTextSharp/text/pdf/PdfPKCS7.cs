@@ -187,9 +187,9 @@ public class PdfPkcs7
         {
             pkcs = din.ReadObject();
         }
-        catch
+        catch(Exception ex)
         {
-            throw new ArgumentException(message: "can't decode PKCS7SignedData object");
+            throw new ArgumentException(message: "can't decode PKCS7SignedData object", ex);
         }
 
         if (pkcs is not Asn1Sequence signedData)

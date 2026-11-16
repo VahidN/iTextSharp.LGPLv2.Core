@@ -2421,7 +2421,11 @@ public class PdfDocument : Document
                     var textArray = new PdfTextArray(s.Substring(startIndex: 0, idx));
                     var lastIdx = idx;
 
-                    while ((idx = s.IndexOf(value: ' ', lastIdx + 1)) >= 0)
+                    while ((idx = s.IndexOf(value: ' ', lastIdx + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																						
+					)) >= 0)
                     {
                         textArray.Add(spaceCorrection);
                         textArray.Add(s.Substring(lastIdx, idx - lastIdx));

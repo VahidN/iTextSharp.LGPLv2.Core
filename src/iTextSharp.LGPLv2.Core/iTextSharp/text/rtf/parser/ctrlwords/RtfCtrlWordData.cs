@@ -54,8 +54,7 @@ public class RtfCtrlWordData
     /// <returns></returns>
     public int IntValue()
     {
-        int value;
-        value = int.Parse(Param, CultureInfo.InvariantCulture);
+        var value = int.Parse(Param, CultureInfo.InvariantCulture);
         if (IsNeg)
         {
             value = -value;
@@ -71,8 +70,7 @@ public class RtfCtrlWordData
     /// <returns></returns>
     public long LongValue()
     {
-        long value;
-        value = long.Parse(Param, CultureInfo.InvariantCulture);
+        var value = long.Parse(Param, CultureInfo.InvariantCulture);
         if (IsNeg)
         {
             value = -value;

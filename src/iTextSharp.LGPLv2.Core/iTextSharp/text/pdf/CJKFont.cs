@@ -81,7 +81,11 @@ internal class CjkFont : BaseFont
 
         _fontName = fontName;
         encoding = CJK_ENCODING;
-        _vertical = enc.EndsWith(value: 'V');
+        _vertical = enc.EndsWith(value: 'V'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																																												
+		);
         _cMap = enc;
 
         if (enc.StartsWith(value: "Identity-", StringComparison.Ordinal))

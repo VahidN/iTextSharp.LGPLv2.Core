@@ -382,7 +382,11 @@ public static class EntitiesToUnicode
             }
         }
 
-        if (name.StartsWith(value: '#'))
+        if (name.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																	
+		))
         {
             try
             {
@@ -429,7 +433,11 @@ public static class EntitiesToUnicode
 
         while (true)
         {
-            posSc = s.IndexOf(value: ';', posAmp);
+            posSc = s.IndexOf(value: ';', posAmp
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																		
+			);
 
             if (posSc == -1)
             {
@@ -438,13 +446,21 @@ public static class EntitiesToUnicode
                 return buf.ToString();
             }
 
-            posA = s.IndexOf(value: '&', posAmp + 1);
+            posA = s.IndexOf(value: '&', posAmp + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																		
+			);
 
             while (posA != -1 && posA < posSc)
             {
                 buf.Append(s.Substring(posAmp, posA - posAmp));
                 posAmp = posA;
-                posA = s.IndexOf(value: '&', posAmp + 1);
+                posA = s.IndexOf(value: '&', posAmp + 1
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																		
+				);
             }
 
             replace = DecodeEntity(s.Substring(posAmp + 1, posSc - (posAmp + 1)));
@@ -463,7 +479,11 @@ public static class EntitiesToUnicode
                 buf.Append(replace);
             }
 
-            posAmp = s.IndexOf(value: '&', posSc);
+            posAmp = s.IndexOf(value: '&', posSc
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																		
+			);
 
             if (posAmp == -1)
             {

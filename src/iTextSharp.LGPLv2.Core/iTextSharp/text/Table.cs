@@ -703,9 +703,7 @@ public class Table : Rectangle, ILargeElement
             throw new ArgumentNullException(nameof(aLocation));
         }
 
-        Point p;
-
-        p = (Point)aLocation;
+        var p = (Point)aLocation;
 
         if (aCell.IsTable())
         {
@@ -1556,9 +1554,7 @@ public class Table : Rectangle, ILargeElement
                         for (; cb < lDummyTable._widths.Length; cb++)
                         {
                             colMap[cb] = lDummyColumn + ct;
-
-                            float wb;
-                            wb = lDummyTable._widths[cb];
+                            var wb = lDummyTable._widths[cb];
 
                             float wt = 0;
 

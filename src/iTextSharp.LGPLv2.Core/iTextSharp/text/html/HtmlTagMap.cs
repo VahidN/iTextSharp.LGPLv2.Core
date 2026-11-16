@@ -13,9 +13,7 @@ public class HtmlTagMap : TagMap
     /// </summary>
     public HtmlTagMap()
     {
-        HtmlPeer peer;
-
-        peer = new HtmlPeer(ElementTags.ITEXT, HtmlTags.HTML);
+        var peer = new HtmlPeer(ElementTags.ITEXT, HtmlTags.HTML);
         this[peer.Alias] = peer;
 
         peer = new HtmlPeer(ElementTags.PHRASE, HtmlTags.SPAN);

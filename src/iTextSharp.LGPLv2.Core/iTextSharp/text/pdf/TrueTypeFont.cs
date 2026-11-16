@@ -208,7 +208,11 @@ internal class TrueTypeFont : BaseFont
             throw new DocumentException(FileName + Style + " is not a TTF, OTF or TTC font file.");
         }
 
-        if (!encoding.StartsWith(value: '#'))
+        if (!encoding.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																								
+		))
         {
             PdfEncodings.ConvertToBytes(text: " ", enc); // check if the encoding exists
         }
@@ -316,8 +320,7 @@ internal class TrueTypeFont : BaseFont
     {
         get
         {
-            int[] tableLocation;
-            tableLocation = Tables[key: "name"];
+            var tableLocation = Tables[key: "name"];
 
             if (tableLocation == null)
             {
@@ -536,8 +539,7 @@ internal class TrueTypeFont : BaseFont
 
     internal void CheckCff()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "CFF "];
+        var tableLocation = Tables[key: "CFF "];
 
         if (tableLocation != null)
         {
@@ -554,8 +556,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     internal void FillTables()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "head"];
+        var tableLocation = Tables[key: "head"];
 
         if (tableLocation == null)
         {
@@ -677,8 +678,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     internal string[][] GetAllNames()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "name"];
+        var tableLocation = Tables[key: "name"];
 
         if (tableLocation == null)
         {
@@ -739,8 +739,7 @@ internal class TrueTypeFont : BaseFont
     /// <param name="id">the name id to retrieve</param>
     internal string[][] GetNames(int id)
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "name"];
+        var tableLocation = Tables[key: "name"];
 
         if (tableLocation == null)
         {
@@ -926,8 +925,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     internal void ReadCMaps()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "cmap"];
+        var tableLocation = Tables[key: "cmap"];
 
         if (tableLocation == null)
         {
@@ -1203,8 +1201,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     internal void ReadKerning()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "kern"];
+        var tableLocation = Tables[key: "kern"];
 
         if (tableLocation == null)
         {
@@ -1789,8 +1786,7 @@ internal class TrueTypeFont : BaseFont
     /// </summary>
     protected void ReadGlyphWidths()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "hmtx"];
+        var tableLocation = Tables[key: "hmtx"];
 
         if (tableLocation == null)
         {
@@ -1845,8 +1841,7 @@ internal class TrueTypeFont : BaseFont
 
     private void readBbox()
     {
-        int[] tableLocation;
-        tableLocation = Tables[key: "head"];
+        var tableLocation = Tables[key: "head"];
 
         if (tableLocation == null)
         {

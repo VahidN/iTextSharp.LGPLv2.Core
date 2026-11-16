@@ -330,7 +330,11 @@ internal class Type1Font : BaseFont
             FontSpecific = false;
         }
 
-        if (!encoding.StartsWith(value: '#'))
+        if (!encoding.StartsWith(value: '#'
+#if NET_11
+            , StringComparison.Ordinal
+#endif																																								
+		))
         {
             PdfEncodings.ConvertToBytes(text: " ", enc); // check if the encoding exists
         }

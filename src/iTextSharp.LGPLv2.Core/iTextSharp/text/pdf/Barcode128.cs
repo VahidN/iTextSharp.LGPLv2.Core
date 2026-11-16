@@ -708,14 +708,22 @@ public class Barcode128 : Barcode
 
             var localCode = value;
 
-            if (CodeType == CODE128_UCC && localCode.StartsWith(value: '('))
+            if (CodeType == CODE128_UCC && localCode.StartsWith(value: '('
+#if NET_11
+            , StringComparison.Ordinal
+#endif																							
+			))
             {
                 var idx = 0;
                 var ret = "";
 
                 while (idx >= 0)
                 {
-                    var end = localCode.IndexOf(value: ')', idx);
+                    var end = localCode.IndexOf(value: ')', idx
+#if NET_11
+            , StringComparison.Ordinal
+#endif																									
+					);
 
                     if (end < 0)
                     {
@@ -744,7 +752,11 @@ public class Barcode128 : Barcode
                         sai = "0" + sai;
                     }
 
-                    idx = localCode.IndexOf(value: '(', end);
+                    idx = localCode.IndexOf(value: '(', end
+#if NET_11
+            , StringComparison.Ordinal
+#endif																									
+					);
                     var next = idx < 0 ? localCode.Length : idx;
                     ret += sai + localCode.Substring(end + 1, next - (end + 1));
 
