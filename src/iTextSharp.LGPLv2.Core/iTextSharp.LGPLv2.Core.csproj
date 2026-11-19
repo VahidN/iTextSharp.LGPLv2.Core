@@ -81,7 +81,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="4.156.1"/>
+        <PackageReference Include="SkiaSharp" Version="4.157.0"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="All"/>
     </ItemGroup>
