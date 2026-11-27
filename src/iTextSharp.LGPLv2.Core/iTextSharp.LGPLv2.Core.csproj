@@ -61,7 +61,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.36.0.15337">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -81,7 +81,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="4.156.1"/>
+        <PackageReference Include="SkiaSharp" Version="4.158.0"/>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="All"/>
     </ItemGroup>
